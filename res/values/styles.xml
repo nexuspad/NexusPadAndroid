@@ -2,4 +2,6 @@
 
     <style name="AppTheme" parent="@style/Theme.Sherlock.Light.DarkActionBar"></style>
 
+    <style name="autoMargin"></style>
+
 </resources>

@@ -1,22 +1,36 @@
+/*
+ * Copyright (C), NexusPad LLC
+ */
 package com.nexuspad.home.ui.activity;
 
-import com.nexuspad.ui.activity.ForwardActivity;
-
 import android.content.Intent;
+import android.support.v4.app.Fragment;
 
-public class MainActivity extends ForwardActivity {
+import com.edmondapps.utils.android.Logs;
+import com.edmondapps.utils.android.activity.SinglePaneActivity;
+import com.nexuspad.datamodel.NPUser;
+import com.nexuspad.home.ui.fragment.MainFragment;
+
+/**
+ * @author Edmond
+ * 
+ */
+public class MainActivity extends SinglePaneActivity implements MainFragment.Callback {
     @Override
-    protected Intent onCreatePhoneIntent() {
-        return new Intent(this, MainPhoneActivity.class);
+    protected Fragment onCreateFragment() {
+        return new MainFragment();
     }
 
     @Override
-    protected Intent onCreate7InchTabletIntent() {
-        throw new UnsupportedOperationException();
+    public void onUserLoggedIn(MainFragment f, NPUser user) {
+        Logs.d("WelcomeActivity", "User has a session id: " + user.getSessionId());
+        startActivity(new Intent(this, DashboardActivity.class));
+        finish();
     }
 
     @Override
-    protected Intent onCreate10InchTabletIntent() {
-        throw new UnsupportedOperationException();
+    public void onNoUserStored(MainFragment f) {
+        startActivity(new Intent(this, LoginActivity.class));
+        finish();
     }
 }

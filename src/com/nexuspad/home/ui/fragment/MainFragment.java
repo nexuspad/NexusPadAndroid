@@ -1,25 +1,81 @@
 /*
- * Copyright 2013 Edmond Chui
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- * http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright (C), NexusPad LLC
  */
 package com.nexuspad.home.ui.fragment;
 
-import com.actionbarsherlock.app.SherlockListFragment;
+import android.app.Activity;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.text.TextUtils;
+
+import com.actionbarsherlock.app.SherlockFragment;
+import com.edmondapps.utils.android.Logs;
+import com.edmondapps.utils.android.annotaion.FragmentName;
+import com.nexuspad.account.AccountManager;
+import com.nexuspad.datamodel.NPUser;
+import com.nexuspad.dataservice.NPException;
 
 /**
  * @author Edmond
  * 
  */
-public class MainFragment extends SherlockListFragment {
+@FragmentName(MainFragment.TAG)
+public class MainFragment extends SherlockFragment {
+    public static final String TAG = "MainFragment";
+
+    public interface Callback {
+        void onUserLoggedIn(MainFragment f, NPUser user);
+
+        void onNoUserStored(MainFragment f);
+    }
+
+    private Callback mCallback;
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        if (activity instanceof Callback) {
+            mCallback = (Callback)activity;
+        } else {
+            throw new IllegalStateException(activity + " must implement Callback.");
+        }
+    }
+
+    @Override
+    public void onCreate(Bundle bundle) {
+        super.onCreate(bundle);
+
+        try {
+            NPUser currentUser = AccountManager.currentAccount();
+            Logs.d(TAG, "Current user stored in SQLite: " + currentUser);
+
+            if (!TextUtils.isEmpty(currentUser.getSessionId())) {
+                mCallback.onUserLoggedIn(null, currentUser);
+            } else {
+                String email = currentUser.getEmail();
+                String password = currentUser.getPassword();
+                if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password)) {
+                    new LoginTask(email, password).execute((Void[])null);
+                }
+            }
+
+        } catch (NPException npe) {
+            mCallback.onNoUserStored(this);
+        }
+    }
+
+    private static class LoginTask extends AsyncTask<Void, Void, String> {
+        private final String mEmail;
+        private final String mPassword;
+
+        private LoginTask(String email, String password) {
+            mEmail = email;
+            mPassword = password;
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+            return AccountManager.autoSignIn(mEmail, mPassword);
+        }
+    }
 }
