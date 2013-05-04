@@ -24,5 +24,6 @@ public class DashboardActivity extends SinglePaneActivity implements DashboardFr
     @Override
     public void onModuleClicked(DashboardFragment f, int moduleType) {
         Logs.v(TAG, "moduleType: " + moduleType);
+        // TODO WIP
     }
 }

@@ -4,7 +4,6 @@
 package com.nexuspad.home.ui.fragment;
 
 import android.app.Activity;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 
@@ -24,7 +23,9 @@ public class MainFragment extends SherlockFragment {
     public static final String TAG = "MainFragment";
 
     public interface Callback {
-        void onUserLoggedIn(MainFragment f, NPUser user);
+        void onLogin(MainFragment f, NPUser user);
+
+        void onLoginFailed(MainFragment f, String userName, String password);
 
         void onNoUserStored(MainFragment f);
     }
@@ -50,32 +51,24 @@ public class MainFragment extends SherlockFragment {
             Logs.d(TAG, "Current user stored in SQLite: " + currentUser);
 
             if (!TextUtils.isEmpty(currentUser.getSessionId())) {
-                mCallback.onUserLoggedIn(null, currentUser);
+                mCallback.onLogin(null, currentUser);
             } else {
                 String email = currentUser.getEmail();
                 String password = currentUser.getPassword();
-                if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password)) {
-                    new LoginTask(email, password).execute((Void[])null);
-                }
-            }
+                AccountManager.autoSignInAsync(email, password, new AccountManager.Callback() {
+                    @Override
+                    public void onLoginFailed(String userName, String password) {
+                        mCallback.onLoginFailed(MainFragment.this, userName, password);
+                    }
 
+                    @Override
+                    public void onLogin(NPUser user) {
+                        mCallback.onLogin(MainFragment.this, user);
+                    }
+                });
+            }
         } catch (NPException npe) {
             mCallback.onNoUserStored(this);
-        }
-    }
-
-    private static class LoginTask extends AsyncTask<Void, Void, String> {
-        private final String mEmail;
-        private final String mPassword;
-
-        private LoginTask(String email, String password) {
-            mEmail = email;
-            mPassword = password;
-        }
-
-        @Override
-        protected String doInBackground(Void... params) {
-            return AccountManager.autoSignIn(mEmail, mPassword);
         }
     }
 }

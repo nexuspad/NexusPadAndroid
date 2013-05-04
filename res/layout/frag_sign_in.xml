@@ -26,7 +26,8 @@
             android:id="@+id/txt_user_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/username_or_email" />
+            android:hint="@string/username_or_email"
+            android:inputType="textEmailAddress" />
 
         <EditText
             android:id="@+id/txt_password"
@@ -38,13 +39,15 @@
         <TextView
             android:id="@+id/lbl_sign_up"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackground"
             android:clickable="true"
             android:focusable="true"
             android:gravity="center"
+            android:minHeight="48dp"
             android:padding="@dimen/ed__padding_small"
-            android:text="@string/lbl_sign_up" />
+            android:text="@string/lbl_sign_up"
+            android:textSize="@dimen/ed__textsize_small" />
 
         <LinearLayout
             android:id="@+id/frame_new_account"
@@ -57,21 +60,42 @@
                 android:id="@+id/txt_first_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/first_name" />
+                android:hint="@string/first_name"
+                android:inputType="textCapWords" />
 
             <EditText
                 android:id="@+id/txt_last_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/last_name" />
+                android:hint="@string/last_name"
+                android:inputType="textCapWords" />
+
+            <EditText
+                android:id="@+id/txt_confirm_pw"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/confirm_password"
+                android:inputType="textPassword" />
         </LinearLayout>
 
-        <Button
-            android:id="@+id/btn_login"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:text="@string/login" />
+            android:layout_height="wrap_content" >
+
+            <Button
+                android:id="@+id/btn_login"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:text="@string/login" />
+
+            <ProgressBar
+                android:id="@android:id/progress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="invisible" />
+        </FrameLayout>
     </LinearLayout>
 
 </ScrollView>

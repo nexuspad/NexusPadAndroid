@@ -5,6 +5,7 @@ package com.nexuspad.ui;
 
 import static com.edmondapps.utils.android.view.ViewUtils.findView;
 import android.app.Activity;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,16 +22,29 @@ import com.nexuspad.R;
 public class IconListAdapter extends BaseAdapter {
 
     private final int[] mDrawableIds;
-    private final int[] mStringIds;
+    private final CharSequence[] mStrings;
     private final LayoutInflater mLayoutInflater;
 
     public IconListAdapter(Activity activity, int[] drawableIds, int[] stringIds) {
-        if (drawableIds.length != stringIds.length) {
+        this(activity, drawableIds, toStrings(activity, stringIds));
+    }
+
+    public IconListAdapter(Activity activity, int[] drawableIds, CharSequence[] strings) {
+        if (drawableIds.length != strings.length) {
             throw new IllegalArgumentException("drawableIds and stringIds must have the same length");
         }
         mDrawableIds = drawableIds;
-        mStringIds = stringIds;
+        mStrings = strings;
         mLayoutInflater = activity.getLayoutInflater();
+    }
+
+    private static CharSequence[] toStrings(Context c, int[] stringIds) {
+        CharSequence[] out = new CharSequence[stringIds.length];
+        int i = 0;
+        for (int id : stringIds) {
+            out[i++] = c.getText(id);
+        }
+        return out;
     }
 
     @Override
@@ -63,7 +77,7 @@ public class IconListAdapter extends BaseAdapter {
         }
 
         holder.icon.setImageResource(mDrawableIds[position]);
-        holder.text1.setText(mStringIds[position]);
+        holder.text1.setText(mStrings[position]);
 
         return convertView;
     }

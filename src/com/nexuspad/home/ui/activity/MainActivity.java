@@ -5,9 +5,11 @@ package com.nexuspad.home.ui.activity;
 
 import android.content.Intent;
 import android.support.v4.app.Fragment;
+import android.widget.Toast;
 
 import com.edmondapps.utils.android.Logs;
 import com.edmondapps.utils.android.activity.SinglePaneActivity;
+import com.nexuspad.R;
 import com.nexuspad.datamodel.NPUser;
 import com.nexuspad.home.ui.fragment.MainFragment;
 
@@ -22,9 +24,16 @@ public class MainActivity extends SinglePaneActivity implements MainFragment.Cal
     }
 
     @Override
-    public void onUserLoggedIn(MainFragment f, NPUser user) {
+    public void onLogin(MainFragment f, NPUser user) {
         Logs.d("WelcomeActivity", "User has a session id: " + user.getSessionId());
         startActivity(new Intent(this, DashboardActivity.class));
+        finish();
+    }
+
+    @Override
+    public void onLoginFailed(MainFragment f, String userName, String password) {
+        Toast.makeText(this, R.string.err_login_failed, Toast.LENGTH_LONG).show();
+        startActivity(new Intent(this, LoginActivity.class));
         finish();
     }
 
