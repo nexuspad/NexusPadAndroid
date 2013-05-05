@@ -9,7 +9,8 @@
     <string name="photos">Photos</string>
     <string name="bookmarks">Bookmarks</string>
     <string name="settings">Settings</string>
-    <string name="username_or_email">Username or email</string>
+    <string name="folder">Folder</string>
+    <string name="username_or_email">Username or Email</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="first_name">First Name</string>
@@ -20,7 +21,16 @@
     <string name="lbl_login">Have an account? Click here to login.</string>
     <string name="err_empty_field">This field must not be be empty.</string>
     <string name="err_login_failed">Login failed. Please try again later.</string>
+    <string name="err_invalid_bookmark">Please check the web address of the bookmark.</string>
+    <string name="formatted_err_delete_failed">Failed to delete \"%s\". Please try again later.</string>
     <string name="err_network">Please check your network connection.</string>
-    <string name="confirm_password">Confirm password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="folders">Folders</string>
+    <string name="more">More</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="rename">Rename</string>
+    <string name="empty_folder">Folder Is Empty</string>
+    <string name="empty_bookmarks">No Bookmarks</string>
 
 </resources>

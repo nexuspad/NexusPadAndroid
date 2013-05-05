@@ -3,10 +3,14 @@
  */
 package com.nexuspad.home.ui.activity;
 
+import static com.nexuspad.dataservice.ServiceConstants.BOOKMARK_MODULE;
+import android.app.Activity;
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 
 import com.edmondapps.utils.android.Logs;
 import com.edmondapps.utils.android.activity.SinglePaneActivity;
+import com.nexuspad.bookmark.ui.activity.BookmarksActivity;
 import com.nexuspad.home.ui.fragment.DashboardFragment;
 
 /**
@@ -23,7 +27,17 @@ public class DashboardActivity extends SinglePaneActivity implements DashboardFr
 
     @Override
     public void onModuleClicked(DashboardFragment f, int moduleType) {
-        Logs.v(TAG, "moduleType: " + moduleType);
-        // TODO WIP
+        Class<? extends Activity> activity = null;
+        switch (moduleType) {
+            case BOOKMARK_MODULE:
+                activity = BookmarksActivity.class;
+                break;
+            default:
+                Logs.v(TAG, "moduleType: " + moduleType);
+                break;
+        }
+        if (activity != null) {
+            startActivity(new Intent(this, activity));
+        }
     }
 }

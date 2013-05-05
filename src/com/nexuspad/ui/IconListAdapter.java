@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -24,6 +25,8 @@ public class IconListAdapter extends BaseAdapter {
     private final int[] mDrawableIds;
     private final CharSequence[] mStrings;
     private final LayoutInflater mLayoutInflater;
+
+    private boolean mHasMenu;
 
     public IconListAdapter(Activity activity, int[] drawableIds, int[] stringIds) {
         this(activity, drawableIds, toStrings(activity, stringIds));
@@ -45,6 +48,17 @@ public class IconListAdapter extends BaseAdapter {
             out[i++] = c.getText(id);
         }
         return out;
+    }
+
+    public final boolean hasMenu() {
+        return mHasMenu;
+    }
+
+    public final void setHasMenu(boolean hasMenu) {
+        if (mHasMenu != hasMenu) {
+            mHasMenu = hasMenu;
+            notifyDataSetChanged();
+        }
     }
 
     @Override
@@ -70,6 +84,7 @@ public class IconListAdapter extends BaseAdapter {
             holder = new ViewHolder();
             holder.icon = findView(convertView, android.R.id.icon);
             holder.text1 = findView(convertView, android.R.id.text1);
+            holder.menu = findView(convertView, R.id.menu);
 
             convertView.setTag(holder);
         } else {
@@ -79,11 +94,14 @@ public class IconListAdapter extends BaseAdapter {
         holder.icon.setImageResource(mDrawableIds[position]);
         holder.text1.setText(mStrings[position]);
 
+        holder.menu.setVisibility(mHasMenu ? View.VISIBLE : View.GONE);
+
         return convertView;
     }
 
-    private class ViewHolder {
+    private static class ViewHolder {
         ImageView icon;
         TextView text1;
+        ImageButton menu;
     }
 }

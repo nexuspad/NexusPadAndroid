@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.nexuspad.ui.DuplicateParentStateAwareLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginLeft="@dimen/ed__padding_small"
     android:minHeight="48dp"
     android:orientation="horizontal"
     tools:context=".home.ui.activity.MainActivity" >
@@ -18,10 +19,21 @@
 
     <TextView
         android:id="@android:id/text1"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
+        android:layout_weight="1"
         android:gravity="center_vertical"
         android:paddingLeft="@dimen/ed__padding_small"
         android:textSize="@dimen/ed__textsize_medium" />
 
-</LinearLayout>
+    <ImageButton
+        android:id="@+id/menu"
+        android:layout_width="32dp"
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent"
+        android:contentDescription="@string/more"
+        android:duplicateParentState="false"
+        android:scaleType="fitXY"
+        android:src="@drawable/abs__spinner_ab_holo_light" />
+
+</com.nexuspad.ui.DuplicateParentStateAwareLinearLayout>
