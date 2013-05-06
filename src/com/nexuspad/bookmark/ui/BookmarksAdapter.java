@@ -4,9 +4,13 @@
 package com.nexuspad.bookmark.ui;
 
 import static com.edmondapps.utils.android.view.ViewUtils.findView;
+
+import java.util.List;
+
 import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
@@ -15,8 +19,6 @@ import android.widget.TextView;
 
 import com.nexuspad.R;
 import com.nexuspad.datamodel.Bookmark;
-import com.nexuspad.datamodel.EntryList;
-import com.nexuspad.datamodel.Folder;
 import com.nexuspad.ui.EntriesAdapter;
 
 /**
@@ -25,14 +27,17 @@ import com.nexuspad.ui.EntriesAdapter;
  */
 public class BookmarksAdapter extends EntriesAdapter<Bookmark> {
 
-    public BookmarksAdapter(Activity a, EntryList list) {
-        super(a, list);
+    public BookmarksAdapter(Activity a, List<? extends Bookmark> entries) {
+        super(a, entries);
     }
 
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
         ViewHolder holder = getHolder(view);
-        getOnMenuClickListener().onClick(holder.menu);
+        OnClickListener listener = getOnMenuClickListener();
+        if (listener != null) {
+            listener.onClick(holder.menu);
+        }
         return true;
     }
 
@@ -57,20 +62,6 @@ public class BookmarksAdapter extends EntriesAdapter<Bookmark> {
     }
 
     @Override
-    protected View getFolderView(Folder folder, int position, View convertView, ViewGroup parent) {
-        if (convertView == null) {
-            convertView = getLayoutInflater().inflate(R.layout.list_item_icon, parent, false);
-        }
-        ViewHolder holder = getHolder(convertView);
-
-        holder.icon.setImageResource(R.drawable.ic_folder);
-        holder.text1.setText(folder.getFolderName());
-        holder.menu.setOnClickListener(getOnMenuClickListener());
-
-        return convertView;
-    }
-
-    @Override
     protected View getEntryView(Bookmark entry, int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
             convertView = getLayoutInflater().inflate(R.layout.list_item_icon, parent, false);
@@ -87,11 +78,6 @@ public class BookmarksAdapter extends EntriesAdapter<Bookmark> {
     @Override
     protected int getEntryStringId() {
         return R.string.bookmarks;
-    }
-
-    @Override
-    protected View getEmptySubfoldersView(LayoutInflater i, View c, ViewGroup p) {
-        return getCaptionView(i, c, p, R.string.empty_folder, R.drawable.empty_subfolders);
     }
 
     @Override

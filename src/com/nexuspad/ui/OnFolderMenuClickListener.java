@@ -15,15 +15,15 @@ import com.edmondapps.utils.android.view.PopupMenu;
 import com.edmondapps.utils.android.view.PopupMenu.OnMenuItemClickListener;
 import com.nexuspad.R;
 import com.nexuspad.account.AccountManager;
-import com.nexuspad.datamodel.NPEntry;
-import com.nexuspad.dataservice.EntryService;
+import com.nexuspad.datamodel.Folder;
+import com.nexuspad.dataservice.FolderService;
 import com.nexuspad.dataservice.NPException;
 
-public class OnEntryMenuClickListener<T extends NPEntry> implements OnClickListener {
-    public static final String TAG = "OnEntryMenuClickListener";
+public class OnFolderMenuClickListener implements OnClickListener {
+    public static final String TAG = "OnFolderMenuClickListener";
 
-    public static PopupMenu getEntryPopupMenu(View view) {
-        return getPopupMenu(view, R.menu.entry);
+    public static PopupMenu getFolderPopupMenu(View view) {
+        return getPopupMenu(view, R.menu.folder);
     }
 
     private static PopupMenu getPopupMenu(View view, int menuId) {
@@ -37,58 +37,57 @@ public class OnEntryMenuClickListener<T extends NPEntry> implements OnClickListe
         return menu;
     }
 
+    private final FolderService mFolderService;
     private final ListView mListView;
-    private final EntryService mEntryService;
 
-    public OnEntryMenuClickListener(ListView listView, EntryService entryService) {
+    public OnFolderMenuClickListener(ListView listView, FolderService folderService) {
         mListView = listView;
-        mEntryService = entryService;
+        mFolderService = folderService;
     }
 
     @Override
     public void onClick(View v) {
-        @SuppressWarnings("unchecked")
-        FolderEntriesAdapter<? extends EntriesAdapter<T>> compoundAdapter = ((FolderEntriesAdapter<? extends EntriesAdapter<T>>)mListView.getAdapter());
+        FolderEntriesAdapter<?> compoundAdapter = ((FolderEntriesAdapter<?>)mListView.getAdapter());
 
         int pos = mListView.getPositionForView(v);
         if (pos != ListView.INVALID_POSITION) {
-            EntriesAdapter<T> adapter = compoundAdapter.getEntriesAdapter();
-
+            FoldersAdapter adapter = compoundAdapter.getFoldersAdapter();
             int position = compoundAdapter.getPositionForAdapter(pos);
-            T item = adapter.getItem(position);
-            onEntryClick(item, position, v);
+
+            Folder item = adapter.getItem(position);
+            onFolderClick(item, position, v);
         }
     }
 
-    protected void onEntryClick(final T entry, int position, View view) {
-        PopupMenu popupMenu = getEntryPopupMenu(view);
+    protected void onFolderClick(final Folder folder, int position, View view) {
+        PopupMenu popupMenu = getFolderPopupMenu(view);
         popupMenu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                return onEntryMenuClick(entry, item);
+                return onFolderMenuClick(folder, item);
             }
         });
         popupMenu.show();
     }
 
-    protected boolean onEntryMenuClick(T entry, MenuItem item) {
+    protected boolean onFolderMenuClick(Folder folder, MenuItem item) {
         switch (item.getItemId()) {
             case R.id.delete:
-                deleteEntry(entry);
+                deleteFolder(folder);
                 return true;
         }
         return false;
     }
 
-    private void deleteEntry(T entry) {
-        EntryService service = getEntryService();
+    private void deleteFolder(Folder folder) {
+        FolderService service = getFolderService();
         try {
-            entry.setOwner(AccountManager.currentAccount());
-            service.deleteEntry(entry);
+            folder.setOwner(AccountManager.currentAccount());
+            service.deleteFolder(folder);
         } catch (NPException e) {
             Logs.e(TAG, e);
             Context context = getListView().getContext();
-            String msg = context.getString(R.string.formatted_err_delete_failed, entry.getTitle());
+            String msg = context.getString(R.string.formatted_err_delete_failed, folder.getDisplayName());
             Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
         }
     }
@@ -97,7 +96,7 @@ public class OnEntryMenuClickListener<T extends NPEntry> implements OnClickListe
         return mListView;
     }
 
-    public final EntryService getEntryService() {
-        return mEntryService;
+    public final FolderService getFolderService() {
+        return mFolderService;
     }
 }

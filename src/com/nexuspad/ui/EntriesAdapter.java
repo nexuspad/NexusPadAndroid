@@ -5,7 +5,7 @@ package com.nexuspad.ui;
 
 import static com.edmondapps.utils.android.view.ViewUtils.findView;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import android.app.Activity;
 import android.view.LayoutInflater;
@@ -13,53 +13,33 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.nexuspad.R;
-import com.nexuspad.datamodel.EntryList;
-import com.nexuspad.datamodel.Folder;
 import com.nexuspad.datamodel.NPEntry;
 
 /**
  * @author Edmond
  * 
  */
-public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter {
+public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter implements OnItemLongClickListener {
     public static final int TYPE_HEADER = 0;
-    public static final int TYPE_FOLDER = 1;
-    public static final int TYPE_ENTRY = 2;
-    public static final int TYPE_EMPTY_FOLDER = 3;
-    public static final int TYPE_EMPTY_ENTRY = 4;
+    public static final int TYPE_ENTRY = 1;
+    public static final int TYPE_EMPTY_ENTRY = 2;
 
-    private final EntryList mEntryList;
+    private final List<? extends T> mEntries;
     private final LayoutInflater mInflater;
-    private final int mFolderHeaderPos = 0;
-    private final ArrayList<Folder> mSubFolders;
 
-    private int mEntryHeaderPos;
     private OnClickListener mOnMenuClickListener;
 
-    public EntriesAdapter(Activity a, EntryList list) {
-        mEntryList = list;
+    public EntriesAdapter(Activity a, List<? extends T> entries) {
+        mEntries = entries;
         mInflater = a.getLayoutInflater();
-        mSubFolders = list.getFolder().getSubFolders();
-        updateHeadersPositions();
     }
-
-    protected boolean isSubfoldersEmpty() {
-        return mSubFolders.isEmpty();
-    }
-
-    protected boolean isEntriesEmpty() {
-        return mEntryList.getEntries().size() == 0;
-    }
-
-    protected abstract View getFolderView(Folder folder, int position, View convertView, ViewGroup parent);
 
     protected abstract View getEntryView(T entry, int position, View convertView, ViewGroup parent);
-
-    protected abstract View getEmptySubfoldersView(LayoutInflater inflater, View convertView, ViewGroup parent);
 
     protected abstract View getEmptyEntryView(LayoutInflater inflater, View convertView, ViewGroup parent);
 
@@ -69,27 +49,18 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter {
         TextView header;
     }
 
+    @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
         return false;
     }
 
-    @Override
-    public void notifyDataSetChanged() {
-        super.notifyDataSetChanged();
-        updateHeadersPositions();
-    }
-
-    private void updateHeadersPositions() {
-        int entryHeaderPos = mFolderHeaderPos + mSubFolders.size() + 1;
-        // a space for "no folders" view
-        mEntryHeaderPos = isSubfoldersEmpty() ? entryHeaderPos + 1 : entryHeaderPos;
+    protected boolean isEntriesEmpty() {
+        return mEntries.isEmpty();
     }
 
     @Override
     public int getCount() {
-        int count = mEntryList.getEntries().size() + mSubFolders.size() + 2;// headers
-        // a space for "no subfolders" view
-        count = isSubfoldersEmpty() ? count + 1 : count;
+        int count = mEntries.size() + 1;// headers
         // a space for "no entries" view
         count = isEntriesEmpty() ? count + 1 : count;
         return count;
@@ -97,18 +68,16 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter {
 
     @Override
     public int getItemViewType(int position) {
-        if ( (position == 0) || (position == mEntryHeaderPos)) {
+        if (position == 0) {
             return TYPE_HEADER;
-        } else if (position < mEntryHeaderPos) {
-            return isSubfoldersEmpty() ? TYPE_EMPTY_FOLDER : TYPE_FOLDER;
-        } else /* if (position > mEntryHeaderPos) */{
+        } else {
             return isEntriesEmpty() ? TYPE_EMPTY_ENTRY : TYPE_ENTRY;
         }
     }
 
     @Override
     public int getViewTypeCount() {
-        return 5;
+        return 3;
     }
 
     @Override
@@ -119,11 +88,9 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter {
     @Override
     public boolean isEnabled(int position) {
         switch (getItemViewType(position)) {
-            case TYPE_FOLDER:
             case TYPE_ENTRY:
                 return true;
             case TYPE_HEADER:
-            case TYPE_EMPTY_FOLDER:
             case TYPE_EMPTY_ENTRY:
                 return false;
             default:
@@ -132,18 +99,13 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public T getItem(int position) {
-        return (T)mEntryList.getEntries().get(position - (mEntryHeaderPos + 1));
-    }
-
-    public Folder getFolder(int position) {
-        return mSubFolders.get(position - (mFolderHeaderPos + 1));
+        return mEntries.get(position - 1);
     }
 
     @Override
     public long getItemId(int position) {
-        return 0;
+        return position;
     }
 
     @Override
@@ -151,12 +113,8 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter {
         switch (getItemViewType(position)) {
             case TYPE_HEADER:
                 return getHeaderView(position, convertView, parent);
-            case TYPE_FOLDER:
-                return getFolderView(getFolder(position), position, convertView, parent);
             case TYPE_ENTRY:
                 return getEntryView(getItem(position), position, convertView, parent);
-            case TYPE_EMPTY_FOLDER:
-                return getEmptySubfoldersView(mInflater, convertView, parent);
             case TYPE_EMPTY_ENTRY:
                 return getEmptyEntryView(mInflater, convertView, parent);
             default:
@@ -177,13 +135,7 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter {
             holder = (ViewHolder)convertView.getTag();
         }
 
-        if (position == mFolderHeaderPos) {
-            holder.header.setText(R.string.folders);
-        } else if (position == mEntryHeaderPos) {
-            holder.header.setText(getEntryStringId());
-        } else {
-            throw new AssertionError("unknown header for position: " + position);
-        }
+        holder.header.setText(getEntryStringId());
 
         return convertView;
     }

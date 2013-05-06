@@ -32,5 +32,6 @@
     <string name="rename">Rename</string>
     <string name="empty_folder">Folder Is Empty</string>
     <string name="empty_bookmarks">No Bookmarks</string>
+    <string name="load_more">Load More…</string>
 
 </resources>

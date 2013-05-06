@@ -6,20 +6,27 @@ package com.nexuspad.bookmark.ui.fragment;
 import static com.nexuspad.dataservice.ServiceConstants.BOOKMARK_MODULE;
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.BaseAdapter;
 import android.widget.ListView;
 
+import com.edmondapps.utils.android.Logs;
 import com.edmondapps.utils.android.annotaion.FragmentName;
+import com.edmondapps.utils.android.ui.SingleAdapter;
+import com.edmondapps.utils.java.Lazy;
+import com.edmondapps.utils.java.WrapperList;
+import com.nexuspad.R;
 import com.nexuspad.bookmark.ui.BookmarksAdapter;
 import com.nexuspad.datamodel.Bookmark;
 import com.nexuspad.datamodel.EntryList;
 import com.nexuspad.datamodel.EntryTemplate;
 import com.nexuspad.datamodel.Folder;
 import com.nexuspad.dataservice.ServiceConstants;
-import com.nexuspad.ui.EntriesAdapter;
+import com.nexuspad.ui.FolderEntriesAdapter;
+import com.nexuspad.ui.FoldersAdapter;
+import com.nexuspad.ui.OnEntryMenuClickListener;
+import com.nexuspad.ui.OnFolderMenuClickListener;
 import com.nexuspad.ui.fragment.EntriesFragment;
 
 /**
@@ -47,10 +54,15 @@ public class BookmarksFragment extends EntriesFragment {
         void onFolderClick(BookmarksFragment f, Folder folder);
     }
 
-    private OnClickListener mOnMenuClickListener;
-
     private Folder mFolder;
     private Callback mCallback;
+    private final Lazy<SingleAdapter<View>> mLoadMoreAdapter = new Lazy<SingleAdapter<View>>() {
+        @Override
+        protected SingleAdapter<View> onCreate() {
+            return new SingleAdapter<View>(getActivity().getLayoutInflater()
+                    .inflate(R.layout.list_item_load_more, null, false));
+        }
+    };
 
     @Override
     public void onAttach(Activity activity) {
@@ -85,34 +97,48 @@ public class BookmarksFragment extends EntriesFragment {
     @Override
     protected void onListLoaded(EntryList list) {
         super.onListLoaded(list);
-        mOnMenuClickListener = new OnBookmarkMenuClickListener(getListView(), getEntryService(), getFolderService());
 
-        final BookmarksAdapter adapter = new BookmarksAdapter(getActivity(), list);
-        adapter.setOnMenuClickListener(mOnMenuClickListener);
+        FragmentActivity a = getActivity();
+        ListView listView = getListView();
 
-        getListView().setOnItemLongClickListener(new OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                return adapter.onItemLongClick(parent, view, position, id);
-            }
-        });
+        BookmarksAdapter bookmarksAdapter = newBookmarksAdapter(list, a, listView);
+        FoldersAdapter foldersAdapter = newFoldersAdapter(list, a, listView);
 
+        FolderBookmarksAdapter adapter =
+                new FolderBookmarksAdapter(foldersAdapter, bookmarksAdapter, mLoadMoreAdapter.get());
         setListAdapter(adapter);
+
+        listView.setOnItemLongClickListener(adapter);
+    }
+
+    private BookmarksAdapter newBookmarksAdapter(EntryList list, FragmentActivity a, ListView listView) {
+        BookmarksAdapter bookmarksAdapter = new BookmarksAdapter(a, new WrapperList<Bookmark>(list.getEntries()));
+        bookmarksAdapter.setOnMenuClickListener(new OnEntryMenuClickListener<Bookmark>(listView, getEntryService()));
+        return bookmarksAdapter;
+    }
+
+    private FoldersAdapter newFoldersAdapter(EntryList list, FragmentActivity a, ListView listView) {
+        FoldersAdapter foldersAdapter = new FoldersAdapter(a, list.getFolder().getSubFolders());
+        foldersAdapter.setOnMenuClickListener(new OnFolderMenuClickListener(listView, getFolderService()));
+        return foldersAdapter;
     }
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-        EntriesAdapter<Bookmark> adapter = getListAdapter();
-        switch (adapter.getItemViewType(position)) {
-            case EntriesAdapter.TYPE_ENTRY:
-                mCallback.onBookmarkClick(this, adapter.getItem(position));
-                break;
-            case EntriesAdapter.TYPE_FOLDER:
-                mCallback.onFolderClick(this, adapter.getFolder(position));
-                break;
-            default:
-                throw new AssertionError("unexpected view type: " + adapter.getItemViewType(position) + ", at position: " + position);
+
+        FolderBookmarksAdapter adapter = getListAdapter();
+
+        if (adapter.isPositionFolder(position)) {
+            int pos = adapter.getPositionForAdapter(position);
+            mCallback.onFolderClick(this, adapter.getFoldersAdapter().getItem(pos));
+
+        } else if (adapter.isPositionEntries(position)) {
+            int pos = adapter.getPositionForAdapter(position);
+            mCallback.onBookmarkClick(this, adapter.getEntriesAdapter().getItem(pos));
+
+        } else {
+            Logs.d(TAG, "position: " + position);
         }
     }
 
@@ -127,7 +153,17 @@ public class BookmarksFragment extends EntriesFragment {
     }
 
     @Override
-    public BookmarksAdapter getListAdapter() {
-        return (BookmarksAdapter)super.getListAdapter();
+    public FolderBookmarksAdapter getListAdapter() {
+        return (FolderBookmarksAdapter)super.getListAdapter();
+    }
+
+    private static class FolderBookmarksAdapter extends FolderEntriesAdapter<BookmarksAdapter> {
+        private FolderBookmarksAdapter(FoldersAdapter folderAdapter, BookmarksAdapter entriesAdapter) {
+            super(folderAdapter, entriesAdapter);
+        }
+
+        public FolderBookmarksAdapter(FoldersAdapter folderAdapter, BookmarksAdapter entriesAdapter, BaseAdapter... others) {
+            super(folderAdapter, entriesAdapter, others);
+        }
     }
 }
