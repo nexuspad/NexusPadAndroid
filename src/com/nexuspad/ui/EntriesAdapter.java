@@ -59,11 +59,13 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter impl
     }
 
     @Override
+    public boolean isEmpty() {
+        return isEntriesEmpty();
+    }
+
+    @Override
     public int getCount() {
-        int count = mEntries.size() + 1;// headers
-        // a space for "no entries" view
-        count = isEntriesEmpty() ? count + 1 : count;
-        return count;
+        return mEntries.size() + 1;// header
     }
 
     @Override

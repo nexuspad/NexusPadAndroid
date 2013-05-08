@@ -48,21 +48,24 @@ public class BookmarksFragment extends EntriesFragment {
         return fragment;
     }
 
-    public interface Callback {
+    public interface Callback extends EntriesFragment.Callback {
         void onBookmarkClick(BookmarksFragment f, Bookmark bookmark);
 
         void onFolderClick(BookmarksFragment f, Folder folder);
     }
 
-    private Folder mFolder;
-    private Callback mCallback;
     private final Lazy<SingleAdapter<View>> mLoadMoreAdapter = new Lazy<SingleAdapter<View>>() {
         @Override
         protected SingleAdapter<View> onCreate() {
-            return new SingleAdapter<View>(getActivity().getLayoutInflater()
-                    .inflate(R.layout.list_item_load_more, null, false));
+            View view = getActivity().getLayoutInflater()
+                    .inflate(R.layout.list_item_load_more, null, false);
+            return new SingleAdapter<View>(view);
         }
     };
+
+    private Folder mFolder;
+    private Callback mCallback;
+    private final int mPageCount = 1;
 
     @Override
     public void onAttach(Activity activity) {
@@ -90,7 +93,7 @@ public class BookmarksFragment extends EntriesFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        queryEntriesAync(mFolder);
+        queryEntriesAync(mFolder, mPageCount);
         getListView().setItemsCanFocus(true);
     }
 

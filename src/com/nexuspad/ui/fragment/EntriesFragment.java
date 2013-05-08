@@ -6,12 +6,12 @@ package com.nexuspad.ui.fragment;
 import java.lang.ref.WeakReference;
 import java.util.Map;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.widget.BaseAdapter;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockListFragment;
 import com.edmondapps.utils.android.Logs;
 import com.edmondapps.utils.java.Lazy;
 import com.nexuspad.R;
@@ -37,8 +37,13 @@ import com.nexuspad.home.ui.activity.LoginActivity;
  * @author Edmond
  * 
  */
-public abstract class EntriesFragment extends SherlockListFragment {
+public abstract class EntriesFragment extends PaddedListFragment {
+    private static final int PAGE_COUNT = 20;
     private static final String TAG = "EntriesFragment";
+
+    public interface Callback {
+        void onListLoaded(EntriesFragment f, EntryList list);
+    }
 
     private final Lazy<FolderService> mFolderService = new Lazy<FolderService>() {
         @Override
@@ -54,7 +59,16 @@ public abstract class EntriesFragment extends SherlockListFragment {
         }
     };
 
+    private final Lazy<EntryListService> mEntryListService = new Lazy<EntryListService>() {
+        @Override
+        protected EntryListService onCreate() {
+            return new EntryListService(getActivity(), mEntryListCallback);
+        }
+    };
+
+    private final EntryListCallback mEntryListCallback = new EntryListCallback(this);
     private EntryList mEntryList;
+    private Callback mCallback;
 
     /**
      * @see #getTemplate()
@@ -67,25 +81,46 @@ public abstract class EntriesFragment extends SherlockListFragment {
      */
     protected abstract EntryTemplate getTemplate();
 
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        if (activity instanceof Callback) {
+            mCallback = (Callback)activity;
+        } else {
+            throw new IllegalStateException(activity + " must implement Callback.");
+        }
+    }
+
     public void queryEntriesAync(Folder folder) {
+        queryEntriesAync(folder, 1);
+    }
+
+    public void queryEntriesAync(Folder folder, int page) {
         FragmentActivity activity = getActivity();
 
         try {
-            EntryListService service = new EntryListService(activity, new EntryListCallback(this));
+            EntryListService service = new EntryListService(activity, mEntryListCallback);
             folder.setOwner(AccountManager.currentAccount());
-            service.getEntriesInFolder(folder, getTemplate(), 1, 20);
+            service.getEntriesInFolder(folder, getTemplate(), page, PAGE_COUNT);
 
         } catch (NPException e) {
             Logs.e(TAG, e);
             if (e.getServiceError().getErrorCode() == ErrorCode.INVALID_USER_TOKEN) {
                 startActivity(new Intent(activity, LoginActivity.class));
                 activity.finish();
+            } else {
+                Toast.makeText(activity, R.string.err_internal, Toast.LENGTH_SHORT).show();
             }
         }
     }
 
     protected void onListLoaded(EntryList list) {
         mEntryList = list;
+        mCallback.onListLoaded(this, list);
+    }
+
+    public EntryList getEntryList() {
+        return mEntryList;
     }
 
     public final FolderService getFolderService() {
@@ -94,6 +129,10 @@ public abstract class EntriesFragment extends SherlockListFragment {
 
     public final EntryService getEntryService() {
         return mEntryService.get();
+    }
+
+    public final EntryListService getEntryListService() {
+        return mEntryListService.get();
     }
 
     private static class EntryListCallback implements EntryListServiceCallback {
@@ -115,7 +154,7 @@ public abstract class EntriesFragment extends SherlockListFragment {
         public void failureCallback(ServiceError error) {
             EntriesFragment fragment = mEntriesFragment.get();
             if (fragment != null) {
-                Toast.makeText(fragment.getActivity(), R.string.err_network, Toast.LENGTH_LONG).show();
+                Toast.makeText(fragment.getActivity(), R.string.err_internal, Toast.LENGTH_LONG).show();
             }
         }
     }

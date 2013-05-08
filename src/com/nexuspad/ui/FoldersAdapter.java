@@ -96,6 +96,11 @@ public class FoldersAdapter extends BaseAdapter implements OnItemLongClickListen
     }
 
     @Override
+    public boolean isEmpty() {
+        return isSubfoldersEmpty();
+    }
+
+    @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
         ViewHolder holder = getHolder(view);
         if (mOnMenuClickListener != null) {
@@ -106,10 +111,7 @@ public class FoldersAdapter extends BaseAdapter implements OnItemLongClickListen
 
     @Override
     public int getCount() {
-        int count = mSubFolders.size() + 1;// header
-        // a space for "no subfolders" view
-        count = isSubfoldersEmpty() ? count + 1 : count;
-        return count;
+        return mSubFolders.size() + 1;// header
     }
 
     @Override

@@ -2,8 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/ed__activity_margin_vertical" >
+    android:layout_height="wrap_content" >
 
     <LinearLayout
         style="@style/autoMargin"

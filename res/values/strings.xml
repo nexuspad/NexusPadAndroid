@@ -24,6 +24,7 @@
     <string name="err_invalid_bookmark">Please check the web address of the bookmark.</string>
     <string name="formatted_err_delete_failed">Failed to delete \"%s\". Please try again later.</string>
     <string name="err_network">Please check your network connection.</string>
+    <string name="err_internal">An internal error has occurred. Please try again later.</string>
     <string name="confirm_password">Confirm Password</string>
     <string name="folders">Folders</string>
     <string name="more">More</string>
@@ -33,5 +34,6 @@
     <string name="empty_folder">Folder Is Empty</string>
     <string name="empty_bookmarks">No Bookmarks</string>
     <string name="load_more">Load More…</string>
+    <string name="no_folders">No Folders</string>
 
 </resources>
