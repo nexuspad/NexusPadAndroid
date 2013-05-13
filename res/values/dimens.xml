@@ -2,8 +2,8 @@
 
     <!--
      Overrides the default margin since we hae a ton of lists,
-     it makes sense to have lists start/end on the edge
+     it makes sense to have lists start/end on the edge
     -->
-    <dimen name="ed__activity_margin_vertical">0dp</dimen>
+    <dimen name="ed__activity_margin_vertical">8dp</dimen>
 
 </resources>

@@ -3,15 +3,11 @@
  */
 package com.nexuspad.bookmark.ui.activity;
 
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.support.v4.app.Fragment;
-import android.widget.Toast;
 
 import com.edmondapps.utils.android.annotaion.ParentActivity;
-import com.nexuspad.R;
 import com.nexuspad.bookmark.ui.fragment.BookmarksFragment;
 import com.nexuspad.datamodel.Bookmark;
 import com.nexuspad.datamodel.Folder;
@@ -29,7 +25,7 @@ public class BookmarksActivity extends EntriesActivity implements BookmarksFragm
     public static void startWithFolder(Folder f, Context c) {
         Intent intent = new Intent(c, BookmarksActivity.class);
         intent.putExtra(KEY_FOLDER, f);
-        intent.putExtra(KEY_PARENT, c.getClass());
+        intent.putExtra(KEY_PARENT_ACTIVITY, c.getClass());
         c.startActivity(intent);
     }
 
@@ -40,14 +36,12 @@ public class BookmarksActivity extends EntriesActivity implements BookmarksFragm
 
     @Override
     public void onBookmarkClick(BookmarksFragment f, Bookmark bookmark) {
-        Uri uri = Uri.parse(bookmark.getWebAddress());
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(uri);
-        try {
-            startActivity(intent);
-        } catch (ActivityNotFoundException e) {
-            Toast.makeText(this, R.string.err_invalid_bookmark, Toast.LENGTH_LONG).show();
-        }
+        BookmarkActivity.startWithBookmark(bookmark, this);
+    }
+
+    @Override
+    public void onEditBookmark(BookmarksFragment f, Bookmark bookmark) {
+        NewBookmarkActivity.startWithBookmark(bookmark, this);
     }
 
     @Override

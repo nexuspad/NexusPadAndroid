@@ -8,8 +8,11 @@ import java.util.Map;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.view.View;
 import android.widget.BaseAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.edmondapps.utils.android.Logs;
@@ -32,12 +35,16 @@ import com.nexuspad.dataservice.NPException;
 import com.nexuspad.dataservice.ServiceConstants;
 import com.nexuspad.dataservice.ServiceError;
 import com.nexuspad.home.ui.activity.LoginActivity;
+import com.nexuspad.ui.FoldersAdapter;
+import com.nexuspad.ui.OnFolderMenuClickListener;
 
 /**
  * @author Edmond
  * 
  */
 public abstract class EntriesFragment extends PaddedListFragment {
+    public static final String KEY_FOLDER = "key_folder";
+
     private static final int PAGE_COUNT = 20;
     private static final String TAG = "EntriesFragment";
 
@@ -69,6 +76,8 @@ public abstract class EntriesFragment extends PaddedListFragment {
     private final EntryListCallback mEntryListCallback = new EntryListCallback(this);
     private EntryList mEntryList;
     private Callback mCallback;
+    private int mCurrentPage;
+    private Folder mFolder;
 
     /**
      * @see #getTemplate()
@@ -91,17 +100,38 @@ public abstract class EntriesFragment extends PaddedListFragment {
         }
     }
 
-    public void queryEntriesAync(Folder folder) {
-        queryEntriesAync(folder, 1);
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Bundle arguments = getArguments();
+        if (arguments != null) {
+            mFolder = arguments.getParcelable(KEY_FOLDER);
+        }
+
+        if (mFolder == null) {
+            mFolder = Folder.initReservedFolder(getModule(), Folder.ROOT_FOLDER);
+        }
     }
 
-    public void queryEntriesAync(Folder folder, int page) {
-        FragmentActivity activity = getActivity();
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        queryEntriesAync();
+        getListView().setItemsCanFocus(true);
+    }
 
+    public void queryEntriesAync() {
+        queryEntriesAync(1);
+    }
+
+    public void queryEntriesAync(int page) {
+        mCurrentPage = page;
+
+        FragmentActivity activity = getActivity();
         try {
-            EntryListService service = new EntryListService(activity, mEntryListCallback);
-            folder.setOwner(AccountManager.currentAccount());
-            service.getEntriesInFolder(folder, getTemplate(), page, PAGE_COUNT);
+            EntryListService service = mEntryListService.get();
+            mFolder.setOwner(AccountManager.currentAccount());
+            service.getEntriesInFolder(mFolder, getTemplate(), page, PAGE_COUNT);
 
         } catch (NPException e) {
             Logs.e(TAG, e);
@@ -119,8 +149,22 @@ public abstract class EntriesFragment extends PaddedListFragment {
         mCallback.onListLoaded(this, list);
     }
 
+    protected FoldersAdapter newFoldersAdapter(EntryList list, FragmentActivity a, ListView listView) {
+        FoldersAdapter foldersAdapter = new FoldersAdapter(a, list.getFolder().getSubFolders());
+        foldersAdapter.setOnMenuClickListener(new OnFolderMenuClickListener(listView, getFolderService()));
+        return foldersAdapter;
+    }
+
     public EntryList getEntryList() {
         return mEntryList;
+    }
+
+    public final Folder getFolder() {
+        return mFolder;
+    }
+
+    public final int getCurrentPage() {
+        return mCurrentPage;
     }
 
     public final FolderService getFolderService() {

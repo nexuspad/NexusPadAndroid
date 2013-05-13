@@ -3,7 +3,7 @@
  */
 package com.nexuspad.bookmark.ui.fragment;
 
-import static com.nexuspad.dataservice.ServiceConstants.BOOKMARK_MODULE;
+import static com.edmondapps.utils.android.view.ViewUtils.findView;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -11,9 +11,9 @@ import android.view.View;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 
-import com.edmondapps.utils.android.Logs;
 import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.edmondapps.utils.android.ui.SingleAdapter;
+import com.edmondapps.utils.android.view.LoadingViews;
 import com.edmondapps.utils.java.Lazy;
 import com.edmondapps.utils.java.WrapperList;
 import com.nexuspad.R;
@@ -22,11 +22,11 @@ import com.nexuspad.datamodel.Bookmark;
 import com.nexuspad.datamodel.EntryList;
 import com.nexuspad.datamodel.EntryTemplate;
 import com.nexuspad.datamodel.Folder;
+import com.nexuspad.dataservice.EntryService;
 import com.nexuspad.dataservice.ServiceConstants;
 import com.nexuspad.ui.FolderEntriesAdapter;
 import com.nexuspad.ui.FoldersAdapter;
 import com.nexuspad.ui.OnEntryMenuClickListener;
-import com.nexuspad.ui.OnFolderMenuClickListener;
 import com.nexuspad.ui.fragment.EntriesFragment;
 
 /**
@@ -36,7 +36,6 @@ import com.nexuspad.ui.fragment.EntriesFragment;
 @FragmentName(BookmarksFragment.TAG)
 public class BookmarksFragment extends EntriesFragment {
     public static final String TAG = "BookmarksFragment";
-    private static final String KEY_FOLDER = "key_folder";
 
     public static BookmarksFragment of(Folder f) {
         Bundle bundle = new Bundle();
@@ -51,6 +50,8 @@ public class BookmarksFragment extends EntriesFragment {
     public interface Callback extends EntriesFragment.Callback {
         void onBookmarkClick(BookmarksFragment f, Bookmark bookmark);
 
+        void onEditBookmark(BookmarksFragment f, Bookmark bookmark);
+
         void onFolderClick(BookmarksFragment f, Folder folder);
     }
 
@@ -59,13 +60,16 @@ public class BookmarksFragment extends EntriesFragment {
         protected SingleAdapter<View> onCreate() {
             View view = getActivity().getLayoutInflater()
                     .inflate(R.layout.list_item_load_more, null, false);
+
+            LoadingViews loadingViews = LoadingViews.of(
+                    findView(view, android.R.id.text1), findView(view, android.R.id.progress));
+
+            view.setTag(loadingViews);
             return new SingleAdapter<View>(view);
         }
     };
 
-    private Folder mFolder;
     private Callback mCallback;
-    private final int mPageCount = 1;
 
     @Override
     public void onAttach(Activity activity) {
@@ -78,28 +82,10 @@ public class BookmarksFragment extends EntriesFragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Bundle arguments = getArguments();
-        if (arguments != null) {
-            mFolder = arguments.getParcelable(KEY_FOLDER);
-        }
-
-        if (mFolder == null) {
-            mFolder = Folder.initReservedFolder(BOOKMARK_MODULE, Folder.ROOT_FOLDER);
-        }
-    }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        queryEntriesAync(mFolder, mPageCount);
-        getListView().setItemsCanFocus(true);
-    }
-
-    @Override
     protected void onListLoaded(EntryList list) {
         super.onListLoaded(list);
+
+        clearLoadMore();
 
         FragmentActivity a = getActivity();
         ListView listView = getListView();
@@ -114,16 +100,15 @@ public class BookmarksFragment extends EntriesFragment {
         listView.setOnItemLongClickListener(adapter);
     }
 
-    private BookmarksAdapter newBookmarksAdapter(EntryList list, FragmentActivity a, ListView listView) {
-        BookmarksAdapter bookmarksAdapter = new BookmarksAdapter(a, new WrapperList<Bookmark>(list.getEntries()));
-        bookmarksAdapter.setOnMenuClickListener(new OnEntryMenuClickListener<Bookmark>(listView, getEntryService()));
-        return bookmarksAdapter;
+    private void clearLoadMore() {
+        LoadingViews loadingViews = (LoadingViews)mLoadMoreAdapter.get().getView().getTag();
+        loadingViews.doneLoading();
     }
 
-    private FoldersAdapter newFoldersAdapter(EntryList list, FragmentActivity a, ListView listView) {
-        FoldersAdapter foldersAdapter = new FoldersAdapter(a, list.getFolder().getSubFolders());
-        foldersAdapter.setOnMenuClickListener(new OnFolderMenuClickListener(listView, getFolderService()));
-        return foldersAdapter;
+    private BookmarksAdapter newBookmarksAdapter(EntryList list, FragmentActivity a, ListView listView) {
+        BookmarksAdapter bookmarksAdapter = new BookmarksAdapter(a, new WrapperList<Bookmark>(list.getEntries()));
+        bookmarksAdapter.setOnMenuClickListener(new BookmarkMenuClickListener(listView, getEntryService()));
+        return bookmarksAdapter;
     }
 
     @Override
@@ -141,7 +126,9 @@ public class BookmarksFragment extends EntriesFragment {
             mCallback.onBookmarkClick(this, adapter.getEntriesAdapter().getItem(pos));
 
         } else {
-            Logs.d(TAG, "position: " + position);
+            LoadingViews loadingViews = (LoadingViews)v.getTag();
+            loadingViews.startLoading();
+            queryEntriesAync(getCurrentPage() + 1);
         }
     }
 
@@ -158,6 +145,23 @@ public class BookmarksFragment extends EntriesFragment {
     @Override
     public FolderBookmarksAdapter getListAdapter() {
         return (FolderBookmarksAdapter)super.getListAdapter();
+    }
+
+    private class BookmarkMenuClickListener extends OnEntryMenuClickListener<Bookmark> {
+        public BookmarkMenuClickListener(ListView listView, EntryService entryService) {
+            super(listView, entryService);
+        }
+
+        @Override
+        protected boolean onEntryMenuClick(Bookmark entry, int menuId) {
+            switch (menuId) {
+                case R.id.edit:
+                    mCallback.onEditBookmark(BookmarksFragment.this, entry);
+                    return true;
+                default:
+                    return super.onEntryMenuClick(entry, menuId);
+            }
+        }
     }
 
     private static class FolderBookmarksAdapter extends FolderEntriesAdapter<BookmarksAdapter> {

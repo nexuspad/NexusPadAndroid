@@ -35,6 +35,12 @@
         <activity
             android:name="com.nexuspad.bookmark.ui.activity.BookmarksActivity"
             android:label="@string/bookmarks" />
+        <activity
+            android:name="com.nexuspad.bookmark.ui.activity.BookmarkActivity"
+            android:label="@string/bookmark" />
+        <activity
+            android:name="com.nexuspad.bookmark.ui.activity.NewBookmarkActivity"
+            android:label="@string/bookmark" />
     </application>
 
 </manifest>

@@ -13,7 +13,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,7 +48,7 @@ public class LoginFragment extends SherlockFragment {
     private TextView mSignUpV;
     private View mNewAccountV;
 
-    private LoadingViews<Button, ProgressBar> mLoadingViews;
+    private LoadingViews mLoadingViews;
     private final Lazy<EditText[]> mLoginFields = new Lazy<EditText[]>() {
         @Override
         protected EditText[] onCreate() {
@@ -95,7 +94,7 @@ public class LoginFragment extends SherlockFragment {
         mNewAccountV = findView(view, R.id.frame_new_account);
         mConfirmPwV = findView(view, R.id.txt_confirm_pw);
 
-        mLoadingViews = LoadingViews.of(mLoginV, (ProgressBar)findView(view, android.R.id.progress));
+        mLoadingViews = LoadingViews.of(mLoginV, findView(view, android.R.id.progress));
         initListeners();
     }
 

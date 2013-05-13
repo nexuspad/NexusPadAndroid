@@ -4,4 +4,19 @@
 
     <style name="autoMargin"></style>
 
+    <style name="formMargin">
+        <item name="android:layout_marginBottom">@dimen/ed__padding_small</item>
+        <item name="android:layout_marginTop">@dimen/ed__padding_small</item>
+    </style>
+
+    <style name="selectableTextView">
+        <item name="android:background">?attr/selectableItemBackground</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:padding">@dimen/ed__padding_small</item>
+        <item name="android:textSize">@dimen/ed__textsize_medium</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+    </style>
+
 </resources>

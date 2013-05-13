@@ -25,8 +25,10 @@
             android:id="@android:id/list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:paddingBottom="@dimen/ed__padding_small"
             android:paddingLeft="@dimen/ed__padding_medium"
             android:paddingRight="@dimen/ed__padding_medium"
+            android:paddingTop="@dimen/ed__padding_small"
             android:scrollbarStyle="outsideOverlay" >
         </ListView>
 
@@ -37,7 +39,7 @@
             android:layout_gravity="center"
             android:drawablePadding="@dimen/ed__padding_medium"
             android:drawableTop="@drawable/empty_subfolders"
-            android:text="@string/no_folders"
+            android:text="@string/empty_folder"
             android:textSize="@dimen/ed__textsize_medium" >
         </TextView>
     </FrameLayout>

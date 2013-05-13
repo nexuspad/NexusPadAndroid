@@ -9,7 +9,6 @@ import android.view.View.OnClickListener;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.view.MenuItem;
 import com.edmondapps.utils.android.Logs;
 import com.edmondapps.utils.android.view.PopupMenu;
 import com.edmondapps.utils.android.view.PopupMenu.OnMenuItemClickListener;
@@ -22,15 +21,11 @@ import com.nexuspad.dataservice.NPException;
 public class OnFolderMenuClickListener implements OnClickListener {
     public static final String TAG = "OnFolderMenuClickListener";
 
-    public static PopupMenu getFolderPopupMenu(View view) {
-        return getPopupMenu(view, R.menu.folder);
-    }
-
-    private static PopupMenu getPopupMenu(View view, int menuId) {
+    private static PopupMenu getPopupMenu(View view) {
         PopupMenu menu = (PopupMenu)view.getTag();
         if (menu == null) {
-            menu = new PopupMenu(view.getContext(), view);
-            menu.inflate(menuId);
+            menu = PopupMenu.newInstance(view.getContext(), view);
+            menu.inflate(R.menu.folder);
 
             view.setTag(menu);
         }
@@ -60,18 +55,18 @@ public class OnFolderMenuClickListener implements OnClickListener {
     }
 
     protected void onFolderClick(final Folder folder, int position, View view) {
-        PopupMenu popupMenu = getFolderPopupMenu(view);
+        PopupMenu popupMenu = getPopupMenu(view);
         popupMenu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
             @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                return onFolderMenuClick(folder, item);
+            public boolean onMenuItemClick(int menuId) {
+                return onFolderMenuClick(folder, menuId);
             }
         });
         popupMenu.show();
     }
 
-    protected boolean onFolderMenuClick(Folder folder, MenuItem item) {
-        switch (item.getItemId()) {
+    protected boolean onFolderMenuClick(Folder folder, int menuId) {
+        switch (menuId) {
             case R.id.delete:
                 deleteFolder(folder);
                 return true;

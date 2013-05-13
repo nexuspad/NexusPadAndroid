@@ -9,7 +9,6 @@ import android.view.View.OnClickListener;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.view.MenuItem;
 import com.edmondapps.utils.android.Logs;
 import com.edmondapps.utils.android.view.PopupMenu;
 import com.edmondapps.utils.android.view.PopupMenu.OnMenuItemClickListener;
@@ -22,15 +21,11 @@ import com.nexuspad.dataservice.NPException;
 public class OnEntryMenuClickListener<T extends NPEntry> implements OnClickListener {
     public static final String TAG = "OnEntryMenuClickListener";
 
-    public static PopupMenu getEntryPopupMenu(View view) {
-        return getPopupMenu(view, R.menu.entry);
-    }
-
-    private static PopupMenu getPopupMenu(View view, int menuId) {
+    private static PopupMenu getPopupMenu(View view) {
         PopupMenu menu = (PopupMenu)view.getTag();
         if (menu == null) {
-            menu = new PopupMenu(view.getContext(), view);
-            menu.inflate(menuId);
+            menu = PopupMenu.newInstance(view.getContext(), view);
+            menu.inflate(R.menu.entry);
 
             view.setTag(menu);
         }
@@ -61,18 +56,18 @@ public class OnEntryMenuClickListener<T extends NPEntry> implements OnClickListe
     }
 
     protected void onEntryClick(final T entry, int position, View view) {
-        PopupMenu popupMenu = getEntryPopupMenu(view);
+        PopupMenu popupMenu = getPopupMenu(view);
         popupMenu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
             @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                return onEntryMenuClick(entry, item);
+            public boolean onMenuItemClick(int menuId) {
+                return onEntryMenuClick(entry, menuId);
             }
         });
         popupMenu.show();
     }
 
-    protected boolean onEntryMenuClick(T entry, MenuItem item) {
-        switch (item.getItemId()) {
+    protected boolean onEntryMenuClick(T entry, int menuId) {
+        switch (menuId) {
             case R.id.delete:
                 deleteEntry(entry);
                 return true;
