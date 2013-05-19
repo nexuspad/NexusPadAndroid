@@ -13,6 +13,7 @@ import com.nexuspad.datamodel.Bookmark;
 import com.nexuspad.datamodel.Folder;
 import com.nexuspad.home.ui.activity.DashboardActivity;
 import com.nexuspad.ui.activity.EntriesActivity;
+import com.nexuspad.ui.activity.NewEntryActivity.Mode;
 
 /**
  * @author Edmond
@@ -41,7 +42,7 @@ public class BookmarksActivity extends EntriesActivity implements BookmarksFragm
 
     @Override
     public void onEditBookmark(BookmarksFragment f, Bookmark bookmark) {
-        NewBookmarkActivity.startWithBookmark(bookmark, this);
+        NewBookmarkActivity.startWithBookmark(bookmark, Mode.EDIT, this);
     }
 
     @Override

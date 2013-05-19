@@ -35,6 +35,7 @@ public class FoldersAdapter extends BaseAdapter implements OnItemLongClickListen
     private final List<? extends Folder> mSubFolders;
 
     private OnClickListener mOnMenuClickListener;
+    private boolean mHasHeader = true;
 
     public FoldersAdapter(Activity a, List<? extends Folder> folders) {
         mInflater = a.getLayoutInflater();
@@ -111,16 +112,16 @@ public class FoldersAdapter extends BaseAdapter implements OnItemLongClickListen
 
     @Override
     public int getCount() {
-        return mSubFolders.size() + 1;// header
+        int size = mSubFolders.size();
+        return mHasHeader ? size + 1 : size;
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (position == 0) {
+        if ( (position == 0) && mHasHeader) {
             return TYPE_HEADER;
-        } else {
-            return isSubfoldersEmpty() ? TYPE_EMPTY_FOLDER : TYPE_FOLDER;
         }
+        return isSubfoldersEmpty() ? TYPE_EMPTY_FOLDER : TYPE_FOLDER;
     }
 
     @Override
@@ -148,7 +149,10 @@ public class FoldersAdapter extends BaseAdapter implements OnItemLongClickListen
 
     @Override
     public Folder getItem(int position) {
-        return mSubFolders.get(position - 1);
+        if (mHasHeader) {
+            position = position - 1;
+        }
+        return mSubFolders.get(position);
     }
 
     @Override
@@ -190,6 +194,14 @@ public class FoldersAdapter extends BaseAdapter implements OnItemLongClickListen
 
     public final void setOnMenuClickListener(OnClickListener onMenuClickListener) {
         mOnMenuClickListener = onMenuClickListener;
+    }
+
+    public void setHasHeader(boolean hasHeader) {
+        mHasHeader = hasHeader;
+    }
+
+    public boolean hasHeader() {
+        return mHasHeader;
     }
 
     public final OnClickListener getOnMenuClickListener() {

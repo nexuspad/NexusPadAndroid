@@ -145,8 +145,36 @@ public abstract class EntriesFragment extends PaddedListFragment {
     }
 
     protected void onListLoaded(EntryList list) {
-        mEntryList = list;
-        mCallback.onListLoaded(this, list);
+    }
+
+    private void onListLoadedInternal(EntryList list) {
+        if (mEntryList == null) {
+            mEntryList = list;
+        } else {
+            expandEntryList(list);
+        }
+        onListLoaded(mEntryList);
+        mCallback.onListLoaded(this, mEntryList);
+    }
+
+    /**
+     * Add the entries to the current {@code EntryList} from another
+     * {@code EntryList}.
+     * 
+     * @param o
+     *            other {@code EntryList}
+     */
+    private void expandEntryList(EntryList o) {
+        mEntryList.getEntries().addAll(o.getEntries());
+        mEntryList.setPageId(o.getPageId());
+    }
+
+    protected boolean hasNextPage() {
+        final EntryList list = mEntryList;
+        if (list != null) {
+            return list.getEntries().size() == (list.getCountPerPage() * list.getPageId());
+        }
+        return false;
     }
 
     protected FoldersAdapter newFoldersAdapter(EntryList list, FragmentActivity a, ListView listView) {
@@ -189,15 +217,15 @@ public abstract class EntriesFragment extends PaddedListFragment {
         @Override
         public void successfulRetrieval(EntryList list) {
             EntriesFragment fragment = mEntriesFragment.get();
-            if (fragment != null) {
-                fragment.onListLoaded(list);
+            if ( (fragment != null) && fragment.isAdded()) {
+                fragment.onListLoadedInternal(list);
             }
         }
 
         @Override
         public void failureCallback(ServiceError error) {
             EntriesFragment fragment = mEntriesFragment.get();
-            if (fragment != null) {
+            if ( (fragment != null) && fragment.isAdded()) {
                 Toast.makeText(fragment.getActivity(), R.string.err_internal, Toast.LENGTH_LONG).show();
             }
         }
@@ -217,7 +245,7 @@ public abstract class EntriesFragment extends PaddedListFragment {
         @Override
         public void successfulUpdate(ActionResult actionResult) {
             EntriesFragment fragment = mEntriesFragment.get();
-            if (fragment != null) {
+            if ( (fragment != null) && fragment.isAdded()) {
                 if (fragment.mEntryList != null) {
                     fragment.mEntryList.getFolder()
                             .removeSubFolder(fragment.getFolderService().getJustDeletedFolder());
@@ -229,7 +257,7 @@ public abstract class EntriesFragment extends PaddedListFragment {
         @Override
         public void failureCallback(ServiceError error) {
             EntriesFragment fragment = mEntriesFragment.get();
-            if (fragment != null) {
+            if ( (fragment != null) && fragment.isAdded()) {
                 Toast.makeText(fragment.getActivity(), R.string.err_network, Toast.LENGTH_LONG).show();
             }
         }
@@ -249,7 +277,7 @@ public abstract class EntriesFragment extends PaddedListFragment {
         @Override
         public void successfulUpdate(NPEntry updatedEntry) {
             EntriesFragment fragment = mEntriesFragment.get();
-            if (fragment != null) {
+            if ( (fragment != null) && fragment.isAdded()) {
                 if (fragment.mEntryList != null) {
                     fragment.mEntryList.getEntries()
                             .remove(fragment.getEntryService().getJustDeletedEntry());
@@ -261,7 +289,7 @@ public abstract class EntriesFragment extends PaddedListFragment {
         @Override
         public void failureCallback(ServiceError error) {
             EntriesFragment fragment = mEntriesFragment.get();
-            if (fragment != null) {
+            if ( (fragment != null) && fragment.isAdded()) {
                 Toast.makeText(fragment.getActivity(), R.string.err_network, Toast.LENGTH_LONG).show();
             }
         }

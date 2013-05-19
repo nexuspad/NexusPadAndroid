@@ -35,6 +35,7 @@ public class BookmarkFragment extends EntryFragment<Bookmark> {
     public static BookmarkFragment of(Bookmark bookmark) {
         Bundle bundle = new Bundle();
         bundle.putParcelable(KEY_ENTRY, bookmark);
+        bundle.putParcelable(KEY_FOLDER, bookmark.getFolder());
 
         BookmarkFragment fragment = new BookmarkFragment();
         fragment.setArguments(bundle);
@@ -65,7 +66,7 @@ public class BookmarkFragment extends EntryFragment<Bookmark> {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.frag_bookmark, menu);
+        inflater.inflate(R.menu.bookmark_frag, menu);
     }
 
     @Override
@@ -81,13 +82,13 @@ public class BookmarkFragment extends EntryFragment<Bookmark> {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.frag_bookmark, container, false);
+        return inflater.inflate(R.layout.bookmark_frag, container, false);
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mNameV = findView(view, R.id.lbl_name);
+        mNameV = findView(view, R.id.lbl_title);
         mWebAddressV = findView(view, R.id.lbl_web_address);
 
         updateUI();

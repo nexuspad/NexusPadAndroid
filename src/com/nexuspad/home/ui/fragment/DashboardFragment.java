@@ -14,20 +14,20 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
 
-import com.actionbarsherlock.app.SherlockListFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.nexuspad.R;
 import com.nexuspad.dataservice.ServiceConstants;
 import com.nexuspad.ui.IconListAdapter;
+import com.nexuspad.ui.fragment.PaddedListFragment;
 
 /**
  * @author Edmond
  * 
  */
 @FragmentName(DashboardFragment.TAG)
-public class DashboardFragment extends SherlockListFragment {
+public class DashboardFragment extends PaddedListFragment {
     public static final String TAG = "DashboardFragment";
 
     /*

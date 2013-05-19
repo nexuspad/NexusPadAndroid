@@ -7,6 +7,7 @@ import android.app.Activity;
 
 import com.nexuspad.account.AccountManager;
 import com.nexuspad.datamodel.NPEntry;
+import com.nexuspad.dataservice.ErrorCode;
 import com.nexuspad.dataservice.NPException;
 import com.nexuspad.dataservice.ServiceError;
 
@@ -15,6 +16,10 @@ import com.nexuspad.dataservice.ServiceError;
  * 
  */
 public abstract class NewEntryFragment<T extends NPEntry> extends EntryFragment<T> {
+    /**
+     * 
+     * @return if calling {@link #getEditedEntry()} would return a valid entry
+     */
     public abstract boolean isEditedEntryValid();
 
     public abstract T getEditedEntry();
@@ -35,6 +40,20 @@ public abstract class NewEntryFragment<T extends NPEntry> extends EntryFragment<
             mCallback = (Callback<T>)activity;
         } else {
             throw new IllegalStateException(activity + " must implement Callback.");
+        }
+    }
+
+    public void addEntry() {
+        if (isEditedEntryValid()) {
+            T entry = getEditedEntry();
+            try {
+                entry.setOwner(AccountManager.currentAccount());
+            } catch (NPException e) {
+                throw new AssertionError("WTF, I thought I am logged in!");
+            }
+            getEntryService().addEntry(entry);
+        } else {
+            onEntryUpdateFailed(new ServiceError(ErrorCode.MISSING_PARAM, "entry is not valid"));
         }
     }
 

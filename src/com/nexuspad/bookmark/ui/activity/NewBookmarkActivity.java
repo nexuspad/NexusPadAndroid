@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.widget.Toast;
 
 import com.edmondapps.utils.android.annotaion.ParentActivity;
 import com.edmondapps.utils.android.view.LoadingViews;
@@ -14,6 +15,8 @@ import com.edmondapps.utils.java.Lazy;
 import com.nexuspad.R;
 import com.nexuspad.bookmark.ui.fragment.NewBookmarkFragment;
 import com.nexuspad.datamodel.Bookmark;
+import com.nexuspad.datamodel.Folder;
+import com.nexuspad.dataservice.ErrorCode;
 import com.nexuspad.dataservice.ServiceError;
 import com.nexuspad.ui.activity.NewEntryActivity;
 import com.nexuspad.ui.fragment.NewEntryFragment;
@@ -32,9 +35,18 @@ public class NewBookmarkActivity extends NewEntryActivity<Bookmark> implements N
         }
     };
 
-    public static void startWithBookmark(Bookmark b, Context c) {
+    public static void startWithBookmark(Bookmark b, Mode m, Context c) {
         Intent intent = new Intent(c, NewBookmarkActivity.class);
         intent.putExtra(KEY_ENTRY, b);
+        intent.putExtra(KEY_FOLDER, b.getFolder());
+        intent.putExtra(KEY_MODE, m);
+        c.startActivity(intent);
+    }
+
+    public static void startWithFolder(Folder f, Mode m, Context c) {
+        Intent intent = new Intent(c, NewBookmarkActivity.class);
+        intent.putExtra(KEY_FOLDER, f);
+        intent.putExtra(KEY_MODE, m);
         c.startActivity(intent);
     }
 
@@ -45,13 +57,30 @@ public class NewBookmarkActivity extends NewEntryActivity<Bookmark> implements N
 
     @Override
     protected Fragment onCreateFragment() {
-        return NewBookmarkFragment.of(getEntry());
+        Bookmark bookmark = getEntry();
+        if (bookmark != null) {
+            return NewBookmarkFragment.of(bookmark);
+        } else {
+            return NewBookmarkFragment.of(getFolder());
+        }
     }
 
     @Override
     protected Intent getUpIntent(Class<?> activity) {
-        Bookmark entry = getFragment().getEditedEntry();
-        return super.getUpIntent(activity).putExtra(BookmarkActivity.KEY_ENTRY, entry);
+        Intent upIntent = super.getUpIntent(activity);
+
+        NewBookmarkFragment fragment = getFragment();
+
+        upIntent.putExtra(KEY_FOLDER, getFolder());
+
+        if (fragment.isEditedEntryValid()) {
+            Bookmark entry = fragment.getEditedEntry();
+            upIntent.putExtra(KEY_ENTRY, entry);
+        } else {
+            upIntent.setClass(this, BookmarksActivity.class);
+        }
+
+        return upIntent;
     }
 
     @Override
@@ -62,9 +91,18 @@ public class NewBookmarkActivity extends NewEntryActivity<Bookmark> implements N
     @Override
     protected void onDonePressed() {
         super.onDonePressed();
-        getFragment().updateEntry();
 
         mLoadingViews.get().startLoading();
+
+        switch (getMode()) {
+            case EDIT:
+                getFragment().updateEntry();
+                break;
+            case NEW:
+            default:
+                getFragment().addEntry();
+                break;
+        }
     }
 
     @Override
@@ -82,11 +120,8 @@ public class NewBookmarkActivity extends NewEntryActivity<Bookmark> implements N
     @Override
     public void onEntryUpdateFailed(NewEntryFragment<Bookmark> f, ServiceError error) {
         mLoadingViews.get().doneLoading();
-    }
-
-    @Override
-    public void finish() {
-        super.finish();
-        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+        if (ErrorCode.MISSING_PARAM != error.getErrorCode()) {
+            Toast.makeText(this, R.string.err_internal, Toast.LENGTH_LONG).show();
+        }
     }
 }

@@ -11,6 +11,7 @@ import com.edmondapps.utils.android.annotaion.ParentActivity;
 import com.nexuspad.bookmark.ui.fragment.BookmarkFragment;
 import com.nexuspad.datamodel.Bookmark;
 import com.nexuspad.ui.activity.EntryActivity;
+import com.nexuspad.ui.activity.NewEntryActivity.Mode;
 
 /**
  * @author Edmond
@@ -22,6 +23,7 @@ public class BookmarkActivity extends EntryActivity<Bookmark> implements Bookmar
     public static void startWithBookmark(Bookmark b, Context c) {
         Intent intent = new Intent(c, BookmarkActivity.class);
         intent.putExtra(KEY_ENTRY, b);
+        intent.putExtra(KEY_FOLDER, b.getFolder());
         c.startActivity(intent);
     }
 
@@ -32,8 +34,7 @@ public class BookmarkActivity extends EntryActivity<Bookmark> implements Bookmar
 
     @Override
     public void onEdit(BookmarkFragment f, Bookmark b) {
-        NewBookmarkActivity.startWithBookmark(b, this);
-        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+        NewBookmarkActivity.startWithBookmark(b, Mode.EDIT, this);
     }
 
     @Override

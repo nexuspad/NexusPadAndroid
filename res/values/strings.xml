@@ -29,13 +29,17 @@
     <string name="confirm_password">Confirm Password</string>
     <string name="folders">Folders</string>
     <string name="more">More</string>
+    <string name="new_">New</string>
+    <string name="new_folder">New Folder</string>
+    <string name="new_bookmark">New Bookmark</string>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
     <string name="rename">Rename</string>
     <string name="empty_folder">Folder Is Empty</string>
     <string name="empty_bookmarks">No Bookmarks</string>
+    <string name="empty_docs">No Docs</string>
     <string name="load_more">Load More…</string>
-    <string name="name">Name</string>
+    <string name="title">Title</string>
     <string name="web_address">Web Address</string>
 
 </resources>

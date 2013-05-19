@@ -1,7 +1,7 @@
 /*
  * Copyright (C), NexusPad LLC
  */
-package com.nexuspad.bookmark.ui;
+package com.nexuspad.doc.ui;
 
 import java.util.List;
 
@@ -11,27 +11,27 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.nexuspad.R;
-import com.nexuspad.datamodel.Bookmark;
+import com.nexuspad.datamodel.Doc;
 import com.nexuspad.ui.EntriesAdapter;
 
 /**
  * @author Edmond
  * 
  */
-public class BookmarksAdapter extends EntriesAdapter<Bookmark> {
+public class DocsAdapter extends EntriesAdapter<Doc> {
 
-    public BookmarksAdapter(Activity a, List<? extends Bookmark> entries) {
+    public DocsAdapter(Activity a, List<? extends Doc> entries) {
         super(a, entries);
     }
 
     @Override
-    protected View getEntryView(Bookmark entry, int position, View convertView, ViewGroup parent) {
+    protected View getEntryView(Doc entry, int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
             convertView = getLayoutInflater().inflate(R.layout.list_item_icon, parent, false);
         }
         ViewHolder holder = getHolder(convertView);
 
-        holder.icon.setImageResource(R.drawable.ic_bookmark);
+        holder.icon.setImageResource(R.drawable.ic_doc);
         holder.text1.setText(entry.getTitle());
         holder.menu.setOnClickListener(getOnMenuClickListener());
 
@@ -39,12 +39,12 @@ public class BookmarksAdapter extends EntriesAdapter<Bookmark> {
     }
 
     @Override
-    protected int getEntryStringId() {
-        return R.string.bookmarks;
+    protected View getEmptyEntryView(LayoutInflater i, View c, ViewGroup p) {
+        return getCaptionView(i, c, p, R.string.empty_docs, R.drawable.empty_folder);
     }
 
     @Override
-    protected View getEmptyEntryView(LayoutInflater i, View c, ViewGroup p) {
-        return getCaptionView(i, c, p, R.string.empty_bookmarks, R.drawable.empty_folder);
+    protected int getEntryStringId() {
+        return R.string.docs;
     }
 }

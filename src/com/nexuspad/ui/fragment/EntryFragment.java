@@ -6,11 +6,10 @@ package com.nexuspad.ui.fragment;
 import java.lang.ref.WeakReference;
 
 import android.os.Bundle;
-import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.edmondapps.utils.java.Lazy;
-import com.nexuspad.R;
+import com.nexuspad.datamodel.Folder;
 import com.nexuspad.datamodel.NPEntry;
 import com.nexuspad.dataservice.EntryService;
 import com.nexuspad.dataservice.EntryServiceCallback;
@@ -22,6 +21,7 @@ import com.nexuspad.dataservice.ServiceError;
  */
 public abstract class EntryFragment<T extends NPEntry> extends SherlockFragment {
     public static final String KEY_ENTRY = "com.nexuspad.ui.fragment.EntryFragment.entry";
+    public static final String KEY_FOLDER = "com.nexuspad.ui.fragment.EntryFragment.folder";
 
     private final Lazy<EntryService> mEntryService = new Lazy<EntryService>() {
         @Override
@@ -31,6 +31,7 @@ public abstract class EntryFragment<T extends NPEntry> extends SherlockFragment 
     };
 
     private T mEntry;
+    private Folder mFolder;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -38,6 +39,18 @@ public abstract class EntryFragment<T extends NPEntry> extends SherlockFragment 
         Bundle arguments = getArguments();
         if (arguments != null) {
             mEntry = arguments.getParcelable(KEY_ENTRY);
+            mFolder = arguments.getParcelable(KEY_FOLDER);
+        }
+
+        if (mFolder == null) {
+            throw new IllegalArgumentException("you must pass in a Folder with KEY_FOLDER");
+        }
+    }
+
+    public void setEntry(T entry) {
+        if (mEntry != entry) {
+            mEntry = entry;
+            onEntryUpdatedInternal(entry);
         }
     }
 
@@ -45,8 +58,8 @@ public abstract class EntryFragment<T extends NPEntry> extends SherlockFragment 
         return mEntry;
     }
 
-    public void setEntry(T entry) {
-        mEntry = entry;
+    public Folder getFolder() {
+        return mFolder;
     }
 
     public EntryService getEntryService() {
@@ -57,7 +70,6 @@ public abstract class EntryFragment<T extends NPEntry> extends SherlockFragment 
     }
 
     protected void onEntryUpdateFailed(ServiceError error) {
-        Toast.makeText(getActivity(), R.string.err_internal, Toast.LENGTH_LONG).show();
     }
 
     @SuppressWarnings("unchecked")

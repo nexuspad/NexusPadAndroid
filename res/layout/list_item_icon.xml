@@ -22,10 +22,13 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
+        android:ellipsize="end"
         android:gravity="center_vertical"
+        android:maxLines="1"
         android:paddingBottom="@dimen/ed__padding_micro"
         android:paddingLeft="@dimen/ed__padding_small"
         android:paddingTop="@dimen/ed__padding_micro"
+        android:scrollHorizontally="true"
         android:textSize="@dimen/ed__textsize_medium" />
 
     <ImageButton

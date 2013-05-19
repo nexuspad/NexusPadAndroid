@@ -15,6 +15,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nexuspad.R;
@@ -45,13 +47,34 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter impl
 
     protected abstract int getEntryStringId();
 
-    private static class ViewHolder {
-        TextView header;
+    protected static class ViewHolder {
+        public ImageView icon;
+        public TextView text1;
+        public ImageButton menu;
+    }
+
+    protected static ViewHolder getHolder(View convertView) {
+        ViewHolder holder = (ViewHolder)convertView.getTag();
+        if (holder == null) {
+            holder = new ViewHolder();
+            holder.icon = findView(convertView, android.R.id.icon);
+            holder.text1 = findView(convertView, android.R.id.text1);
+            holder.menu = findView(convertView, R.id.menu);
+            holder.menu.setFocusable(false);
+
+            convertView.setTag(holder);
+        }
+        return holder;
     }
 
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-        return false;
+        ViewHolder holder = getHolder(view);
+        OnClickListener listener = getOnMenuClickListener();
+        if (listener != null) {
+            listener.onClick(holder.menu);
+        }
+        return true;
     }
 
     protected boolean isEntriesEmpty() {
@@ -130,16 +153,33 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter impl
             convertView = mInflater.inflate(R.layout.list_header, parent, false);
 
             holder = new ViewHolder();
-            holder.header = findView(convertView, android.R.id.text1);
+            holder.text1 = findView(convertView, android.R.id.text1);
 
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder)convertView.getTag();
         }
 
-        holder.header.setText(getEntryStringId());
+        holder.text1.setText(getEntryStringId());
 
         return convertView;
+    }
+
+    protected static View getCaptionView(LayoutInflater i, View c, ViewGroup p, int stringId, int drawableId) {
+        ViewHolder holder;
+        if (c == null) {
+            c = i.inflate(R.layout.layout_img_caption, p, false);
+
+            holder = new ViewHolder();
+            holder.text1 = findView(c, android.R.id.text1);
+
+            c.setTag(holder);
+        } else {
+            holder = (ViewHolder)c.getTag();
+        }
+        holder.text1.setText(stringId);
+        holder.text1.setCompoundDrawablesWithIntrinsicBounds(0, drawableId, 0, 0);
+        return c;
     }
 
     public final void setOnMenuClickListener(OnClickListener onMenuClickListener) {

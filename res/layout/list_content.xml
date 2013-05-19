@@ -26,8 +26,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingBottom="@dimen/ed__padding_small"
-            android:paddingLeft="@dimen/ed__padding_medium"
-            android:paddingRight="@dimen/ed__padding_medium"
+            android:paddingLeft="@dimen/ed__padding_small"
+            android:paddingRight="@dimen/ed__padding_small"
             android:paddingTop="@dimen/ed__padding_small"
             android:scrollbarStyle="outsideOverlay" >
         </ListView>
