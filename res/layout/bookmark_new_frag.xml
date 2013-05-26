@@ -25,6 +25,18 @@
                 style="?android:attr/listSeparatorTextViewStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:text="@string/folder" />
+
+            <Spinner
+                android:id="@+id/spinner_folders"
+                style="@style/formMargin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                style="?android:attr/listSeparatorTextViewStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:text="@string/web_address" />
 
             <EditText
@@ -39,13 +51,29 @@
                 style="?android:attr/listSeparatorTextViewStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/folder" />
+                android:text="@string/tags" />
 
-            <Spinner
-                android:id="@+id/spinner_folders"
+            <EditText
+                android:id="@+id/txt_tags"
                 style="@style/formMargin"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:hint="@string/tags" />
+
+            <TextView
+                style="?android:attr/listSeparatorTextViewStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/note" />
+
+            <EditText
+                android:id="@+id/txt_note"
+                style="@style/formMargin"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:hint="@string/note"
+                android:minLines="3" />
         </LinearLayout>
     </FrameLayout>
 

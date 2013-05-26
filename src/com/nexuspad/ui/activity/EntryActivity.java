@@ -6,7 +6,7 @@ package com.nexuspad.ui.activity;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.edmondapps.utils.android.activity.DoneDiscardActivity;
+import com.edmondapps.utils.android.activity.SinglePaneActivity;
 import com.nexuspad.datamodel.Folder;
 import com.nexuspad.datamodel.NPEntry;
 
@@ -14,17 +14,12 @@ import com.nexuspad.datamodel.NPEntry;
  * @author Edmond
  * 
  */
-public abstract class EntryActivity<T extends NPEntry> extends DoneDiscardActivity {
+public abstract class EntryActivity<T extends NPEntry> extends SinglePaneActivity {
     public static final String KEY_ENTRY = "com.nexuspad.ui.activity.EntryActivity.entry";
     public static final String KEY_FOLDER = "com.nexuspad.ui.activity.EntryActivity.folder";
 
     private T mEntry;
     private Folder mFolder;
-
-    @Override
-    protected boolean isDoneDiscardEnabled() {
-        return false;
-    }
 
     @Override
     protected void onCreate(Bundle savedState) {

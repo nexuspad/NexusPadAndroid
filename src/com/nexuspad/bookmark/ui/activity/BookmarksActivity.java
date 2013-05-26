@@ -11,6 +11,7 @@ import com.edmondapps.utils.android.annotaion.ParentActivity;
 import com.nexuspad.bookmark.ui.fragment.BookmarksFragment;
 import com.nexuspad.datamodel.Bookmark;
 import com.nexuspad.datamodel.Folder;
+import com.nexuspad.dataservice.ServiceConstants;
 import com.nexuspad.home.ui.activity.DashboardActivity;
 import com.nexuspad.ui.activity.EntriesActivity;
 import com.nexuspad.ui.activity.NewEntryActivity.Mode;
@@ -37,16 +38,21 @@ public class BookmarksActivity extends EntriesActivity implements BookmarksFragm
 
     @Override
     public void onBookmarkClick(BookmarksFragment f, Bookmark bookmark) {
-        BookmarkActivity.startWithBookmark(bookmark, this);
+        BookmarkActivity.startWithBookmark(bookmark, getFolder(), this);
     }
 
     @Override
     public void onEditBookmark(BookmarksFragment f, Bookmark bookmark) {
-        NewBookmarkActivity.startWithBookmark(bookmark, Mode.EDIT, this);
+        NewBookmarkActivity.startWithBookmark(bookmark, getFolder(), Mode.EDIT, this);
     }
 
     @Override
     public void onFolderClick(BookmarksFragment f, Folder folder) {
         startWithFolder(folder, this);
+    }
+
+    @Override
+    protected int getModule() {
+        return ServiceConstants.BOOKMARK_MODULE;
     }
 }

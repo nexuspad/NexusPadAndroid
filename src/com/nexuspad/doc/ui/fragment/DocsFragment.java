@@ -3,6 +3,8 @@
  */
 package com.nexuspad.doc.ui.fragment;
 
+import android.content.Context;
+import android.content.Intent;
 import android.widget.ListView;
 
 import com.edmondapps.utils.android.annotaion.FragmentName;
@@ -11,6 +13,7 @@ import com.nexuspad.R;
 import com.nexuspad.datamodel.Doc;
 import com.nexuspad.datamodel.EntryList;
 import com.nexuspad.datamodel.EntryTemplate;
+import com.nexuspad.datamodel.Folder;
 import com.nexuspad.dataservice.EntryService;
 import com.nexuspad.dataservice.ServiceConstants;
 import com.nexuspad.doc.ui.DocsAdapter;
@@ -28,12 +31,18 @@ public class DocsFragment extends EntriesFragment {
     public static final String TAG = "DocsFragment";
 
     @Override
+    protected void onNewFolder(Context c, Intent i, Folder f) {
+        getEntryList().getFolder().getSubFolders().add(f);
+        getListAdapter().notifyDataSetChanged();
+    }
+
+    @Override
     protected void onListLoaded(EntryList list) {
         super.onListLoaded(list);
 
         ListView listView = getListView();
 
-        FoldersAdapter foldersAdapter = newFoldersAdapter(list, getActivity(), listView);
+        FoldersAdapter foldersAdapter = newFoldersAdapter(list);
         DocsAdapter docsAdapter = newDocsAdapter(list);
 
         FoldersDocsAdapter foldersDocsAdapter = new FoldersDocsAdapter(foldersAdapter, docsAdapter);
@@ -56,6 +65,11 @@ public class DocsFragment extends EntriesFragment {
     @Override
     protected EntryTemplate getTemplate() {
         return EntryTemplate.DOC;
+    }
+
+    @Override
+    public FoldersDocsAdapter getListAdapter() {
+        return (FoldersDocsAdapter)super.getListAdapter();
     }
 
     private class OnDocMenuClickListener extends OnEntryMenuClickListener<Doc> {

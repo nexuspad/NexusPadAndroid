@@ -10,8 +10,10 @@ import android.support.v4.app.Fragment;
 import com.edmondapps.utils.android.annotaion.ParentActivity;
 import com.nexuspad.bookmark.ui.fragment.BookmarkFragment;
 import com.nexuspad.datamodel.Bookmark;
+import com.nexuspad.datamodel.Folder;
 import com.nexuspad.ui.activity.EntryActivity;
 import com.nexuspad.ui.activity.NewEntryActivity.Mode;
+import com.nexuspad.ui.fragment.EntryFragment;
 
 /**
  * @author Edmond
@@ -20,21 +22,26 @@ import com.nexuspad.ui.activity.NewEntryActivity.Mode;
 @ParentActivity(BookmarksActivity.class)
 public class BookmarkActivity extends EntryActivity<Bookmark> implements BookmarkFragment.Callback {
 
-    public static void startWithBookmark(Bookmark b, Context c) {
+    public static void startWithBookmark(Bookmark b, Folder f, Context c) {
         Intent intent = new Intent(c, BookmarkActivity.class);
         intent.putExtra(KEY_ENTRY, b);
-        intent.putExtra(KEY_FOLDER, b.getFolder());
+        intent.putExtra(KEY_FOLDER, f);
         c.startActivity(intent);
     }
 
     @Override
     protected Fragment onCreateFragment() {
-        return BookmarkFragment.of(getEntry());
+        return BookmarkFragment.of(getEntry(), getFolder());
+    }
+
+    @Override
+    public void onDeleting(EntryFragment<Bookmark> f, Bookmark entry) {
+        finish();
     }
 
     @Override
     public void onEdit(BookmarkFragment f, Bookmark b) {
-        NewBookmarkActivity.startWithBookmark(b, Mode.EDIT, this);
+        NewBookmarkActivity.startWithBookmark(b, getFolder(), Mode.EDIT, this);
     }
 
     @Override

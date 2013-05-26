@@ -3,20 +3,15 @@
  */
 package com.nexuspad.ui;
 
-import android.content.Context;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import com.edmondapps.utils.android.Logs;
 import com.edmondapps.utils.android.view.PopupMenu;
 import com.edmondapps.utils.android.view.PopupMenu.OnMenuItemClickListener;
 import com.nexuspad.R;
-import com.nexuspad.account.AccountManager;
 import com.nexuspad.datamodel.NPEntry;
 import com.nexuspad.dataservice.EntryService;
-import com.nexuspad.dataservice.NPException;
 
 public class OnEntryMenuClickListener<T extends NPEntry> implements OnClickListener {
     public static final String TAG = "OnEntryMenuClickListener";
@@ -76,16 +71,7 @@ public class OnEntryMenuClickListener<T extends NPEntry> implements OnClickListe
     }
 
     private void deleteEntry(T entry) {
-        EntryService service = getEntryService();
-        try {
-            entry.setOwner(AccountManager.currentAccount());
-            service.deleteEntry(entry);
-        } catch (NPException e) {
-            Logs.e(TAG, e);
-            Context context = getListView().getContext();
-            String msg = context.getString(R.string.formatted_err_delete_failed, entry.getTitle());
-            Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
-        }
+        getEntryService().safeDeleteEntry(getListView().getContext(), entry);
     }
 
     public final ListView getListView() {

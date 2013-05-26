@@ -8,7 +8,16 @@
         android:minSdkVersion="8"
         android:targetSdkVersion="17" />
 
+    <permission
+        android:name="com.nexuspad.core.permission.LISTEN_ENTRY_CHANGES"
+        android:protectionLevel="signature" />
+    <permission
+        android:name="com.nexuspad.core.permission.LISTEN_FOLDER_CHANGES"
+        android:protectionLevel="signature" />
+
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="com.nexuspad.core.permission.LISTEN_ENTRY_CHANGES" />
+    <uses-permission android:name="com.nexuspad.core.permission.LISTEN_FOLDER_CHANGES" />
 
     <application
         android:name="com.nexuspad.app.App"
@@ -40,10 +49,22 @@
             android:label="@string/bookmarks" />
         <activity
             android:name="com.nexuspad.bookmark.ui.activity.NewBookmarkActivity"
-            android:label="@string/bookmark" />
+            android:exported="true"
+            android:label="@string/bookmark" >
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="*/*" />
+            </intent-filter>
+        </activity>
         <activity
             android:name="com.nexuspad.doc.ui.activity.DocsActivity"
             android:label="@string/docs" />
+        <activity
+            android:name="com.nexuspad.ui.activity.NewFolderActivity"
+            android:label="@string/new_folder" />
     </application>
 
 </manifest>

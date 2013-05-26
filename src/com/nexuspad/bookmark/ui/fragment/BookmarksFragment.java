@@ -5,8 +5,9 @@ package com.nexuspad.bookmark.ui.fragment;
 
 import static com.edmondapps.utils.android.view.ViewUtils.findView;
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
@@ -19,6 +20,7 @@ import com.edmondapps.utils.android.ui.SingleAdapter;
 import com.edmondapps.utils.android.view.LoadingViews;
 import com.edmondapps.utils.java.Lazy;
 import com.edmondapps.utils.java.WrapperList;
+import com.nexuspad.Manifest;
 import com.nexuspad.R;
 import com.nexuspad.bookmark.ui.BookmarksAdapter;
 import com.nexuspad.bookmark.ui.activity.NewBookmarkActivity;
@@ -26,7 +28,9 @@ import com.nexuspad.datamodel.Bookmark;
 import com.nexuspad.datamodel.EntryList;
 import com.nexuspad.datamodel.EntryTemplate;
 import com.nexuspad.datamodel.Folder;
+import com.nexuspad.datamodel.NPEntry;
 import com.nexuspad.dataservice.EntryService;
+import com.nexuspad.dataservice.EntryService.EntryReceiver;
 import com.nexuspad.dataservice.ServiceConstants;
 import com.nexuspad.ui.FolderEntriesAdapter;
 import com.nexuspad.ui.FoldersAdapter;
@@ -73,6 +77,25 @@ public class BookmarksFragment extends EntriesFragment {
             return new SingleAdapter<View>(view);
         }
     };
+    private final EntryReceiver mEntryReceiver = new EntryReceiver() {
+        @Override
+        public void onDelete(Context context, Intent intent, NPEntry entry) {
+            EntryList entryList = getEntryList();
+            if (entryList != null) {
+                entryList.getEntries().remove(entry);
+                getListAdapter().notifyDataSetChanged();
+            }
+        }
+
+        @Override
+        public void onNew(Context context, Intent intent, NPEntry entry) {
+            EntryList entryList = getEntryList();
+            if (entryList != null) {
+                entryList.getEntries().add(entry);
+                getListAdapter().notifyDataSetChanged();
+            }
+        }
+    };
 
     private Callback mCallback;
 
@@ -88,6 +111,16 @@ public class BookmarksFragment extends EntriesFragment {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        getActivity().registerReceiver(
+                mEntryReceiver,
+                EntryService.getEntryReceiverIntentFilter(),
+                Manifest.permission.LISTEN_ENTRY_CHANGES,
+                null);
+    }
+
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.bookmarks_frag, menu);
@@ -96,8 +129,6 @@ public class BookmarksFragment extends EntriesFragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.new_folder:
-                return true;
             case R.id.new_bookmark:
                 NewBookmarkActivity.startWithFolder(getFolder(), Mode.NEW, getActivity());
                 return true;
@@ -107,16 +138,27 @@ public class BookmarksFragment extends EntriesFragment {
     }
 
     @Override
+    public void onStop() {
+        super.onStop();
+        getActivity().unregisterReceiver(mEntryReceiver);
+    }
+
+    @Override
+    protected void onNewFolder(Context c, Intent i, Folder f) {
+        getEntryList().getFolder().getSubFolders().add(f);
+        getListAdapter().notifyDataSetChanged();
+    }
+
+    @Override
     protected void onListLoaded(EntryList list) {
         super.onListLoaded(list);
 
         clearLoadMore();
 
-        FragmentActivity activity = getActivity();
         ListView listView = getListView();
 
         BookmarksAdapter bookmarksAdapter = newBookmarksAdapter(list);
-        FoldersAdapter foldersAdapter = newFoldersAdapter(list, activity, listView);
+        FoldersAdapter foldersAdapter = newFoldersAdapter(list);
 
         FolderBookmarksAdapter adapter;
 

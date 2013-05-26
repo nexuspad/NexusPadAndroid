@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.widget.Toast;
 
-import com.edmondapps.utils.android.Logs;
 import com.edmondapps.utils.android.activity.SinglePaneActivity;
 import com.nexuspad.R;
 import com.nexuspad.datamodel.NPUser;
@@ -25,7 +24,6 @@ public class MainActivity extends SinglePaneActivity implements MainFragment.Cal
 
     @Override
     public void onLogin(MainFragment f, NPUser user) {
-        Logs.d("WelcomeActivity", "User has a session id: " + user.getSessionId());
         startActivity(new Intent(this, DashboardActivity.class));
         finish();
     }

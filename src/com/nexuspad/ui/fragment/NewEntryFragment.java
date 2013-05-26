@@ -3,8 +3,6 @@
  */
 package com.nexuspad.ui.fragment;
 
-import android.app.Activity;
-
 import com.nexuspad.account.AccountManager;
 import com.nexuspad.datamodel.NPEntry;
 import com.nexuspad.dataservice.ErrorCode;
@@ -23,25 +21,6 @@ public abstract class NewEntryFragment<T extends NPEntry> extends EntryFragment<
     public abstract boolean isEditedEntryValid();
 
     public abstract T getEditedEntry();
-
-    public interface Callback<T extends NPEntry> {
-        void onEntryUpdated(NewEntryFragment<T> f, T entry);
-
-        void onEntryUpdateFailed(NewEntryFragment<T> f, ServiceError error);
-    }
-
-    private Callback<T> mCallback;
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        if (activity instanceof Callback) {
-            mCallback = (Callback<T>)activity;
-        } else {
-            throw new IllegalStateException(activity + " must implement Callback.");
-        }
-    }
 
     public void addEntry() {
         if (isEditedEntryValid()) {
@@ -67,17 +46,5 @@ public abstract class NewEntryFragment<T extends NPEntry> extends EntryFragment<
             }
             getEntryService().updateEntry(entry);
         }
-    }
-
-    @Override
-    protected void onEntryUpdated(T entry) {
-        super.onEntryUpdated(entry);
-        mCallback.onEntryUpdated(this, entry);
-    }
-
-    @Override
-    protected void onEntryUpdateFailed(ServiceError error) {
-        super.onEntryUpdateFailed(error);
-        mCallback.onEntryUpdateFailed(this, error);
     }
 }

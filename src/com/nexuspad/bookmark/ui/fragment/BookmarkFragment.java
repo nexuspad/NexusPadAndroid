@@ -22,6 +22,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.nexuspad.R;
 import com.nexuspad.datamodel.Bookmark;
+import com.nexuspad.datamodel.Folder;
 import com.nexuspad.ui.fragment.EntryFragment;
 
 /**
@@ -32,10 +33,10 @@ import com.nexuspad.ui.fragment.EntryFragment;
 public class BookmarkFragment extends EntryFragment<Bookmark> {
     public static final String TAG = "BookmarkFragment";
 
-    public static BookmarkFragment of(Bookmark bookmark) {
+    public static BookmarkFragment of(Bookmark bookmark, Folder f) {
         Bundle bundle = new Bundle();
         bundle.putParcelable(KEY_ENTRY, bookmark);
-        bundle.putParcelable(KEY_FOLDER, bookmark.getFolder());
+        bundle.putParcelable(KEY_FOLDER, f);
 
         BookmarkFragment fragment = new BookmarkFragment();
         fragment.setArguments(bundle);
@@ -43,7 +44,7 @@ public class BookmarkFragment extends EntryFragment<Bookmark> {
         return fragment;
     }
 
-    public interface Callback {
+    public interface Callback extends EntryFragment.Callback<Bookmark> {
         void onEdit(BookmarkFragment f, Bookmark b);
     }
 
@@ -51,6 +52,8 @@ public class BookmarkFragment extends EntryFragment<Bookmark> {
 
     private TextView mNameV;
     private TextView mWebAddressV;
+    private TextView mTagsV;
+    private TextView mNoteV;
 
     @Override
     public void onAttach(Activity activity) {
@@ -71,9 +74,14 @@ public class BookmarkFragment extends EntryFragment<Bookmark> {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Bookmark entry = getEntry();
         switch (item.getItemId()) {
             case R.id.edit:
-                mCallback.onEdit(this, getEntry());
+                mCallback.onEdit(this, entry);
+                return true;
+            case R.id.delete:
+                getEntryService().safeDeleteEntry(getActivity(), entry);
+                mCallback.onDeleting(this, entry);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -90,6 +98,8 @@ public class BookmarkFragment extends EntryFragment<Bookmark> {
         super.onViewCreated(view, savedInstanceState);
         mNameV = findView(view, R.id.lbl_title);
         mWebAddressV = findView(view, R.id.lbl_web_address);
+        mTagsV = findView(view, R.id.lbl_tags);
+        mNoteV = findView(view, R.id.lbl_note);
 
         updateUI();
         installListeners();
@@ -106,6 +116,8 @@ public class BookmarkFragment extends EntryFragment<Bookmark> {
         if (bookmark != null) {
             mNameV.setText(bookmark.getTitle());
             mWebAddressV.setText(bookmark.getWebAddress());
+            mTagsV.setText(bookmark.getTags());
+            mNoteV.setText(bookmark.getNote());
         }
     }
 

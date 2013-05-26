@@ -10,15 +10,20 @@ import static com.nexuspad.dataservice.ServiceConstants.DOC_MODULE;
 import static com.nexuspad.dataservice.ServiceConstants.JOURNAL_MODULE;
 import static com.nexuspad.dataservice.ServiceConstants.PHOTO_MODULE;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.ListView;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.nexuspad.R;
+import com.nexuspad.account.AccountManager;
 import com.nexuspad.dataservice.ServiceConstants;
+import com.nexuspad.home.ui.activity.LoginActivity;
 import com.nexuspad.ui.IconListAdapter;
 import com.nexuspad.ui.fragment.PaddedListFragment;
 
@@ -76,6 +81,21 @@ public class DashboardFragment extends PaddedListFragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.logout:
+                AccountManager.logout();
+                FragmentActivity activity = getActivity();
+
+                startActivity(new Intent(activity, LoginActivity.class));
+                activity.finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override

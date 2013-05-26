@@ -7,16 +7,18 @@ import java.lang.ref.WeakReference;
 import java.util.Map;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.BaseAdapter;
-import android.widget.ListView;
 import android.widget.Toast;
 
+import com.actionbarsherlock.view.MenuItem;
 import com.edmondapps.utils.android.Logs;
 import com.edmondapps.utils.java.Lazy;
+import com.nexuspad.Manifest;
 import com.nexuspad.R;
 import com.nexuspad.account.AccountManager;
 import com.nexuspad.datamodel.EntryList;
@@ -30,6 +32,7 @@ import com.nexuspad.dataservice.EntryService;
 import com.nexuspad.dataservice.EntryServiceCallback;
 import com.nexuspad.dataservice.ErrorCode;
 import com.nexuspad.dataservice.FolderService;
+import com.nexuspad.dataservice.FolderService.FolderReceiver;
 import com.nexuspad.dataservice.FolderServiceCallback;
 import com.nexuspad.dataservice.NPException;
 import com.nexuspad.dataservice.ServiceConstants;
@@ -37,6 +40,7 @@ import com.nexuspad.dataservice.ServiceError;
 import com.nexuspad.home.ui.activity.LoginActivity;
 import com.nexuspad.ui.FoldersAdapter;
 import com.nexuspad.ui.OnFolderMenuClickListener;
+import com.nexuspad.ui.activity.NewFolderActivity;
 
 /**
  * @author Edmond
@@ -73,7 +77,15 @@ public abstract class EntriesFragment extends PaddedListFragment {
         }
     };
 
+    private final FolderReceiver mFolderReceiver = new FolderReceiver() {
+        @Override
+        protected void onNew(Context c, Intent i, Folder f) {
+            onNewFolder(c, i, f);
+        }
+    };
+
     private final EntryListCallback mEntryListCallback = new EntryListCallback(this);
+
     private EntryList mEntryList;
     private Callback mCallback;
     private int mCurrentPage;
@@ -89,6 +101,8 @@ public abstract class EntriesFragment extends PaddedListFragment {
      * @return should correspond with {@link #getModule()}
      */
     protected abstract EntryTemplate getTemplate();
+
+    protected abstract void onNewFolder(Context c, Intent i, Folder f);
 
     @Override
     public void onAttach(Activity activity) {
@@ -114,10 +128,37 @@ public abstract class EntriesFragment extends PaddedListFragment {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        getActivity().registerReceiver(
+                mFolderReceiver,
+                FolderService.getFolderReceiverIntentFilter(),
+                Manifest.permission.LISTEN_FOLDER_CHANGES,
+                null);
+    }
+
+    @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         queryEntriesAync();
         getListView().setItemsCanFocus(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.new_folder:
+                NewFolderActivity.startWithParentFolder(getFolder(), getActivity());
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        getActivity().unregisterReceiver(mFolderReceiver);
     }
 
     public void queryEntriesAync() {
@@ -177,9 +218,13 @@ public abstract class EntriesFragment extends PaddedListFragment {
         return false;
     }
 
-    protected FoldersAdapter newFoldersAdapter(EntryList list, FragmentActivity a, ListView listView) {
-        FoldersAdapter foldersAdapter = new FoldersAdapter(a, list.getFolder().getSubFolders());
-        foldersAdapter.setOnMenuClickListener(new OnFolderMenuClickListener(listView, getFolderService()));
+    public void deleteEntry(NPEntry entry) {
+        getEntryService().safeDeleteEntry(getActivity(), entry);
+    }
+
+    protected FoldersAdapter newFoldersAdapter(EntryList list) {
+        FoldersAdapter foldersAdapter = new FoldersAdapter(getActivity(), list.getFolder().getSubFolders());
+        foldersAdapter.setOnMenuClickListener(new OnFolderMenuClickListener(getListView(), getFolderService()));
         return foldersAdapter;
     }
 

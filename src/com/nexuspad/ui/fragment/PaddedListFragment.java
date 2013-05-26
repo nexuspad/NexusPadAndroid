@@ -18,7 +18,7 @@ import com.nexuspad.R;
  * @author Edmond
  * 
  */
-public class PaddedListFragment extends SherlockListFragment {
+public abstract class PaddedListFragment extends SherlockListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.list_content, container, false);

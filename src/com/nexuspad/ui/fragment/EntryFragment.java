@@ -5,9 +5,10 @@ package com.nexuspad.ui.fragment;
 
 import java.lang.ref.WeakReference;
 
+import android.app.Activity;
 import android.os.Bundle;
 
-import com.actionbarsherlock.app.SherlockFragment;
+import com.actionbarsherlock.app.SherlockDialogFragment;
 import com.edmondapps.utils.java.Lazy;
 import com.nexuspad.datamodel.Folder;
 import com.nexuspad.datamodel.NPEntry;
@@ -16,12 +17,18 @@ import com.nexuspad.dataservice.EntryServiceCallback;
 import com.nexuspad.dataservice.ServiceError;
 
 /**
+ * You must pass in a {@code Folder} with the key {@link KEY_FOLDER}
+ * 
  * @author Edmond
  * 
  */
-public abstract class EntryFragment<T extends NPEntry> extends SherlockFragment {
+public abstract class EntryFragment<T extends NPEntry> extends SherlockDialogFragment {
     public static final String KEY_ENTRY = "com.nexuspad.ui.fragment.EntryFragment.entry";
     public static final String KEY_FOLDER = "com.nexuspad.ui.fragment.EntryFragment.folder";
+
+    public interface Callback<T extends NPEntry> {
+        void onDeleting(EntryFragment<T> f, T entry);
+    }
 
     private final Lazy<EntryService> mEntryService = new Lazy<EntryService>() {
         @Override
@@ -32,6 +39,18 @@ public abstract class EntryFragment<T extends NPEntry> extends SherlockFragment 
 
     private T mEntry;
     private Folder mFolder;
+    private Callback<T> mCallback;
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        if (activity instanceof Callback) {
+            mCallback = (Callback<T>)activity;
+        } else {
+            throw new IllegalStateException(activity + " must implement Callback.");
+        }
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -64,6 +83,11 @@ public abstract class EntryFragment<T extends NPEntry> extends SherlockFragment 
 
     public EntryService getEntryService() {
         return mEntryService.get();
+    }
+
+    protected void deleteEntry() {
+        getEntryService().safeDeleteEntry(getActivity(), mEntry);
+        mCallback.onDeleting(this, mEntry);
     }
 
     protected void onEntryUpdated(T entry) {

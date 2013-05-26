@@ -30,4 +30,30 @@
         android:layout_height="wrap_content"
         android:hint="@string/web_address" />
 
+    <TextView
+        style="?android:attr/listSeparatorTextViewStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/tags" />
+
+    <TextView
+        android:id="@+id/lbl_tags"
+        style="@style/selectableTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/tags" />
+
+    <TextView
+        style="?android:attr/listSeparatorTextViewStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/note" />
+
+    <TextView
+        android:id="@+id/lbl_note"
+        style="@style/selectableTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/note" />
+
 </LinearLayout>
