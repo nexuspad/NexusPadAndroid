@@ -65,6 +65,9 @@
         <activity
             android:name="com.nexuspad.ui.activity.NewFolderActivity"
             android:label="@string/new_folder" />
+        <activity
+            android:name="com.nexuspad.ui.activity.FoldersActivity"
+            android:label="@string/folders" />
     </application>
 
 </manifest>

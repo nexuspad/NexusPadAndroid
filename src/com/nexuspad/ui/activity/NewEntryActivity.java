@@ -56,7 +56,7 @@ public abstract class NewEntryActivity<T extends NPEntry> extends DoneDiscardAct
         mEntry = i.getParcelableExtra(KEY_ENTRY);
         mFolder = i.getParcelableExtra(KEY_FOLDER);
         if (mFolder == null) {
-            mFolder = Folder.initReservedFolder(getModule(), Folder.ROOT_FOLDER);
+            mFolder = Folder.rootFolderOf(getModule());
         }
     }
 

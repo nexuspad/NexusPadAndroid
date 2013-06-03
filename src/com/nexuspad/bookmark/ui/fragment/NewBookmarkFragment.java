@@ -5,22 +5,22 @@ package com.nexuspad.bookmark.ui.fragment;
 
 import static com.edmondapps.utils.android.view.ViewUtils.findView;
 import static com.edmondapps.utils.android.view.ViewUtils.isAllTextNotEmpty;
-
-import java.util.ArrayList;
-import java.util.List;
-
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.nexuspad.R;
 import com.nexuspad.datamodel.Bookmark;
 import com.nexuspad.datamodel.Folder;
+import com.nexuspad.dataservice.ServiceConstants;
+import com.nexuspad.ui.activity.FoldersActivity;
 import com.nexuspad.ui.fragment.NewEntryFragment;
 
 /**
@@ -29,6 +29,8 @@ import com.nexuspad.ui.fragment.NewEntryFragment;
 @FragmentName(NewBookmarkFragment.TAG)
 public class NewBookmarkFragment extends NewEntryFragment<Bookmark> {
     public static final String TAG = "NewBookmarkFragment";
+
+    private static final int REQ_FOLDER = 1;
 
     public static NewBookmarkFragment of(Folder folder) {
         return of(null, folder);
@@ -45,10 +47,10 @@ public class NewBookmarkFragment extends NewEntryFragment<Bookmark> {
         return fragment;
     }
 
+    private TextView mFolderV;
     private EditText mWebAddressV;
     private EditText mNoteV;
     private EditText mTagsV;
-    private Spinner mFoldersV;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -58,36 +60,61 @@ public class NewBookmarkFragment extends NewEntryFragment<Bookmark> {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mFoldersV = findView(view, R.id.spinner_folders);
+        mFolderV = findView(view, R.id.lbl_folder);
         mWebAddressV = findView(view, R.id.txt_web_address);
         mNoteV = findView(view, R.id.txt_note);
         mTagsV = findView(view, R.id.txt_tags);
 
-        prepSpinner();
-        fillWithData();
+        intstallListeners();
+        updateFolderView();
+        updateBookmarkViews();
     }
 
-    private void prepSpinner() {
-        ArrayAdapter<String> a = new ArrayAdapter<String>(getActivity(),
-                android.R.layout.simple_spinner_item,
-                makeFolderNameList());
-        a.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mFoldersV.setAdapter(a);
+    private void intstallListeners() {
+        mFolderV.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Folder folder = Folder.rootFolderOf(ServiceConstants.BOOKMARK_MODULE);
+                Intent intent = FoldersActivity.ofParentFolder(getActivity(), folder);
+                startActivityForResult(intent, REQ_FOLDER);
+            }
+        });
     }
 
-    private List<String> makeFolderNameList() {
-        List<String> out = new ArrayList<String>();
-        Folder f = getFolder();
-
-        if (f.getFolderId() != Folder.ROOT_FOLDER) {
-            out.add(getString(R.string.root));
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode != Activity.RESULT_OK) {
+            return;
         }
-        out.add(f.getFolderName());
-
-        return out;
+        switch (requestCode) {
+            case REQ_FOLDER:
+                setFolder(data.<Folder> getParcelableExtra(FoldersActivity.KEY_FOLDER));
+                break;
+            default:
+                throw new AssertionError("unknown requestCode: " + requestCode);
+        }
     }
 
-    private void fillWithData() {
+    @Override
+    protected void onEntryUpdated(Bookmark entry) {
+        super.onEntryUpdated(entry);
+        updateBookmarkViews();
+    }
+
+    @Override
+    protected void onFolderUpdated(Folder folder) {
+        super.onFolderUpdated(folder);
+        updateFolderView();
+    }
+
+    private void updateFolderView() {
+        mFolderV.setText(getFolder().getFolderName());
+    }
+
+    private void updateBookmarkViews() {
+        mFolderV.setText(getFolder().getFolderName());
+
         Bookmark bookmark = getEntry();
         if (bookmark != null) {
             mWebAddressV.setText(bookmark.getWebAddress());

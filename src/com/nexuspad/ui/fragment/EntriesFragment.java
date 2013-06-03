@@ -51,6 +51,7 @@ public abstract class EntriesFragment extends PaddedListFragment {
 
     private static final int PAGE_COUNT = 20;
     private static final String TAG = "EntriesFragment";
+    private static final String KEY_ENTRY_LIST = "key_entry_list";
 
     public interface Callback {
         void onListLoaded(EntriesFragment f, EntryList list);
@@ -123,13 +124,9 @@ public abstract class EntriesFragment extends PaddedListFragment {
         }
 
         if (mFolder == null) {
-            mFolder = Folder.initReservedFolder(getModule(), Folder.ROOT_FOLDER);
+            mFolder = Folder.rootFolderOf(getModule());
         }
-    }
 
-    @Override
-    public void onStart() {
-        super.onStart();
         getActivity().registerReceiver(
                 mFolderReceiver,
                 FolderService.getFolderReceiverIntentFilter(),
@@ -138,10 +135,21 @@ public abstract class EntriesFragment extends PaddedListFragment {
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(KEY_ENTRY_LIST, mEntryList);
+    }
+
+    @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        queryEntriesAync();
         getListView().setItemsCanFocus(true);
+
+        if (savedInstanceState == null) {
+            queryEntriesAync();
+        } else {
+            onListLoadedInternal(savedInstanceState.<EntryList> getParcelable(KEY_ENTRY_LIST));
+        }
     }
 
     @Override
@@ -156,8 +164,8 @@ public abstract class EntriesFragment extends PaddedListFragment {
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
+    public void onDestroy() {
+        super.onDestroy();
         getActivity().unregisterReceiver(mFolderReceiver);
     }
 

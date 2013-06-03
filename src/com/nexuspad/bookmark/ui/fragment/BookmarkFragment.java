@@ -111,6 +111,12 @@ public class BookmarkFragment extends EntryFragment<Bookmark> {
         updateUI();
     }
 
+    @Override
+    protected void onEntryUpdated(Bookmark entry) {
+        super.onEntryUpdated(entry);
+        updateUI();
+    }
+
     private void updateUI() {
         Bookmark bookmark = getEntry();
         if (bookmark != null) {

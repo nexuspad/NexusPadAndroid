@@ -18,7 +18,7 @@ import com.nexuspad.ui.fragment.EntriesFragment;
 public abstract class EntriesActivity extends PaddedListActivity implements EntriesFragment.Callback {
     public static final String KEY_FOLDER = "key_folder";
 
-    private Folder mFolder = Folder.initReservedFolder(getModule(), Folder.ROOT_FOLDER);
+    private Folder mFolder = Folder.rootFolderOf(getModule());
 
     /**
      * @return one of the {@code *_MODULE} constants in {@link ServiceConstants}

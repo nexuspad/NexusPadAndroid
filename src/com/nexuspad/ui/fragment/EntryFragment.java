@@ -6,14 +6,23 @@ package com.nexuspad.ui.fragment;
 import java.lang.ref.WeakReference;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockDialogFragment;
+import com.edmondapps.utils.android.Logs;
 import com.edmondapps.utils.java.Lazy;
+import com.nexuspad.R;
+import com.nexuspad.account.AccountManager;
+import com.nexuspad.core.Manifest;
 import com.nexuspad.datamodel.Folder;
 import com.nexuspad.datamodel.NPEntry;
 import com.nexuspad.dataservice.EntryService;
+import com.nexuspad.dataservice.EntryService.EntryReceiver;
 import com.nexuspad.dataservice.EntryServiceCallback;
+import com.nexuspad.dataservice.NPException;
 import com.nexuspad.dataservice.ServiceError;
 
 /**
@@ -26,6 +35,8 @@ public abstract class EntryFragment<T extends NPEntry> extends SherlockDialogFra
     public static final String KEY_ENTRY = "com.nexuspad.ui.fragment.EntryFragment.entry";
     public static final String KEY_FOLDER = "com.nexuspad.ui.fragment.EntryFragment.folder";
 
+    private static final String TAG = "EntryFragment";
+
     public interface Callback<T extends NPEntry> {
         void onDeleting(EntryFragment<T> f, T entry);
     }
@@ -34,6 +45,13 @@ public abstract class EntryFragment<T extends NPEntry> extends SherlockDialogFra
         @Override
         protected EntryService onCreate() {
             return new EntryService(getActivity(), new EntryCallback(EntryFragment.this));
+        }
+    };
+
+    private final EntryReceiver mEntryReceiver = new EntryReceiver() {
+        @Override
+        public void onGot(Context context, Intent intent, NPEntry entry) {
+            onEntryUpdatedInternal(entry);
         }
     };
 
@@ -66,11 +84,47 @@ public abstract class EntryFragment<T extends NPEntry> extends SherlockDialogFra
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        getActivity().registerReceiver(
+                mEntryReceiver,
+                EntryService.getEntryReceiverIntentFilter(),
+                Manifest.permission.LISTEN_ENTRY_CHANGES,
+                null);
+
+        if (mEntry != null) {
+            try {
+                mEntry.setOwner(AccountManager.currentAccount());
+                getEntryService().getEntry(mEntry);
+            } catch (NPException e) {
+                Logs.e(TAG, e);
+                Toast.makeText(getActivity(), R.string.err_internal, Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        getActivity().unregisterReceiver(mEntryReceiver);
+    }
+
     public void setEntry(T entry) {
         if (mEntry != entry) {
             mEntry = entry;
             onEntryUpdatedInternal(entry);
         }
+    }
+
+    public void setFolder(Folder folder) {
+        if (mFolder != folder) {
+            mFolder = folder;
+            onFolderUpdated(folder);
+        }
+    }
+
+    protected void onFolderUpdated(Folder folder) {
     }
 
     public T getEntry() {
@@ -91,6 +145,7 @@ public abstract class EntryFragment<T extends NPEntry> extends SherlockDialogFra
     }
 
     protected void onEntryUpdated(T entry) {
+        mEntry = entry;
     }
 
     protected void onEntryUpdateFailed(ServiceError error) {

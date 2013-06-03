@@ -111,13 +111,19 @@ public class BookmarksFragment extends EntriesFragment {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         getActivity().registerReceiver(
                 mEntryReceiver,
                 EntryService.getEntryReceiverIntentFilter(),
                 Manifest.permission.LISTEN_ENTRY_CHANGES,
                 null);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        getActivity().unregisterReceiver(mEntryReceiver);
     }
 
     @Override
@@ -138,13 +144,11 @@ public class BookmarksFragment extends EntriesFragment {
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
-        getActivity().unregisterReceiver(mEntryReceiver);
-    }
-
-    @Override
     protected void onNewFolder(Context c, Intent i, Folder f) {
+        // TODO bug in ActionResult.getUpdatedFolder()
+        if (true) {
+            return;
+        }
         getEntryList().getFolder().getSubFolders().add(f);
         getListAdapter().notifyDataSetChanged();
     }

@@ -40,6 +40,10 @@ public class OnFolderMenuClickListener implements OnClickListener {
         mFolderService = folderService;
     }
 
+    /**
+     * You must call {@link #onFolderClick(Folder, int, View)} if you are using
+     * your own implementation.
+     */
     @Override
     public void onClick(View v) {
         FolderEntriesAdapter<?> compoundAdapter = ((FolderEntriesAdapter<?>)mListView.getAdapter());
@@ -54,7 +58,7 @@ public class OnFolderMenuClickListener implements OnClickListener {
         }
     }
 
-    protected void onFolderClick(final Folder folder, int position, View view) {
+    public void onFolderClick(final Folder folder, int position, View view) {
         PopupMenu popupMenu = getPopupMenu(view);
         popupMenu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
             @Override
@@ -65,7 +69,7 @@ public class OnFolderMenuClickListener implements OnClickListener {
         popupMenu.show();
     }
 
-    protected boolean onFolderMenuClick(Folder folder, int menuId) {
+    public boolean onFolderMenuClick(Folder folder, int menuId) {
         switch (menuId) {
             case R.id.delete:
                 deleteFolder(folder);

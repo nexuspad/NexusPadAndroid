@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.nexuspad.ui.DuplicateParentStateAwareLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:minHeight="48dp"
+    android:orientation="horizontal"
+    tools:context=".home.ui.activity.MainActivity" >
+
+    <ImageButton
+        android:id="@android:id/icon2"
+        android:layout_width="32dp"
+        android:layout_height="match_parent"
+        android:background="?attr/selectableItemBackground"
+        android:duplicateParentState="false"
+        android:paddingLeft="@dimen/ed__padding_micro"
+        android:paddingRight="@dimen/ed__padding_micro"
+        android:scaleType="centerInside"
+        tools:ignore="ContentDescription" />
+
+    <ImageView
+        android:id="@android:id/icon"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:maxWidth="48dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_launcher"
+        tools:ignore="ContentDescription" />
+
+    <TextView
+        android:id="@android:id/text1"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:maxLines="1"
+        android:paddingBottom="@dimen/ed__padding_micro"
+        android:paddingLeft="@dimen/ed__padding_small"
+        android:paddingTop="@dimen/ed__padding_micro"
+        android:scrollHorizontally="true"
+        android:textSize="@dimen/ed__textsize_medium" />
+
+    <ImageButton
+        android:id="@+id/menu"
+        android:layout_width="32dp"
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent"
+        android:contentDescription="@string/more"
+        android:duplicateParentState="false"
+        android:scaleType="fitXY"
+        android:src="@drawable/abs__spinner_ab_holo_light" />
+
+</com.nexuspad.ui.DuplicateParentStateAwareLinearLayout>

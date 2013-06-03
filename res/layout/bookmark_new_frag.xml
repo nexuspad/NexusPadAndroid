@@ -27,11 +27,12 @@
                 android:layout_height="wrap_content"
                 android:text="@string/folder" />
 
-            <Spinner
-                android:id="@+id/spinner_folders"
-                style="@style/formMargin"
+            <TextView
+                android:id="@+id/lbl_folder"
+                style="@style/selectableTextView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text="@string/root" />
 
             <TextView
                 style="?android:attr/listSeparatorTextViewStyle"
