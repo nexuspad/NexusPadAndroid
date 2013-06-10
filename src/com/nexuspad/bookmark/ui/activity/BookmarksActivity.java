@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.support.v4.app.Fragment;
 
 import com.edmondapps.utils.android.annotaion.ParentActivity;
+import com.nexuspad.annotation.ModuleId;
 import com.nexuspad.bookmark.ui.fragment.BookmarksFragment;
 import com.nexuspad.datamodel.Bookmark;
 import com.nexuspad.datamodel.Folder;
@@ -21,6 +22,7 @@ import com.nexuspad.ui.activity.NewEntryActivity.Mode;
  * 
  */
 @ParentActivity(DashboardActivity.class)
+@ModuleId(moduleId = ServiceConstants.BOOKMARK_MODULE)
 public class BookmarksActivity extends EntriesActivity implements BookmarksFragment.Callback {
     public static final String TAG = "BookmarksActivity";
 
@@ -49,10 +51,5 @@ public class BookmarksActivity extends EntriesActivity implements BookmarksFragm
     @Override
     public void onFolderClick(BookmarksFragment f, Folder folder) {
         startWithFolder(folder, this);
-    }
-
-    @Override
-    protected int getModule() {
-        return ServiceConstants.BOOKMARK_MODULE;
     }
 }

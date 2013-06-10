@@ -13,7 +13,6 @@ import com.nexuspad.datamodel.Bookmark;
 import com.nexuspad.datamodel.Folder;
 import com.nexuspad.ui.activity.EntryActivity;
 import com.nexuspad.ui.activity.NewEntryActivity.Mode;
-import com.nexuspad.ui.fragment.EntryFragment;
 
 /**
  * @author Edmond
@@ -32,11 +31,6 @@ public class BookmarkActivity extends EntryActivity<Bookmark> implements Bookmar
     @Override
     protected Fragment onCreateFragment() {
         return BookmarkFragment.of(getEntry(), getFolder());
-    }
-
-    @Override
-    public void onDeleting(EntryFragment<Bookmark> f, Bookmark entry) {
-        finish();
     }
 
     @Override

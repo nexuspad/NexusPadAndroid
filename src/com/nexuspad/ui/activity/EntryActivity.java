@@ -6,15 +6,18 @@ package com.nexuspad.ui.activity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.actionbarsherlock.view.Window;
 import com.edmondapps.utils.android.activity.SinglePaneActivity;
+import com.nexuspad.R;
 import com.nexuspad.datamodel.Folder;
 import com.nexuspad.datamodel.NPEntry;
+import com.nexuspad.ui.fragment.EntryFragment;
 
 /**
  * @author Edmond
  * 
  */
-public abstract class EntryActivity<T extends NPEntry> extends SinglePaneActivity {
+public abstract class EntryActivity<T extends NPEntry> extends SinglePaneActivity implements EntryFragment.Callback<T> {
     public static final String KEY_ENTRY = "com.nexuspad.ui.activity.EntryActivity.entry";
     public static final String KEY_FOLDER = "com.nexuspad.ui.activity.EntryActivity.folder";
 
@@ -22,9 +25,19 @@ public abstract class EntryActivity<T extends NPEntry> extends SinglePaneActivit
     private Folder mFolder;
 
     @Override
+    protected int onCreateLayoutId() {
+        return R.layout.no_padding_activity;
+    }
+
+    @Override
     protected void onCreate(Bundle savedState) {
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+
         handleIntent(getIntent());
         super.onCreate(savedState);
+
+        // have to reset the progress bar here (some kind of bug)
+        setSupportProgressBarIndeterminateVisibility(false);
     }
 
     @Override
@@ -55,6 +68,21 @@ public abstract class EntryActivity<T extends NPEntry> extends SinglePaneActivit
      */
     protected void onNewEntry(T entry) {
         setTitle(entry.getTitle());
+    }
+
+    @Override
+    public void onDeleting(EntryFragment<T> f, T entry) {
+        finish();
+    }
+
+    @Override
+    public void onStartLoadingEntry(EntryFragment<T> f, T entry) {
+        setSupportProgressBarIndeterminateVisibility(true);
+    }
+
+    @Override
+    public void onGotEntry(EntryFragment<T> f, T entry) {
+        setSupportProgressBarIndeterminateVisibility(false);
     }
 
     protected T getEntry() {

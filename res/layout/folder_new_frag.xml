@@ -1,33 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/scrollableFrame"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:layout_height="match_parent" >
 
-    <TextView
-        style="?android:attr/listSeparatorTextViewStyle"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/parent_folder" />
+        android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/lbl_folder"
-        style="@style/selectableTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/root" />
+        <TextView
+            style="?android:attr/listSeparatorTextViewStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/parent_folder" />
 
-    <TextView
-        style="?android:attr/listSeparatorTextViewStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/folder_name" />
+        <include layout="@layout/folder_selector_include" />
 
-    <EditText
-        android:id="@+id/txt_folder_name"
-        style="@style/formMargin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/folder_name" />
+        <TextView
+            style="?android:attr/listSeparatorTextViewStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/folder_name" />
 
-</LinearLayout>
+        <EditText
+            android:id="@+id/txt_folder_name"
+            style="@style/formMargin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/folder_name" />
+    </LinearLayout>
+
+</ScrollView>

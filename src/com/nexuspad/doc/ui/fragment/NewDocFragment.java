@@ -1,65 +1,74 @@
 /*
  * Copyright (C), NexusPad LLC
  */
-package com.nexuspad.bookmark.ui.fragment;
+package com.nexuspad.doc.ui.fragment;
 
 import static com.edmondapps.utils.android.view.ViewUtils.findView;
 import static com.edmondapps.utils.android.view.ViewUtils.isAllTextNotEmpty;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.commonsware.cwac.richedit.RichEditText;
 import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.nexuspad.R;
-import com.nexuspad.datamodel.Bookmark;
+import com.nexuspad.annotation.ModuleId;
+import com.nexuspad.datamodel.Doc;
 import com.nexuspad.datamodel.Folder;
+import com.nexuspad.dataservice.ServiceConstants;
 import com.nexuspad.ui.activity.FoldersActivity;
 import com.nexuspad.ui.fragment.NewEntryFragment;
 
 /**
  * @author Edmond
  */
-@FragmentName(NewBookmarkFragment.TAG)
-public class NewBookmarkFragment extends NewEntryFragment<Bookmark> {
-    public static final String TAG = "NewBookmarkFragment";
+@FragmentName(NewDocFragment.TAG)
+@ModuleId(moduleId = ServiceConstants.DOC_MODULE)
+public class NewDocFragment extends NewEntryFragment<Doc> {
+    public static final String TAG = "NewDocFragment";
 
-    public static NewBookmarkFragment of(Folder folder) {
+    public static NewDocFragment of(Folder folder) {
         return of(null, folder);
     }
 
-    public static NewBookmarkFragment of(Bookmark b, Folder f) {
+    public static NewDocFragment of(Doc doc, Folder f) {
         Bundle bundle = new Bundle();
-        bundle.putParcelable(KEY_ENTRY, b);
+        bundle.putParcelable(KEY_ENTRY, doc);
         bundle.putParcelable(KEY_FOLDER, f);
 
-        NewBookmarkFragment fragment = new NewBookmarkFragment();
+        NewDocFragment fragment = new NewDocFragment();
         fragment.setArguments(bundle);
 
         return fragment;
     }
 
     private TextView mFolderV;
-    private EditText mWebAddressV;
-    private EditText mNoteV;
+    private EditText mTitleV;
     private EditText mTagsV;
+    private RichEditText mNoteV;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.bookmark_new_frag, container, false);
+        return inflater.inflate(R.layout.doc_new_frag, container, false);
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mFolderV = findView(view, R.id.lbl_folder);
-        mWebAddressV = findView(view, R.id.txt_web_address);
         mNoteV = findView(view, R.id.txt_note);
+        mTitleV = findView(view, R.id.txt_title);
         mTagsV = findView(view, R.id.txt_tags);
+
+        mNoteV.enableActionModes(false);
 
         intstallFolderSelectorListener(mFolderV);
         updateUI();
@@ -81,13 +90,13 @@ public class NewBookmarkFragment extends NewEntryFragment<Bookmark> {
     }
 
     @Override
-    protected void onEntryUpdated(Bookmark entry) {
+    protected void onEntryUpdated(Doc entry) {
         super.onEntryUpdated(entry);
         updateUI();
     }
 
     @Override
-    protected void onDetailEntryUpdated(Bookmark entry) {
+    protected void onDetailEntryUpdated(Doc entry) {
         super.onDetailEntryUpdated(entry);
         updateUI();
     }
@@ -105,30 +114,40 @@ public class NewBookmarkFragment extends NewEntryFragment<Bookmark> {
     private void updateUI() {
         updateFolderView();
 
-        Bookmark bookmark = getDetailEntryIfExist();
-        if (bookmark != null) {
-            mWebAddressV.setText(bookmark.getWebAddress());
-            mNoteV.setText(bookmark.getNote());
-            mTagsV.setText(bookmark.getTags());
+        Doc doc = getDetailEntryIfExist();
+        if (doc != null) {
+            mTitleV.setText(doc.getTitle());
+            mTagsV.setText(doc.getTags());
+
+            String note = doc.getNote();
+            if (note != null) {
+                mNoteV.setText(Html.fromHtml(note));
+            }
         }
     }
 
     @Override
     public boolean isEditedEntryValid() {
-        return isAllTextNotEmpty(R.string.err_empty_field, mWebAddressV);
+        return isAllTextNotEmpty(R.string.err_empty_field, mTitleV);
     }
 
     @Override
-    public Bookmark getEditedEntry() {
-        Bookmark bookmark = getDetailEntryIfExist();
-        if (bookmark == null) {
-            bookmark = new Bookmark(getFolder());
-        }
-        bookmark.setWebAddress(mWebAddressV.getText().toString());
-        bookmark.setNote(mNoteV.getText().toString());
-        bookmark.setTags(mTagsV.getText().toString());
+    public Doc getEditedEntry() {
+        // BUG: the cursor underlines the EditText automatically, affecting the
+        // returned Editable of getText()
+        InputMethodManager m = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        m.hideSoftInputFromWindow(mNoteV.getWindowToken(), 0);
+        mNoteV.clearFocus();
 
-        setDetailEntry(bookmark);
-        return bookmark;
+        Doc entry = getDetailEntryIfExist();
+        if (entry == null) {
+            entry = new Doc(getFolder());
+        }
+        entry.setTitle(mTitleV.getText().toString());
+        entry.setNote(Html.toHtml(mNoteV.getText()));
+        entry.setTags(mTagsV.getText().toString());
+
+        setDetailEntry(entry);
+        return entry;
     }
 }

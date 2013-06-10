@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView
+    android:id="@+id/lbl_folder"
+    style="@style/selectableTextView"
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    android:drawableLeft="@drawable/ic_folder"
+    android:drawablePadding="@dimen/ed__padding_small"
+    android:ellipsize="end"
+    android:maxLines="1"
+    android:scrollHorizontally="true"
+    android:text="@string/root"
+    android:textSize="@dimen/ed__textsize_medium"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" />
+

@@ -9,18 +9,19 @@ import android.net.Uri;
 import android.support.v4.app.Fragment;
 
 import com.edmondapps.utils.android.annotaion.ParentActivity;
+import com.nexuspad.annotation.ModuleId;
 import com.nexuspad.bookmark.ui.fragment.NewBookmarkFragment;
 import com.nexuspad.datamodel.Bookmark;
 import com.nexuspad.datamodel.Folder;
 import com.nexuspad.dataservice.ServiceConstants;
 import com.nexuspad.ui.activity.NewEntryActivity;
-import com.nexuspad.ui.fragment.EntryFragment;
 
 /**
  * @author Edmond
  */
 @ParentActivity(BookmarksActivity.class)
-public class NewBookmarkActivity extends NewEntryActivity<Bookmark> implements EntryFragment.Callback<Bookmark> {
+@ModuleId(moduleId = ServiceConstants.BOOKMARK_MODULE)
+public class NewBookmarkActivity extends NewEntryActivity<Bookmark> {
 
     public static void startWithBookmark(Bookmark b, Folder f, Mode m, Context c) {
         Intent intent = new Intent(c, NewBookmarkActivity.class);
@@ -35,11 +36,6 @@ public class NewBookmarkActivity extends NewEntryActivity<Bookmark> implements E
         intent.putExtra(KEY_FOLDER, f);
         intent.putExtra(KEY_MODE, m);
         c.startActivity(intent);
-    }
-
-    @Override
-    protected int getModule() {
-        return ServiceConstants.BOOKMARK_MODULE;
     }
 
     @Override
@@ -75,37 +71,5 @@ public class NewBookmarkActivity extends NewEntryActivity<Bookmark> implements E
     @Override
     protected NewBookmarkFragment getFragment() {
         return (NewBookmarkFragment)super.getFragment();
-    }
-
-    @Override
-    protected void onDonePressed() {
-        super.onDonePressed();
-
-        switch (getMode()) {
-            case EDIT:
-                getFragment().updateEntry();
-                goUp();
-                break;
-            case NEW:
-            default:
-                getFragment().addEntry();
-                goUp();
-                break;
-        }
-    }
-
-    @Override
-    protected void onDiscardPressed() {
-        goUp();
-    }
-
-    @Override
-    public void onDeleting(EntryFragment<Bookmark> f, Bookmark entry) {
-        goUp();
-    }
-
-    private void goUp() {
-        startActivity(getUpIntent(getUpActivity()));
-        finish();
     }
 }

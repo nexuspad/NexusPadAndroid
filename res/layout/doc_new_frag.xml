@@ -34,15 +34,14 @@
                 style="?android:attr/listSeparatorTextViewStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/web_address" />
+                android:text="@string/title" />
 
             <EditText
-                android:id="@+id/txt_web_address"
+                android:id="@+id/txt_title"
                 style="@style/formMargin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/web_address"
-                android:inputType="textUri" />
+                android:hint="@string/title" />
 
             <TextView
                 style="?android:attr/listSeparatorTextViewStyle"
@@ -63,13 +62,15 @@
                 android:layout_height="wrap_content"
                 android:text="@string/note" />
 
-            <EditText
+            <com.commonsware.cwac.richedit.RichEditText
                 android:id="@+id/txt_note"
                 style="@style/formMargin"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:hint="@string/note"
+                android:imeOptions="flagNoExtractUi"
+                android:inputType="textMultiLine"
                 android:minLines="3" />
         </LinearLayout>
     </FrameLayout>

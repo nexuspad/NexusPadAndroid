@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.BaseAdapter;
+import android.widget.ListAdapter;
 import android.widget.Toast;
 
 import com.actionbarsherlock.view.MenuItem;
@@ -21,6 +22,7 @@ import com.edmondapps.utils.java.Lazy;
 import com.nexuspad.Manifest;
 import com.nexuspad.R;
 import com.nexuspad.account.AccountManager;
+import com.nexuspad.annotation.ModuleId;
 import com.nexuspad.datamodel.EntryList;
 import com.nexuspad.datamodel.EntryTemplate;
 import com.nexuspad.datamodel.Folder;
@@ -29,6 +31,7 @@ import com.nexuspad.dataservice.ActionResult;
 import com.nexuspad.dataservice.EntryListService;
 import com.nexuspad.dataservice.EntryListServiceCallback;
 import com.nexuspad.dataservice.EntryService;
+import com.nexuspad.dataservice.EntryService.EntryReceiver;
 import com.nexuspad.dataservice.EntryServiceCallback;
 import com.nexuspad.dataservice.ErrorCode;
 import com.nexuspad.dataservice.FolderService;
@@ -43,6 +46,11 @@ import com.nexuspad.ui.OnFolderMenuClickListener;
 import com.nexuspad.ui.activity.NewFolderActivity;
 
 /**
+ * Manages an EntryList.
+ * <p>
+ * You may use {@link ModuleId} annotation on the {@code Fragment} class, if you
+ * don't, you must override {@link #getTemplate()} and {@link #getModule()}.
+ * 
  * @author Edmond
  * 
  */
@@ -81,7 +89,28 @@ public abstract class EntriesFragment extends PaddedListFragment {
     private final FolderReceiver mFolderReceiver = new FolderReceiver() {
         @Override
         protected void onNew(Context c, Intent i, Folder f) {
-            onNewFolder(c, i, f);
+            if (f.getParentId() == mFolder.getParentId()) {
+                onNewFolder(c, i, f);
+            }
+        }
+    };
+    private final EntryReceiver mEntryReceiver = new EntryReceiver() {
+        @Override
+        public void onDelete(Context context, Intent intent, NPEntry entry) {
+            EntryList entryList = getEntryList();
+            if (entryList != null) {
+                entryList.getEntries().remove(entry);
+                getListAdapter().notifyDataSetChanged();
+            }
+        }
+
+        @Override
+        public void onNew(Context context, Intent intent, NPEntry entry) {
+            EntryList entryList = getEntryList();
+            if (entryList != null) {
+                entryList.getEntries().add(entry);
+                getListAdapter().notifyDataSetChanged();
+            }
         }
     };
 
@@ -92,16 +121,28 @@ public abstract class EntriesFragment extends PaddedListFragment {
     private int mCurrentPage;
     private Folder mFolder;
 
+    private ModuleId mModuleId;
+
     /**
      * @see #getTemplate()
      * @return one of the {@code *_MODULE} constants in {@link ServiceConstants}
      */
-    protected abstract int getModule();
+    protected int getModule() {
+        if (mModuleId == null) {
+            throw new IllegalStateException("You must annotate the class with a ModuleId, or override this method.");
+        }
+        return mModuleId.moduleId();
+    }
 
     /**
      * @return should correspond with {@link #getModule()}
      */
-    protected abstract EntryTemplate getTemplate();
+    protected EntryTemplate getTemplate() {
+        if (mModuleId == null) {
+            throw new IllegalStateException("You must annotate the class with a ModuleId, or override this method.");
+        }
+        return mModuleId.template();
+    }
 
     protected abstract void onNewFolder(Context c, Intent i, Folder f);
 
@@ -113,12 +154,17 @@ public abstract class EntriesFragment extends PaddedListFragment {
         } else {
             throw new IllegalStateException(activity + " must implement Callback.");
         }
+
+        mModuleId = getClass().getAnnotation(ModuleId.class);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        FragmentActivity activity = getActivity();
         Bundle arguments = getArguments();
+
         if (arguments != null) {
             mFolder = arguments.getParcelable(KEY_FOLDER);
         }
@@ -127,10 +173,16 @@ public abstract class EntriesFragment extends PaddedListFragment {
             mFolder = Folder.rootFolderOf(getModule());
         }
 
-        getActivity().registerReceiver(
+        activity.registerReceiver(
                 mFolderReceiver,
-                FolderService.getFolderReceiverIntentFilter(),
+                FolderReceiver.getIntentFilter(),
                 Manifest.permission.LISTEN_FOLDER_CHANGES,
+                null);
+
+        activity.registerReceiver(
+                mEntryReceiver,
+                EntryReceiver.getIntentFilter(),
+                Manifest.permission.LISTEN_ENTRY_CHANGES,
                 null);
     }
 
@@ -166,7 +218,10 @@ public abstract class EntriesFragment extends PaddedListFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        getActivity().unregisterReceiver(mFolderReceiver);
+
+        FragmentActivity activity = getActivity();
+        activity.unregisterReceiver(mFolderReceiver);
+        activity.unregisterReceiver(mEntryReceiver);
     }
 
     public void queryEntriesAync() {
@@ -240,6 +295,26 @@ public abstract class EntriesFragment extends PaddedListFragment {
         return mEntryList;
     }
 
+    /**
+     * @deprecated use {@link #setListAdapter(BaseAdapter)}
+     * @throws UnsupportedOperationException
+     *             every time this method is invoked
+     */
+    @Override
+    @Deprecated
+    public void setListAdapter(ListAdapter adapter) {
+        throw new UnsupportedOperationException("You must use setListAdapter(BaseAdapter).");
+    }
+
+    public void setListAdapter(BaseAdapter adapter) {
+        super.setListAdapter(adapter);
+    }
+
+    @Override
+    public BaseAdapter getListAdapter() {
+        return (BaseAdapter)super.getListAdapter();
+    }
+
     public final Folder getFolder() {
         return mFolder;
     }
@@ -303,7 +378,7 @@ public abstract class EntriesFragment extends PaddedListFragment {
                     fragment.mEntryList.getFolder()
                             .removeSubFolder(fragment.getFolderService().getJustDeletedFolder());
                 }
-                ((BaseAdapter)fragment.getListAdapter()).notifyDataSetChanged();
+                fragment.getListAdapter().notifyDataSetChanged();
             }
         }
 
@@ -335,7 +410,7 @@ public abstract class EntriesFragment extends PaddedListFragment {
                     fragment.mEntryList.getEntries()
                             .remove(fragment.getEntryService().getJustDeletedEntry());
                 }
-                ((BaseAdapter)fragment.getListAdapter()).notifyDataSetChanged();
+                fragment.getListAdapter().notifyDataSetChanged();
             }
         }
 

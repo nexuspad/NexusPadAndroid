@@ -13,6 +13,6 @@ import com.nexuspad.R;
 public abstract class PaddedListActivity extends SinglePaneActivity {
     @Override
     protected int onCreateLayoutId() {
-        return R.layout.list_activity;
+        return R.layout.no_padding_activity;
     }
 }

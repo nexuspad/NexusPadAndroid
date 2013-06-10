@@ -130,7 +130,7 @@ public class FoldersFragment extends PaddedListFragment {
 
         getActivity().registerReceiver(
                 mFolderReceiver,
-                FolderService.getFolderReceiverIntentFilter(),
+                FolderReceiver.getIntentFilter(),
                 Manifest.permission.LISTEN_FOLDER_CHANGES,
                 null);
 

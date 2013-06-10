@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
 import com.edmondapps.utils.android.activity.DoneDiscardActivity;
+import com.nexuspad.R;
 import com.nexuspad.datamodel.Folder;
 import com.nexuspad.dataservice.FolderService;
 import com.nexuspad.ui.fragment.NewFolderFragment;
@@ -33,6 +34,11 @@ public class NewFolderActivity extends DoneDiscardActivity {
     private final FolderService mFolderService = new FolderService(this, null);
 
     private Folder mParentFolder;
+
+    @Override
+    protected int onCreateLayoutId() {
+        return R.layout.no_padding_activity;
+    }
 
     @Override
     protected void onCreate(Bundle savedState) {

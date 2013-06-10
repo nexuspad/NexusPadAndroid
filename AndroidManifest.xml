@@ -60,7 +60,13 @@
             </intent-filter>
         </activity>
         <activity
+            android:name="com.nexuspad.doc.ui.activity.DocActivity"
+            android:label="@string/docs" />
+        <activity
             android:name="com.nexuspad.doc.ui.activity.DocsActivity"
+            android:label="@string/docs" />
+        <activity
+            android:name="com.nexuspad.doc.ui.activity.NewDocActivity"
             android:label="@string/docs" />
         <activity
             android:name="com.nexuspad.ui.activity.NewFolderActivity"

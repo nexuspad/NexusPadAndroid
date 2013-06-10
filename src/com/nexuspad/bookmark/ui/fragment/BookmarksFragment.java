@@ -20,17 +20,15 @@ import com.edmondapps.utils.android.ui.SingleAdapter;
 import com.edmondapps.utils.android.view.LoadingViews;
 import com.edmondapps.utils.java.Lazy;
 import com.edmondapps.utils.java.WrapperList;
-import com.nexuspad.Manifest;
 import com.nexuspad.R;
+import com.nexuspad.annotation.ModuleId;
 import com.nexuspad.bookmark.ui.BookmarksAdapter;
 import com.nexuspad.bookmark.ui.activity.NewBookmarkActivity;
 import com.nexuspad.datamodel.Bookmark;
 import com.nexuspad.datamodel.EntryList;
 import com.nexuspad.datamodel.EntryTemplate;
 import com.nexuspad.datamodel.Folder;
-import com.nexuspad.datamodel.NPEntry;
 import com.nexuspad.dataservice.EntryService;
-import com.nexuspad.dataservice.EntryService.EntryReceiver;
 import com.nexuspad.dataservice.ServiceConstants;
 import com.nexuspad.ui.FolderEntriesAdapter;
 import com.nexuspad.ui.FoldersAdapter;
@@ -43,6 +41,7 @@ import com.nexuspad.ui.fragment.EntriesFragment;
  * 
  */
 @FragmentName(BookmarksFragment.TAG)
+@ModuleId(moduleId = ServiceConstants.BOOKMARK_MODULE, template = EntryTemplate.BOOKMARK)
 public class BookmarksFragment extends EntriesFragment {
     public static final String TAG = "BookmarksFragment";
 
@@ -77,25 +76,6 @@ public class BookmarksFragment extends EntriesFragment {
             return new SingleAdapter<View>(view);
         }
     };
-    private final EntryReceiver mEntryReceiver = new EntryReceiver() {
-        @Override
-        public void onDelete(Context context, Intent intent, NPEntry entry) {
-            EntryList entryList = getEntryList();
-            if (entryList != null) {
-                entryList.getEntries().remove(entry);
-                getListAdapter().notifyDataSetChanged();
-            }
-        }
-
-        @Override
-        public void onNew(Context context, Intent intent, NPEntry entry) {
-            EntryList entryList = getEntryList();
-            if (entryList != null) {
-                entryList.getEntries().add(entry);
-                getListAdapter().notifyDataSetChanged();
-            }
-        }
-    };
 
     private Callback mCallback;
 
@@ -108,22 +88,6 @@ public class BookmarksFragment extends EntriesFragment {
             throw new IllegalStateException(activity + " must implement Callback.");
         }
         setHasOptionsMenu(true);
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        getActivity().registerReceiver(
-                mEntryReceiver,
-                EntryService.getEntryReceiverIntentFilter(),
-                Manifest.permission.LISTEN_ENTRY_CHANGES,
-                null);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        getActivity().unregisterReceiver(mEntryReceiver);
     }
 
     @Override
@@ -146,9 +110,6 @@ public class BookmarksFragment extends EntriesFragment {
     @Override
     protected void onNewFolder(Context c, Intent i, Folder f) {
         // TODO bug in ActionResult.getUpdatedFolder()
-        if (true) {
-            return;
-        }
         getEntryList().getFolder().getSubFolders().add(f);
         getListAdapter().notifyDataSetChanged();
     }
@@ -206,16 +167,6 @@ public class BookmarksFragment extends EntriesFragment {
             loadingViews.startLoading();
             queryEntriesAync(getCurrentPage() + 1);
         }
-    }
-
-    @Override
-    protected int getModule() {
-        return ServiceConstants.BOOKMARK_MODULE;
-    }
-
-    @Override
-    protected EntryTemplate getTemplate() {
-        return EntryTemplate.BOOKMARK;
     }
 
     @Override
