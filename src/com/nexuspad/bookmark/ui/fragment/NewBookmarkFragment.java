@@ -32,7 +32,7 @@ public class NewBookmarkFragment extends NewEntryFragment<Bookmark> {
     public static final String TAG = "NewBookmarkFragment";
 
     public static NewBookmarkFragment of(Folder folder) {
-        return of(null, folder);
+        return NewBookmarkFragment.of(null, folder);
     }
 
     public static NewBookmarkFragment of(Bookmark b, Folder f) {

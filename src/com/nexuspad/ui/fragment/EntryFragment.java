@@ -25,6 +25,7 @@ import com.nexuspad.dataservice.EntryService.EntryReceiver;
 import com.nexuspad.dataservice.EntryServiceCallback;
 import com.nexuspad.dataservice.NPException;
 import com.nexuspad.dataservice.ServiceError;
+import com.nexuspad.ui.activity.FoldersActivity;
 
 /**
  * You must pass in a {@code Folder} with the key {@link KEY_FOLDER}
@@ -174,13 +175,33 @@ public abstract class EntryFragment<T extends NPEntry> extends SherlockDialogFra
         }
     }
 
+    /**
+     * Calling this method will also invoke {@link NPEntry#setFolder(Folder)}
+     * for the simple entry and the detail entry.
+     * 
+     * @see #getDetailEntry()
+     * @see #getDetailEntryIfExist()
+     */
     public void setFolder(Folder folder) {
         if (mFolder != folder) {
             mFolder = folder;
-            onFolderUpdated(folder);
+            onFolderUpdatedInternal(folder);
         }
     }
 
+    private void onFolderUpdatedInternal(Folder folder) {
+        mEntry.setFolder(folder);
+        mDetailEntry.setFolder(folder);
+        onFolderUpdated(folder);
+    }
+
+    /**
+     * Called when a folder is updated (usually from the result of selecting a
+     * folder).
+     * 
+     * @see FoldersActivity
+     * @param folder
+     */
     protected void onFolderUpdated(Folder folder) {
     }
 
