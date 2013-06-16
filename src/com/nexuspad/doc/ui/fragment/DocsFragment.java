@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.BaseAdapter;
 import android.widget.ListView;
 
 import com.actionbarsherlock.view.Menu;
@@ -96,12 +97,28 @@ public class DocsFragment extends EntriesFragment {
     protected void onListLoaded(EntryList list) {
         super.onListLoaded(list);
 
+        FoldersDocsAdapter a = getListAdapter();
+        if (a != null) {
+            a.notifyDataSetChanged();
+            if (!hasNextPage()) {
+                a.removeAdapter(getLoadMoreAdapter());
+            }
+            return;
+        }
+
         ListView listView = getListView();
 
         FoldersAdapter foldersAdapter = newFoldersAdapter(list);
         DocsAdapter docsAdapter = newDocsAdapter(list);
 
-        FoldersDocsAdapter foldersDocsAdapter = new FoldersDocsAdapter(foldersAdapter, docsAdapter);
+        FoldersDocsAdapter foldersDocsAdapter;
+
+        if (hasNextPage()) {
+            foldersDocsAdapter = new FoldersDocsAdapter(foldersAdapter, docsAdapter, getLoadMoreAdapter());
+        } else {
+            foldersDocsAdapter = new FoldersDocsAdapter(foldersAdapter, docsAdapter);
+        }
+
         setListAdapter(foldersDocsAdapter);
 
         listView.setOnItemLongClickListener(foldersDocsAdapter);
@@ -127,7 +144,6 @@ public class DocsFragment extends EntriesFragment {
         } else if (adapter.isPositionEntries(position)) {
             Doc doc = adapter.getEntriesAdapter().getItem(realPos);
             mCallback.onDocClick(this, doc);
-
         }
     }
 
@@ -156,6 +172,10 @@ public class DocsFragment extends EntriesFragment {
     private static class FoldersDocsAdapter extends FolderEntriesAdapter<DocsAdapter> {
         public FoldersDocsAdapter(FoldersAdapter folderAdapter, DocsAdapter entriesAdapter) {
             super(folderAdapter, entriesAdapter);
+        }
+
+        public FoldersDocsAdapter(FoldersAdapter folderAdapter, DocsAdapter entriesAdapter, BaseAdapter a) {
+            super(folderAdapter, entriesAdapter, a);
         }
     }
 }

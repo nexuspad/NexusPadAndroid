@@ -40,6 +40,8 @@ public class DashboardActivity extends PaddedListActivity implements DashboardFr
                 return BookmarksActivity.class;
             case DOC_MODULE:
                 return DocsActivity.class;
+                // case JOURNAL_MODULE:
+                // return JournalActivity.class;
             default:
                 Logs.v(TAG, "moduleType: " + moduleType);
                 return null;

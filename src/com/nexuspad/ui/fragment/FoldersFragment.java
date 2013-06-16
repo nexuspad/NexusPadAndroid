@@ -40,7 +40,7 @@ import com.nexuspad.ui.activity.NewFolderActivity;
  * 
  */
 @FragmentName(FoldersFragment.TAG)
-public class FoldersFragment extends PaddedListFragment {
+public class FoldersFragment extends ListFragment {
     public static final String TAG = "FoldersFragment";
     public static final String KEY_PARENT_FOLDER = "com.nexuspad.ui.fragment.FoldersFragment.parent_folder";
 
@@ -173,7 +173,7 @@ public class FoldersFragment extends PaddedListFragment {
     protected FoldersAdapter newFoldersAdapter(List<Folder> folders) {
         final FoldersAdapter adapter = new FoldersAdapter(getActivity(), folders, true);
         ListView listView = getListView();
-        adapter.setOnMenuClickListener(new OnFolderMenuClickListener(listView, mFolderService) {
+        adapter.setOnMenuClickListener(new OnFolderMenuClickListener(listView, mParentFolder, mFolderService) {
             @Override
             public void onClick(View v) {
                 int pos = getListView().getPositionForView(v);

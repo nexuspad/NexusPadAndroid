@@ -4,6 +4,7 @@
 package com.nexuspad.ui.fragment;
 
 import java.lang.ref.WeakReference;
+import java.util.Date;
 import java.util.Map;
 
 import android.app.Activity;
@@ -14,10 +15,13 @@ import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.BaseAdapter;
 import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.view.MenuItem;
 import com.edmondapps.utils.android.Logs;
+import com.edmondapps.utils.android.ui.CompoundAdapter;
+import com.edmondapps.utils.android.ui.SingleAdapter;
 import com.edmondapps.utils.java.Lazy;
 import com.nexuspad.Manifest;
 import com.nexuspad.R;
@@ -43,6 +47,7 @@ import com.nexuspad.dataservice.ServiceError;
 import com.nexuspad.home.ui.activity.LoginActivity;
 import com.nexuspad.ui.FoldersAdapter;
 import com.nexuspad.ui.OnFolderMenuClickListener;
+import com.nexuspad.ui.OnListEndListener;
 import com.nexuspad.ui.activity.NewFolderActivity;
 
 /**
@@ -54,10 +59,10 @@ import com.nexuspad.ui.activity.NewFolderActivity;
  * @author Edmond
  * 
  */
-public abstract class EntriesFragment extends PaddedListFragment {
+public abstract class EntriesFragment extends ListFragment {
     public static final String KEY_FOLDER = "key_folder";
+    public static final int PAGE_COUNT = 20;
 
-    private static final int PAGE_COUNT = 20;
     private static final String TAG = "EntriesFragment";
     private static final String KEY_ENTRY_LIST = "key_entry_list";
 
@@ -111,6 +116,14 @@ public abstract class EntriesFragment extends PaddedListFragment {
                 entryList.getEntries().add(entry);
                 getListAdapter().notifyDataSetChanged();
             }
+        }
+    };
+
+    private final Lazy<SingleAdapter<View>> mLoadMoreAdapter = new Lazy<SingleAdapter<View>>() {
+        @Override
+        protected SingleAdapter<View> onCreate() {
+            return new SingleAdapter<View>(getActivity().getLayoutInflater()
+                    .inflate(R.layout.list_item_load_more, null, false));
         }
     };
 
@@ -195,7 +208,18 @@ public abstract class EntriesFragment extends PaddedListFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        getListView().setItemsCanFocus(true);
+
+        ListView listView = getListView();
+        if (listView != null) {
+            listView.setItemsCanFocus(true);
+            listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+            listView.setOnScrollListener(new OnListEndListener() {
+                @Override
+                protected void onListEnd(int page) {
+                    queryEntriesAync(getCurrentPage() + 1);
+                }
+            });
+        }
 
         if (savedInstanceState == null) {
             queryEntriesAync();
@@ -233,9 +257,8 @@ public abstract class EntriesFragment extends PaddedListFragment {
 
         FragmentActivity activity = getActivity();
         try {
-            EntryListService service = mEntryListService.get();
             mFolder.setOwner(AccountManager.currentAccount());
-            service.getEntriesInFolder(mFolder, getTemplate(), page, PAGE_COUNT);
+            getEntriesInFolder(mEntryListService.get(), mFolder, page);
 
         } catch (NPException e) {
             Logs.e(TAG, e);
@@ -246,6 +269,19 @@ public abstract class EntriesFragment extends PaddedListFragment {
                 Toast.makeText(activity, R.string.err_internal, Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    /**
+     * Called when {@link #queryEntriesAync(int)} is invoked. The default
+     * implementation calls
+     * {@link EntryListService#getEntriesInFolder(Folder, EntryTemplate, int, int)}
+     * .
+     * <p>
+     * You may override this method to use other mechanisms, such as
+     * {@link EntryListService#getEntriesBetweenDates(Folder, EntryTemplate, Date, Date, int, int)}
+     */
+    protected void getEntriesInFolder(EntryListService service, Folder folder, int page) throws NPException {
+        service.getEntriesInFolder(mFolder, getTemplate(), page, PAGE_COUNT);
     }
 
     protected void onListLoaded(EntryList list) {
@@ -287,8 +323,18 @@ public abstract class EntriesFragment extends PaddedListFragment {
 
     protected FoldersAdapter newFoldersAdapter(EntryList list) {
         FoldersAdapter foldersAdapter = new FoldersAdapter(getActivity(), list.getFolder().getSubFolders());
-        foldersAdapter.setOnMenuClickListener(new OnFolderMenuClickListener(getListView(), getFolderService()));
+        OnFolderMenuClickListener listener = new OnFolderMenuClickListener(getListView(), mFolder, getFolderService());
+        foldersAdapter.setOnMenuClickListener(listener);
         return foldersAdapter;
+    }
+
+    /**
+     * @see CompoundAdapter
+     * @return an adapter that is used to indicate it is loading more entries at
+     *         the end of the lit
+     */
+    protected SingleAdapter<View> getLoadMoreAdapter() {
+        return mLoadMoreAdapter.get();
     }
 
     public EntryList getEntryList() {

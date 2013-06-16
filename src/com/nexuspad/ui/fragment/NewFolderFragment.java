@@ -32,13 +32,27 @@ public class NewFolderFragment extends SherlockDialogFragment {
     public static final String TAG = "NewFolderFragment";
 
     private static final String KEY_FOLDER = "key_folder";
+    private static final String KEY_ORIGINAL_FOLDER_NAME = "key_original_folder_name";
 
     // request code for startActivityForResult(Intent, int)
     private static final int REQ_FOLDER = 1;
 
+    /**
+     * 
+     * @return a {@link NewFolderFragment} with a parent folder
+     */
     public static NewFolderFragment of(Folder parent) {
+        return NewFolderFragment.of(parent, null);
+    }
+
+    /**
+     * 
+     * @return a {@link NewFolderFragment} with a default folder name
+     */
+    public static NewFolderFragment of(Folder parent, Folder folder) {
         Bundle bundle = new Bundle();
         bundle.putParcelable(KEY_FOLDER, parent);
+        bundle.putParcelable(KEY_ORIGINAL_FOLDER_NAME, folder);
 
         NewFolderFragment fragment = new NewFolderFragment();
         fragment.setArguments(bundle);
@@ -48,7 +62,9 @@ public class NewFolderFragment extends SherlockDialogFragment {
 
     private TextView mFolderV;
     private EditText mFolderNameV;
+
     private Folder mParentFolder;
+    private Folder mOriginalFolder;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -57,6 +73,7 @@ public class NewFolderFragment extends SherlockDialogFragment {
         Bundle arguments = getArguments();
         if (arguments != null) {
             mParentFolder = arguments.getParcelable(KEY_FOLDER);
+            mOriginalFolder = arguments.getParcelable(KEY_ORIGINAL_FOLDER_NAME);
         }
 
         if (mParentFolder == null) {
@@ -75,8 +92,8 @@ public class NewFolderFragment extends SherlockDialogFragment {
         mFolderNameV = findView(view, R.id.txt_folder_name);
         mFolderV = findView(view, R.id.lbl_folder);
 
-        mFolderV.setText(mParentFolder.getFolderName());
         installListeners();
+        updateUI();
     }
 
     private void installListeners() {
@@ -88,6 +105,11 @@ public class NewFolderFragment extends SherlockDialogFragment {
                 startActivityForResult(intent, REQ_FOLDER);
             }
         });
+    }
+
+    private void updateUI() {
+        mFolderV.setText(mParentFolder.getFolderName());
+        mFolderNameV.setText(mOriginalFolder.getFolderName());
     }
 
     @Override
@@ -112,7 +134,8 @@ public class NewFolderFragment extends SherlockDialogFragment {
     }
 
     public Folder getEditedFolder() {
-        Folder folder = new Folder(mParentFolder.getModuleId());
+        Folder folder = mOriginalFolder != null ? mOriginalFolder : new Folder(mParentFolder.getModuleId());
+
         folder.setParent(mParentFolder);
         folder.setFolderName(mFolderNameV.getText().toString());
         try {

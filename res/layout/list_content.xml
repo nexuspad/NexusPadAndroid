@@ -31,17 +31,6 @@
             android:paddingTop="@dimen/ed__padding_small"
             android:scrollbarStyle="outsideOverlay" >
         </ListView>
-
-        <TextView
-            android:id="@android:id/empty"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:drawablePadding="@dimen/ed__padding_medium"
-            android:drawableTop="@drawable/empty_subfolders"
-            android:text="@string/empty_folder"
-            android:textSize="@dimen/ed__textsize_medium" >
-        </TextView>
     </FrameLayout>
 
 </FrameLayout>

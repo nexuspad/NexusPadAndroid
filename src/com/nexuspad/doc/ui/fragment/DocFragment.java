@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,7 +46,10 @@ public class DocFragment extends EntryFragment<Doc> {
 
     private TextView mTitleV;
     private TextView mTagsV;
-    private TextView mDocV;
+    private TextView mNoteV;
+
+    private TextView mTagsFrameV;
+    private TextView mNoteFrameV;
 
     @Override
     public void onAttach(Activity activity) {
@@ -82,7 +86,13 @@ public class DocFragment extends EntryFragment<Doc> {
 
         mTitleV = findView(view, R.id.lbl_title);
         mTagsV = findView(view, R.id.lbl_tags);
-        mDocV = findView(view, R.id.lbl_doc);
+        mNoteV = findView(view, R.id.lbl_note);
+
+        mTagsFrameV = findView(view, R.id.lbl_tags_frame);
+        mNoteFrameV = findView(view, R.id.lbl_note_frame);
+
+        // magic to make the links inside the <a></a> tags clickable
+        mNoteV.setMovementMethod(LinkMovementMethod.getInstance());
 
         updateUI();
     }
@@ -107,8 +117,20 @@ public class DocFragment extends EntryFragment<Doc> {
 
             String note = doc.getNote();
             if (!TextUtils.isEmpty(note)) {
-                mDocV.setText(Html.fromHtml(note));
+                mNoteV.setText(Html.fromHtml(note));
             }
+
+            updateVisibilities(doc);
         }
+    }
+
+    private void updateVisibilities(Doc doc) {
+        int tagsFlag = !TextUtils.isEmpty(doc.getTags()) ? View.VISIBLE : View.GONE;
+        mTagsV.setVisibility(tagsFlag);
+        mTagsFrameV.setVisibility(tagsFlag);
+
+        int noteFlag = !TextUtils.isEmpty(doc.getNote()) ? View.VISIBLE : View.GONE;
+        mNoteV.setVisibility(noteFlag);
+        mNoteFrameV.setVisibility(noteFlag);
     }
 }

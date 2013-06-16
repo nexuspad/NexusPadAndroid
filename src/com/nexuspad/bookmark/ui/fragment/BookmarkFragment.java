@@ -9,6 +9,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -55,6 +56,9 @@ public class BookmarkFragment extends EntryFragment<Bookmark> {
     private TextView mTagsV;
     private TextView mNoteV;
 
+    private TextView mTagsFrameV;
+    private TextView mNoteFrameV;
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -97,6 +101,9 @@ public class BookmarkFragment extends EntryFragment<Bookmark> {
         mTagsV = findView(view, R.id.lbl_tags);
         mNoteV = findView(view, R.id.lbl_note);
 
+        mTagsFrameV = findView(view, R.id.lbl_tags_frame);
+        mNoteFrameV = findView(view, R.id.lbl_note_frame);
+
         updateUI();
         installListeners();
     }
@@ -120,7 +127,19 @@ public class BookmarkFragment extends EntryFragment<Bookmark> {
             mWebAddressV.setText(bookmark.getWebAddress());
             mTagsV.setText(bookmark.getTags());
             mNoteV.setText(bookmark.getNote());
+
+            updateVisibilities(bookmark);
         }
+    }
+
+    private void updateVisibilities(Bookmark bookmark) {
+        int noteFlag = !TextUtils.isEmpty(bookmark.getNote()) ? View.VISIBLE : View.GONE;
+        mNoteV.setVisibility(noteFlag);
+        mNoteFrameV.setVisibility(noteFlag);
+
+        int tagsFlag = !TextUtils.isEmpty(bookmark.getTags()) ? View.VISIBLE : View.GONE;
+        mTagsV.setVisibility(tagsFlag);
+        mTagsFrameV.setVisibility(tagsFlag);
     }
 
     private void installListeners() {

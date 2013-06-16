@@ -17,6 +17,7 @@ import com.nexuspad.account.AccountManager;
 import com.nexuspad.datamodel.Folder;
 import com.nexuspad.dataservice.FolderService;
 import com.nexuspad.dataservice.NPException;
+import com.nexuspad.ui.activity.NewFolderActivity;
 
 public class OnFolderMenuClickListener implements OnClickListener {
     public static final String TAG = "OnFolderMenuClickListener";
@@ -34,9 +35,11 @@ public class OnFolderMenuClickListener implements OnClickListener {
 
     private final FolderService mFolderService;
     private final ListView mListView;
+    private final Folder mParentFolder;
 
-    public OnFolderMenuClickListener(ListView listView, FolderService folderService) {
+    public OnFolderMenuClickListener(ListView listView, Folder parent, FolderService folderService) {
         mListView = listView;
+        mParentFolder = parent;
         mFolderService = folderService;
     }
 
@@ -71,11 +74,18 @@ public class OnFolderMenuClickListener implements OnClickListener {
 
     public boolean onFolderMenuClick(Folder folder, int menuId) {
         switch (menuId) {
+            case R.id.rename:
+                renameFolder(folder);
+                return true;
             case R.id.delete:
                 deleteFolder(folder);
                 return true;
         }
         return false;
+    }
+
+    private void renameFolder(Folder f) {
+        NewFolderActivity.startWithParentFolder(mParentFolder, f, mListView.getContext());
     }
 
     private void deleteFolder(Folder folder) {

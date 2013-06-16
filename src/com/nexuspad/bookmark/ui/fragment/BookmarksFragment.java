@@ -3,7 +3,6 @@
  */
 package com.nexuspad.bookmark.ui.fragment;
 
-import static com.edmondapps.utils.android.view.ViewUtils.findView;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -16,9 +15,6 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.edmondapps.utils.android.annotaion.FragmentName;
-import com.edmondapps.utils.android.ui.SingleAdapter;
-import com.edmondapps.utils.android.view.LoadingViews;
-import com.edmondapps.utils.java.Lazy;
 import com.edmondapps.utils.java.WrapperList;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
@@ -63,20 +59,6 @@ public class BookmarksFragment extends EntriesFragment {
         void onFolderClick(BookmarksFragment f, Folder folder);
     }
 
-    private final Lazy<SingleAdapter<View>> mLoadMoreAdapter = new Lazy<SingleAdapter<View>>() {
-        @Override
-        protected SingleAdapter<View> onCreate() {
-            View view = getActivity().getLayoutInflater()
-                    .inflate(R.layout.list_item_load_more, null, false);
-
-            LoadingViews loadingViews = LoadingViews.of(
-                    findView(view, android.R.id.text1), findView(view, android.R.id.progress));
-
-            view.setTag(loadingViews);
-            return new SingleAdapter<View>(view);
-        }
-    };
-
     private Callback mCallback;
 
     @Override
@@ -118,7 +100,14 @@ public class BookmarksFragment extends EntriesFragment {
     protected void onListLoaded(EntryList list) {
         super.onListLoaded(list);
 
-        clearLoadMore();
+        FolderBookmarksAdapter a = getListAdapter();
+        if (a != null) {
+            a.notifyDataSetChanged();
+            if (!hasNextPage()) {
+                a.removeAdapter(getLoadMoreAdapter());
+            }
+            return;
+        }
 
         ListView listView = getListView();
 
@@ -128,18 +117,13 @@ public class BookmarksFragment extends EntriesFragment {
         FolderBookmarksAdapter adapter;
 
         if (hasNextPage()) {
-            adapter = new FolderBookmarksAdapter(foldersAdapter, bookmarksAdapter, mLoadMoreAdapter.get());
+            adapter = new FolderBookmarksAdapter(foldersAdapter, bookmarksAdapter, getLoadMoreAdapter());
         } else {
             adapter = new FolderBookmarksAdapter(foldersAdapter, bookmarksAdapter);
         }
 
         setListAdapter(adapter);
         listView.setOnItemLongClickListener(adapter);
-    }
-
-    private void clearLoadMore() {
-        LoadingViews loadingViews = (LoadingViews)mLoadMoreAdapter.get().getView().getTag();
-        loadingViews.doneLoading();
     }
 
     private BookmarksAdapter newBookmarksAdapter(EntryList list) {
@@ -161,11 +145,6 @@ public class BookmarksFragment extends EntriesFragment {
         } else if (adapter.isPositionEntries(position)) {
             int pos = adapter.getPositionForAdapter(position);
             mCallback.onBookmarkClick(this, adapter.getEntriesAdapter().getItem(pos));
-
-        } else {
-            LoadingViews loadingViews = (LoadingViews)v.getTag();
-            loadingViews.startLoading();
-            queryEntriesAync(getCurrentPage() + 1);
         }
     }
 

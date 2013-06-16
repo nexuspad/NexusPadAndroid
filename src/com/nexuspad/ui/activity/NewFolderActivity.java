@@ -20,20 +20,31 @@ import com.nexuspad.ui.fragment.NewFolderFragment;
  */
 public class NewFolderActivity extends DoneDiscardActivity {
     public static final String KEY_FOLDER = "key_folder";
+    public static final String KEY_ORIGINAL_FOLDER = "key_original_folder";
 
     /**
      * Start a new {@link NewFolderActivity} with the default parent folder
-     * {@code f}
+     * {@code f}.
      */
     public static void startWithParentFolder(Folder f, Context c) {
+        startWithParentFolder(f, null, c);
+    }
+
+    /**
+     * Start a new {@link NewFolderActivity} with the default parent folder
+     * {@code p} and default folder {@code f}.
+     */
+    public static void startWithParentFolder(Folder p, Folder f, Context c) {
         Intent intent = new Intent(c, NewFolderActivity.class);
-        intent.putExtra(KEY_FOLDER, f);
+        intent.putExtra(KEY_FOLDER, p);
+        intent.putExtra(KEY_ORIGINAL_FOLDER, f);
         c.startActivity(intent);
     }
 
     private final FolderService mFolderService = new FolderService(this, null);
 
     private Folder mParentFolder;
+    private Folder mOringinalFolder;
 
     @Override
     protected int onCreateLayoutId() {
@@ -42,13 +53,16 @@ public class NewFolderActivity extends DoneDiscardActivity {
 
     @Override
     protected void onCreate(Bundle savedState) {
-        mParentFolder = getIntent().getParcelableExtra(KEY_FOLDER);
+        Intent intent = getIntent();
+        mParentFolder = intent.getParcelableExtra(KEY_FOLDER);
+        mOringinalFolder = intent.getParcelableExtra(KEY_ORIGINAL_FOLDER);
+
         super.onCreate(savedState);
     }
 
     @Override
     protected Fragment onCreateFragment() {
-        return NewFolderFragment.of(mParentFolder);
+        return NewFolderFragment.of(mParentFolder, mOringinalFolder);
     }
 
     @Override

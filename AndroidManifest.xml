@@ -36,7 +36,8 @@
         </activity>
         <activity
             android:name="com.nexuspad.home.ui.activity.LoginActivity"
-            android:label="@string/app_name" />
+            android:label="@string/app_name"
+            android:theme="@style/Theme.Sherlock.Light.NoActionBar" />
         <activity
             android:name="com.nexuspad.home.ui.activity.DashboardActivity"
             android:label="@string/app_name" >
@@ -68,6 +69,9 @@
         <activity
             android:name="com.nexuspad.doc.ui.activity.NewDocActivity"
             android:label="@string/docs" />
+        <activity
+            android:name="com.nexuspad.journal.ui.activity.JournalActivity"
+            android:label="@string/journal" />
         <activity
             android:name="com.nexuspad.ui.activity.NewFolderActivity"
             android:label="@string/new_folder" />

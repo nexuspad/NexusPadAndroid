@@ -25,14 +25,14 @@ import com.nexuspad.account.AccountManager;
 import com.nexuspad.dataservice.ServiceConstants;
 import com.nexuspad.home.ui.activity.LoginActivity;
 import com.nexuspad.ui.IconListAdapter;
-import com.nexuspad.ui.fragment.PaddedListFragment;
+import com.nexuspad.ui.fragment.ListFragment;
 
 /**
  * @author Edmond
  * 
  */
 @FragmentName(DashboardFragment.TAG)
-public class DashboardFragment extends PaddedListFragment {
+public class DashboardFragment extends ListFragment {
     public static final String TAG = "DashboardFragment";
 
     /*

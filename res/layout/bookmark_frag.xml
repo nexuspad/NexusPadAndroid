@@ -38,6 +38,7 @@
             android:linksClickable="false" />
 
         <TextView
+            android:id="@+id/lbl_tags_frame"
             style="?android:attr/listSeparatorTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -51,6 +52,7 @@
             android:hint="@string/tags" />
 
         <TextView
+            android:id="@+id/lbl_note_frame"
             style="?android:attr/listSeparatorTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

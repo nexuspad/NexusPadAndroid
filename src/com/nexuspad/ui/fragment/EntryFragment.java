@@ -196,16 +196,6 @@ public abstract class EntryFragment<T extends NPEntry> extends SherlockDialogFra
     }
 
     /**
-     * Called when a folder is updated (usually from the result of selecting a
-     * folder).
-     * 
-     * @see FoldersActivity
-     * @param folder
-     */
-    protected void onFolderUpdated(Folder folder) {
-    }
-
-    /**
      * @deprecated use {@link #getDetailEntryIfExist()} instead
      * @return the original entry passed in by {@link #KEY_ENTRY} or
      *         {@link #setEntry(T)}
@@ -253,6 +243,16 @@ public abstract class EntryFragment<T extends NPEntry> extends SherlockDialogFra
     protected void deleteEntry() {
         getEntryService().safeDeleteEntry(getActivity(), mEntry);
         mCallback.onDeleting(this, mEntry);
+    }
+
+    /**
+     * Called when a folder is updated (usually from the result of selecting a
+     * folder).
+     * 
+     * @see FoldersActivity
+     * @param folder
+     */
+    protected void onFolderUpdated(Folder folder) {
     }
 
     /**

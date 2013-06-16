@@ -10,16 +10,13 @@
         android:layout_height="wrap_content"
         android:orientation="vertical" >
 
-        <TextView
-            android:layout_width="wrap_content"
+        <ImageView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:drawableLeft="@drawable/icon"
-            android:drawablePadding="@dimen/ed__padding_medium"
-            android:gravity="center_vertical"
-            android:text="(NexusPad Banner)"
-            android:textSize="@dimen/ed__textsize_large"
-            tools:ignore="HardcodedText" />
+            android:layout_marginBottom="@dimen/ed__padding_medium"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/np_banner" />
 
         <EditText
             android:id="@+id/txt_user_name"
@@ -35,47 +32,29 @@
             android:hint="@string/password"
             android:inputType="textPassword" />
 
-        <TextView
-            android:id="@+id/lbl_sign_up"
+        <EditText
+            android:id="@+id/txt_first_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:focusable="true"
-            android:gravity="center"
-            android:minHeight="48dp"
-            android:padding="@dimen/ed__padding_small"
-            android:text="@string/lbl_sign_up"
-            android:textSize="@dimen/ed__textsize_small" />
+            android:hint="@string/first_name"
+            android:inputType="textCapWords"
+            android:visibility="gone" />
 
-        <LinearLayout
-            android:id="@+id/frame_new_account"
+        <EditText
+            android:id="@+id/txt_last_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="gone" >
+            android:hint="@string/last_name"
+            android:inputType="textCapWords"
+            android:visibility="gone" />
 
-            <EditText
-                android:id="@+id/txt_first_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/first_name"
-                android:inputType="textCapWords" />
-
-            <EditText
-                android:id="@+id/txt_last_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/last_name"
-                android:inputType="textCapWords" />
-
-            <EditText
-                android:id="@+id/txt_confirm_pw"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/confirm_password"
-                android:inputType="textPassword" />
-        </LinearLayout>
+        <EditText
+            android:id="@+id/txt_confirm_pw"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/confirm_password"
+            android:inputType="textPassword"
+            android:visibility="gone" />
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -95,6 +74,19 @@
                 android:layout_gravity="center"
                 android:visibility="invisible" />
         </FrameLayout>
+
+        <TextView
+            android:id="@+id/lbl_sign_up"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:minHeight="48dp"
+            android:padding="@dimen/ed__padding_small"
+            android:text="@string/lbl_sign_up"
+            android:textSize="@dimen/ed__textsize_small" />
     </LinearLayout>
 
 </ScrollView>

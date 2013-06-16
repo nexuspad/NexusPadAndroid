@@ -5,12 +5,14 @@ package com.nexuspad.home.ui.fragment;
 
 import static com.edmondapps.utils.android.view.ViewUtils.findView;
 import static com.edmondapps.utils.android.view.ViewUtils.isAllTextNotEmpty;
+import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver.OnPreDrawListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -23,6 +25,7 @@ import com.edmondapps.utils.java.Lazy;
 import com.nexuspad.R;
 import com.nexuspad.account.AccountManager;
 import com.nexuspad.datamodel.NPUser;
+import com.nineoldandroids.view.ViewHelper;
 
 /**
  * A {@code Fragment} that handles both login and signup.
@@ -46,7 +49,6 @@ public class LoginFragment extends SherlockFragment {
     private EditText mLastNameV;
     private Button mLoginV;
     private TextView mSignUpV;
-    private View mNewAccountV;
 
     private LoadingViews mLoadingViews;
     private final Lazy<EditText[]> mLoginFields = new Lazy<EditText[]>() {
@@ -57,9 +59,15 @@ public class LoginFragment extends SherlockFragment {
     };
     private final Lazy<EditText[]> mSignUpFields = new Lazy<EditText[]>() {
         @Override
-        protected EditText[] onCreate() {
-            // order should correspond to the layout (error check should flow
-            // from top to bottom)
+        public EditText[] onCreate() {
+            return new EditText[] {mFirstNameV, mLastNameV, mConfirmPwV};
+        }
+    };
+    // order should correspond to the layout (error check should flow
+    // from top to bottom)
+    private final Lazy<EditText[]> mAllFields = new Lazy<EditText[]>() {
+        @Override
+        public EditText[] onCreate() {
             return new EditText[] {mUserNameV, mPasswordV, mFirstNameV, mLastNameV, mConfirmPwV};
         }
     };
@@ -91,7 +99,6 @@ public class LoginFragment extends SherlockFragment {
         mLoginV = findView(view, R.id.btn_login);
 
         mSignUpV = findView(view, R.id.lbl_sign_up);
-        mNewAccountV = findView(view, R.id.frame_new_account);
         mConfirmPwV = findView(view, R.id.txt_confirm_pw);
 
         mLoadingViews = LoadingViews.of(mLoginV, findView(view, android.R.id.progress));
@@ -102,12 +109,51 @@ public class LoginFragment extends SherlockFragment {
         mSignUpV.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean wasSignUp = isSignUp();
+                final boolean wasSignUp = isSignUp();
 
                 mUserNameV.setHint(wasSignUp ? R.string.username_or_email : R.string.email);
                 mSignUpV.setText(wasSignUp ? R.string.lbl_sign_up : R.string.lbl_login);
-                mNewAccountV.setVisibility(wasSignUp ? View.GONE : View.VISIBLE);
                 mLoginV.setText(wasSignUp ? R.string.login : R.string.sign_up);
+
+                prepareAnimation(wasSignUp);
+
+                for (EditText e : mSignUpFields.get()) {
+                    e.setVisibility(wasSignUp ? View.GONE : View.VISIBLE);
+                }
+            }
+
+            private void translateView(View v, int delta) {
+                ViewHelper.setTranslationY(v, delta);
+                animate(v).translationY(0);
+            }
+
+            private void fade(boolean in, View v) {
+                ViewHelper.setAlpha(v, in ? 0 : 1);
+                animate(v).alpha(in ? 1 : 0);
+            }
+
+            private void prepareAnimation(final boolean wasSignUp) {
+                final int[] oldPos = new int[2];
+                mLoginV.getLocationOnScreen(oldPos);
+                mLoginV.getViewTreeObserver().addOnPreDrawListener(new OnPreDrawListener() {
+                    @Override
+                    public boolean onPreDraw() {
+                        mLoginV.getViewTreeObserver().removeOnPreDrawListener(this);
+
+                        int[] newPos = new int[2];
+                        mLoginV.getLocationOnScreen(newPos);
+
+                        for (EditText e : mSignUpFields.get()) {
+                            fade(!wasSignUp, e);
+                        }
+
+                        int deltaY = oldPos[1] - newPos[1];
+                        translateView(mLoginV, deltaY);
+                        translateView(mSignUpV, deltaY);
+
+                        return true;
+                    }
+                });
             }
         });
 
@@ -115,7 +161,7 @@ public class LoginFragment extends SherlockFragment {
             @Override
             public void onClick(View v) {
                 boolean isSignUp = isSignUp();
-                EditText[] views = isSignUp ? mSignUpFields.get() : mLoginFields.get();
+                EditText[] views = isSignUp ? mAllFields.get() : mLoginFields.get();
 
                 if (!isAllTextNotEmpty(R.string.err_empty_field, views)) {
                     return;// error message is show on the EditText
@@ -146,6 +192,6 @@ public class LoginFragment extends SherlockFragment {
     }
 
     private boolean isSignUp() {
-        return mNewAccountV.getVisibility() == View.VISIBLE;
+        return mFirstNameV.getVisibility() == View.VISIBLE;
     }
 }
