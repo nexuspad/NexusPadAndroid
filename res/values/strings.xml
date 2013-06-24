@@ -23,6 +23,8 @@
     <string name="err_empty_field">This field must not be be empty.</string>
     <string name="err_login_failed">Login failed. Please try again later.</string>
     <string name="err_invalid_bookmark">Please check the web address of the bookmark.</string>
+    <string name="err_no_email_app">No email app installed.</string>
+    <string name="err_no_browser">No browser installed.</string>
     <string name="formatted_err_delete_failed">Failed to delete \"%s\". Please try again later.</string>
     <string name="err_network">Please check your network connection.</string>
     <string name="err_internal">An internal error has occurred. Please try again later.</string>
@@ -48,5 +50,19 @@
     <string name="doc">Doc</string>
     <string name="tags">Tags</string>
     <string name="root">ROOT</string>
+    <string name="account_email">Email</string>
+    <string name="account_usage">Usage</string>
+    <string name="email_support">Email Support</string>
+    <string name="account_info">Account Info</string>
+    <string name="support">Support</string>
+    <string name="terms_of_use">Terms of Use</string>
+    <string name="format_ac_usage">%1$dMB / %2$dMB</string>
+    <!-- first name, last name -->
+    <string name="format_ac_name">%1$s %2$s</string>
+    <string name="about">About</string>
+    <string name="profile">Profile</string>
+    <string name="porfile_image">Porfile Image</string>
+    <string name="no_name">(No Name)</string>
+    <string name="usage_unavailable">(usage unavailable)</string>
 
 </resources>

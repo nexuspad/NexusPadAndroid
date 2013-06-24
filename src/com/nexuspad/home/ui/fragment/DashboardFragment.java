@@ -21,6 +21,7 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.nexuspad.R;
+import com.nexuspad.about.activity.AboutActivity;
 import com.nexuspad.account.AccountManager;
 import com.nexuspad.dataservice.ServiceConstants;
 import com.nexuspad.home.ui.activity.LoginActivity;
@@ -92,6 +93,9 @@ public class DashboardFragment extends ListFragment {
 
                 startActivity(new Intent(activity, LoginActivity.class));
                 activity.finish();
+                return true;
+            case R.id.about:
+                startActivity(new Intent(getActivity(), AboutActivity.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

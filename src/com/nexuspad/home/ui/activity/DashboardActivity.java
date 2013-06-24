@@ -5,21 +5,29 @@ package com.nexuspad.home.ui.activity;
 
 import static com.nexuspad.dataservice.ServiceConstants.BOOKMARK_MODULE;
 import static com.nexuspad.dataservice.ServiceConstants.DOC_MODULE;
+import static com.nexuspad.dataservice.ServiceConstants.PHOTO_MODULE;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 
 import com.edmondapps.utils.android.Logs;
+import com.edmondapps.utils.android.activity.SinglePaneActivity;
+import com.nexuspad.R;
 import com.nexuspad.bookmark.ui.activity.BookmarksActivity;
 import com.nexuspad.doc.ui.activity.DocsActivity;
 import com.nexuspad.home.ui.fragment.DashboardFragment;
-import com.nexuspad.ui.activity.PaddedListActivity;
+import com.nexuspad.photos.ui.activity.PhotosActivity;
 
 /**
  * @author Edmond
  * 
  */
-public class DashboardActivity extends PaddedListActivity implements DashboardFragment.Callback {
+public class DashboardActivity extends SinglePaneActivity implements DashboardFragment.Callback {
     public static final String TAG = "MainPhoneActivity";
+
+    @Override
+    protected int onCreateLayoutId() {
+        return R.layout.no_padding_activity;
+    }
 
     @Override
     protected Fragment onCreateFragment() {
@@ -42,6 +50,8 @@ public class DashboardActivity extends PaddedListActivity implements DashboardFr
                 return DocsActivity.class;
                 // case JOURNAL_MODULE:
                 // return JournalActivity.class;
+            case PHOTO_MODULE:
+                return PhotosActivity.class;
             default:
                 Logs.v(TAG, "moduleType: " + moduleType);
                 return null;

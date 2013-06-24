@@ -46,9 +46,9 @@ public class JournalsFragment extends EntriesFragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
         mViewPager = ViewUtils.findView(view, R.id.view_pager);
+
+        super.onViewCreated(view, savedInstanceState);
     }
 
     @Override

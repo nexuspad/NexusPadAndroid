@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
+import com.edmondapps.utils.android.activity.SinglePaneActivity;
+import com.nexuspad.R;
 import com.nexuspad.datamodel.Folder;
 import com.nexuspad.ui.fragment.FoldersFragment;
 
@@ -15,7 +17,7 @@ import com.nexuspad.ui.fragment.FoldersFragment;
  * @author Edmond
  * 
  */
-public class FoldersActivity extends PaddedListActivity implements FoldersFragment.Callback {
+public class FoldersActivity extends SinglePaneActivity implements FoldersFragment.Callback {
     public static final String KEY_FOLDER = "com.nexuspad.ui.activity.FoldersActivity.folder";
 
     private static final int REQ_FOLDER = 1;
@@ -37,6 +39,11 @@ public class FoldersActivity extends PaddedListActivity implements FoldersFragme
     }
 
     private Folder mParentFolder;
+
+    @Override
+    protected int onCreateLayoutId() {
+        return R.layout.no_padding_activity;
+    }
 
     @Override
     protected void onCreate(Bundle savedState) {

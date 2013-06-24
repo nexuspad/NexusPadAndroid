@@ -205,6 +205,10 @@ public abstract class EntriesFragment extends ListFragment {
         outState.putParcelable(KEY_ENTRY_LIST, mEntryList);
     }
 
+    /**
+     * {@link #onListLoaded(EntryList)} may get called immediately in the
+     * method.
+     */
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -221,11 +225,19 @@ public abstract class EntriesFragment extends ListFragment {
             });
         }
 
-        if (savedInstanceState == null) {
-            queryEntriesAync();
-        } else {
+        if (savedInstanceState != null) {
             onListLoadedInternal(savedInstanceState.<EntryList> getParcelable(KEY_ENTRY_LIST));
+        } else if (isLoadListEnabled()) {
+            queryEntriesAync();
         }
+    }
+
+    /**
+     * @return true if this Fragment should call {@link #queryEntriesAync()}
+     *         automatically after view is created; false to disable it
+     */
+    protected boolean isLoadListEnabled() {
+        return true;
     }
 
     @Override

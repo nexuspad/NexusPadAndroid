@@ -2,6 +2,12 @@
 
     <style name="AppTheme" parent="@style/Theme.Sherlock.Light.DarkActionBar"></style>
 
+    <style name="Transparent" parent="@style/Theme.Sherlock">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
     <style name="autoMargin"></style>
 
     <style name="formMargin">
@@ -28,6 +34,21 @@
         <item name="android:paddingRight">@dimen/ed__padding_small</item>
         <item name="android:paddingTop">@dimen/ed__padding_small</item>
         <item name="android:scrollbarStyle">outsideOverlay</item>
+    </style>
+
+    <style name="stylePrimaryTextView" parent="android:Widget.Holo.Light.TextView">
+        <item name="android:layout_marginBottom">@dimen/ed__padding_micro</item>
+        <item name="android:layout_marginTop">@dimen/ed__padding_small</item>
+        <item name="android:layout_marginLeft">@dimen/ed__padding_small</item>
+        <item name="android:layout_marginRight">@dimen/ed__padding_small</item>
+        <item name="android:textSize">@dimen/ed__textsize_large</item>
+    </style>
+
+    <style name="styleSecondaryTextView" parent="android:Widget.Holo.Light.TextView">
+        <item name="android:layout_marginBottom">@dimen/ed__padding_small</item>
+        <item name="android:layout_marginLeft">@dimen/ed__padding_small</item>
+        <item name="android:layout_marginRight">@dimen/ed__padding_small</item>
+        <item name="android:textSize">@dimen/ed__textsize_small</item>
     </style>
 
 </resources>

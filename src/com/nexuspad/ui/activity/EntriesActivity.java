@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 
+import com.edmondapps.utils.android.activity.SinglePaneActivity;
+import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
 import com.nexuspad.datamodel.EntryList;
 import com.nexuspad.datamodel.Folder;
@@ -14,9 +16,11 @@ import com.nexuspad.dataservice.ServiceConstants;
 import com.nexuspad.ui.fragment.EntriesFragment;
 
 /**
+ * You must annotate the class with {@link ModuleId}.
+ * 
  * @author Edmond
  */
-public abstract class EntriesActivity extends PaddedListActivity implements EntriesFragment.Callback {
+public abstract class EntriesActivity extends SinglePaneActivity implements EntriesFragment.Callback {
     public static final String KEY_FOLDER = "key_folder";
 
     private Folder mFolder;
@@ -31,6 +35,11 @@ public abstract class EntriesActivity extends PaddedListActivity implements Entr
             throw new IllegalStateException("You must annotate the class with ModuleId, or override this method.");
         }
         return mModuleId.moduleId();
+    }
+
+    @Override
+    protected int onCreateLayoutId() {
+        return R.layout.no_padding_activity;
     }
 
     @Override
