@@ -235,9 +235,14 @@ public final class PhotosService {
                     mPhotos.add(p);
                 }
             }
+            // integrity checks
+            if (mBitmapInfo != null) {
+                setActiveBitmapInfo(mBitmapInfo);
+            }
+            if (mActivePhotoIndex > 0) {
+                setActivePhoto(mActivePhotoIndex);
+            }
         }
-        setActiveBitmapInfo(mBitmapInfo);
-        // setActivePhoto(mActivePhotoIndex); (called by setActiveBitmapInfo())
 
         if (mOnPhotosChangedListener != null) {
             mOnPhotosChangedListener.onPhotosAdded(photos);

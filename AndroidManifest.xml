@@ -84,9 +84,6 @@
             android:label="@string/photos"
             android:theme="@style/Transparent" />
         <activity
-            android:name="com.nexuspad.photos.ui.activity.PhotosPagerActivity"
-            android:label="@string/photos" />
-        <activity
             android:name="com.nexuspad.ui.activity.NewFolderActivity"
             android:label="@string/new_folder" />
         <activity

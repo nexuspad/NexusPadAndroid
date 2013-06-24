@@ -97,6 +97,9 @@ public class PhotosFragment extends EntriesFragment implements OnItemClickListen
     protected void onListLoaded(EntryList list) {
         super.onListLoaded(list);
 
+        List<Photo> photos = new WrapperList<Photo>(list.getEntries());
+        mPhotosService.addPhotos(photos);
+
         BaseAdapter adapter = (BaseAdapter)mGridView.getAdapter();
         if (adapter != null) {
             final int prevPos = mGridView.getFirstVisiblePosition();
@@ -105,10 +108,7 @@ public class PhotosFragment extends EntriesFragment implements OnItemClickListen
             return;
         }
 
-        List<Photo> photos = new WrapperList<Photo>(list.getEntries());
         mGridView.setAdapter(new PhotosAdapter(photos));
-
-        mPhotosService.addPhotos(photos);
     }
 
     @Override
