@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
+import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Window;
 import com.edmondapps.utils.android.activity.SinglePaneActivity;
 import com.edmondapps.utils.android.annotaion.ParentActivity;
@@ -60,7 +61,10 @@ public class PhotoActivity extends SinglePaneActivity implements EntriesFragment
         }
 
         super.onCreate(savedState);
-        getSupportActionBar().hide();
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.hide();
+        }
     }
 
     @Override
@@ -72,7 +76,7 @@ public class PhotoActivity extends SinglePaneActivity implements EntriesFragment
     @Override
     public void finish() {
         super.finish();
-        overridePendingTransition(0, 0);
+        overridePendingTransition(0, android.R.anim.fade_out);
     }
 
     @Override

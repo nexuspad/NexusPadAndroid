@@ -15,6 +15,7 @@ import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -126,7 +127,6 @@ public class PhotoFragment extends EntriesFragment {
     private ColorDrawable mBackground;
     private ViewPager mViewPager;
     private ImageView mImageV;
-    private View mFrameV;
 
     private boolean mPlayedEnterAnimation;
     private BitmapInfo mBitmapInfo;
@@ -176,17 +176,18 @@ public class PhotoFragment extends EntriesFragment {
         super.onViewCreated(view, savedState);
 
         mViewPager = findView(view, R.id.view_pager);
-        mFrameV = findView(view, R.id.frame);
 
         initViews();
         installListenters();
     }
 
+    @SuppressWarnings("deprecation")
     private void initViews() {
+        mBackground = new ColorDrawable(Color.BLACK);
+
         mViewPager.setAdapter(newPagerAdapter());
         mViewPager.setCurrentItem(mPhotosService.getActivePhotoIndex(), false);
-
-        mBackground = new ColorDrawable(Color.BLACK);
+        mViewPager.setBackgroundDrawable(mBackground);
     }
 
     private void installListenters() {
@@ -209,19 +210,41 @@ public class PhotoFragment extends EntriesFragment {
     private PagerAdapter newPagerAdapter() {
         return new PagerAdapter() {
             @Override
-            @SuppressWarnings("deprecation")
             public Object instantiateItem(ViewGroup container, int position) {
                 Photo photo = mPhotos.get(position);
 
-                LayoutInflater inflater = LayoutInflater.from(getActivity());
+                Activity activity = getActivity();
+                LayoutInflater inflater = LayoutInflater.from(activity);
 
                 View frame = inflater.inflate(R.layout.photo_layout, container, false);
 
                 ImageView imageView = findView(frame, android.R.id.icon);
+                // not ready
+                // imageView.setOnTouchListener(new OnSwipeUpListener(activity)
+                // {
+                // @Override
+                // protected void onSwipingVertically(View view, MotionEvent ev)
+                // {
+                // super.onSwipingVertically(view, ev);
+                // mViewPager.requestDisallowInterceptTouchEvent(true);
+                // }
+                //
+                // @Override
+                // protected void restore(View view) {
+                // super.restore(view);
+                // mViewPager.requestDisallowInterceptTouchEvent(false);
+                // }
+                //
+                // @Override
+                // protected void swipeAway(View view, float velocity, float
+                // deltaY) {
+                // super.swipeAway(view, velocity, deltaY);
+                // mViewPager.requestDisallowInterceptTouchEvent(false);
+                // }
+                // });
                 mPhotosService.loadBestImage(imageView, photo);
 
                 frame.setTag(imageView);
-                frame.setBackgroundDrawable(mBackground);
 
                 container.addView(frame);
                 return frame;
@@ -236,8 +259,8 @@ public class PhotoFragment extends EntriesFragment {
             public void setPrimaryItem(ViewGroup container, int position, Object object) {
                 super.setPrimaryItem(container, position, object);
                 if (!mPlayedEnterAnimation && (position == mPhotosService.getActivePhotoIndex())) {
-                    mFrameV = ((View)object);
-                    mImageV = (ImageView)mFrameV.getTag();
+
+                    mImageV = (ImageView)container.getChildAt(0).getTag();
                     if (mPhotosService.loadThumbnailIfExist(mImageV, mPhotos.get(position))) {
                         prepareEnterAnimation();
                     }
@@ -298,12 +321,12 @@ public class PhotoFragment extends EntriesFragment {
                 .translationX(0)
                 .translationY(0);
 
-        ObjectAnimator animator = ObjectAnimator.ofInt(mBackground, "alpha", 0, 200);
+        ObjectAnimator animator = ObjectAnimator.ofInt(mBackground, "alpha", 0, 255);
         animator.setDuration(300L);
         animator.addUpdateListener(new AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
-                mFrameV.invalidateDrawable(mBackground);
+                mViewPager.invalidateDrawable(mBackground);
             }
         });
         animator.start();

@@ -5,6 +5,7 @@ package com.nexuspad.ui.fragment;
 
 import java.lang.ref.WeakReference;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import android.app.Activity;
@@ -317,7 +318,15 @@ public abstract class EntriesFragment extends ListFragment {
      *            other {@code EntryList}
      */
     private void expandEntryList(EntryList o) {
-        mEntryList.getEntries().addAll(o.getEntries());
+        List<NPEntry> oldEntries = mEntryList.getEntries();
+        List<NPEntry> newEntries = o.getEntries();
+
+        for (NPEntry newEntry : newEntries) {
+            if (!oldEntries.contains(newEntry)) {
+                oldEntries.add(newEntry);
+            }
+        }
+
         mEntryList.setPageId(o.getPageId());
     }
 
