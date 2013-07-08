@@ -6,12 +6,18 @@ package com.nexuspad.photos.ui.fragment;
 import static com.edmondapps.utils.android.view.ViewUtils.findView;
 import static com.nexuspad.dataservice.ServiceConstants.PHOTO_MODULE;
 
+import java.io.File;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,13 +27,20 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader.ImageContainer;
 import com.android.volley.toolbox.ImageLoader.ImageListener;
+import com.edmondapps.utils.android.Logs;
 import com.edmondapps.utils.android.animation.ViewAnimations;
 import com.edmondapps.utils.android.annotaion.FragmentName;
+import com.edmondapps.utils.android.service.FileUploadService;
 import com.edmondapps.utils.java.WrapperList;
+import com.ipaulpro.afilechooser.FileChooserActivity;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
 import com.nexuspad.datamodel.EntryList;
@@ -35,6 +48,7 @@ import com.nexuspad.datamodel.EntryTemplate;
 import com.nexuspad.datamodel.Folder;
 import com.nexuspad.datamodel.Photo;
 import com.nexuspad.dataservice.NPService;
+import com.nexuspad.dataservice.UploadService;
 import com.nexuspad.photos.service.PhotosService;
 import com.nexuspad.photos.ui.activity.PhotoActivity;
 import com.nexuspad.photos.ui.fragment.PhotoFragment.BitmapInfo;
@@ -49,6 +63,8 @@ import com.nexuspad.ui.fragment.EntriesFragment;
 @ModuleId(moduleId = PHOTO_MODULE, template = EntryTemplate.PHOTO)
 public class PhotosFragment extends EntriesFragment implements OnItemClickListener {
     public static final String TAG = "PhotosFragment";
+
+    private static final int REQ_CHOOSE_FILE = 1;
 
     private GridView mGridView;
 
@@ -67,6 +83,75 @@ public class PhotosFragment extends EntriesFragment implements OnItemClickListen
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mPhotosService = PhotosService.getInstance(getActivity());
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.photos_frag, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.new_photos:
+                // temporary
+                Intent intent = new Intent(getActivity(), FileChooserActivity.class);
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                intent.setType("*/*");
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                startActivityForResult(intent, REQ_CHOOSE_FILE);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case REQ_CHOOSE_FILE:
+                if (resultCode == Activity.RESULT_OK) {
+                    Uri uri = data.getData();
+                    uploadFile(uri);
+                }
+                break;
+            default:
+                throw new AssertionError("unknown requestCode: " + requestCode);
+        }
+    }
+
+    // temporary
+    @Deprecated
+    private void uploadFile(Uri uri) {
+        final ProgressDialog dialog = new ProgressDialog(getActivity());
+        final File file = new File(uri.getPath());
+        final AsyncTask<?, ?, ?> task = new UploadService(getActivity()).addUploadToFolder(file, getFolder(), new FileUploadService.Callback() {
+            @Override
+            public void onProgress(long progress, long total) {
+                Logs.d(TAG, "progress/total: " + progress + "/" + total);
+                dialog.setMax((int)total);
+                dialog.setProgress((int)progress);
+            }
+
+            @Override
+            public void onDone(boolean success) {
+                Toast.makeText(getActivity(), "onDone: success? " + success, Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+            }
+        });
+        dialog.setMessage("Uploading " + file.getName() + " (temporary UI)");
+        dialog.setCancelable(true);
+        dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        dialog.setOnCancelListener(new OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                task.cancel(false);
+            }
+        });
+        dialog.show();
     }
 
     @Override

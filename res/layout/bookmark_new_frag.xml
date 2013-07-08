@@ -30,12 +30,6 @@
 
             <include layout="@layout/folder_selector_include" />
 
-            <TextView
-                style="?android:attr/listSeparatorTextViewStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/web_address" />
-
             <EditText
                 android:id="@+id/txt_web_address"
                 style="@style/formMargin"
@@ -44,24 +38,12 @@
                 android:hint="@string/web_address"
                 android:inputType="textUri" />
 
-            <TextView
-                style="?android:attr/listSeparatorTextViewStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/tags" />
-
             <EditText
                 android:id="@+id/txt_tags"
                 style="@style/formMargin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/tags" />
-
-            <TextView
-                style="?android:attr/listSeparatorTextViewStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/note" />
 
             <EditText
                 android:id="@+id/txt_note"
@@ -70,7 +52,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:hint="@string/note"
-                android:minLines="3" />
+                android:minLines="@integer/notes_min_lines" />
         </LinearLayout>
     </FrameLayout>
 

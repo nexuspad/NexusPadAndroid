@@ -24,7 +24,7 @@
         android:layout_height="match_parent"
         android:maxWidth="48dp"
         android:scaleType="centerInside"
-        android:src="@drawable/ic_folder"
+        android:src="@drawable/ic_np_folder"
         tools:ignore="ContentDescription" />
 
     <TextView

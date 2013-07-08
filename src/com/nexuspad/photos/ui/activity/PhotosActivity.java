@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.OnNavigationListener;
@@ -66,6 +67,7 @@ public class PhotosActivity extends EntriesActivity implements OnNavigationListe
 
     @Override
     public boolean onNavigationItemSelected(int itemPosition, long itemId) {
+        Toast.makeText(this, "spinner navigation not ready yet", Toast.LENGTH_SHORT).show();
         Fragment fragment;
         switch (itemPosition) {
             case 0:

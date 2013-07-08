@@ -80,7 +80,7 @@ public class FoldersAdapter extends BaseAdapter implements OnItemLongClickListen
         }
         ViewHolder holder = getHolder(c);
 
-        holder.icon.setImageResource(R.drawable.ic_folder);
+        holder.icon.setImageResource(R.drawable.ic_np_folder);
         holder.text1.setText(folder.getFolderName());
         holder.menu.setOnClickListener(getOnMenuClickListener());
 
