@@ -332,10 +332,7 @@ public abstract class EntriesFragment extends ListFragment {
 
     protected boolean hasNextPage() {
         final EntryList list = mEntryList;
-        if (list != null) {
-            return list.getEntries().size() == (list.getCountPerPage() * list.getPageId());
-        }
-        return false;
+        return list != null && list.getEntries().size() == (list.getCountPerPage() * list.getPageId());
     }
 
     public void deleteEntry(NPEntry entry) {

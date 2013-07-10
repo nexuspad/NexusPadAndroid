@@ -46,7 +46,7 @@ public final class PhotosService {
         /**
          * Called when new photos are added
          * 
-         * @param newPhotos
+         * @param addedPhotos
          *            a view of the new photos
          */
         public void onPhotosAdded(List<? extends Photo> addedPhotos) {
@@ -111,14 +111,10 @@ public final class PhotosService {
         DisplayMetrics metrics = new DisplayMetrics();
         d.getMetrics(metrics);
 
-        int maxWidth = metrics.heightPixels;
-        int maxHeight = metrics.widthPixels;
+        int maxWidth = metrics.widthPixels;
+        int maxHeight = metrics.heightPixels;
 
-        if (maxWidth > maxHeight) {
-            return maxWidth;
-        } else {
-            return maxHeight;
-        }
+        return maxWidth > maxHeight ? maxWidth : maxHeight;
     }
 
     private static int initThumbnailMaxSide(Resources res) {
@@ -150,9 +146,7 @@ public final class PhotosService {
             newWidth = width;
         }
 
-        Bitmap bitmap = Bitmap.createScaledBitmap(in, newWidth, newHeight, false);
-
-        return bitmap;
+        return Bitmap.createScaledBitmap(in, newWidth, newHeight, false);
     }
 
     /**
@@ -258,7 +252,7 @@ public final class PhotosService {
      * @param p
      *            the {@link Photo} instance
      * @see #setActivePhoto(int)
-     * @see #setPhotos(List)
+     * @see #addPhotos(List)
      */
     public void setActivePhoto(Photo p) {
         int index = getPhotos().indexOf(p);
@@ -276,7 +270,7 @@ public final class PhotosService {
      * @param i
      *            the index of the photo in the list
      * @see #setActivePhoto(Photo)
-     * @see #setPhotos(List)
+     * @see #addPhotos(List)
      */
     public void setActivePhoto(int i) {
         Photo photo = getPhotos().get(i);
@@ -293,7 +287,7 @@ public final class PhotosService {
      * {@link Photo} instance inside of the info must obey the contract of
      * {@link #setActivePhoto(Photo)}.
      * 
-     * @param info
+     * @param info a non-null instance of {@link BitmapInfo}
      */
     public void setActiveBitmapInfo(BitmapInfo info) {
         setActivePhoto(info.getPhoto());
@@ -306,7 +300,7 @@ public final class PhotosService {
 
     /**
      * @return a view to the list of photos
-     * @see #setPhotos(List)
+     * @see #addPhotos(List)
      */
     public List<Photo> getPhotos() {
         if (mPhotos == null) {

@@ -70,7 +70,7 @@ public class NewDocFragment extends NewEntryFragment<Doc> {
 
         mNoteV.enableActionModes(false);
 
-        intstallFolderSelectorListener(mFolderV);
+        installFolderSelectorListener(mFolderV);
         updateUI();
     }
 

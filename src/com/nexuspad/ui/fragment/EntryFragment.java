@@ -3,14 +3,11 @@
  */
 package com.nexuspad.ui.fragment;
 
-import java.lang.ref.WeakReference;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
-
 import com.actionbarsherlock.app.SherlockDialogFragment;
 import com.actionbarsherlock.view.MenuItem;
 import com.edmondapps.utils.android.Logs;
@@ -27,11 +24,12 @@ import com.nexuspad.dataservice.NPException;
 import com.nexuspad.dataservice.ServiceError;
 import com.nexuspad.ui.activity.FoldersActivity;
 
+import java.lang.ref.WeakReference;
+
 /**
- * You must pass in a {@code Folder} with the key {@link KEY_FOLDER}
- * 
+ * You must pass in a {@code Folder} with the key {@link EntryFragment#KEY_FOLDER}
+ *
  * @author Edmond
- * 
  */
 public abstract class EntryFragment<T extends NPEntry> extends SherlockDialogFragment {
     public static final String KEY_ENTRY = "com.nexuspad.ui.fragment.EntryFragment.entry";
@@ -45,19 +43,19 @@ public abstract class EntryFragment<T extends NPEntry> extends SherlockDialogFra
 
         /**
          * Called right after {@link EntryService#getEntry(NPEntry)} is called.
-         * 
-         * @param f
-         * @param entry
+         *
+         * @param f     the {@link EntryFragment} instance
+         * @param entry the entry
          */
         void onStartLoadingEntry(EntryFragment<T> f, T entry);
 
         /**
          * Called after {@link EntryService#getEntry(NPEntry)} has returned the
          * detail entry.
-         * 
+         *
+         * @param f     the {@link EntryFragment} instance
+         * @param entry the entry
          * @see #onStartLoadingEntry(EntryFragment, NPEntry)
-         * @param f
-         * @param entry
          */
         void onGotEntry(EntryFragment<T> f, T entry);
     }
@@ -86,7 +84,7 @@ public abstract class EntryFragment<T extends NPEntry> extends SherlockDialogFra
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         if (activity instanceof Callback) {
-            mCallback = (Callback<T>)activity;
+            mCallback = (Callback<T>) activity;
         } else {
             throw new IllegalStateException(activity + " must implement Callback.");
         }
@@ -142,7 +140,7 @@ public abstract class EntryFragment<T extends NPEntry> extends SherlockDialogFra
                 Manifest.permission.LISTEN_ENTRY_CHANGES,
                 null);
 
-        if ( (mEntry != null) && (mDetailEntry == null)) {
+        if ((mEntry != null) && (mDetailEntry == null)) {
             try {
                 mEntry.setOwner(AccountManager.currentAccount());
                 getEntryService().getEntry(mEntry);
@@ -178,7 +176,7 @@ public abstract class EntryFragment<T extends NPEntry> extends SherlockDialogFra
     /**
      * Calling this method will also invoke {@link NPEntry#setFolder(Folder)}
      * for the simple entry and the detail entry.
-     * 
+     *
      * @see #getDetailEntry()
      * @see #getDetailEntryIfExist()
      */
@@ -196,11 +194,11 @@ public abstract class EntryFragment<T extends NPEntry> extends SherlockDialogFra
     }
 
     /**
-     * @deprecated use {@link #getDetailEntryIfExist()} instead
      * @return the original entry passed in by {@link #KEY_ENTRY} or
      *         {@link #setEntry(T)}
      * @see #getDetailEntry()
      * @see #getDetailEntryIfExist()
+     * @deprecated use {@link #getDetailEntryIfExist()} instead
      */
     @Deprecated
     public T getEntry() {
@@ -208,8 +206,6 @@ public abstract class EntryFragment<T extends NPEntry> extends SherlockDialogFra
     }
 
     /**
-     * 
-     * 
      * @return the entry retrieved by {@link EntryService#getEntry(NPEntry)}
      * @see #getDetailEntryIfExist()
      */
@@ -248,25 +244,25 @@ public abstract class EntryFragment<T extends NPEntry> extends SherlockDialogFra
     /**
      * Called when a folder is updated (usually from the result of selecting a
      * folder).
-     * 
+     *
+     * @param folder the new {@link Folder}
      * @see FoldersActivity
-     * @param folder
      */
     protected void onFolderUpdated(Folder folder) {
     }
 
     /**
      * Called when the original entry is updated.
-     * 
-     * @param entry
+     *
+     * @param entry the new entry
      */
     protected void onEntryUpdated(T entry) {
     }
 
     /**
      * Called when the detailed entry is retrieved from the server.
-     * 
-     * @param entry
+     *
+     * @param entry the new detailed entry
      */
     protected void onDetailEntryUpdated(T entry) {
     }
@@ -276,7 +272,7 @@ public abstract class EntryFragment<T extends NPEntry> extends SherlockDialogFra
 
     @SuppressWarnings("unchecked")
     private void onEntryUpdatedInternal(NPEntry e) {
-        T entry = (T)e;
+        T entry = (T) e;
         mEntry = entry;
 
         onEntryUpdated(entry);
@@ -284,7 +280,7 @@ public abstract class EntryFragment<T extends NPEntry> extends SherlockDialogFra
 
     @SuppressWarnings("unchecked")
     private void onDetailEntryUpdatedInternal(NPEntry e) {
-        T entry = (T)e;
+        T entry = (T) e;
         mDetailEntry = entry;
 
         mCallback.onGotEntry(this, entry);
@@ -305,7 +301,7 @@ public abstract class EntryFragment<T extends NPEntry> extends SherlockDialogFra
         @Override
         public void successfulUpdate(NPEntry updatedEntry) {
             EntryFragment<?> fragment = mFragment.get();
-            if ( (fragment != null) && fragment.isAdded()) {
+            if ((fragment != null) && fragment.isAdded()) {
                 fragment.onEntryUpdatedInternal(updatedEntry);
             }
         }
@@ -313,7 +309,7 @@ public abstract class EntryFragment<T extends NPEntry> extends SherlockDialogFra
         @Override
         public void failureCallback(ServiceError error) {
             EntryFragment<?> fragment = mFragment.get();
-            if ( (fragment != null) && fragment.isAdded()) {
+            if ((fragment != null) && fragment.isAdded()) {
                 fragment.onEntryUpdateFailed(error);
             }
         }

@@ -64,7 +64,7 @@ public class NewBookmarkFragment extends NewEntryFragment<Bookmark> {
         mNoteV = findView(view, R.id.txt_note);
         mTagsV = findView(view, R.id.txt_tags);
 
-        intstallFolderSelectorListener(mFolderV);
+        installFolderSelectorListener(mFolderV);
         updateUI();
     }
 

@@ -11,6 +11,5 @@
     android:scrollHorizontally="true"
     android:text="@string/root"
     android:textSize="@dimen/ed__textsize_medium"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" />
+    xmlns:android="http://schemas.android.com/apk/res/android" />
 

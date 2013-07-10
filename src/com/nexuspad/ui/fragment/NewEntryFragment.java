@@ -84,7 +84,7 @@ public abstract class NewEntryFragment<T extends NPEntry> extends EntryFragment<
         }
     }
 
-    protected void intstallFolderSelectorListener(View v) {
+    protected void installFolderSelectorListener(View v) {
         v.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {

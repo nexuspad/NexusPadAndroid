@@ -119,7 +119,7 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter impl
             case TYPE_EMPTY_ENTRY:
                 return false;
             default:
-                throw new AssertionError("unknow view type: " + getItemViewType(position) + " at position: " + position);
+                throw new AssertionError("unknown view type: " + getItemViewType(position) + " at position: " + position);
         }
     }
 
@@ -143,7 +143,7 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter impl
             case TYPE_EMPTY_ENTRY:
                 return getEmptyEntryView(mInflater, convertView, parent);
             default:
-                throw new AssertionError("unknow view type: " + getItemViewType(position) + " at position: " + position);
+                throw new AssertionError("unknown view type: " + getItemViewType(position) + " at position: " + position);
         }
     }
 

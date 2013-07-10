@@ -159,7 +159,7 @@ public class FoldersAdapter extends BaseAdapter implements OnItemLongClickListen
             case TYPE_EMPTY_FOLDER:
                 return false;
             default:
-                throw new AssertionError("unknow view type: " + getItemViewType(position) + " at position: " + position);
+                throw new AssertionError("unknown view type: " + getItemViewType(position) + " at position: " + position);
         }
     }
 
@@ -183,7 +183,7 @@ public class FoldersAdapter extends BaseAdapter implements OnItemLongClickListen
             case TYPE_EMPTY_FOLDER:
                 return getEmptyFolderView(mInflater, convertView, parent);
             default:
-                throw new AssertionError("unknow view type: " + getItemViewType(position) + " at position: " + position);
+                throw new AssertionError("unknown view type: " + getItemViewType(position) + " at position: " + position);
         }
     }
 
@@ -211,10 +211,6 @@ public class FoldersAdapter extends BaseAdapter implements OnItemLongClickListen
 
     public final void setOnMenuClickListener(OnClickListener onMenuClickListener) {
         mOnMenuClickListener = onMenuClickListener;
-    }
-
-    public final OnClickListener getOnSubFolderClickListener() {
-        return mOnSubFolderClickListener;
     }
 
     public final OnClickListener getOnMenuClickListener() {

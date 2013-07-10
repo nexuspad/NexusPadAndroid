@@ -73,12 +73,12 @@ public class PhotoFragment extends EntriesFragment {
         private final int mWidth;
         private final int mHeight;
 
-        public BitmapInfo(Photo p, int[] positionOnScreen, int width, int hieght) {
+        public BitmapInfo(Photo p, int[] positionOnScreen, int width, int height) {
             mPhoto = p;
             mX = positionOnScreen[0];
             mY = positionOnScreen[1];
             mWidth = width;
-            mHeight = hieght;
+            mHeight = height;
         }
 
         private BitmapInfo(Parcel p) {
@@ -178,7 +178,7 @@ public class PhotoFragment extends EntriesFragment {
         mViewPager = findView(view, R.id.view_pager);
 
         initViews();
-        installListenters();
+        installListeners();
     }
 
     @SuppressWarnings("deprecation")
@@ -190,7 +190,7 @@ public class PhotoFragment extends EntriesFragment {
         mViewPager.setBackgroundDrawable(mBackground);
     }
 
-    private void installListenters() {
+    private void installListeners() {
         mPhotosService.setOnPhotosChangedListener(new OnPhotosChangedListener() {
             @Override
             public void onPhotosAdded(List<? extends Photo> addedPhotos) {

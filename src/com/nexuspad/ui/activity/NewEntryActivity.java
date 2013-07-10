@@ -81,7 +81,7 @@ public abstract class NewEntryActivity<T extends NPEntry> extends DoneDiscardAct
     }
 
     /**
-     * Calls {@link #onDoneNew()}, or {@link #onDoneEdit()} depending on the
+     * Calls {@link #onDoneAdding()} ()}, or {@link #onDoneEditing()} depending on the
      * value of {@link #getMode()}.
      */
     @Override

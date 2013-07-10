@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.nexuspad.ui.DuplicateParentStateAwareLinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="48dp"
+    android:orientation="horizontal"
+    android:paddingLeft="@dimen/ed__padding_small"
+    tools:context=".home.ui.activity.MainActivity">
+
+    <ImageView
+        android:id="@android:id/icon"
+        android:layout_width="@dimen/photo_grid_width"
+        android:layout_height="@dimen/photo_grid_height"
+        android:scaleType="centerCrop"
+        tools:ignore="ContentDescription"/>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@android:id/text1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:paddingBottom="@dimen/ed__padding_micro"
+            android:paddingLeft="@dimen/ed__padding_small"
+            android:paddingTop="@dimen/ed__padding_micro"
+            android:scrollHorizontally="true"
+            android:textSize="@dimen/ed__textsize_medium"
+            android:text="slfkadjlksdajfsfad"/>
+
+        <ProgressBar
+            android:id="@android:id/progress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="?android:attr/progressBarStyleHorizontal"/>
+
+        <TextView
+            android:id="@android:id/text2"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:paddingBottom="@dimen/ed__padding_micro"
+            android:paddingLeft="@dimen/ed__padding_small"
+            android:paddingTop="@dimen/ed__padding_micro"
+            android:scrollHorizontally="true"
+            android:textSize="@dimen/ed__textsize_small"
+            android:text="slfkadjlksdajfsfad"/>
+    </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/menu"
+        android:layout_width="32dp"
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent"
+        android:contentDescription="@string/more"
+        android:duplicateParentState="false"
+        android:scaleType="fitXY"
+        android:src="@drawable/abs__spinner_ab_holo_light"/>
+
+</com.nexuspad.ui.DuplicateParentStateAwareLinearLayout>

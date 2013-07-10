@@ -1,6 +1,6 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="AppTheme" parent="@style/Theme.Sherlock.Light.DarkActionBar"></style>
+    <style name="AppTheme" parent="@style/Theme.Sherlock.Light.DarkActionBar"/>
 
     <style name="Transparent" parent="@style/Theme.Sherlock">
         <item name="android:windowNoTitle">true</item>
@@ -8,7 +8,7 @@
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 
-    <style name="autoMargin"></style>
+    <style name="autoMargin"/>
 
     <style name="formMargin">
         <item name="android:layout_marginBottom">@dimen/ed__padding_small</item>

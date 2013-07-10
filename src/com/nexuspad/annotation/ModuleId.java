@@ -29,7 +29,7 @@ public @interface ModuleId {
     /**
      * Defaults to {@link EntryTemplate#NOT_ASSIGNED}
      * 
-     * @return should correspond with {@link #getModule()}
+     * @return should correspond with {@link #moduleId()}
      * 
      */
     EntryTemplate template() default EntryTemplate.NOT_ASSIGNED;

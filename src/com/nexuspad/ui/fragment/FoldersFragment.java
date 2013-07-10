@@ -33,8 +33,8 @@ import com.nexuspad.ui.OnFolderMenuClickListener;
 import com.nexuspad.ui.activity.NewFolderActivity;
 
 /**
- * You must pass in a moduleId with {@link #KEY_MODULE_ID} as an argument or use
- * the static factory method {@link #of(int)}.
+ * You must pass in a moduleId with {@link FoldersFragment#KEY_PARENT_FOLDER} as an argument or use
+ * the static factory method {@link #of(Folder)}.
  * 
  * @author Edmond
  * 
@@ -154,7 +154,7 @@ public class FoldersFragment extends ListFragment {
      * Called when the sub-folders are retrieved.
      * 
      * @param folders
-     *            same as {@link #getSubFodlers()}
+     *            same as {@link #getSubFolders()}
      */
     protected void onSubFoldersLoaded(List<Folder> folders) {
         FoldersAdapter adapter = newFoldersAdapter(folders);
@@ -220,7 +220,7 @@ public class FoldersFragment extends ListFragment {
         return mFolderService;
     }
 
-    protected List<Folder> getSubFodlers() {
+    protected List<Folder> getSubFolders() {
         return mSubFolders;
     }
 }

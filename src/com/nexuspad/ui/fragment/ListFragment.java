@@ -58,7 +58,7 @@ public abstract class ListFragment extends SherlockFragment {
      * {@link android.R.id#list}.
      * 
      * @see #isFadeInEnabled()
-     * @param adapter
+     * @param adapter the adapter
      */
     public void setListAdapter(ListAdapter adapter) {
         if ( (getListAdapter() == null) && isFadeInEnabled()) {

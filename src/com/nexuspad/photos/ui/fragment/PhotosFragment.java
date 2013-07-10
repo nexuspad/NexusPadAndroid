@@ -51,6 +51,7 @@ import com.nexuspad.dataservice.NPService;
 import com.nexuspad.dataservice.UploadService;
 import com.nexuspad.photos.service.PhotosService;
 import com.nexuspad.photos.ui.activity.PhotoActivity;
+import com.nexuspad.photos.ui.activity.PhotosUploadActivity;
 import com.nexuspad.photos.ui.fragment.PhotoFragment.BitmapInfo;
 import com.nexuspad.ui.OnListEndListener;
 import com.nexuspad.ui.fragment.EntriesFragment;
@@ -126,32 +127,7 @@ public class PhotosFragment extends EntriesFragment implements OnItemClickListen
     // temporary
     @Deprecated
     private void uploadFile(Uri uri) {
-        final ProgressDialog dialog = new ProgressDialog(getActivity());
-        final File file = new File(uri.getPath());
-        final AsyncTask<?, ?, ?> task = new UploadService(getActivity()).addUploadToFolder(file, getFolder(), new FileUploadService.Callback() {
-            @Override
-            public void onProgress(long progress, long total) {
-                Logs.d(TAG, "progress/total: " + progress + "/" + total);
-                dialog.setMax((int)total);
-                dialog.setProgress((int)progress);
-            }
-
-            @Override
-            public void onDone(boolean success) {
-                Toast.makeText(getActivity(), "onDone: success? " + success, Toast.LENGTH_SHORT).show();
-                dialog.dismiss();
-            }
-        });
-        dialog.setMessage("Uploading " + file.getName() + " (temporary UI)");
-        dialog.setCancelable(true);
-        dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        dialog.setOnCancelListener(new OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                task.cancel(false);
-            }
-        });
-        dialog.show();
+        PhotosUploadActivity.startWith(uri, getFolder(), getActivity());
     }
 
     @Override
