@@ -11,20 +11,20 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.FragmentActivity;
+import android.text.Html;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-import com.actionbarsherlock.app.SherlockListFragment;
-import com.edmondapps.utils.android.Logs;
+import android.widget.*;
 import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.edmondapps.utils.android.service.FileUploadService;
+import com.edmondapps.utils.android.view.PopupMenu;
 import com.nexuspad.R;
 import com.nexuspad.datamodel.Folder;
 import com.nexuspad.photos.Request;
 import com.nexuspad.photos.service.PhotoUploadService;
+import com.nexuspad.ui.fragment.ListFragment;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +36,7 @@ import static com.nexuspad.photos.service.PhotoUploadService.PhotosUploadBinder;
  * @author Edmond
  */
 @FragmentName(PhotosUploadFragment.TAG)
-public class PhotosUploadFragment extends SherlockListFragment {
+public class PhotosUploadFragment extends ListFragment {
     public static final String TAG = "PhotosUploadFragment";
 
     private final PhotoUploadService.Callback mCallback = new PhotoUploadService.Callback() {
@@ -72,6 +72,11 @@ public class PhotosUploadFragment extends SherlockListFragment {
     private PhotosUploadAdapter mAdapter;
 
     @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.list_content, container, false);
+    }
+
+    @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mViewCreated = true;
@@ -93,7 +98,9 @@ public class PhotosUploadFragment extends SherlockListFragment {
         super.onActivityCreated(savedInstanceState);
 
         final FragmentActivity activity = getActivity();
-        activity.bindService(new Intent(activity, PhotoUploadService.class), mConnection, Context.BIND_AUTO_CREATE);
+        final Intent service = new Intent(activity, PhotoUploadService.class);
+        activity.startService(service);
+        activity.bindService(service, mConnection, Context.BIND_AUTO_CREATE);
     }
 
     @Override
@@ -103,6 +110,7 @@ public class PhotosUploadFragment extends SherlockListFragment {
         if (mBinder != null) {
             mBinder.removeCallback(mCallback);
         }
+        getActivity().unbindService(mConnection);
     }
 
     public void uploadPhoto(Uri uri, Folder folder) {
@@ -118,19 +126,25 @@ public class PhotosUploadFragment extends SherlockListFragment {
         private TextView title;
         private TextView subTitle;
         private ProgressBar progressbar;
+        private ImageButton menu;
+        private boolean cancelled;
         private FileUploadService.Callback callback = new FileUploadService.Callback() {
             @Override
             public boolean onProgress(long progress, long total) {
                 progressbar.setMax((int) total);
                 progressbar.setProgress((int) progress);
-                int percent = (int) ((double) progress / total);
+                int percent = (int) ((double) progress / total * 100);
                 subTitle.setText(subTitle.getResources().getString(R.string.formatted_progress, percent, progress, total));
-                return true;
+                return !cancelled;
             }
 
             @Override
             public void onDone(boolean success) {
-                Logs.d("ViewHolder", "onDone: " + success);
+                progressbar.setVisibility(View.GONE);
+                final String rawString = subTitle.getResources()
+                        .getString(success ? R.string.upload_completed : R.string.upload_failed);
+                final String color = success ? "green" : "red";
+                subTitle.setText(Html.fromHtml("<b><font color='" + color + "'>" + rawString + "</font></b>"));
             }
         };
     }
@@ -158,15 +172,17 @@ public class PhotosUploadFragment extends SherlockListFragment {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
+            final FragmentActivity activity = getActivity();
             final ViewHolder holder;
             if (convertView == null) {
-                convertView = getActivity().getLayoutInflater().inflate(R.layout.list_item_upload_photo, parent, false);
+                convertView = activity.getLayoutInflater().inflate(R.layout.list_item_upload_photo, parent, false);
 
                 holder = new ViewHolder();
                 holder.icon = findView(convertView, android.R.id.icon);
                 holder.title = findView(convertView, android.R.id.text1);
                 holder.subTitle = findView(convertView, android.R.id.text2);
                 holder.progressbar = findView(convertView, android.R.id.progress);
+                holder.menu = findView(convertView, R.id.menu);
 
                 convertView.setTag(holder);
             } else {
@@ -176,7 +192,33 @@ public class PhotosUploadFragment extends SherlockListFragment {
             final Request request = getItem(position);
             request.setCallback(holder.callback);
 
-            holder.title.setText(request.getUri().toString());
+            Picasso.with(activity)
+                    .load(request.getUri())
+                    .resizeDimen(R.dimen.photo_grid_width, R.dimen.photo_grid_height)
+                    .centerCrop()
+                    .into(holder.icon);
+
+            holder.title.setText(request.getFile(activity).getName());
+            holder.menu.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    final PopupMenu popupMenu = PopupMenu.newInstance(activity, v);
+                    popupMenu.inflate(R.menu.photos_upload);
+                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(int menuId) {
+                            switch (menuId) {
+                                case R.id.cancel:
+                                    holder.cancelled = true;
+                                    return true;
+                                default:
+                                    throw new AssertionError("unexpected menuId: " + menuId);
+                            }
+                        }
+                    });
+                    popupMenu.show();
+                }
+            });
 
             return convertView;
         }

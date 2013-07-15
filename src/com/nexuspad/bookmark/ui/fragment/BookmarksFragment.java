@@ -10,10 +10,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
-
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.widget.SearchView;
 import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.edmondapps.utils.java.WrapperList;
 import com.nexuspad.R;
@@ -25,6 +25,7 @@ import com.nexuspad.datamodel.EntryList;
 import com.nexuspad.datamodel.EntryTemplate;
 import com.nexuspad.datamodel.Folder;
 import com.nexuspad.dataservice.EntryService;
+import com.nexuspad.dataservice.NPException;
 import com.nexuspad.dataservice.ServiceConstants;
 import com.nexuspad.ui.FolderEntriesAdapter;
 import com.nexuspad.ui.FoldersAdapter;
@@ -34,12 +35,12 @@ import com.nexuspad.ui.fragment.EntriesFragment;
 
 /**
  * @author Edmond
- * 
  */
 @FragmentName(BookmarksFragment.TAG)
 @ModuleId(moduleId = ServiceConstants.BOOKMARK_MODULE, template = EntryTemplate.BOOKMARK)
 public class BookmarksFragment extends EntriesFragment {
     public static final String TAG = "BookmarksFragment";
+    private MenuItem mSearchItem;
 
     public static BookmarksFragment of(Folder f) {
         Bundle bundle = new Bundle();
@@ -60,12 +61,14 @@ public class BookmarksFragment extends EntriesFragment {
     }
 
     private Callback mCallback;
+    private SearchView mSearchView;
+    private FolderBookmarksAdapter mPreSearchAdapter;
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         if (activity instanceof Callback) {
-            mCallback = (Callback)activity;
+            mCallback = (Callback) activity;
         } else {
             throw new IllegalStateException(activity + " must implement Callback.");
         }
@@ -76,6 +79,44 @@ public class BookmarksFragment extends EntriesFragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.bookmarks_frag, menu);
+//        mSearchItem = menu.findItem(R.id.search);
+//        mSearchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+//            @Override
+//            public boolean onMenuItemActionExpand(MenuItem item) {
+//                mPreSearchAdapter = getListAdapter();
+//                return true;
+//            }
+//
+//            @Override
+//            public boolean onMenuItemActionCollapse(MenuItem item) {
+//                return true;
+//            }
+//        });
+//        mSearchView = (SearchView) mSearchItem.getActionView();
+//        mSearchView.setOnCloseListener(new SearchView.OnCloseListener() {
+//            @Override
+//            public boolean onClose() {
+//                setListAdapter(mPreSearchAdapter);
+//                return false;
+//            }
+//        });
+//        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//            @Override
+//            public boolean onQueryTextSubmit(String query) {
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean onQueryTextChange(String newText) {
+//                try {
+//                    searchEntriesInFolder(newText, 1);
+//                } catch (NPException e) {
+//                    throw new RuntimeException(e);
+//                }
+//                return false;
+//            }
+//        });
+
     }
 
     @Override
@@ -84,6 +125,8 @@ public class BookmarksFragment extends EntriesFragment {
             case R.id.new_bookmark:
                 NewBookmarkActivity.startWithFolder(getFolder(), Mode.NEW, getActivity());
                 return true;
+            case R.id.search:
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -91,7 +134,6 @@ public class BookmarksFragment extends EntriesFragment {
 
     @Override
     protected void onNewFolder(Context c, Intent i, Folder f) {
-        // TODO bug in ActionResult.getUpdatedFolder()
         getEntryList().getFolder().getSubFolders().add(f);
         getListAdapter().notifyDataSetChanged();
     }
@@ -150,7 +192,7 @@ public class BookmarksFragment extends EntriesFragment {
 
     @Override
     public FolderBookmarksAdapter getListAdapter() {
-        return (FolderBookmarksAdapter)super.getListAdapter();
+        return (FolderBookmarksAdapter) super.getListAdapter();
     }
 
     private class BookmarkMenuClickListener extends OnEntryMenuClickListener<Bookmark> {

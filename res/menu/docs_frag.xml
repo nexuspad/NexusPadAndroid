@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
         android:icon="@android:drawable/ic_menu_add"
@@ -18,5 +18,12 @@
             </group>
         </menu>
     </item>
+    <item
+        android:id="@+id/search"
+        android:icon="@android:drawable/ic_menu_search"
+        android:showAsAction="always|collapseActionView"
+        android:title="@string/search"
+        android:actionViewClass="com.actionbarsherlock.widget.SearchView"
+        />
 
 </menu>

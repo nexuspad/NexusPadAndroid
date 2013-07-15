@@ -25,14 +25,16 @@ import com.edmondapps.utils.android.Logs;
 import com.edmondapps.utils.android.animation.ViewAnimations;
 import com.nexuspad.R;
 import com.nexuspad.app.BitmapLruCache;
+import com.nexuspad.datamodel.NPUpload;
 import com.nexuspad.datamodel.Photo;
 import com.nexuspad.dataservice.NPService;
 import com.nexuspad.photos.ui.fragment.PhotoFragment.BitmapInfo;
 
 /**
  * @author Edmond
- * 
+ * @deprecated this class will die soon
  */
+@Deprecated
 public final class PhotosService {
     public static final String TAG = "PhotosService";
 
@@ -210,6 +212,15 @@ public final class PhotosService {
                 }
             }
         }, mMaxSide, mMaxSide);
+    }
+
+    public void addPhotosFromAttachment(List<? extends NPUpload> photos){
+        List<Photo> out = new ArrayList<Photo>(photos.size());
+        for (NPUpload upload : photos) {
+            final Photo photo = new Photo(upload);
+            out.add(photo);
+        }
+        addPhotos(out);
     }
 
     /**

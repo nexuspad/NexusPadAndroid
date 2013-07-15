@@ -18,5 +18,12 @@
             </group>
         </menu>
     </item>
+    <item
+        android:id="@+id/search"
+        android:icon="@android:drawable/ic_menu_search"
+        android:showAsAction="always|collapseActionView"
+        android:title="@string/search"
+        android:actionViewClass="com.actionbarsherlock.widget.SearchView"
+        />
 
 </menu>

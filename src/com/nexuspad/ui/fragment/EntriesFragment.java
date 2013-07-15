@@ -297,6 +297,11 @@ public abstract class EntriesFragment extends ListFragment {
         service.getEntriesInFolder(mFolder, getTemplate(), page, PAGE_COUNT);
     }
 
+    // not ready
+    protected void searchEntriesInFolder(String keyword, int page) throws NPException {
+        getEntryListService().searchEntriesInFolder(keyword, getFolder(), getTemplate(), page, PAGE_COUNT);
+    }
+
     protected void onListLoaded(EntryList list) {
     }
 
@@ -379,7 +384,7 @@ public abstract class EntriesFragment extends ListFragment {
         return (BaseAdapter)super.getListAdapter();
     }
 
-    public final Folder getFolder() {
+    public Folder getFolder() {
         return mFolder;
     }
 

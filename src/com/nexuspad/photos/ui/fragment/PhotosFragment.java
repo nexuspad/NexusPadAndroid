@@ -3,44 +3,28 @@
  */
 package com.nexuspad.photos.ui.fragment;
 
-import static com.edmondapps.utils.android.view.ViewUtils.findView;
-import static com.nexuspad.dataservice.ServiceConstants.PHOTO_MODULE;
-
-import java.io.File;
-import java.util.List;
-
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
+import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.BaseAdapter;
-import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.Toast;
-
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader.ImageContainer;
 import com.android.volley.toolbox.ImageLoader.ImageListener;
-import com.edmondapps.utils.android.Logs;
 import com.edmondapps.utils.android.animation.ViewAnimations;
 import com.edmondapps.utils.android.annotaion.FragmentName;
-import com.edmondapps.utils.android.service.FileUploadService;
+import com.edmondapps.utils.android.view.RunnableAnimatorListener;
 import com.edmondapps.utils.java.WrapperList;
-import com.ipaulpro.afilechooser.FileChooserActivity;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
 import com.nexuspad.datamodel.EntryList;
@@ -48,17 +32,24 @@ import com.nexuspad.datamodel.EntryTemplate;
 import com.nexuspad.datamodel.Folder;
 import com.nexuspad.datamodel.Photo;
 import com.nexuspad.dataservice.NPService;
-import com.nexuspad.dataservice.UploadService;
 import com.nexuspad.photos.service.PhotosService;
 import com.nexuspad.photos.ui.activity.PhotoActivity;
+import com.nexuspad.photos.ui.activity.PhotosActivity;
 import com.nexuspad.photos.ui.activity.PhotosUploadActivity;
 import com.nexuspad.photos.ui.fragment.PhotoFragment.BitmapInfo;
+import com.nexuspad.ui.DirectionalScrollListener;
 import com.nexuspad.ui.OnListEndListener;
+import com.nexuspad.ui.activity.FoldersActivity;
 import com.nexuspad.ui.fragment.EntriesFragment;
+import com.nineoldandroids.view.ViewPropertyAnimator;
+
+import java.util.List;
+
+import static com.edmondapps.utils.android.view.ViewUtils.findView;
+import static com.nexuspad.dataservice.ServiceConstants.PHOTO_MODULE;
 
 /**
  * @author Edmond
- * 
  */
 @FragmentName(PhotosFragment.TAG)
 @ModuleId(moduleId = PHOTO_MODULE, template = EntryTemplate.PHOTO)
@@ -66,10 +57,14 @@ public class PhotosFragment extends EntriesFragment implements OnItemClickListen
     public static final String TAG = "PhotosFragment";
 
     private static final int REQ_CHOOSE_FILE = 1;
+    private static final int REQ_FOLDER = 2;
 
     private GridView mGridView;
 
     private PhotosService mPhotosService;
+    private View mQuickReturnView;
+    private TextView mFolderView;
+    private List<Photo> mPhotos;
 
     public static PhotosFragment of(Folder f) {
         Bundle bundle = new Bundle();
@@ -98,9 +93,8 @@ public class PhotosFragment extends EntriesFragment implements OnItemClickListen
         switch (item.getItemId()) {
             case R.id.new_photos:
                 // temporary
-                Intent intent = new Intent(getActivity(), FileChooserActivity.class);
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                intent.setType("*/*");
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("image/*");
                 intent.addCategory(Intent.CATEGORY_OPENABLE);
                 startActivityForResult(intent, REQ_CHOOSE_FILE);
                 return true;
@@ -117,6 +111,15 @@ public class PhotosFragment extends EntriesFragment implements OnItemClickListen
                 if (resultCode == Activity.RESULT_OK) {
                     Uri uri = data.getData();
                     uploadFile(uri);
+                }
+                break;
+            case REQ_FOLDER:
+                if (resultCode == Activity.RESULT_OK) {
+                    final FragmentActivity activity = getActivity();
+                    final Folder folder = data.getParcelableExtra(FoldersActivity.KEY_FOLDER);
+                    PhotosActivity.startWithFolder(folder, activity);
+                    activity.finish();
+                    activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 }
                 break;
             default:
@@ -138,11 +141,18 @@ public class PhotosFragment extends EntriesFragment implements OnItemClickListen
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         mGridView = findView(view, R.id.grid_view);
+        mQuickReturnView = findView(view, R.id.sticky);
+        mFolderView = findView(view, R.id.lbl_folder);
+
         mGridView.setOnItemClickListener(this);
-        mGridView.setOnScrollListener(new OnListEndListener() {
+        mFolderView.setText(getFolder().getFolderName());
+        mFolderView.setOnClickListener(new View.OnClickListener() {
             @Override
-            protected void onListEnd(int page) {
-                queryEntriesAync(getCurrentPage() + 1);
+            public void onClick(View v) {
+                final FragmentActivity activity = getActivity();
+                final Intent intent = FoldersActivity.ofParentFolder(activity, Folder.rootFolderOf(PHOTO_MODULE));
+                startActivityForResult(intent, REQ_FOLDER);
+                activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             }
         });
 
@@ -150,31 +160,46 @@ public class PhotosFragment extends EntriesFragment implements OnItemClickListen
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Override
     protected void onListLoaded(EntryList list) {
         super.onListLoaded(list);
 
-        List<Photo> photos = new WrapperList<Photo>(list.getEntries());
-        mPhotosService.addPhotos(photos);
+        mPhotos = new WrapperList<Photo>(list.getEntries());
+        mPhotosService.addPhotos(mPhotos);
 
-        BaseAdapter adapter = (BaseAdapter)mGridView.getAdapter();
+        BaseAdapter adapter = (BaseAdapter) mGridView.getAdapter();
         if (adapter != null) {
             final int prevPos = mGridView.getFirstVisiblePosition();
             adapter.notifyDataSetChanged();
             mGridView.setSelection(prevPos);
-            return;
+        } else {
+            mGridView.setOnScrollListener(new DirectionalScrollListener(0, new OnListEndListener() {
+                @Override
+                protected void onListEnd(int page) {
+                    queryEntriesAync(getCurrentPage() + 1);
+                }
+            }) {
+                @Override
+                public void onScrollDirectionChanged(final boolean showing) {
+                    final int height = showing ? 0 : mQuickReturnView.getHeight();
+                    ViewPropertyAnimator.animate(mQuickReturnView)
+                            .translationY(height)
+                            .setDuration(200L)
+                            .setListener(new RunnableAnimatorListener(true).withEndAction(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mFolderView.setClickable(showing);
+                                    mFolderView.setFocusable(showing);
+                                }
+                            }));
+                }
+            });
+            mGridView.setAdapter(new PhotosAdapter());
         }
-
-        mGridView.setAdapter(new PhotosAdapter(photos));
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        PhotosAdapter adapter = (PhotosAdapter)mGridView.getAdapter();
+        PhotosAdapter adapter = (PhotosAdapter) mGridView.getAdapter();
         Photo photo = adapter.getItem(position);
 
         mPhotosService.setActiveBitmapInfo(new BitmapInfo(photo, getViewLocationOnScreen(view), view.getWidth(), view.getHeight()));
@@ -194,20 +219,14 @@ public class PhotosFragment extends EntriesFragment implements OnItemClickListen
 
     private class PhotosAdapter extends BaseAdapter {
 
-        private final List<? extends Photo> mList;
-
-        private PhotosAdapter(List<? extends Photo> list) {
-            mList = list;
-        }
-
         @Override
         public int getCount() {
-            return mList.size();
+            return mPhotos.size();
         }
 
         @Override
         public Photo getItem(int position) {
-            return mList.get(position);
+            return mPhotos.get(position);
         }
 
         @Override
@@ -217,17 +236,17 @@ public class PhotosFragment extends EntriesFragment implements OnItemClickListen
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            Activity activity = getActivity();
+            final Activity activity = getActivity();
             final ImageView view;
 
             if (convertView == null) {
                 LayoutInflater inflater = activity.getLayoutInflater();
-                view = (ImageView)inflater.inflate(R.layout.layout_photo_grid, parent, false);
+                view = (ImageView) inflater.inflate(R.layout.layout_photo_grid, parent, false);
             } else {
-                view = (ImageView)convertView;
+                view = (ImageView) convertView;
             }
 
-            ImageContainer container = (ImageContainer)view.getTag();
+            ImageContainer container = (ImageContainer) view.getTag();
             if (container != null) {
                 container.cancelRequest();
             }

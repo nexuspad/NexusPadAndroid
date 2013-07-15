@@ -25,6 +25,7 @@ public class Request implements Comparable<Request> {
 
     private File mFile;
     private WeakReference<FileUploadService.Callback> mCallback;
+    private boolean mCancelled;
 
     public Request(Uri uri, Folder folder) {
         this(uri, folder, null);
@@ -36,7 +37,6 @@ public class Request implements Comparable<Request> {
         mCallback = new WeakReference<FileUploadService.Callback>(callback);
         mTimeStamp = System.currentTimeMillis();
     }
-
 
     /**
      * This method may block.

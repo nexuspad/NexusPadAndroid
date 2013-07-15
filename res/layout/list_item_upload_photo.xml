@@ -13,6 +13,7 @@
         android:id="@android:id/icon"
         android:layout_width="@dimen/photo_grid_width"
         android:layout_height="@dimen/photo_grid_height"
+        android:layout_marginRight="@dimen/ed__padding_micro"
         android:scaleType="centerCrop"
         tools:ignore="ContentDescription"/>
 
@@ -35,8 +36,7 @@
             android:paddingLeft="@dimen/ed__padding_small"
             android:paddingTop="@dimen/ed__padding_micro"
             android:scrollHorizontally="true"
-            android:textSize="@dimen/ed__textsize_medium"
-            android:text="slfkadjlksdajfsfad"/>
+            android:textSize="@dimen/ed__textsize_medium"/>
 
         <ProgressBar
             android:id="@android:id/progress"
@@ -57,7 +57,7 @@
             android:paddingTop="@dimen/ed__padding_micro"
             android:scrollHorizontally="true"
             android:textSize="@dimen/ed__textsize_small"
-            android:text="slfkadjlksdajfsfad"/>
+            android:textColor="@android:color/darker_gray"/>
     </LinearLayout>
 
     <ImageButton

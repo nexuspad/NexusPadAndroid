@@ -5,7 +5,6 @@
     android:layout_height="wrap_content"
     android:minHeight="48dp"
     android:orientation="horizontal"
-    android:paddingLeft="@dimen/ed__padding_small"
     tools:context=".home.ui.activity.MainActivity" >
 
     <ImageView
@@ -23,11 +22,12 @@
         android:layout_weight="1"
         android:ellipsize="end"
         android:gravity="center_vertical"
-        android:maxLines="1"
+        android:maxLines="2"
+        android:textStyle="bold"
+        android:scrollHorizontally="true"
         android:paddingBottom="@dimen/ed__padding_micro"
         android:paddingLeft="@dimen/ed__padding_small"
         android:paddingTop="@dimen/ed__padding_micro"
-        android:scrollHorizontally="true"
         android:textSize="@dimen/ed__textsize_medium" />
 
 </com.nexuspad.ui.DuplicateParentStateAwareLinearLayout>

@@ -34,6 +34,7 @@
     <string name="folders">Folders</string>
     <string name="more">More</string>
     <string name="new_">New</string>
+    <string name="search">Search</string>
     <string name="new_photos">New Photos</string>
     <string name="new_folder">New Folder</string>
     <string name="new_bookmark">New Bookmark</string>
@@ -69,5 +70,7 @@
     <string name="usage_unavailable">(usage unavailable)</string>
     <!-- example: 50%  150/300 -->
     <string name="formatted_progress">%1$d%%  %2$d/%3$d</string>
+    <string name="upload_completed">Upload completed</string>
+    <string name="upload_failed">Upload failed</string>
 
 </resources>

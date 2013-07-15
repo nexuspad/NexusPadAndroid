@@ -5,16 +5,13 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Binder;
 import android.os.IBinder;
+import com.edmondapps.utils.android.service.FileUploadService;
 import com.nexuspad.datamodel.Folder;
 import com.nexuspad.dataservice.UploadService;
 import com.nexuspad.photos.Request;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.PriorityBlockingQueue;
+import java.util.*;
 
 /**
  * Author: Edmond
@@ -51,7 +48,7 @@ public class PhotoUploadService extends Service {
             addRequest(new Request(uri, folder));
         }
 
-        public void addRequests(Collection<? extends Request> requests){
+        public void addRequests(Collection<? extends Request> requests) {
             for (Request request : requests) {
                 addRequest(request);
             }
@@ -81,7 +78,7 @@ public class PhotoUploadService extends Service {
         }
     }
 
-    private final PriorityBlockingQueue<Request> mQueue = new PriorityBlockingQueue<Request>();
+    private final List<Request> mQueue = new ArrayList<Request>();
     private final PhotosUploadBinder mBinder = new PhotosUploadBinder(this);
     private final UploadService mUploadService = new UploadService(this);
 
@@ -95,8 +92,24 @@ public class PhotoUploadService extends Service {
         return START_STICKY;
     }
 
-    // TODO actually use the queue
-    public void onNewRequest(Request r) {
-        mUploadService.addUploadToFolder(r.getFile(this), r.getFolder(), r.getCallback());
+    public void onNewRequest(final Request r) {
+        final FileUploadService.Callback callback = r.getCallback();
+        mUploadService.addUploadToFolder(r.getFile(this), r.getFolder(), new FileUploadService.Callback() {
+            @Override
+            public boolean onProgress(long progress, long total) {
+                if (callback != null) {
+                    return callback.onProgress(progress, total);
+                }
+                return true;
+            }
+
+            @Override
+            public void onDone(boolean success) {
+                if (callback != null) {
+                    callback.onDone(success);
+                }
+                mQueue.remove(r);
+            }
+        });
     }
 }

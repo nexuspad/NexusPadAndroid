@@ -219,29 +219,6 @@ public class PhotoFragment extends EntriesFragment {
                 View frame = inflater.inflate(R.layout.photo_layout, container, false);
 
                 ImageView imageView = findView(frame, android.R.id.icon);
-                // not ready
-                // imageView.setOnTouchListener(new OnSwipeUpListener(activity)
-                // {
-                // @Override
-                // protected void onSwipingVertically(View view, MotionEvent ev)
-                // {
-                // super.onSwipingVertically(view, ev);
-                // mViewPager.requestDisallowInterceptTouchEvent(true);
-                // }
-                //
-                // @Override
-                // protected void restore(View view) {
-                // super.restore(view);
-                // mViewPager.requestDisallowInterceptTouchEvent(false);
-                // }
-                //
-                // @Override
-                // protected void swipeAway(View view, float velocity, float
-                // deltaY) {
-                // super.swipeAway(view, velocity, deltaY);
-                // mViewPager.requestDisallowInterceptTouchEvent(false);
-                // }
-                // });
                 mPhotosService.loadBestImage(imageView, photo);
 
                 frame.setTag(imageView);
