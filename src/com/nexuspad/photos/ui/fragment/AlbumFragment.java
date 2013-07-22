@@ -16,9 +16,7 @@ import com.nexuspad.datamodel.Folder;
 import com.nexuspad.datamodel.NPUpload;
 import com.nexuspad.datamodel.Photo;
 import com.nexuspad.dataservice.NPService;
-import com.nexuspad.photos.service.PhotosService;
 import com.nexuspad.photos.ui.activity.PhotoActivity;
-import com.nexuspad.photos.ui.activity.PhotosActivity;
 import com.nexuspad.ui.fragment.EntryFragment;
 import com.squareup.picasso.Picasso;
 
@@ -92,8 +90,12 @@ public class AlbumFragment extends EntryFragment<Album> implements AdapterView.O
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        PhotosService.getInstance(getActivity()).addPhotosFromAttachment(mPhotos);
-        PhotoActivity.startWithFolder(getFolder(), getActivity());
+        final Photo photo = new Photo(mPhotosAdapter.getItem(position));
+        final ArrayList<Photo> photos = new ArrayList<Photo>(mPhotos.size());
+        for (NPUpload npUpload : mPhotos) {
+            photos.add(new Photo(npUpload));
+        }
+        PhotoActivity.startWithFolder(getFolder(), photo, photos, getActivity());
     }
 
     private class PhotosAdapter extends BaseAdapter {
@@ -129,7 +131,7 @@ public class AlbumFragment extends EntryFragment<Album> implements AdapterView.O
                     .load(tnUrl)
                     .resizeDimen(R.dimen.photo_grid_width, R.dimen.photo_grid_height)
                     .centerCrop()
-                    .placeholder(android.R.drawable.ic_menu_slideshow)
+                    .placeholder(R.drawable.placeholder)
                     .error(R.drawable.ic_launcher)
                     .into(view);
 

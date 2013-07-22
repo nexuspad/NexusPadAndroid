@@ -7,6 +7,7 @@ import static com.nexuspad.dataservice.ServiceConstants.BOOKMARK_MODULE;
 import static com.nexuspad.dataservice.ServiceConstants.DOC_MODULE;
 import static com.nexuspad.dataservice.ServiceConstants.PHOTO_MODULE;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
 import com.edmondapps.utils.android.Logs;
@@ -23,6 +24,13 @@ import com.nexuspad.photos.ui.activity.PhotosActivity;
  */
 public class DashboardActivity extends SinglePaneActivity implements DashboardFragment.Callback {
     public static final String TAG = "MainPhoneActivity";
+
+    @Override
+    protected void onCreate(Bundle savedState) {
+        super.onCreate(savedState);
+
+        getSupportActionBar().setIcon(R.drawable.back_to_dashboard);
+    }
 
     @Override
     protected int onCreateLayoutId() {

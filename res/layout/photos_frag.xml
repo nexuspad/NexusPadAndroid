@@ -7,14 +7,18 @@
         android:id="@+id/grid_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:columnWidth="101dp"
-        android:drawSelectorOnTop="true"
-        android:horizontalSpacing="1dp"
-        android:listSelector="?attr/selectableItemBackground"
+        android:verticalSpacing="2dp"
+        android:horizontalSpacing="2dp"
+        android:scrollingCache="true"
+        android:smoothScrollbar="true"
+        android:clipChildren="true"
+        android:alwaysDrawnWithCache="true"
         android:numColumns="auto_fit"
-        android:scrollbarStyle="outsideOverlay"
+        android:columnWidth="@dimen/photo_grid_column_width"
         android:stretchMode="spacingWidthUniform"
-        android:verticalSpacing="1dp"/>
+        android:background="@android:color/white"
+        android:drawSelectorOnTop="true"
+        android:listSelector="?attr/selectableItemBackground"/>
 
     <FrameLayout
         android:id="@+id/sticky"

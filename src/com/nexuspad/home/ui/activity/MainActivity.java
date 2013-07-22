@@ -4,6 +4,7 @@
 package com.nexuspad.home.ui.activity;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.widget.Toast;
 
@@ -17,6 +18,13 @@ import com.nexuspad.home.ui.fragment.MainFragment;
  * 
  */
 public class MainActivity extends SinglePaneActivity implements MainFragment.Callback {
+    @Override
+    protected void onCreate(Bundle savedState) {
+        super.onCreate(savedState);
+
+        getSupportActionBar().setIcon(R.drawable.back_to_dashboard);
+    }
+
     @Override
     protected Fragment onCreateFragment() {
         return new MainFragment();

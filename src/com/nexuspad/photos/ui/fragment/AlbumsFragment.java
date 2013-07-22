@@ -24,6 +24,7 @@ import com.nexuspad.datamodel.Album;
 import com.nexuspad.datamodel.EntryList;
 import com.nexuspad.datamodel.EntryTemplate;
 import com.nexuspad.datamodel.Folder;
+import com.nexuspad.dataservice.NPService;
 import com.nexuspad.dataservice.ServiceConstants;
 import com.nexuspad.photos.ui.activity.AlbumActivity;
 import com.nexuspad.photos.ui.activity.PhotosActivity;
@@ -186,11 +187,12 @@ public class AlbumsFragment extends EntriesFragment {
 
             final Album album = getItem(position);
             holder.title.setText(album.getTitle());
+            final String url = NPService.addAuthToken(album.getTnUrl());
             Picasso.with(getActivity())
-                    .load(album.getTnUrl())
+                    .load(url)
                     .resizeDimen(R.dimen.photo_grid_width, R.dimen.photo_grid_height)
                     .centerCrop()
-                    .placeholder(android.R.drawable.ic_menu_slideshow)
+                    .placeholder(R.drawable.placeholder)
                     .error(R.drawable.ic_launcher)
                     .into(holder.thumbnail);
 

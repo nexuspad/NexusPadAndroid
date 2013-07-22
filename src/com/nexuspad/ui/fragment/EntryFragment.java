@@ -63,7 +63,7 @@ public abstract class EntryFragment<T extends NPEntry> extends SherlockDialogFra
     private final Lazy<EntryService> mEntryService = new Lazy<EntryService>() {
         @Override
         protected EntryService onCreate() {
-            return new EntryService(getActivity(), new EntryCallback(EntryFragment.this));
+            return new EntryService(getActivity());
         }
     };
 
@@ -285,33 +285,5 @@ public abstract class EntryFragment<T extends NPEntry> extends SherlockDialogFra
 
         mCallback.onGotEntry(this, entry);
         onDetailEntryUpdated(entry);
-    }
-
-    private static class EntryCallback implements EntryServiceCallback {
-        private final WeakReference<EntryFragment<?>> mFragment;
-
-        private EntryCallback(EntryFragment<?> f) {
-            mFragment = new WeakReference<EntryFragment<?>>(f);
-        }
-
-        @Override
-        public void successfulRetrieval(NPEntry entry) {
-        }
-
-        @Override
-        public void successfulUpdate(NPEntry updatedEntry) {
-            EntryFragment<?> fragment = mFragment.get();
-            if ((fragment != null) && fragment.isAdded()) {
-                fragment.onEntryUpdatedInternal(updatedEntry);
-            }
-        }
-
-        @Override
-        public void failureCallback(ServiceError error) {
-            EntryFragment<?> fragment = mFragment.get();
-            if ((fragment != null) && fragment.isAdded()) {
-                fragment.onEntryUpdateFailed(error);
-            }
-        }
     }
 }

@@ -6,6 +6,7 @@ package com.nexuspad.about.activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
+import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Window;
 import com.edmondapps.utils.android.activity.SinglePaneActivity;
 import com.edmondapps.utils.android.annotaion.ParentActivity;
@@ -27,8 +28,11 @@ public class AboutActivity extends SinglePaneActivity {
     @Override
     protected void onCreate(Bundle savedState) {
         requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
-        getSupportActionBar().hide();
         super.onCreate(savedState);
+
+        final ActionBar actionBar = getSupportActionBar();
+        actionBar.hide();
+        actionBar.setIcon(R.drawable.back_to_dashboard);
     }
 
     @Override

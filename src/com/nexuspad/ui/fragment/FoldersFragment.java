@@ -121,7 +121,7 @@ public class FoldersFragment extends ListFragment {
             mParentFolder = arguments.getParcelable(KEY_PARENT_FOLDER);
         }
 
-        mFolderService = new FolderService(getActivity(), null);
+        mFolderService = new FolderService(getActivity());
     }
 
     @Override

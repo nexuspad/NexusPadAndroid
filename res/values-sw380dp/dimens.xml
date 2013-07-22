@@ -1,0 +1,7 @@
+<resources>
+    <dimen name="photo_grid_width">119dp</dimen>
+    <dimen name="photo_grid_height">119dp</dimen>
+    <dimen name="photo_grid_spacing_width">3dp</dimen>
+    <dimen name="photo_grid_spacing_height">3dp</dimen>
+    <dimen name="photo_grid_column_width">120dp</dimen>
+</resources>

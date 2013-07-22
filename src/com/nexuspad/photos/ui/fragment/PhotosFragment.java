@@ -6,7 +6,6 @@ package com.nexuspad.photos.ui.fragment;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -18,32 +17,25 @@ import android.widget.AdapterView.OnItemClickListener;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageLoader.ImageContainer;
-import com.android.volley.toolbox.ImageLoader.ImageListener;
-import com.edmondapps.utils.android.animation.ViewAnimations;
 import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.edmondapps.utils.android.view.RunnableAnimatorListener;
 import com.edmondapps.utils.java.WrapperList;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
-import com.nexuspad.datamodel.EntryList;
-import com.nexuspad.datamodel.EntryTemplate;
-import com.nexuspad.datamodel.Folder;
-import com.nexuspad.datamodel.Photo;
+import com.nexuspad.datamodel.*;
+import com.nexuspad.dataservice.EntryService;
 import com.nexuspad.dataservice.NPService;
-import com.nexuspad.photos.service.PhotosService;
 import com.nexuspad.photos.ui.activity.PhotoActivity;
 import com.nexuspad.photos.ui.activity.PhotosActivity;
 import com.nexuspad.photos.ui.activity.PhotosUploadActivity;
-import com.nexuspad.photos.ui.fragment.PhotoFragment.BitmapInfo;
 import com.nexuspad.ui.DirectionalScrollListener;
 import com.nexuspad.ui.OnListEndListener;
 import com.nexuspad.ui.activity.FoldersActivity;
 import com.nexuspad.ui.fragment.EntriesFragment;
 import com.nineoldandroids.view.ViewPropertyAnimator;
+import com.squareup.picasso.Picasso;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import static com.edmondapps.utils.android.view.ViewUtils.findView;
 import static com.nexuspad.dataservice.ServiceConstants.PHOTO_MODULE;
@@ -61,10 +53,10 @@ public class PhotosFragment extends EntriesFragment implements OnItemClickListen
 
     private GridView mGridView;
 
-    private PhotosService mPhotosService;
     private View mQuickReturnView;
     private TextView mFolderView;
-    private List<Photo> mPhotos;
+    // Parcelable
+    private ArrayList<Photo> mPhotos;
 
     public static PhotosFragment of(Folder f) {
         Bundle bundle = new Bundle();
@@ -78,7 +70,6 @@ public class PhotosFragment extends EntriesFragment implements OnItemClickListen
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mPhotosService = PhotosService.getInstance(getActivity());
         setHasOptionsMenu(true);
     }
 
@@ -101,6 +92,19 @@ public class PhotosFragment extends EntriesFragment implements OnItemClickListen
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    protected EntryService.EntryReceiver onCreateEntryReceiver() {
+        return new EntryService.EntryReceiver() {
+            @Override
+            public void onNew(Context context, Intent intent, NPEntry entry) {
+                super.onNew(context, intent, entry);
+                mPhotos.add((Photo) entry);
+                BaseAdapter adapter = (BaseAdapter) mGridView.getAdapter();
+                stableNotifyAdapter(adapter);
+            }
+        };
     }
 
     @Override
@@ -159,18 +163,21 @@ public class PhotosFragment extends EntriesFragment implements OnItemClickListen
         super.onViewCreated(view, savedInstanceState);
     }
 
+    private void stableNotifyAdapter(BaseAdapter adapter) {
+        final int prevPos = mGridView.getFirstVisiblePosition();
+        adapter.notifyDataSetChanged();
+        mGridView.setSelection(prevPos);
+    }
+
     @Override
     protected void onListLoaded(EntryList list) {
         super.onListLoaded(list);
 
-        mPhotos = new WrapperList<Photo>(list.getEntries());
-        mPhotosService.addPhotos(mPhotos);
+        mPhotos = new ArrayList<Photo>(new WrapperList<Photo>(list.getEntries()));
 
         BaseAdapter adapter = (BaseAdapter) mGridView.getAdapter();
         if (adapter != null) {
-            final int prevPos = mGridView.getFirstVisiblePosition();
-            adapter.notifyDataSetChanged();
-            mGridView.setSelection(prevPos);
+            stableNotifyAdapter(adapter);
         } else {
             mGridView.setOnScrollListener(new DirectionalScrollListener(0, new OnListEndListener() {
                 @Override
@@ -202,8 +209,7 @@ public class PhotosFragment extends EntriesFragment implements OnItemClickListen
         PhotosAdapter adapter = (PhotosAdapter) mGridView.getAdapter();
         Photo photo = adapter.getItem(position);
 
-        mPhotosService.setActiveBitmapInfo(new BitmapInfo(photo, getViewLocationOnScreen(view), view.getWidth(), view.getHeight()));
-        PhotoActivity.startWithFolder(getFolder(), getActivity());
+        PhotoActivity.startWithFolder(getFolder(), photo, mPhotos, getActivity());
     }
 
     private static int[] getViewLocationOnScreen(View v) {
@@ -246,35 +252,15 @@ public class PhotosFragment extends EntriesFragment implements OnItemClickListen
                 view = (ImageView) convertView;
             }
 
-            ImageContainer container = (ImageContainer) view.getTag();
-            if (container != null) {
-                container.cancelRequest();
-            }
-
-            int maxSide = mPhotosService.getThumbnailMaxSide();
-
             String url = NPService.addAuthToken(getItem(position).getTnUrl());
-            container = mPhotosService.getImageLoader().get(url, new ImageListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    view.setImageResource(R.drawable.ic_launcher);
-                }
-
-                @Override
-                public void onResponse(ImageContainer response, boolean isImmediate) {
-                    Bitmap bitmap = response.getBitmap();
-                    if (bitmap != null) {
-                        if (!isImmediate) {
-                            ViewAnimations.fadeInBitmap(view, bitmap, 300);
-                        } else {
-                            view.setImageBitmap(bitmap);
-                        }
-                    } else {
-                        view.setImageResource(android.R.drawable.ic_menu_slideshow);
-                    }
-                }
-            }, maxSide, maxSide);
-            view.setTag(container);
+            final Picasso picasso = Picasso.with(activity);
+            picasso.setDebugging(true);
+            picasso.load(url)
+                    .placeholder(R.drawable.placeholder)
+                    .error(R.drawable.ic_launcher)
+                    .resizeDimen(R.dimen.photo_grid_width, R.dimen.photo_grid_height)
+                    .centerCrop()
+                    .into(view);
 
             return view;
         }

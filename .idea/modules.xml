@@ -7,6 +7,7 @@
       <module fileurl="file://$PROJECT_DIR$/NexusPad2.iml" filepath="$PROJECT_DIR$/NexusPad2.iml" />
       <module fileurl="file://$PROJECT_DIR$/../NexusPadCore/NexusPadCore.iml" filepath="$PROJECT_DIR$/../NexusPadCore/NexusPadCore.iml" />
       <module fileurl="file://$PROJECT_DIR$/../NineOldAndroids/NineOldAndroids.iml" filepath="$PROJECT_DIR$/../NineOldAndroids/NineOldAndroids.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../PhotoView/library/PhotoView.iml" filepath="$PROJECT_DIR$/../PhotoView/library/PhotoView.iml" />
       <module fileurl="file://$PROJECT_DIR$/../libs/cwac-richedit/RichTextEditor.iml" filepath="$PROJECT_DIR$/../libs/cwac-richedit/RichTextEditor.iml" />
       <module fileurl="file://$PROJECT_DIR$/../libs/volley/Volley.iml" filepath="$PROJECT_DIR$/../libs/volley/Volley.iml" />
       <module fileurl="file://$PROJECT_DIR$/../libs/aFileChooser/aFileChooser/aFileChooser.iml" filepath="$PROJECT_DIR$/../libs/aFileChooser/aFileChooser/aFileChooser.iml" />

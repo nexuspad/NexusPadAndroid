@@ -38,6 +38,8 @@ public abstract class EntryActivity<T extends NPEntry> extends SinglePaneActivit
 
         // have to reset the progress bar here (some kind of bug)
         setSupportProgressBarIndeterminateVisibility(false);
+
+        getSupportActionBar().setIcon(R.drawable.back_to_dashboard);
     }
 
     @Override
