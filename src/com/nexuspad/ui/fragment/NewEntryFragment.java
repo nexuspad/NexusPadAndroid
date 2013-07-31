@@ -7,7 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-
+import com.edmondapps.utils.android.Logs;
 import com.nexuspad.account.AccountManager;
 import com.nexuspad.annotation.ModuleId;
 import com.nexuspad.datamodel.Folder;
@@ -19,10 +19,12 @@ import com.nexuspad.dataservice.ServiceError;
 import com.nexuspad.ui.activity.FoldersActivity;
 
 /**
+ * Annotate it with {@link ModuleId}.
+ *
  * @author Edmond
- * 
  */
 public abstract class NewEntryFragment<T extends NPEntry> extends EntryFragment<T> {
+    public static final String TAG = "NewEntryFragment";
 
     protected static final int REQ_FOLDER = 1;
 
@@ -35,7 +37,7 @@ public abstract class NewEntryFragment<T extends NPEntry> extends EntryFragment<
      * Callers of this method should first check with
      * {@link #isEditedEntryValid()} to guarantee the validity of the edited
      * entry.
-     * 
+     *
      * @return an edited entry that reflects the user's changes
      */
     public abstract T getEditedEntry();
@@ -75,12 +77,16 @@ public abstract class NewEntryFragment<T extends NPEntry> extends EntryFragment<
     public void updateEntry() {
         if (isEditedEntryValid()) {
             T entry = getEditedEntry();
-            try {
-                entry.setOwner(AccountManager.currentAccount());
-            } catch (NPException e) {
-                throw new AssertionError("WTF, I thought I am logged in!");
+            if (!entry.equals(getDetailEntryIfExist())) {
+                try {
+                    entry.setOwner(AccountManager.currentAccount());
+                } catch (NPException e) {
+                    throw new AssertionError("WTF, I thought I am logged in!");
+                }
+                getEntryService().updateEntry(entry);
+            } else {
+                Logs.w(TAG, "entry not updated because no changes when made: " + entry);
             }
-            getEntryService().updateEntry(entry);
         }
     }
 

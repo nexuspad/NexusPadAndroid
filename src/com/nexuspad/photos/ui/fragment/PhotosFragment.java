@@ -25,6 +25,7 @@ import com.nexuspad.annotation.ModuleId;
 import com.nexuspad.datamodel.*;
 import com.nexuspad.dataservice.EntryService;
 import com.nexuspad.dataservice.NPService;
+import com.nexuspad.photos.ui.activity.NewAlbumActivity;
 import com.nexuspad.photos.ui.activity.PhotoActivity;
 import com.nexuspad.photos.ui.activity.PhotosActivity;
 import com.nexuspad.photos.ui.activity.PhotosUploadActivity;
@@ -48,8 +49,7 @@ import static com.nexuspad.dataservice.ServiceConstants.PHOTO_MODULE;
 public class PhotosFragment extends EntriesFragment implements OnItemClickListener {
     public static final String TAG = "PhotosFragment";
 
-    private static final int REQ_CHOOSE_FILE = 1;
-    private static final int REQ_FOLDER = 2;
+    private static final int REQ_FOLDER = 1;
 
     private GridView mGridView;
 
@@ -68,39 +68,21 @@ public class PhotosFragment extends EntriesFragment implements OnItemClickListen
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.photos_frag, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.new_photos:
-                // temporary
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.setType("image/*");
-                intent.addCategory(Intent.CATEGORY_OPENABLE);
-                startActivityForResult(intent, REQ_CHOOSE_FILE);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    @Override
     protected EntryService.EntryReceiver onCreateEntryReceiver() {
         return new EntryService.EntryReceiver() {
             @Override
             public void onNew(Context context, Intent intent, NPEntry entry) {
                 super.onNew(context, intent, entry);
                 mPhotos.add((Photo) entry);
+                BaseAdapter adapter = (BaseAdapter) mGridView.getAdapter();
+                stableNotifyAdapter(adapter);
+            }
+
+            @Override
+            public void onDelete(Context context, Intent intent, NPEntry entry) {
+                super.onDelete(context, intent, entry);
+                final Photo photo = (Photo) entry;
+                mPhotos.remove(photo);
                 BaseAdapter adapter = (BaseAdapter) mGridView.getAdapter();
                 stableNotifyAdapter(adapter);
             }
@@ -111,12 +93,6 @@ public class PhotosFragment extends EntriesFragment implements OnItemClickListen
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case REQ_CHOOSE_FILE:
-                if (resultCode == Activity.RESULT_OK) {
-                    Uri uri = data.getData();
-                    uploadFile(uri);
-                }
-                break;
             case REQ_FOLDER:
                 if (resultCode == Activity.RESULT_OK) {
                     final FragmentActivity activity = getActivity();
@@ -129,12 +105,6 @@ public class PhotosFragment extends EntriesFragment implements OnItemClickListen
             default:
                 throw new AssertionError("unknown requestCode: " + requestCode);
         }
-    }
-
-    // temporary
-    @Deprecated
-    private void uploadFile(Uri uri) {
-        PhotosUploadActivity.startWith(uri, getFolder(), getActivity());
     }
 
     @Override
@@ -210,12 +180,6 @@ public class PhotosFragment extends EntriesFragment implements OnItemClickListen
         Photo photo = adapter.getItem(position);
 
         PhotoActivity.startWithFolder(getFolder(), photo, mPhotos, getActivity());
-    }
-
-    private static int[] getViewLocationOnScreen(View v) {
-        int[] p = new int[2];
-        v.getLocationOnScreen(p);
-        return p;
     }
 
     @Override

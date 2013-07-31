@@ -3,11 +3,9 @@
  */
 package com.nexuspad.photos.ui.fragment;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import com.edmondapps.utils.android.annotaion.FragmentName;
-import com.edmondapps.utils.android.view.RunnableAnimatorListener;
 import com.edmondapps.utils.java.WrapperList;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
@@ -27,11 +24,7 @@ import com.nexuspad.datamodel.Folder;
 import com.nexuspad.dataservice.NPService;
 import com.nexuspad.dataservice.ServiceConstants;
 import com.nexuspad.photos.ui.activity.AlbumActivity;
-import com.nexuspad.photos.ui.activity.PhotosActivity;
-import com.nexuspad.ui.DirectionalScrollListener;
-import com.nexuspad.ui.activity.FoldersActivity;
 import com.nexuspad.ui.fragment.EntriesFragment;
-import com.nineoldandroids.view.ViewPropertyAnimator;
 import com.squareup.picasso.Picasso;
 
 import static com.edmondapps.utils.android.view.ViewUtils.findView;
@@ -53,17 +46,7 @@ public class AlbumsFragment extends EntriesFragment {
         return fragment;
     }
 
-    private static final int REQ_FOLDER = 1;
-
     private WrapperList<Album> mAlbums;
-
-    private View mQuickReturnView;
-    private TextView mFolderView;
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.albums_frag, container, false);
-    }
 
     @Override
     protected void onListLoaded(EntryList list) {
@@ -73,37 +56,13 @@ public class AlbumsFragment extends EntriesFragment {
     }
 
     @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.list_content, container, false);
+    }
+
+    @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mQuickReturnView = findView(view, R.id.sticky);
-        mFolderView = findView(view, R.id.lbl_folder);
-        mFolderView.setText(getFolder().getFolderName());
-        mFolderView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final Folder folder = Folder.rootFolderOf(ServiceConstants.PHOTO_MODULE);
-                final FragmentActivity activity = getActivity();
-                startActivityForResult(FoldersActivity.ofParentFolder(activity, folder), REQ_FOLDER);
-                activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-            }
-        });
-
-        getListView().setOnScrollListener(new DirectionalScrollListener(0) {
-            @Override
-            public void onScrollDirectionChanged(final boolean showing) {
-                final int height = showing ? 0 : mQuickReturnView.getHeight();
-                ViewPropertyAnimator.animate(mQuickReturnView)
-                        .translationY(height)
-                        .setDuration(200L)
-                        .setListener(new RunnableAnimatorListener(true).withEndAction(new Runnable() {
-                            @Override
-                            public void run() {
-                                mFolderView.setClickable(showing);
-                                mFolderView.setFocusable(showing);
-                            }
-                        }));
-            }
-        });
         updateUI();
     }
 
@@ -115,24 +74,6 @@ public class AlbumsFragment extends EntriesFragment {
             } else {
                 adapter.notifyDataSetChanged();
             }
-        }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case REQ_FOLDER:
-                if (resultCode == Activity.RESULT_OK) {
-                    final FragmentActivity activity = getActivity();
-                    final Folder folder = data.getParcelableExtra(FoldersActivity.KEY_FOLDER);
-                    PhotosActivity.startWithFolderAndIndex(folder, activity, 1);
-                    activity.finish();
-                    activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                }
-                break;
-            default:
-                throw new AssertionError("unexpected requestCode: " + requestCode);
         }
     }
 

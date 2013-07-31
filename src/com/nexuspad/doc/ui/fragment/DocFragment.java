@@ -3,7 +3,6 @@
  */
 package com.nexuspad.doc.ui.fragment;
 
-import static com.edmondapps.utils.android.view.ViewUtils.findView;
 import android.app.Activity;
 import android.os.Bundle;
 import android.text.Html;
@@ -13,21 +12,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.nexuspad.R;
+import com.nexuspad.app.App;
 import com.nexuspad.datamodel.Doc;
 import com.nexuspad.datamodel.Folder;
 import com.nexuspad.doc.ui.activity.NewDocActivity;
 import com.nexuspad.ui.activity.NewEntryActivity.Mode;
 import com.nexuspad.ui.fragment.EntryFragment;
 
+import static com.edmondapps.utils.android.view.ViewUtils.findView;
+
 /**
  * @author Edmond
- * 
  */
 @FragmentName(DocFragment.TAG)
 public class DocFragment extends EntryFragment<Doc> {
@@ -49,7 +49,6 @@ public class DocFragment extends EntryFragment<Doc> {
     private TextView mNoteV;
 
     private TextView mTagsFrameV;
-    private TextView mNoteFrameV;
 
     @Override
     public void onAttach(Activity activity) {
@@ -89,8 +88,8 @@ public class DocFragment extends EntryFragment<Doc> {
         mNoteV = findView(view, R.id.lbl_note);
 
         mTagsFrameV = findView(view, R.id.lbl_tags_frame);
-        mNoteFrameV = findView(view, R.id.lbl_note_frame);
 
+        mTitleV.setTypeface(App.getRobotoLight());
         // magic to make the links inside the <a></a> tags clickable
         mNoteV.setMovementMethod(LinkMovementMethod.getInstance());
 
@@ -131,6 +130,5 @@ public class DocFragment extends EntryFragment<Doc> {
 
         int noteFlag = !TextUtils.isEmpty(doc.getNote()) ? View.VISIBLE : View.GONE;
         mNoteV.setVisibility(noteFlag);
-        mNoteFrameV.setVisibility(noteFlag);
     }
 }

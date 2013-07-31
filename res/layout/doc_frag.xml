@@ -10,17 +10,19 @@
         android:orientation="vertical" >
 
         <TextView
-            style="?android:attr/listSeparatorTextViewStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/title" />
-
-        <TextView
             android:id="@+id/lbl_title"
-            style="@style/listItemTextView"
+            style="@style/listTitleTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/title" />
+
+        <TextView
+            android:id="@+id/lbl_note"
+            style="@style/listItemTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/doc"
+            android:minLines="8" />
 
         <TextView
             android:id="@+id/lbl_tags_frame"
@@ -35,21 +37,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/tags" />
-
-        <TextView
-            android:id="@+id/lbl_note_frame"
-            style="?android:attr/listSeparatorTextViewStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/doc" />
-
-        <TextView
-            android:id="@+id/lbl_note"
-            style="@style/listItemTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/doc"
-            android:minLines="8" />
     </LinearLayout>
 
 </ScrollView>

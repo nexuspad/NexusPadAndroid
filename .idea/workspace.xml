@@ -32,71 +32,52 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="549b77a2-1fbd-459e-bc15-0298bf32a08c" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/com/nexuspad/ui/HackyViewPager.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_google_android_android_4_1_1_4.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__commons_codec_commons_codec_1_3.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__commons_logging_commons_logging_1_1_1.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_httpcomponents_httpclient_4_0_1.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_httpcomponents_httpcore_4_0_1.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_json_json_20080701.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_khronos_opengl_api_gl1_1_android_2_1_r1.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__xerces_xmlParserAPIs_2_6_2.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__xpp3_xpp3_1_1_4c.xml" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../libs/cwac-richedit/RichTextEditor.eml" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../libs/cwac-richedit/RichTextEditor.iml" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../libs/volley/Volley.eml" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../libs/volley/Volley.iml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/values-sw380dp/dimens.xml" />
-      <change type="DELETED" beforePath="D:\workspace-2012-07-02\workspace\NexusPad2\src\com\nexuspad\photos\service\PhotosService.java" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../libs/aFileChooser/aFileChooser/libs/android-support-v4.jar" afterPath="$PROJECT_DIR$/../libs/aFileChooser/aFileChooser/libs/android-support-v4.jar" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../libs/aFileChooser/aFileChooser/.classpath" afterPath="$PROJECT_DIR$/../libs/aFileChooser/aFileChooser/.classpath" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../libs/cwac-richedit/.classpath" afterPath="$PROJECT_DIR$/../libs/cwac-richedit/.classpath" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../libs/volley/.classpath" afterPath="$PROJECT_DIR$/../libs/volley/.classpath" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/nexuspad/about/activity/AboutActivity.java" afterPath="$PROJECT_DIR$/src/com/nexuspad/about/activity/AboutActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/nexuspad/photos/ui/activity/AlbumActivity.java" afterPath="$PROJECT_DIR$/src/com/nexuspad/photos/ui/activity/AlbumActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/nexuspad/photos/ui/fragment/AlbumFragment.java" afterPath="$PROJECT_DIR$/src/com/nexuspad/photos/ui/fragment/AlbumFragment.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/nexuspad/photos/ui/fragment/AlbumsFragment.java" afterPath="$PROJECT_DIR$/src/com/nexuspad/photos/ui/fragment/AlbumsFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/nexuspad/home/ui/activity/DashboardActivity.java" afterPath="$PROJECT_DIR$/src/com/nexuspad/home/ui/activity/DashboardActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/AndroidManifest.xml" afterPath="$PROJECT_DIR$/AndroidManifest.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/nexuspad/app/App.java" afterPath="$PROJECT_DIR$/src/com/nexuspad/app/App.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/nexuspad/bookmark/ui/fragment/BookmarkFragment.java" afterPath="$PROJECT_DIR$/src/com/nexuspad/bookmark/ui/fragment/BookmarkFragment.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/nexuspad/doc/ui/fragment/DocFragment.java" afterPath="$PROJECT_DIR$/src/com/nexuspad/doc/ui/fragment/DocFragment.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../EdmondAppsAndroidUtils/EdmondAppsAndroidUtils.iml" afterPath="$PROJECT_DIR$/../EdmondAppsAndroidUtils/EdmondAppsAndroidUtils.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/nexuspad/ui/activity/EntriesActivity.java" afterPath="$PROJECT_DIR$/src/com/nexuspad/ui/activity/EntriesActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/nexuspad/ui/fragment/EntriesFragment.java" afterPath="$PROJECT_DIR$/src/com/nexuspad/ui/fragment/EntriesFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/nexuspad/ui/activity/EntryActivity.java" afterPath="$PROJECT_DIR$/src/com/nexuspad/ui/activity/EntryActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/nexuspad/ui/fragment/EntryFragment.java" afterPath="$PROJECT_DIR$/src/com/nexuspad/ui/fragment/EntryFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../NexusPadCore/src/com/nexuspad/dataservice/EntryService.java" afterPath="$PROJECT_DIR$/../NexusPadCore/src/com/nexuspad/dataservice/EntryService.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../NexusPadCore/src/com/nexuspad/dataservice/EventService.java" afterPath="$PROJECT_DIR$/../NexusPadCore/src/com/nexuspad/dataservice/EventService.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../NexusPadCore/src/com/nexuspad/dataservice/FolderService.java" afterPath="$PROJECT_DIR$/../NexusPadCore/src/com/nexuspad/dataservice/FolderService.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/nexuspad/ui/activity/FoldersActivity.java" afterPath="$PROJECT_DIR$/src/com/nexuspad/ui/activity/FoldersActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/nexuspad/ui/fragment/FoldersFragment.java" afterPath="$PROJECT_DIR$/src/com/nexuspad/ui/fragment/FoldersFragment.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../libs/volley/src/com/android/volley/toolbox/ImageLoader.java" afterPath="$PROJECT_DIR$/../libs/volley/src/com/android/volley/toolbox/ImageLoader.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../NexusPadCore/src/com/nexuspad/dataservice/JournalService.java" afterPath="$PROJECT_DIR$/../NexusPadCore/src/com/nexuspad/dataservice/JournalService.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/nexuspad/home/ui/activity/LoginActivity.java" afterPath="$PROJECT_DIR$/src/com/nexuspad/home/ui/activity/LoginActivity.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/nexuspad/home/ui/activity/MainActivity.java" afterPath="$PROJECT_DIR$/src/com/nexuspad/home/ui/activity/MainActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/nexuspad/ui/activity/NewEntryActivity.java" afterPath="$PROJECT_DIR$/src/com/nexuspad/ui/activity/NewEntryActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/nexuspad/photos/ui/activity/NewAlbumActivity.java" afterPath="$PROJECT_DIR$/src/com/nexuspad/photos/ui/activity/NewAlbumActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/nexuspad/photos/ui/fragment/NewAlbumFragment.java" afterPath="$PROJECT_DIR$/src/com/nexuspad/photos/ui/fragment/NewAlbumFragment.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/nexuspad/ui/fragment/NewEntryFragment.java" afterPath="$PROJECT_DIR$/src/com/nexuspad/ui/fragment/NewEntryFragment.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/nexuspad/ui/activity/NewFolderActivity.java" afterPath="$PROJECT_DIR$/src/com/nexuspad/ui/activity/NewFolderActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/NexusPad2.iml" afterPath="$PROJECT_DIR$/NexusPad2.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../NexusPadCore/NexusPadCore.iml" afterPath="$PROJECT_DIR$/../NexusPadCore/NexusPadCore.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../NexusPadCore/src/com/nexuspad/datamodel/Photo.java" afterPath="$PROJECT_DIR$/../NexusPadCore/src/com/nexuspad/datamodel/Photo.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/nexuspad/ui/fragment/NewFolderFragment.java" afterPath="$PROJECT_DIR$/src/com/nexuspad/ui/fragment/NewFolderFragment.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/nexuspad/photos/ui/activity/PhotoActivity.java" afterPath="$PROJECT_DIR$/src/com/nexuspad/photos/ui/activity/PhotoActivity.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/nexuspad/photos/ui/fragment/PhotoFragment.java" afterPath="$PROJECT_DIR$/src/com/nexuspad/photos/ui/fragment/PhotoFragment.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/nexuspad/photos/ui/activity/PhotosActivity.java" afterPath="$PROJECT_DIR$/src/com/nexuspad/photos/ui/activity/PhotosActivity.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/nexuspad/photos/ui/fragment/PhotosFragment.java" afterPath="$PROJECT_DIR$/src/com/nexuspad/photos/ui/fragment/PhotosFragment.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/layout/album_new_frag.xml" afterPath="$PROJECT_DIR$/res/layout/album_new_frag.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/layout/bookmark_frag.xml" afterPath="$PROJECT_DIR$/res/layout/bookmark_frag.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/layout/bookmark_new_frag.xml" afterPath="$PROJECT_DIR$/res/layout/bookmark_new_frag.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/compiler.xml" afterPath="$PROJECT_DIR$/.idea/compiler.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/values/dimens.xml" afterPath="$PROJECT_DIR$/res/values/dimens.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/values-sw600dp/dimens.xml" afterPath="$PROJECT_DIR$/res/values-sw600dp/dimens.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/encodings.xml" afterPath="$PROJECT_DIR$/.idea/encodings.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/layout/doc_frag.xml" afterPath="$PROJECT_DIR$/res/layout/doc_frag.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/layout/doc_new_frag.xml" afterPath="$PROJECT_DIR$/res/layout/doc_new_frag.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/layout/photo_frag.xml" afterPath="$PROJECT_DIR$/res/layout/photo_frag.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/layout/photo_layout.xml" afterPath="$PROJECT_DIR$/res/layout/photo_layout.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/layout/photos_frag.xml" afterPath="$PROJECT_DIR$/res/layout/photos_frag.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/menu/photo_frag.xml" afterPath="$PROJECT_DIR$/res/menu/photo_frag.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/menu/photos_frag.xml" afterPath="$PROJECT_DIR$/res/menu/photos_frag.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../libs/aFileChooser/aFileChooser/project.properties" afterPath="$PROJECT_DIR$/../libs/aFileChooser/aFileChooser/project.properties" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../libs/cwac-richedit/project.properties" afterPath="$PROJECT_DIR$/../libs/cwac-richedit/project.properties" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../libs/volley/project.properties" afterPath="$PROJECT_DIR$/../libs/volley/project.properties" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/values/strings.xml" afterPath="$PROJECT_DIR$/res/values/strings.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/values/styles.xml" afterPath="$PROJECT_DIR$/res/values/styles.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="NexusPad2.iws" />
     <ignored path=".idea/workspace.xml" />
-    <file path="/Dummy.txt" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1374435439715" ignored="false" />
+    <file path="/Dummy.txt" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375230380445" ignored="false" />
     <file path="$PROJECT_DIR$/../ActionBarSherlock/project.properties" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1373340130019" ignored="false" />
     <file path="/a.xml" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1373345068968" ignored="false" />
     <file path="/fragment.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1374110211800" ignored="false" />
@@ -111,12 +92,12 @@
     <file path="/PhotoUploadService.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1373597335781" ignored="false" />
     <file path="/Request.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1373505603434" ignored="false" />
     <file path="/PhotosUploadFragment.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1373598225729" ignored="false" />
-    <file path="/PhotosFragment.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1374458496047" ignored="false" />
+    <file path="/PhotosFragment.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1374958831926" ignored="false" />
     <file path="/UploadService.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1373420959251" ignored="false" />
     <file path="/list_item_upload_photo.xml" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1373598482172" ignored="false" />
-    <file path="/strings.xml" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1373836145596" ignored="false" />
+    <file path="/strings.xml" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375235409448" ignored="false" />
     <file path="/PhotosUploadActivity.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1373599332966" ignored="false" />
-    <file path="/AndroidManifest.xml" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1373756974813" ignored="false" />
+    <file path="/AndroidManifest.xml" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375062025727" ignored="false" />
     <file path="/photos_upload.xml" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1373505341807" ignored="false" />
     <file path="/QuickReturnListener.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1373508843765" ignored="false" />
     <file path="/ObservableListView.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1373509319143" ignored="false" />
@@ -125,10 +106,10 @@
     <file path="/photos_frag.xml" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1374456931519" ignored="false" />
     <file path="/QuickReturnListView.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1373513756795" ignored="false" />
     <file path="/QuickReturner.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1373523139529" ignored="false" />
-    <file path="/PhotosActivity.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1373744374792" ignored="false" />
-    <file path="/AlbumsFragment.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1373940831928" ignored="false" />
+    <file path="/PhotosActivity.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1374959285378" ignored="false" />
+    <file path="/AlbumsFragment.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375238132982" ignored="false" />
     <file path="/DirectionalScrollListener.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1373755770663" ignored="false" />
-    <file path="/albums_frag.xml" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1373745529536" ignored="false" />
+    <file path="/albums_frag.xml" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375237009377" ignored="false" />
     <file path="/AlbumFragment.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1373934722934" ignored="false" />
     <file path="/AlbumActivity.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1373756947354" ignored="false" />
     <file path="/Album.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1373757564638" ignored="false" />
@@ -142,10 +123,8 @@
     <file path="/ServiceConstants.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1374457313708" ignored="false" />
     <file path="/EntriesFragment.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1374458323412" ignored="false" />
     <file path="$PROJECT_DIR$/src/com/nexuspad/annotation/ModuleId.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1373927787417" ignored="false" />
-    <file path="$PROJECT_DIR$/src/com/nexuspad/ui/fragment/ListFragment.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1373927787417" ignored="false" />
-    <file path="$PROJECT_DIR$/gen/com/nexuspad/BuildConfig.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1373927787418" ignored="false" />
-    <file path="/PhotoFragment.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1374466515060" ignored="false" />
-    <file path="/PhotoActivity.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1373934464793" ignored="false" />
+    <file path="/PhotoFragment.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375240295572" ignored="false" />
+    <file path="/PhotoActivity.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1374722859633" ignored="false" />
     <file path="/photo_layout.xml" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1374463838080" ignored="false" />
     <file path="/TouchImageView.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1374110009753" ignored="false" />
     <file path="/photo_frag.xml" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1374465082410" ignored="false" />
@@ -154,6 +133,105 @@
     <file path="/FolderService.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1374457803800" ignored="false" />
     <file path="/HackyViewPager.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1374465405613" ignored="false" />
     <file path="/EntriesActivity.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1374466913240" ignored="false" />
+    <file path="/LoginActivity.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1374806625371" ignored="false" />
+    <file path="/ActionResult.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1374807505348" ignored="false" />
+    <file path="/PickPhotosFragment.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1374955981237" ignored="false" />
+    <file path="/NewAlbumFragment.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375235650701" ignored="false" />
+    <file path="/NewEntryFragment.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1374957449908" ignored="false" />
+    <file path="/NewAlbumActivity.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1374957710939" ignored="false" />
+    <file path="/NewFolderFragment.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1374960897460" ignored="false" />
+    <file path="/NewFolderActivity.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1374958469165" ignored="false" />
+    <file path="/doc_new_frag.xml" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1374958520259" ignored="false" />
+    <file path="/bookmark_new_frag.xml" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1374958526985" ignored="false" />
+    <file path="/album_new_frag.xml" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375235304782" ignored="false" />
+    <file path="$PROJECT_DIR$/../Church/gen/com/edmondapps/church/R.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1374977925479" ignored="false" />
+    <file path="$PROJECT_DIR$/../Church/src/com/edmondapps/church/ui/fragments/ContactsFragment.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1374983072928" ignored="false" />
+    <file path="$PROJECT_DIR$/../untitled/src/com/edmondapps/fakingbom/UnicodeBOMInputStream.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375068388835" ignored="false" />
+    <file path="$PROJECT_DIR$/../untitled/src/com/edmondapps/fakingbom/Main.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156256957" ignored="false" />
+    <file path="/Main.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375152199506" ignored="false" />
+    <file path="/UnicodeBOMInputStream.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375068386374" ignored="false" />
+    <file path="D:/Program Files/Android/android-sdk/extras/android/support/v4/src/java/android/support/v4/app/Fragment.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375152359173" ignored="false" />
+    <file path="/a.dummy" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375153080102" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/model/GCUploadToken.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272936" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/api/parcel/ParcelsCreateRequest.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272936" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/model/GCChuteModel.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272936" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/api/comment/CommentsDeleteRequest.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272937" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/api/comment/CommentsGetRequest.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272937" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/model/GCHttpRequestParameters.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272937" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/collections/GCHeartsMap.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272937" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/parsers/GCChuteListObjectParser.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272938" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/collections/GCLocalAssetCollection.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272938" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/utils/rest/entities/CountingInputStreamEntity.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272938" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/collections/GCCollection.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272938" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/api/GCParameterHttpRequestImpl.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272938" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/collections/GCAssetCollection.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272938" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/utils/GCTextUtil.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272939" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/api/membership/GCMembership.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272939" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/parsers/base/GCHttpResponseParser.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272939" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/api/authentication/GCAuthenticationFactory.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272939" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/parsers/base/GCBaseMemberModelParser.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272939" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/parsers/base/GCBaseAssetModelParser.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272939" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/parsers/GCUploadCompleteObjectParser.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272940" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/api/user/GCUser.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272940" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/api/heart/GCHearts.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272940" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/api/authentication/GCAuthenticationToken.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272940" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/model/GCAccountStore.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272940" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/api/GCHttpService.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272941" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/utils/GCConstants.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272941" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/utils/GCRestConstants.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272941" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/collections/GCCommentCollection.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272941" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/api/chute/ChutesMembersGetRequest.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272941" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/api/asset/AssetsUploadRequest.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272941" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/api/chute/ChutesUpdateRequest.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272941" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/utils/MD5.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272942" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/utils/GCUtils.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272942" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/api/chute/ChutesDeleteRequest.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272942" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/api/GCHttpRequest.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272942" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/model/GCCommentModel.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272942" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/model/GCMemberModel.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272942" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/utils/AsyncTaskEx.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272943" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/parsers/base/GCBaseCommentModelParser.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272943" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/api/user/UserChutesRequest.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272943" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/parsers/GCCommentListObjectParser.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272943" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/api/chute/ChutesCreateRequest.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272943" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/api/heart/HeartsPostRequest.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272943" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/api/GCHttpRequestStore.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272944" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/model/GCLocalAssetModel.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272944" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/parsers/base/GCBaseUserModelParser.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272944" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/api/asset/AssetsVerifyRequest.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272944" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/api/asset/AssetsTokenRequest.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272944" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/collections/GCChuteCollection.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272944" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/exceptions/GCHttpException.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272945" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/parsers/GCTokenObjectParser.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272945" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/api/heart/HeartsGetRequest.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272945" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/exceptions/GCParseException.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272945" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/collections/GCMemberCollection.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272945" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/parsers/GCMembershipJoinParser.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272945" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/parsers/GCAssetSingleObjectParser.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272946" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/api/chute/ChutesContributorsGetRequest.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272946" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/parsers/GCHeartsMapObjectParser.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272946" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/utils/GCDateUtil.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272946" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/api/asset/GCUploadProgressListener.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272946" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/parsers/GCMemberListObjectParser.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272946" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/api/asset/AssetsDeleteRequest.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272947" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/api/comment/CommentsPostRequest.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272947" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/model/GCUserModel.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272947" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/parsers/GCCommentSingleObjectParser.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272947" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/api/asset/AssetsUploadCompleteRequest.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272947" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/api/membership/ChutesMembershipsInviteRequest.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272947" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/api/GCHttpCallback.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272948" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/model/GCAssetModel.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272948" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/parsers/GCAssetListObjectParser.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272948" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/parsers/GCLocalAssetListObjectParser.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272948" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/parsers/GCCreateParcelsUploadsListParser.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272948" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/parsers/base/GCBaseChuteModelParser.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272948" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/utils/rest/GCParametersRestClient.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272949" ignored="false" />
+    <file path="$PROJECT_DIR$/../Chute-SDK/Android/src/com/chute/sdk/utils/rest/GCS3Uploader.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156272949" ignored="false" />
+    <file path="/doc_frag.xml" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375156610840" ignored="false" />
+    <file path="/styles.xml" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375238699521" ignored="false" />
+    <file path="/App.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375236785659" ignored="false" />
+    <file path="/DocFragment.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375236878063" ignored="false" />
+    <file path="/EntryService.java" changelist="549b77a2-1fbd-459e-bc15-0298bf32a08c" time="1375238438380" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -174,6 +252,7 @@
   </component>
   <component name="DebuggerManager">
     <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
+    <line_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <breakpoint_any default_suspend_policy="SuspendAll" default_condition_enabled="true">
       <breakpoint>
         <option name="NOTIFY_CAUGHT" value="true" />
@@ -210,7 +289,6 @@
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
     </breakpoint_any>
-    <line_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <breakpoint_rules />
     <ui_properties />
   </component>
@@ -224,19 +302,59 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="EntriesActivity.java" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/com/nexuspad/ui/activity/EntriesActivity.java">
+      <file leaf-file-name="App.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/nexuspad/app/App.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="21" column="22" selection-start="574" selection-end="574" vertical-scroll-proportion="-0.31858408">
+            <state line="24" column="44" selection-start="543" selection-end="543" vertical-scroll-proportion="0.0">
+              <folding>
+                <element signature="e#0#715#0" expanded="true" />
+                <element signature="imports" expanded="true" />
+                <element signature="method#getRobotoLight#0;class#App#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="DocFragment.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/nexuspad/doc/ui/fragment/DocFragment.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="78" column="46" selection-start="2398" selection-end="2398" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="AndroidManifest.xml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/AndroidManifest.xml">
+      <file leaf-file-name="BookmarkFragment.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/nexuspad/bookmark/ui/fragment/BookmarkFragment.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="128" column="57" selection-start="5246" selection-end="5246" vertical-scroll-proportion="0.0">
+            <state line="107" column="14" selection-start="3359" selection-end="3359" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="AlbumsFragment.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/nexuspad/photos/ui/fragment/AlbumsFragment.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="61" column="0" selection-start="1988" selection-end="1988" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="PhotoFragment.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/nexuspad/photos/ui/fragment/PhotoFragment.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="134" column="60" selection-start="4320" selection-end="4320" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="NewAlbumActivity.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/com/nexuspad/photos/ui/activity/NewAlbumActivity.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="23" column="35" selection-start="895" selection-end="895" vertical-scroll-proportion="0.5864662">
               <folding />
             </state>
           </provider>
@@ -305,22 +423,22 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/src/com/nexuspad/ui/fragment/EntriesFragment.java" />
-        <option value="$PROJECT_DIR$/src/com/nexuspad/photos/ui/fragment/PhotosFragment.java" />
-        <option value="$PROJECT_DIR$/src/com/nexuspad/ui/ImageViewTouchViewPager.java" />
-        <option value="$PROJECT_DIR$/res/layout/photo_layout.xml" />
-        <option value="$PROJECT_DIR$/res/layout/photo_frag.xml" />
-        <option value="$PROJECT_DIR$/src/com/nexuspad/ui/HackyViewPager.java" />
-        <option value="$PROJECT_DIR$/src/com/nexuspad/photos/ui/fragment/PhotoFragment.java" />
-        <option value="$PROJECT_DIR$/src/com/nexuspad/ui/activity/EntriesActivity.java" />
+        <option value="$PROJECT_DIR$/../photo-picker-plus/Android/SDK/src/com/chute/sdk/parsers/base/GCBaseAssetModelParser.java" />
         <option value="$PROJECT_DIR$/src/com/nexuspad/home/ui/activity/MainActivity.java" />
-        <option value="$PROJECT_DIR$/src/com/nexuspad/home/ui/activity/LoginActivity.java" />
-        <option value="$PROJECT_DIR$/src/com/nexuspad/home/ui/activity/DashboardActivity.java" />
-        <option value="$PROJECT_DIR$/src/com/nexuspad/about/activity/AboutActivity.java" />
-        <option value="$PROJECT_DIR$/src/com/nexuspad/ui/activity/NewEntryActivity.java" />
-        <option value="$PROJECT_DIR$/src/com/nexuspad/ui/activity/EntryActivity.java" />
-        <option value="$PROJECT_DIR$/src/com/nexuspad/photos/ui/activity/AlbumActivity.java" />
-        <option value="$PROJECT_DIR$/src/com/nexuspad/ui/activity/FoldersActivity.java" />
+        <option value="$PROJECT_DIR$/res/layout/doc_frag.xml" />
+        <option value="$PROJECT_DIR$/AndroidManifest.xml" />
+        <option value="$PROJECT_DIR$/res/layout/album_new_frag.xml" />
+        <option value="$PROJECT_DIR$/res/values/strings.xml" />
+        <option value="$PROJECT_DIR$/src/com/nexuspad/photos/ui/fragment/NewAlbumFragment.java" />
+        <option value="$PROJECT_DIR$/res/layout/bookmark_frag.xml" />
+        <option value="$PROJECT_DIR$/src/com/nexuspad/doc/ui/fragment/DocFragment.java" />
+        <option value="$PROJECT_DIR$/src/com/nexuspad/bookmark/ui/fragment/BookmarkFragment.java" />
+        <option value="$PROJECT_DIR$/res/layout/albums_frag.xml" />
+        <option value="$PROJECT_DIR$/src/com/nexuspad/app/App.java" />
+        <option value="$PROJECT_DIR$/src/com/nexuspad/photos/ui/fragment/AlbumsFragment.java" />
+        <option value="$PROJECT_DIR$/../NexusPadCore/src/com/nexuspad/dataservice/EntryService.java" />
+        <option value="$PROJECT_DIR$/res/values/styles.xml" />
+        <option value="$PROJECT_DIR$/src/com/nexuspad/photos/ui/fragment/PhotoFragment.java" />
       </list>
     </option>
   </component>
@@ -329,7 +447,13 @@
       <MavenImportingSettings>
         <option name="downloadDocsAutomatically" value="true" />
         <option name="downloadSourcesAutomatically" value="true" />
+        <option name="importAutomatically" value="true" />
       </MavenImportingSettings>
+    </option>
+    <option name="enabledProfiles">
+      <list>
+        <option value="sonatype-oss-release" />
+      </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
@@ -420,16 +544,6 @@
               <option name="myItemId" value="NexusPad2" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="External Libraries" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="NexusPad2" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
@@ -451,154 +565,14 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="NexusPad2" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="NexusPad2" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ui" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="NexusPad2" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="NexusPad2" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ui" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="NexusPad2" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="NexusPad2" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="res" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="NexusPad2" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="NexusPad2" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="res" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="values-sw720dp-land" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="NexusPad2" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="NexusPad2" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="res" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="values-sw600dp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="NexusPad2" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="NexusPad2" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="res" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="values-sw380dp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="NexusPad2" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="NexusPad2" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="res" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="values" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="NexusPad2" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="NexusPad2" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="res" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="layout" />
+              <option name="myItemId" value="libs" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
       <pane id="PackagesPane" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -611,21 +585,21 @@
     <property name="options.lastSelected" value="project.propVCSSupport.Mappings" />
     <property name="MemberChooser.sorted" value="false" />
     <property name="recentsLimit" value="5" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../PhotoView/library/pom.xml" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../untitled" />
     <property name="AndroidLayoutSelectedEditor" value="text-editor" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="ANDROID_EXTENDED_DEVICE_CHOOSER_SERIALS" value="HT9CTP814410" />
-    <property name="GoToClass.includeJavaFiles" value="false" />
-    <property name="DEBUGGABLE_DEVICE" value="HT9CTP814410" />
     <property name="MemberChooser.copyJavadoc" value="false" />
+    <property name="DEBUGGABLE_DEVICE" value="HT9CTP814410" />
+    <property name="GoToClass.includeJavaFiles" value="false" />
     <property name="DEBUGGABLE_PROCESS" value="com.nexuspad" />
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
     <property name="restartRequiresConfirmation" value="true" />
-    <property name="MemberChooser.showClasses" value="true" />
     <property name="FullScreen" value="false" />
+    <property name="MemberChooser.showClasses" value="true" />
     <property name="GoToClass.includeLibraries" value="false" />
-    <property name="options.splitter.details.proportions" value="0.2" />
     <property name="options.searchVisible" value="true" />
+    <property name="options.splitter.details.proportions" value="0.2" />
   </component>
   <component name="RecentsManager">
     <key name="CopyClassDialog.RECENTS_KEY">
@@ -633,13 +607,16 @@
       <recent name="com.nexuspad.ui" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="D:\workspace-2012-07-02\workspace\NexusPad2\res\values-sw380dp" />
       <recent name="D:\workspace-2012-07-02\workspace\NexusPad2\res\layout" />
+      <recent name="D:\workspace-2012-07-02\workspace\NexusPad2\res\menu" />
+      <recent name="D:\workspace-2012-07-02\workspace\NexusPad2\res\values-sw380dp" />
     </key>
     <key name="ExtractSuperBase.RECENT_KEYS">
       <recent name="com.nexuspad.view" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\workspace-2012-07-02\workspace\NexusPad2\assets" />
+      <recent name="D:\workspace-2012-07-02\workspace\NexusPad2\assets\fonts" />
       <recent name="D:\workspace-2012-07-02\workspace\NexusPad2\res" />
     </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
@@ -680,19 +657,6 @@
       <option name="PORT" value="5005" />
       <method />
     </configuration>
-    <configuration default="true" type="Applet" factoryName="Applet">
-      <module name="" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="HTML_FILE_NAME" />
-      <option name="HTML_USED" value="false" />
-      <option name="WIDTH" value="400" />
-      <option name="HEIGHT" value="300" />
-      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
-      <option name="VM_PARAMETERS" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <method />
-    </configuration>
     <configuration default="true" type="TestNG" factoryName="TestNG">
       <module name="" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
@@ -718,6 +682,19 @@
       <envs />
       <properties />
       <listeners />
+      <method />
+    </configuration>
+    <configuration default="true" type="Applet" factoryName="Applet">
+      <module name="" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="HTML_FILE_NAME" />
+      <option name="HTML_USED" value="false" />
+      <option name="WIDTH" value="400" />
+      <option name="HEIGHT" value="300" />
+      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
+      <option name="VM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
       <method />
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
@@ -861,7 +838,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-4" y="-4" width="1374" height="776" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32954547" sideWeight="0.6" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32954547" sideWeight="0.6" order="8" side_tool="false" content_ui="tabs" />
@@ -869,25 +846,25 @@
       <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32954547" sideWeight="0.6" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32857144" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="11" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32857144" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.30476192" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32698414" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32539684" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32857144" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2560606" sideWeight="0.6" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2560606" sideWeight="0.67460316" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32857144" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="combo" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32857144" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -956,118 +933,127 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="jar://$PROJECT_DIR$/libs/picasso-1.1.1.jar!/com/squareup/picasso/RequestBuilder.class">
+    <entry file="file://$PROJECT_DIR$/res/values/strings.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="52" column="47" selection-start="2418" selection-end="2418" vertical-scroll-proportion="0.3598726">
+        <state line="80" column="48" selection-start="4033" selection-end="4033" vertical-scroll-proportion="0.6283988">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/layout/bookmark_frag.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="16" column="43" selection-start="621" selection-end="621" vertical-scroll-proportion="-0.44036698">
+          <folding />
+        </state>
+      </provider>
+      <provider editor-type-id="android-designer">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/nexuspad/doc/ui/fragment/DocsFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="40" column="13" selection-start="1331" selection-end="1331" vertical-scroll-proportion="0.33238637">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/nexuspad/bookmark/ui/fragment/BookmarkFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="107" column="14" selection-start="3359" selection-end="3359" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../EdmondAppsAndroidUtils/src/com/edmondapps/utils/java/WrapperList.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="31" column="13" selection-start="943" selection-end="943" vertical-scroll-proportion="0.17880794">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/layout/list_content.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+      <provider editor-type-id="android-designer">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://D:/Program Files/Android/android-sdk/sources/android-17/android/graphics/Typeface.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="225" column="31" selection-start="7508" selection-end="7508" vertical-scroll-proportion="0.45864663">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/nexuspad/app/App.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="24" column="44" selection-start="543" selection-end="543" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="e#0#715#0" expanded="true" />
+            <element signature="imports" expanded="true" />
+            <element signature="method#getRobotoLight#0;class#App#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/nexuspad/doc/ui/fragment/DocFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="78" column="46" selection-start="2398" selection-end="2398" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../NexusPadCore/src/com/nexuspad/dataservice/EntryService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="292" column="41" selection-start="10104" selection-end="10104" vertical-scroll-proportion="0.3316062">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/values/styles.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="29" column="47" selection-start="1297" selection-end="1297" vertical-scroll-proportion="0.69423556">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/layout/doc_frag.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="13" column="33" selection-start="462" selection-end="479" vertical-scroll-proportion="0.04812834">
+          <folding />
+        </state>
+      </provider>
+      <provider editor-type-id="android-designer">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/nexuspad/photos/ui/fragment/AlbumsFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="61" column="0" selection-start="1988" selection-end="1988" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/libs/picasso-1.1.1.jar!/com/squareup/picasso/Picasso.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="6" column="13" selection-start="163" selection-end="163" vertical-scroll-proportion="0.24930748">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/nexuspad/photos/ui/fragment/PhotoFragment.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="40" column="43" selection-start="1309" selection-end="1309" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/nexuspad/ui/fragment/EntriesFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="62" column="22" selection-start="2181" selection-end="2181" vertical-scroll-proportion="0.31858408">
+        <state line="134" column="60" selection-start="4320" selection-end="4320" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/nexuspad/home/ui/activity/MainActivity.java">
+    <entry file="file://$PROJECT_DIR$/src/com/nexuspad/photos/ui/activity/NewAlbumActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="24" column="68" selection-start="669" selection-end="669" vertical-scroll-proportion="0.5625">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/nexuspad/home/ui/activity/LoginActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="23" column="68" selection-start="643" selection-end="643" vertical-scroll-proportion="0.5625">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/nexuspad/home/ui/activity/DashboardActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="31" column="68" selection-start="1094" selection-end="1094" vertical-scroll-proportion="0.6136364">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/nexuspad/about/activity/AboutActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="33" column="67" selection-start="967" selection-end="967" vertical-scroll-proportion="0.4346591">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/nexuspad/bookmark/ui/activity/NewBookmarkActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="23" column="47" selection-start="723" selection-end="723" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/nexuspad/ui/activity/NewEntryActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="59" column="68" selection-start="1863" selection-end="1863" vertical-scroll-proportion="0.8495575">
-          <folding>
-            <element signature="e#4931#4961#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/nexuspad/bookmark/ui/activity/BookmarksActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="25" column="48" selection-start="812" selection-end="812" vertical-scroll-proportion="0.33238637">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/nexuspad/ui/activity/EntryActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="31" column="61" selection-start="891" selection-end="891" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/nexuspad/bookmark/ui/activity/BookmarkActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="21" column="48" selection-start="607" selection-end="607" vertical-scroll-proportion="0.33238637">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/nexuspad/photos/ui/activity/AlbumActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="48" column="68" selection-start="1563" selection-end="1563" vertical-scroll-proportion="1.7386364">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/nexuspad/ui/activity/FoldersActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="54" column="68" selection-start="1610" selection-end="1610" vertical-scroll-proportion="0.76704544">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/AndroidManifest.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="128" column="57" selection-start="5246" selection-end="5246" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/nexuspad/ui/activity/EntriesActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="21" column="22" selection-start="574" selection-end="574" vertical-scroll-proportion="-0.31858408">
+        <state line="23" column="35" selection-start="895" selection-end="895" vertical-scroll-proportion="0.5864662">
           <folding />
         </state>
       </provider>
@@ -1137,7 +1123,7 @@
       </state>
       <state key="ProjectLibrariesConfigurable.UI">
         <settings>
-          <last-edited>picasso-1.1.1</last-edited>
+          <last-edited>Maven: xpp3:xpp3:1.1.4c</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>

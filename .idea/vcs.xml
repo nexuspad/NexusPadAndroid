@@ -5,6 +5,7 @@
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/../NexusPadCore" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/../PhotoView" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../chute-android-components" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/../libs/aFileChooser" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/../libs/cwac-richedit" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/../libs/volley" vcs="Git" />

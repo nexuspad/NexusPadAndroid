@@ -3,7 +3,6 @@
  */
 package com.nexuspad.photos.ui.fragment;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -14,6 +13,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
@@ -24,8 +28,9 @@ import com.nexuspad.dataservice.NPService;
 import com.nexuspad.dataservice.ServiceConstants;
 import com.nexuspad.ui.fragment.EntriesFragment;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Transformation;
+import com.squareup.picasso.Target;
 import uk.co.senab.photoview.PhotoView;
+import uk.co.senab.photoview.PhotoViewAttacher;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,8 +51,9 @@ public class PhotoFragment extends EntriesFragment {
 
     private ViewPager mViewPager;
 
+    private Picasso mPicasso;
     private List<Photo> mPhotos;
-    private int mPhotoIndex;
+    private int mInitialPhotoIndex;
 
     public static PhotoFragment of(Folder f, Photo photo, ArrayList<? extends Photo> photos) {
         Bundle bundle = new Bundle();
@@ -69,12 +75,35 @@ public class PhotoFragment extends EntriesFragment {
 
     @Override
     public void onCreate(Bundle savedState) {
+        setHasOptionsMenu(true);
+
         super.onCreate(savedState);
         final Bundle arguments = getArguments();
 
+        mPicasso = Picasso.with(getActivity());
         mPhotos = arguments.getParcelableArrayList(KEY_PHOTOS);
         final Photo photo = arguments.getParcelable(KEY_PHOTO);
-        mPhotoIndex = mPhotos.indexOf(photo);
+        mInitialPhotoIndex = mPhotos.indexOf(photo);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.photo_frag, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.delete:
+                final Photo photo = mPhotos.get(mViewPager.getCurrentItem());
+                deleteEntry(photo);
+                mPhotos.remove(photo);
+                stableNotifyAdapter();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
@@ -93,28 +122,72 @@ public class PhotoFragment extends EntriesFragment {
 
     private void initViews() {
         mViewPager.setAdapter(newPagerAdapter());
-        mViewPager.setCurrentItem(mPhotoIndex, false);
+        mViewPager.setCurrentItem(mInitialPhotoIndex, false);
+    }
+
+    private void stableNotifyAdapter() {
+        final int prevPos = mViewPager.getCurrentItem();
+        mViewPager.getAdapter().notifyDataSetChanged();
+        mViewPager.setCurrentItem(prevPos);
+    }
+
+    private void cancelTargetFor(ImageView view) {
+        Target target = (Target) view.getTag();
+        if (target != null) {
+            mPicasso.cancelRequest(target);
+        }
+    }
+
+    private Target getTargetFor(final ImageView view) {
+        Target target = (Target) view.getTag();
+        if (target == null) {
+            target = new Target() {
+                @Override
+                public void onSuccess(Bitmap bitmap) {
+                    view.setImageBitmap(bitmap);
+                }
+
+                @Override
+                public void onError() {
+                    view.setImageResource(R.drawable.ic_launcher);
+                }
+            };
+            view.setTag(target);
+        } else {
+            mPicasso.cancelRequest(target);
+        }
+        return target;
     }
 
     private PagerAdapter newPagerAdapter() {
         return new PagerAdapter() {
             @Override
             public Object instantiateItem(ViewGroup container, int position) {
-                Photo photo = mPhotos.get(position);
+                final Photo photo = mPhotos.get(position);
 
-                Activity activity = getActivity();
-                LayoutInflater inflater = LayoutInflater.from(activity);
+                final SherlockFragmentActivity activity = getSherlockActivity();
+                final ActionBar actionBar = getSherlockActivity().getSupportActionBar();
+                final LayoutInflater inflater = LayoutInflater.from(activity);
 
-                View frame = inflater.inflate(R.layout.photo_layout, container, false);
+                final View frame = inflater.inflate(R.layout.photo_layout, container, false);
 
                 final PhotoView imageView = findView(frame, android.R.id.icon);
+                imageView.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
+                    @Override
+                    public void onViewTap(View view, float x, float y) {
+                        if (actionBar.isShowing()) {
+                            actionBar.hide();
+                        } else {
+                            actionBar.show();
+                        }
+                    }
+                });
                 final String url = NPService.addAuthToken(photo.getPhotoUrl());
 
-                Picasso.with(getActivity())
-                        .load(url)
+                mPicasso.load(url)
                         .placeholder(R.drawable.placeholder)
                         .error(R.drawable.ic_launcher)
-                        .into(imageView);
+                        .into(getTargetFor(imageView));
 
                 container.addView(frame, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
                 return frame;
@@ -122,9 +195,16 @@ public class PhotoFragment extends EntriesFragment {
 
             @Override
             public void destroyItem(ViewGroup container, int position, Object object) {
-                ImageView view = (ImageView) ((ViewGroup)object).getChildAt(0);
-                Picasso.with(getActivity()).cancelRequest(view);
-                container.removeView(view);
+                final ImageView imageView = (ImageView) ((ViewGroup) object).getChildAt(0);
+                cancelTargetFor(imageView);
+                container.removeView(imageView);
+            }
+
+            @Override
+            public void setPrimaryItem(ViewGroup container, int position, Object object) {
+                super.setPrimaryItem(container, position, object);
+                final Photo photo = mPhotos.get(position);
+                getSherlockActivity().getSupportActionBar().setTitle(photo.getTitle());
             }
 
             @Override

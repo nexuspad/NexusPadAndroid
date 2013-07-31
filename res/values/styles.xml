@@ -22,6 +22,14 @@
         <item name="android:textSize">@dimen/ed__textsize_medium</item>
     </style>
 
+    <style name="listTitleTextView">
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:padding">@dimen/ed__padding_small</item>
+        <item name="android:textSize">@dimen/ed__textsize_large</item>
+        <item name="android:background">#DFDFDF</item>
+    </style>
+
     <style name="selectableTextView" parent="@style/listItemTextView">
         <item name="android:background">?attr/selectableItemBackground</item>
         <item name="android:clickable">true</item>

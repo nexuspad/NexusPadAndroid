@@ -22,6 +22,7 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.nexuspad.R;
+import com.nexuspad.app.App;
 import com.nexuspad.datamodel.Bookmark;
 import com.nexuspad.datamodel.Folder;
 import com.nexuspad.ui.fragment.EntryFragment;
@@ -103,6 +104,8 @@ public class BookmarkFragment extends EntryFragment<Bookmark> {
 
         mTagsFrameV = findView(view, R.id.lbl_tags_frame);
         mNoteFrameV = findView(view, R.id.lbl_note_frame);
+
+        mNameV.setTypeface(App.getRobotoLight());
 
         updateUI();
         installListeners();

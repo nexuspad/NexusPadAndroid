@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.widget.Toast;
-
 import com.edmondapps.utils.android.activity.SinglePaneActivity;
 import com.nexuspad.R;
 import com.nexuspad.datamodel.NPUser;
@@ -15,7 +14,6 @@ import com.nexuspad.home.ui.fragment.MainFragment;
 
 /**
  * @author Edmond
- * 
  */
 public class MainActivity extends SinglePaneActivity implements MainFragment.Callback {
     @Override

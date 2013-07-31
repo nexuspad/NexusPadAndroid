@@ -26,6 +26,9 @@
         <module name="PhotoView" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="chute-sdk-v2-android" target="1.6" />
+    </bytecodeTargetLevel>
   </component>
 </project>
 

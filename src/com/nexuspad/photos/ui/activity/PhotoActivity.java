@@ -35,7 +35,7 @@ public class PhotoActivity extends SinglePaneActivity implements EntriesFragment
 
     public static void startWithFolder(Folder f, Photo photo, ArrayList<? extends Photo> photos, Activity c) {
         c.startActivity(PhotoActivity.of(f, photo, photos, c));
-        c.overridePendingTransition(0, 0);
+        c.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
 
     public static Intent of(Folder f, Photo photo, ArrayList<? extends Photo> photos, Context c) {

@@ -1,10 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
-
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/new_photos"
         android:icon="@android:drawable/ic_menu_add"
         android:showAsAction="ifRoom"
-        android:title="@string/new_photos"/>
-
+        android:title="@string/new_">
+        <menu>
+            <group>
+                <item
+                    android:id="@+id/new_photos"
+                    android:showAsAction="ifRoom"
+                    android:title="@string/new_photos"/>
+                <item
+                    android:id="@+id/new_albums"
+                    android:showAsAction="ifRoom"
+                    android:title="@string/new_albums"/>
+            </group>
+        </menu>
+    </item>
 </menu>
