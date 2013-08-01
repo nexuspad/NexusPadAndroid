@@ -299,12 +299,16 @@ public abstract class EntriesFragment extends ListFragment {
      * {@link EntryListService#getEntriesBetweenDates(Folder, EntryTemplate, Date, Date, int, int)}
      */
     protected void getEntriesInFolder(EntryListService service, Folder folder, int page) throws NPException {
-        service.getEntriesInFolder(mFolder, getTemplate(), page, PAGE_COUNT);
+        service.getEntriesInFolder(mFolder, getTemplate(), page, getEntriesCountPerPage());
     }
 
     // not ready
     protected void searchEntriesInFolder(String keyword, int page) throws NPException {
-        getEntryListService().searchEntriesInFolder(keyword, getFolder(), getTemplate(), page, PAGE_COUNT);
+        getEntryListService().searchEntriesInFolder(keyword, getFolder(), getTemplate(), page, getEntriesCountPerPage());
+    }
+
+    protected int getEntriesCountPerPage() {
+       return PAGE_COUNT;
     }
 
     protected void onListLoaded(EntryList list) {

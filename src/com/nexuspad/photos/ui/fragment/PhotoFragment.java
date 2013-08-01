@@ -5,7 +5,6 @@ package com.nexuspad.photos.ui.fragment;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -26,10 +25,9 @@ import com.nexuspad.datamodel.Folder;
 import com.nexuspad.datamodel.Photo;
 import com.nexuspad.dataservice.NPService;
 import com.nexuspad.dataservice.ServiceConstants;
+import com.nexuspad.ui.ZoomableImageView;
 import com.nexuspad.ui.fragment.EntriesFragment;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
-import uk.co.senab.photoview.PhotoView;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
 import java.util.ArrayList;
@@ -131,34 +129,6 @@ public class PhotoFragment extends EntriesFragment {
         mViewPager.setCurrentItem(prevPos);
     }
 
-    private void cancelTargetFor(ImageView view) {
-        Target target = (Target) view.getTag();
-        if (target != null) {
-            mPicasso.cancelRequest(target);
-        }
-    }
-
-    private Target getTargetFor(final ImageView view) {
-        Target target = (Target) view.getTag();
-        if (target == null) {
-            target = new Target() {
-                @Override
-                public void onSuccess(Bitmap bitmap) {
-                    view.setImageBitmap(bitmap);
-                }
-
-                @Override
-                public void onError() {
-                    view.setImageResource(R.drawable.ic_launcher);
-                }
-            };
-            view.setTag(target);
-        } else {
-            mPicasso.cancelRequest(target);
-        }
-        return target;
-    }
-
     private PagerAdapter newPagerAdapter() {
         return new PagerAdapter() {
             @Override
@@ -171,7 +141,7 @@ public class PhotoFragment extends EntriesFragment {
 
                 final View frame = inflater.inflate(R.layout.photo_layout, container, false);
 
-                final PhotoView imageView = findView(frame, android.R.id.icon);
+                final ZoomableImageView imageView = findView(frame, android.R.id.icon);
                 imageView.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
                     @Override
                     public void onViewTap(View view, float x, float y) {
@@ -187,7 +157,17 @@ public class PhotoFragment extends EntriesFragment {
                 mPicasso.load(url)
                         .placeholder(R.drawable.placeholder)
                         .error(R.drawable.ic_launcher)
-                        .into(getTargetFor(imageView));
+                        .into(imageView, new com.squareup.picasso.Callback() {
+                            @Override
+                            public void onSuccess() {
+                                imageView.update();
+                            }
+
+                            @Override
+                            public void onError() {
+                                imageView.update();
+                            }
+                        });
 
                 container.addView(frame, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
                 return frame;
@@ -196,7 +176,7 @@ public class PhotoFragment extends EntriesFragment {
             @Override
             public void destroyItem(ViewGroup container, int position, Object object) {
                 final ImageView imageView = (ImageView) ((ViewGroup) object).getChildAt(0);
-                cancelTargetFor(imageView);
+                mPicasso.cancelRequest(imageView);
                 container.removeView(imageView);
             }
 

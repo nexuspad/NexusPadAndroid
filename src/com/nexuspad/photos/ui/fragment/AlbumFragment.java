@@ -57,6 +57,8 @@ public class AlbumFragment extends EntryFragment<Album> implements AdapterView.O
         mGridView = findView(view, R.id.grid_view);
         mGridView.setOnItemClickListener(this);
 
+        findView(view, R.id.sticky).setVisibility(View.GONE);
+
         super.onViewCreated(view, savedInstanceState);
     }
 

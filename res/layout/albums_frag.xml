@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
+
+    <include layout="@layout/list_content"/>
+    <FrameLayout
+        android:id="@+id/sticky"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_gravity="bottom"
+        android:background="#7F000000">
+
+        <TextView
+            android:id="@+id/lbl_folder"
+            style="@style/selectableTextView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:drawableLeft="@drawable/ic_np_folder"
+            android:drawablePadding="@dimen/ed__padding_small"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:scrollHorizontally="true"
+            android:textColor="#FFFF"
+            android:text="@string/root"
+            android:textSize="@dimen/ed__textsize_medium"/>
+    </FrameLayout>
+</FrameLayout>

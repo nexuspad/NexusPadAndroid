@@ -217,9 +217,7 @@ public class PhotosFragment extends EntriesFragment implements OnItemClickListen
             }
 
             String url = NPService.addAuthToken(getItem(position).getTnUrl());
-            final Picasso picasso = Picasso.with(activity);
-            picasso.setDebugging(true);
-            picasso.load(url)
+            Picasso.with(activity).load(url)
                     .placeholder(R.drawable.placeholder)
                     .error(R.drawable.ic_launcher)
                     .resizeDimen(R.dimen.photo_grid_width, R.dimen.photo_grid_height)

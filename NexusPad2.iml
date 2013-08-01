@@ -27,20 +27,13 @@
     <orderEntry type="jdk" jdkName="Android 4.2.2 Platform" jdkType="Android SDK" />
     <orderEntry type="library" exported="" name="com.android.ide.eclipse.adt.DEPENDENCIES" level="application" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module-library" exported="">
-      <library name="picasso-1.1.1.jar">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/libs/picasso-1.1.1.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
     <orderEntry type="module" module-name="NexusPadCore" exported="" />
     <orderEntry type="module" module-name="aFileChooser" exported="" />
     <orderEntry type="module" module-name="RichTextEditor" />
     <orderEntry type="library" name="android-support-v4" level="application" />
     <orderEntry type="module" module-name="PhotoView" />
+    <orderEntry type="module" module-name="picasso" />
+    <orderEntry type="module" module-name="simple-section-adapter" />
   </component>
 </module>
 

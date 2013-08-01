@@ -14,6 +14,7 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.OnNavigationListener;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.edmondapps.utils.android.Logs;
 import com.edmondapps.utils.android.annotaion.ParentActivity;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
@@ -36,9 +37,10 @@ import static com.nexuspad.dataservice.ServiceConstants.PHOTO_MODULE;
 @ParentActivity(DashboardActivity.class)
 @ModuleId(moduleId = PHOTO_MODULE, template = EntryTemplate.PHOTO)
 public class PhotosActivity extends EntriesActivity implements OnNavigationListener {
+    public static final String TAG = "PhotosActivity";
     public static final String KEY_SPINNER_INDEX = "key_spinner_index";
 
-    private static final int REQ_CHOOSE_FILE = 1;
+    private static final int REQ_CHOOSE_FILE = Integer.MAX_VALUE;
 
     public static void startWithFolder(Folder f, Context c) {
         c.startActivity(PhotosActivity.of(f, c));
@@ -138,7 +140,8 @@ public class PhotosActivity extends EntriesActivity implements OnNavigationListe
                 }
                 break;
             default:
-                throw new AssertionError("unknown requestCode: " + requestCode);
+                // probably from fragments
+                Logs.w(TAG, "unknown requestCode: " + requestCode);
         }
     }
 

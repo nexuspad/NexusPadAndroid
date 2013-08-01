@@ -76,6 +76,10 @@
     <string name="upload_failed">Upload failed</string>
     <string name="add_more">Add More…</string>
 
+    <!-- <last name>, <first name> <middle initials> example: Chui, Edmond Hin Wai -->
+    <string name="formatted_person_name">%1$s, %2$s %3$s</string>
+    <string name="others">Others</string>
+
     <plurals name="numberOfPhotos">
         <item quantity="one">1 photo</item>
         <item quantity="other">%d photos</item>
