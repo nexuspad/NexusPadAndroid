@@ -204,7 +204,10 @@ public class PhotoFragment extends EntriesFragment {
             public void setPrimaryItem(ViewGroup container, int position, Object object) {
                 super.setPrimaryItem(container, position, object);
                 final Photo photo = mPhotos.get(position);
-                getSherlockActivity().getSupportActionBar().setTitle(photo.getTitle());
+                final ActionBar actionBar = getSherlockActivity().getSupportActionBar();
+                if (actionBar != null) {
+                    actionBar.setTitle(photo.getTitle());
+                }
             }
 
             @Override
