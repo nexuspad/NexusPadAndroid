@@ -32,8 +32,8 @@
     <orderEntry type="module" module-name="RichTextEditor" />
     <orderEntry type="library" name="android-support-v4" level="application" />
     <orderEntry type="module" module-name="PhotoView" />
-    <orderEntry type="module" module-name="simple-section-adapter" />
     <orderEntry type="module" module-name="picasso" />
+    <orderEntry type="module" module-name="stickylistheaders" />
   </component>
 </module>
 

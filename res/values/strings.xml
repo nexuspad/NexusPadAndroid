@@ -48,6 +48,7 @@
     <string name="rename">Rename</string>
     <string name="empty_folder">Folder Is Empty</string>
     <string name="empty_bookmarks">No Bookmarks</string>
+    <string name="empty_contacts">No Contacts</string>
     <string name="empty_docs">No Docs</string>
     <string name="loading_more">Loading More…</string>
     <string name="title">Title</string>
