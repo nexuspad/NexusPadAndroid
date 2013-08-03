@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="VcsDirectoryMappings">
-    <mapping directory="" vcs="" />
+    <mapping directory="$PROJECT_DIR$/../EdmondAppsAndroidUtils" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../NexusPadCore" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../libs/PhotoView" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../libs/StickyListHeaders" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../libs/aFileChooser" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../libs/cwac-richedit" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../libs/volley" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../picasso" vcs="Git" />
   </component>
 </project>
 
