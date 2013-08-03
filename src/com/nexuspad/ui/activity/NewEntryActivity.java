@@ -56,6 +56,8 @@ public abstract class NewEntryActivity<T extends NPEntry> extends DoneDiscardAct
 
         handleIntent(getIntent());
         super.onCreate(savedState);
+
+        getSupportActionBar().setIcon(R.drawable.back_to_dashboard);
     }
 
     @Override

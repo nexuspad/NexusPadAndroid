@@ -3,28 +3,22 @@
  */
 package com.nexuspad.ui;
 
-import static com.edmondapps.utils.android.view.ViewUtils.findView;
-
-import java.util.List;
-
 import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
+import android.widget.*;
 import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.BaseAdapter;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.TextView;
-
 import com.nexuspad.R;
 import com.nexuspad.datamodel.NPEntry;
 
+import java.util.List;
+
+import static com.edmondapps.utils.android.view.ViewUtils.findView;
+
 /**
  * @author Edmond
- * 
  */
 public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter implements OnItemLongClickListener {
     public static final int TYPE_HEADER = 0;
@@ -33,19 +27,28 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter impl
 
     private final List<? extends T> mEntries;
     private final LayoutInflater mInflater;
+    private final int mEntryHeaderId;
 
     private OnClickListener mOnMenuClickListener;
 
     public EntriesAdapter(Activity a, List<? extends T> entries) {
         mEntries = entries;
         mInflater = a.getLayoutInflater();
+        mEntryHeaderId = getEntryStringId();
     }
 
     protected abstract View getEntryView(T entry, int position, View convertView, ViewGroup parent);
 
     protected abstract View getEmptyEntryView(LayoutInflater inflater, View convertView, ViewGroup parent);
 
+    /**
+     * @return the string id; or 0 if no headers should be used
+     */
     protected abstract int getEntryStringId();
+
+    private boolean isHeaderEnabled() {
+        return mEntryHeaderId > 0;
+    }
 
     protected static class ViewHolder {
         public ImageView icon;
@@ -54,13 +57,15 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter impl
     }
 
     protected static ViewHolder getHolder(View convertView) {
-        ViewHolder holder = (ViewHolder)convertView.getTag();
+        ViewHolder holder = (ViewHolder) convertView.getTag();
         if (holder == null) {
             holder = new ViewHolder();
             holder.icon = findView(convertView, android.R.id.icon);
             holder.text1 = findView(convertView, android.R.id.text1);
             holder.menu = findView(convertView, R.id.menu);
-            holder.menu.setFocusable(false);
+            if (holder.menu != null) {
+                holder.menu.setFocusable(false);
+            }
 
             convertView.setTag(holder);
         }
@@ -88,12 +93,16 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter impl
 
     @Override
     public int getCount() {
-        return mEntries.size() + 1;// header
+        if (isHeaderEnabled()) {
+            return mEntries.size() + 1;// header
+        } else {
+            return mEntries.size();
+        }
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (position == 0) {
+        if (position == 0 && isHeaderEnabled()) {
             return TYPE_HEADER;
         } else {
             return isEntriesEmpty() ? TYPE_EMPTY_ENTRY : TYPE_ENTRY;
@@ -102,7 +111,7 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter impl
 
     @Override
     public int getViewTypeCount() {
-        return 3;
+        return isHeaderEnabled() ? 3 : 2;
     }
 
     @Override
@@ -125,7 +134,7 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter impl
 
     @Override
     public T getItem(int position) {
-        return mEntries.get(position - 1);
+        return mEntries.get(isHeaderEnabled() ? position - 1 : position);
     }
 
     @Override
@@ -148,17 +157,10 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter impl
     }
 
     public View getHeaderView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder;
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.list_header, parent, false);
-
-            holder = new ViewHolder();
-            holder.text1 = findView(convertView, android.R.id.text1);
-
-            convertView.setTag(holder);
-        } else {
-            holder = (ViewHolder)convertView.getTag();
         }
+        ViewHolder holder = getHolder(convertView);
 
         holder.text1.setText(getEntryStringId());
 
@@ -175,7 +177,7 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter impl
 
             c.setTag(holder);
         } else {
-            holder = (ViewHolder)c.getTag();
+            holder = (ViewHolder) c.getTag();
         }
         holder.text1.setText(stringId);
         holder.text1.setCompoundDrawablesWithIntrinsicBounds(0, drawableId, 0, 0);

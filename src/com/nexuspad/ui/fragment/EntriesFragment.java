@@ -74,14 +74,14 @@ public abstract class EntriesFragment extends ListFragment {
     private final Lazy<FolderService> mFolderService = new Lazy<FolderService>() {
         @Override
         protected FolderService onCreate() {
-            return new FolderService(getActivity(), new FolderCallback(EntriesFragment.this));
+            return new FolderService(getActivity());
         }
     };
 
     private final Lazy<EntryService> mEntryService = new Lazy<EntryService>() {
         @Override
         protected EntryService onCreate() {
-            return new EntryService(getActivity(), new EntryCallback(EntriesFragment.this));
+            return new EntryService(getActivity());
         }
     };
 
@@ -100,25 +100,30 @@ public abstract class EntriesFragment extends ListFragment {
             }
         }
     };
-    private final EntryReceiver mEntryReceiver = new EntryReceiver() {
-        @Override
-        public void onDelete(Context context, Intent intent, NPEntry entry) {
-            EntryList entryList = getEntryList();
-            if (entryList != null) {
-                entryList.getEntries().remove(entry);
-                getListAdapter().notifyDataSetChanged();
-            }
-        }
 
-        @Override
-        public void onNew(Context context, Intent intent, NPEntry entry) {
-            EntryList entryList = getEntryList();
-            if (entryList != null) {
-                entryList.getEntries().add(entry);
-                getListAdapter().notifyDataSetChanged();
+    private final EntryReceiver mEntryReceiver = onCreateEntryReceiver();
+
+    protected EntryReceiver onCreateEntryReceiver() {
+        return new EntryReceiver() {
+            @Override
+            public void onDelete(Context context, Intent intent, NPEntry entry) {
+                EntryList entryList = getEntryList();
+                if (entryList != null) {
+                    entryList.getEntries().remove(entry);
+                    getListAdapter().notifyDataSetChanged();
+                }
             }
-        }
-    };
+
+            @Override
+            public void onNew(Context context, Intent intent, NPEntry entry) {
+                EntryList entryList = getEntryList();
+                if (entryList != null) {
+                    entryList.getEntries().add(entry);
+                    getListAdapter().notifyDataSetChanged();
+                }
+            }
+        };
+    }
 
     private final Lazy<SingleAdapter<View>> mLoadMoreAdapter = new Lazy<SingleAdapter<View>>() {
         @Override
@@ -294,12 +299,16 @@ public abstract class EntriesFragment extends ListFragment {
      * {@link EntryListService#getEntriesBetweenDates(Folder, EntryTemplate, Date, Date, int, int)}
      */
     protected void getEntriesInFolder(EntryListService service, Folder folder, int page) throws NPException {
-        service.getEntriesInFolder(mFolder, getTemplate(), page, PAGE_COUNT);
+        service.getEntriesInFolder(mFolder, getTemplate(), page, getEntriesCountPerPage());
     }
 
     // not ready
     protected void searchEntriesInFolder(String keyword, int page) throws NPException {
-        getEntryListService().searchEntriesInFolder(keyword, getFolder(), getTemplate(), page, PAGE_COUNT);
+        getEntryListService().searchEntriesInFolder(keyword, getFolder(), getTemplate(), page, getEntriesCountPerPage());
+    }
+
+    protected int getEntriesCountPerPage() {
+       return PAGE_COUNT;
     }
 
     protected void onListLoaded(EntryList list) {
@@ -424,70 +433,6 @@ public abstract class EntriesFragment extends ListFragment {
             EntriesFragment fragment = mEntriesFragment.get();
             if ( (fragment != null) && fragment.isAdded()) {
                 Toast.makeText(fragment.getActivity(), R.string.err_internal, Toast.LENGTH_LONG).show();
-            }
-        }
-    }
-
-    private static class FolderCallback implements FolderServiceCallback {
-        private final WeakReference<EntriesFragment> mEntriesFragment;
-
-        private FolderCallback(EntriesFragment f) {
-            mEntriesFragment = new WeakReference<EntriesFragment>(f);
-        }
-
-        @Override
-        public void successfulRetrieval(Map<String, Folder> folders) {
-        }
-
-        @Override
-        public void successfulUpdate(ActionResult actionResult) {
-            EntriesFragment fragment = mEntriesFragment.get();
-            if ( (fragment != null) && fragment.isAdded()) {
-                if (fragment.mEntryList != null) {
-                    fragment.mEntryList.getFolder()
-                            .removeSubFolder(fragment.getFolderService().getJustDeletedFolder());
-                }
-                fragment.getListAdapter().notifyDataSetChanged();
-            }
-        }
-
-        @Override
-        public void failureCallback(ServiceError error) {
-            EntriesFragment fragment = mEntriesFragment.get();
-            if ( (fragment != null) && fragment.isAdded()) {
-                Toast.makeText(fragment.getActivity(), R.string.err_network, Toast.LENGTH_LONG).show();
-            }
-        }
-    }
-
-    private static class EntryCallback implements EntryServiceCallback {
-        private final WeakReference<EntriesFragment> mEntriesFragment;
-
-        private EntryCallback(EntriesFragment f) {
-            mEntriesFragment = new WeakReference<EntriesFragment>(f);
-        }
-
-        @Override
-        public void successfulRetrieval(NPEntry entry) {
-        }
-
-        @Override
-        public void successfulUpdate(NPEntry updatedEntry) {
-            EntriesFragment fragment = mEntriesFragment.get();
-            if ( (fragment != null) && fragment.isAdded()) {
-                if (fragment.mEntryList != null) {
-                    fragment.mEntryList.getEntries()
-                            .remove(fragment.getEntryService().getJustDeletedEntry());
-                }
-                fragment.getListAdapter().notifyDataSetChanged();
-            }
-        }
-
-        @Override
-        public void failureCallback(ServiceError error) {
-            EntriesFragment fragment = mEntriesFragment.get();
-            if ( (fragment != null) && fragment.isAdded()) {
-                Toast.makeText(fragment.getActivity(), R.string.err_network, Toast.LENGTH_LONG).show();
             }
         }
     }

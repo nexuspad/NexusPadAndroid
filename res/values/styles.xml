@@ -3,7 +3,7 @@
     <style name="AppTheme" parent="@style/Theme.Sherlock.Light.DarkActionBar"/>
 
     <style name="Transparent" parent="@style/Theme.Sherlock">
-        <item name="android:windowNoTitle">true</item>
+        <item name="windowNoTitle">true</item>
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>
@@ -20,6 +20,14 @@
         <item name="android:minHeight">48dp</item>
         <item name="android:padding">@dimen/ed__padding_small</item>
         <item name="android:textSize">@dimen/ed__textsize_medium</item>
+    </style>
+
+    <style name="listTitleTextView">
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:padding">@dimen/ed__padding_small</item>
+        <item name="android:textSize">@dimen/ed__textsize_large</item>
+        <item name="android:background">#DFDFDF</item>
     </style>
 
     <style name="selectableTextView" parent="@style/listItemTextView">

@@ -2,10 +2,17 @@
 
     <!--
      Overrides the default margin since we hae a ton of lists,
-     it makes sense to have lists start/end on the edge
+     it makes sense to have lists start/end on the edge
+
+
+
+
     -->
     <dimen name="ed__activity_margin_vertical">8dp</dimen>
     <dimen name="photo_grid_width">99dp</dimen>
     <dimen name="photo_grid_height">99dp</dimen>
+    <dimen name="photo_grid_spacing_width">2dp</dimen>
+    <dimen name="photo_grid_spacing_height">2dp</dimen>
+    <dimen name="photo_grid_column_width">100dp</dimen>
 
 </resources>

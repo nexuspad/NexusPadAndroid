@@ -51,6 +51,8 @@ public class FoldersActivity extends SinglePaneActivity implements FoldersFragme
 
         setResult(RESULT_CANCELED);
         super.onCreate(savedState);
+
+        getSupportActionBar().setIcon(R.drawable.back_to_dashboard);
     }
 
     @Override

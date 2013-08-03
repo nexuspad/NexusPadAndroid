@@ -19,28 +19,44 @@
         <include layout="@layout/folder_selector_include"/>
 
         <EditText
-            android:id="@+id/txt_title"
+            android:id="@+id/txt_album_name"
             style="@style/formMargin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/title"/>
 
-        <com.commonsware.cwac.richedit.RichEditText
-            android:id="@+id/txt_note"
-            style="@style/formMargin"
+        <TextView
+            style="?android:attr/listSeparatorTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/note"
-            android:imeOptions="flagNoExtractUi"
-            android:inputType="textMultiLine"
-            android:minLines="@integer/notes_min_lines"/>
+            android:text="@string/photos"/>
 
-        <EditText
-            android:id="@+id/txt_tags"
-            style="@style/formMargin"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/tags"/>
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/pick_img"
+                android:padding="@dimen/ed__padding_small"
+                android:drawableLeft="@drawable/photo"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/add_more"
+                android:gravity="center_vertical"
+                style="@style/selectableTextView"
+                />
+
+            <TextView
+                android:id="@+id/lbl_num_photos"
+                android:padding="@dimen/ed__padding_small"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="@string/add_more"
+                android:gravity="center_vertical|right"
+                />
+        </LinearLayout>
     </LinearLayout>
 
 </ScrollView>

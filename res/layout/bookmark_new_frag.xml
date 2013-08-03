@@ -1,59 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/scrollableFrame"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" >
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-
-        <ProgressBar
-            android:id="@android:id/progress"
-            style="?android:attr/progressBarStyleLarge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:visibility="gone" />
-
-        <LinearLayout
-            android:id="@+id/content"
+            style="@style/scrollableFrame"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical" >
+            android:layout_height="match_parent">
 
-            <TextView
-                style="?android:attr/listSeparatorTextViewStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/folder" />
+    <LinearLayout
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-            <include layout="@layout/folder_selector_include" />
+        <TextView
+            style="?android:attr/listSeparatorTextViewStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/folder"/>
 
-            <EditText
-                android:id="@+id/txt_web_address"
-                style="@style/formMargin"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/web_address"
-                android:inputType="textUri" />
+        <include layout="@layout/folder_selector_include"/>
 
-            <EditText
-                android:id="@+id/txt_tags"
-                style="@style/formMargin"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/tags" />
+        <EditText
+            android:id="@+id/txt_web_address"
+            style="@style/formMargin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/web_address"
+            android:inputType="textUri"/>
 
-            <EditText
-                android:id="@+id/txt_note"
-                style="@style/formMargin"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:hint="@string/note"
-                android:minLines="@integer/notes_min_lines" />
-        </LinearLayout>
-    </FrameLayout>
+        <EditText
+            android:id="@+id/txt_tags"
+            style="@style/formMargin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/tags"/>
+
+        <EditText
+            android:id="@+id/txt_note"
+            style="@style/formMargin"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:hint="@string/note"
+            android:minLines="@integer/notes_min_lines"/>
+    </LinearLayout>
 
 </ScrollView>

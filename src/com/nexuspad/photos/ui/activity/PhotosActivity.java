@@ -3,13 +3,18 @@
  */
 package com.nexuspad.photos.ui.activity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.widget.ArrayAdapter;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.OnNavigationListener;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+import com.edmondapps.utils.android.Logs;
 import com.edmondapps.utils.android.annotaion.ParentActivity;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
@@ -32,7 +37,10 @@ import static com.nexuspad.dataservice.ServiceConstants.PHOTO_MODULE;
 @ParentActivity(DashboardActivity.class)
 @ModuleId(moduleId = PHOTO_MODULE, template = EntryTemplate.PHOTO)
 public class PhotosActivity extends EntriesActivity implements OnNavigationListener {
+    public static final String TAG = "PhotosActivity";
     public static final String KEY_SPINNER_INDEX = "key_spinner_index";
+
+    private static final int REQ_CHOOSE_FILE = 2;
 
     public static void startWithFolder(Folder f, Context c) {
         c.startActivity(PhotosActivity.of(f, c));
@@ -55,6 +63,32 @@ public class PhotosActivity extends EntriesActivity implements OnNavigationListe
 
     private Fragment mPhotosFragment;
     private Fragment mAlbumsFragment;
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getSupportMenuInflater().inflate(R.menu.photos_frag, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.new_photos:
+                final Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("image/*");
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                startActivityForResult(intent, REQ_CHOOSE_FILE);
+                return true;
+            case R.id.new_albums:
+                final Intent albumIntent = NewAlbumActivity.of(getFolder(), this);
+                startActivity(albumIntent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedState) {
@@ -91,6 +125,28 @@ public class PhotosActivity extends EntriesActivity implements OnNavigationListe
             mPhotosFragment = findFragment(getSupportFragmentManager(), PhotosFragment.TAG);
             mAlbumsFragment = findFragment(getSupportFragmentManager(), AlbumsFragment.TAG);
         }
+    }
+
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case REQ_CHOOSE_FILE:
+                if (resultCode == Activity.RESULT_OK) {
+                    Uri uri = data.getData();
+                    uploadFile(uri);
+                }
+                break;
+            default:
+                // probably from fragments
+                Logs.w(TAG, "unknown requestCode: " + requestCode);
+        }
+    }
+
+    private void uploadFile(Uri uri) {
+        PhotosUploadActivity.startWith(uri, getFolder(), this);
     }
 
     @Override

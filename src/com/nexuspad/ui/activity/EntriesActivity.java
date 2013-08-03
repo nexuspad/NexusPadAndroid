@@ -6,7 +6,6 @@ package com.nexuspad.ui.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-
 import com.edmondapps.utils.android.activity.SinglePaneActivity;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
@@ -17,7 +16,7 @@ import com.nexuspad.ui.fragment.EntriesFragment;
 
 /**
  * You must annotate the class with {@link ModuleId}.
- * 
+ *
  * @author Edmond
  */
 public abstract class EntriesActivity extends SinglePaneActivity implements EntriesFragment.Callback {
@@ -55,6 +54,8 @@ public abstract class EntriesActivity extends SinglePaneActivity implements Entr
         }
 
         super.onCreate(savedState);
+
+        getSupportActionBar().setIcon(R.drawable.back_to_dashboard);
     }
 
     @Override

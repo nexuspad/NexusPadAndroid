@@ -3,8 +3,6 @@
  */
 package com.nexuspad.ui.fragment;
 
-import static com.edmondapps.utils.android.view.ViewUtils.findView;
-import static com.edmondapps.utils.android.view.ViewUtils.isAllTextNotEmpty;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,7 +12,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
-
 import com.actionbarsherlock.app.SherlockDialogFragment;
 import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.nexuspad.R;
@@ -23,9 +20,11 @@ import com.nexuspad.datamodel.Folder;
 import com.nexuspad.dataservice.NPException;
 import com.nexuspad.ui.activity.FoldersActivity;
 
+import static com.edmondapps.utils.android.view.ViewUtils.findView;
+import static com.edmondapps.utils.android.view.ViewUtils.isAllTextNotEmpty;
+
 /**
  * @author Edmond
- * 
  */
 @FragmentName(NewFolderFragment.TAG)
 public class NewFolderFragment extends SherlockDialogFragment {
@@ -38,7 +37,6 @@ public class NewFolderFragment extends SherlockDialogFragment {
     private static final int REQ_FOLDER = 1;
 
     /**
-     * 
      * @return a {@link NewFolderFragment} with a parent folder
      */
     public static NewFolderFragment of(Folder parent) {
@@ -46,7 +44,6 @@ public class NewFolderFragment extends SherlockDialogFragment {
     }
 
     /**
-     * 
      * @return a {@link NewFolderFragment} with a default folder name
      */
     public static NewFolderFragment of(Folder parent, Folder folder) {
@@ -109,7 +106,9 @@ public class NewFolderFragment extends SherlockDialogFragment {
 
     private void updateUI() {
         mFolderV.setText(mParentFolder.getFolderName());
-        mFolderNameV.setText(mOriginalFolder.getFolderName());
+        if (mOriginalFolder != null) {
+            mFolderNameV.setText(mOriginalFolder.getFolderName());
+        }
     }
 
     @Override

@@ -10,23 +10,11 @@
         android:orientation="vertical" >
 
         <TextView
-            style="?android:attr/listSeparatorTextViewStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/title" />
-
-        <TextView
             android:id="@+id/lbl_title"
-            style="@style/listItemTextView"
+            style="@style/listTitleTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/title" />
-
-        <TextView
-            style="?android:attr/listSeparatorTextViewStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/web_address" />
 
         <TextView
             android:id="@+id/lbl_web_address"

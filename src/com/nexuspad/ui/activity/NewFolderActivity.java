@@ -7,7 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-
+import com.edmondapps.utils.android.Logs;
 import com.edmondapps.utils.android.activity.DoneDiscardActivity;
 import com.nexuspad.R;
 import com.nexuspad.datamodel.Folder;
@@ -16,9 +16,9 @@ import com.nexuspad.ui.fragment.NewFolderFragment;
 
 /**
  * @author Edmond
- * 
  */
 public class NewFolderActivity extends DoneDiscardActivity {
+    public static final String TAG = "NewFolderActivity";
     public static final String KEY_FOLDER = "key_folder";
     public static final String KEY_ORIGINAL_FOLDER = "key_original_folder";
 
@@ -41,10 +41,10 @@ public class NewFolderActivity extends DoneDiscardActivity {
         c.startActivity(intent);
     }
 
-    private final FolderService mFolderService = new FolderService(this, null);
+    private final FolderService mFolderService = new FolderService(this);
 
     private Folder mParentFolder;
-    private Folder mOringinalFolder;
+    private Folder mOriginalFolder;
 
     @Override
     protected int onCreateLayoutId() {
@@ -55,26 +55,31 @@ public class NewFolderActivity extends DoneDiscardActivity {
     protected void onCreate(Bundle savedState) {
         Intent intent = getIntent();
         mParentFolder = intent.getParcelableExtra(KEY_FOLDER);
-        mOringinalFolder = intent.getParcelableExtra(KEY_ORIGINAL_FOLDER);
+        mOriginalFolder = intent.getParcelableExtra(KEY_ORIGINAL_FOLDER);
 
         super.onCreate(savedState);
     }
 
     @Override
     protected Fragment onCreateFragment() {
-        return NewFolderFragment.of(mParentFolder, mOringinalFolder);
+        return NewFolderFragment.of(mParentFolder, mOriginalFolder);
     }
 
     @Override
     protected NewFolderFragment getFragment() {
-        return (NewFolderFragment)super.getFragment();
+        return (NewFolderFragment) super.getFragment();
     }
 
     @Override
     protected void onDonePressed() {
         NewFolderFragment fragment = getFragment();
         if (fragment.isEditedFolderValid()) {
-            mFolderService.updateFolder(fragment.getEditedFolder());
+            final Folder editedFolder = fragment.getEditedFolder();
+            if (!editedFolder.equals(mOriginalFolder)) {
+                mFolderService.updateFolder(editedFolder);
+            } else {
+                Logs.w(TAG, "folder not updated because no changes when made: " + editedFolder);
+            }
             finish();
         }
     }
