@@ -4,9 +4,7 @@
 package com.nexuspad.photos.ui.fragment;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
@@ -14,21 +12,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.edmondapps.utils.android.view.RunnableAnimatorListener;
 import com.edmondapps.utils.java.WrapperList;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
 import com.nexuspad.datamodel.*;
-import com.nexuspad.dataservice.EntryService;
 import com.nexuspad.dataservice.NPService;
-import com.nexuspad.photos.ui.activity.NewAlbumActivity;
 import com.nexuspad.photos.ui.activity.PhotoActivity;
 import com.nexuspad.photos.ui.activity.PhotosActivity;
-import com.nexuspad.photos.ui.activity.PhotosUploadActivity;
 import com.nexuspad.ui.DirectionalScrollListener;
 import com.nexuspad.ui.OnListEndListener;
 import com.nexuspad.ui.activity.FoldersActivity;
@@ -68,25 +60,20 @@ public class PhotosFragment extends EntriesFragment implements OnItemClickListen
     }
 
     @Override
-    protected EntryService.EntryReceiver onCreateEntryReceiver() {
-        return new EntryService.EntryReceiver() {
-            @Override
-            public void onNew(Context context, Intent intent, NPEntry entry) {
-                super.onNew(context, intent, entry);
-                mPhotos.add((Photo) entry);
-                BaseAdapter adapter = (BaseAdapter) mGridView.getAdapter();
-                stableNotifyAdapter(adapter);
-            }
+    protected void onNewEntry(NPEntry entry) {
+        super.onNewEntry(entry);
+        mPhotos.add((Photo) entry);
+        BaseAdapter adapter = (BaseAdapter) mGridView.getAdapter();
+        stableNotifyAdapter(adapter);
+    }
 
-            @Override
-            public void onDelete(Context context, Intent intent, NPEntry entry) {
-                super.onDelete(context, intent, entry);
-                final Photo photo = (Photo) entry;
-                mPhotos.remove(photo);
-                BaseAdapter adapter = (BaseAdapter) mGridView.getAdapter();
-                stableNotifyAdapter(adapter);
-            }
-        };
+    @Override
+    protected void onDeleteEntry(NPEntry entry) {
+        super.onDeleteEntry(entry);
+        final Photo photo = (Photo) entry;
+        mPhotos.remove(photo);
+        BaseAdapter adapter = (BaseAdapter) mGridView.getAdapter();
+        stableNotifyAdapter(adapter);
     }
 
     @Override
@@ -180,11 +167,6 @@ public class PhotosFragment extends EntriesFragment implements OnItemClickListen
         Photo photo = adapter.getItem(position);
 
         PhotoActivity.startWithFolder(getFolder(), photo, mPhotos, getActivity());
-    }
-
-    @Override
-    protected void onNewFolder(Context c, Intent i, Folder f) {
-        throw new UnsupportedOperationException();
     }
 
     private class PhotosAdapter extends BaseAdapter {

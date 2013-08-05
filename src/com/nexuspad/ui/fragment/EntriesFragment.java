@@ -3,11 +3,6 @@
  */
 package com.nexuspad.ui.fragment;
 
-import java.lang.ref.WeakReference;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -18,12 +13,12 @@ import android.widget.BaseAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
-
 import com.actionbarsherlock.view.MenuItem;
 import com.edmondapps.utils.android.Logs;
 import com.edmondapps.utils.android.ui.CompoundAdapter;
 import com.edmondapps.utils.android.ui.SingleAdapter;
 import com.edmondapps.utils.java.Lazy;
+import com.google.common.collect.Iterables;
 import com.nexuspad.Manifest;
 import com.nexuspad.R;
 import com.nexuspad.account.AccountManager;
@@ -32,33 +27,27 @@ import com.nexuspad.datamodel.EntryList;
 import com.nexuspad.datamodel.EntryTemplate;
 import com.nexuspad.datamodel.Folder;
 import com.nexuspad.datamodel.NPEntry;
-import com.nexuspad.dataservice.ActionResult;
-import com.nexuspad.dataservice.EntryListService;
-import com.nexuspad.dataservice.EntryListServiceCallback;
-import com.nexuspad.dataservice.EntryService;
+import com.nexuspad.dataservice.*;
 import com.nexuspad.dataservice.EntryService.EntryReceiver;
-import com.nexuspad.dataservice.EntryServiceCallback;
-import com.nexuspad.dataservice.ErrorCode;
-import com.nexuspad.dataservice.FolderService;
 import com.nexuspad.dataservice.FolderService.FolderReceiver;
-import com.nexuspad.dataservice.FolderServiceCallback;
-import com.nexuspad.dataservice.NPException;
-import com.nexuspad.dataservice.ServiceConstants;
-import com.nexuspad.dataservice.ServiceError;
 import com.nexuspad.home.ui.activity.LoginActivity;
 import com.nexuspad.ui.FoldersAdapter;
 import com.nexuspad.ui.OnFolderMenuClickListener;
 import com.nexuspad.ui.OnListEndListener;
 import com.nexuspad.ui.activity.NewFolderActivity;
 
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 /**
  * Manages an EntryList.
- * <p>
+ * <p/>
  * You may use {@link ModuleId} annotation on the {@code Fragment} class, if you
  * don't, you must override {@link #getTemplate()} and {@link #getModule()}.
- * 
+ *
  * @author Edmond
- * 
  */
 public abstract class EntriesFragment extends ListFragment {
     public static final String KEY_FOLDER = "key_folder";
@@ -95,35 +84,61 @@ public abstract class EntriesFragment extends ListFragment {
     private final FolderReceiver mFolderReceiver = new FolderReceiver() {
         @Override
         protected void onNew(Context c, Intent i, Folder f) {
-            if (f.getParentId() == mFolder.getParentId()) {
-                onNewFolder(c, i, f);
+            final List<Folder> subFolders = getSubFolders();
+            if (mFolder.getFolderId() == f.getParentId()) {
+                if (!Iterables.tryFind(subFolders, f.filterById()).isPresent()) {
+                    subFolders.add(f);
+                    notifyDataSetChanged();
+                } else {
+                    Logs.w(TAG, "folder created on the server, but ID already exists in the list, updating instead: " + f);
+                    onUpdate(c, i, f);
+                }
+            }
+        }
+
+        @Override
+        protected void onDelete(Context c, Intent i, Folder folder) {
+            if (mFolder.getFolderId() == folder.getParentId()) {
+                if (Iterables.removeIf(getSubFolders(), folder.filterById())) {
+                    notifyDataSetChanged();
+                } else {
+                    Logs.w(TAG, "folder deleted from the server, but no matching ID found in the list. " + folder);
+                }
+            }
+        }
+
+        @Override
+        protected void onUpdate(Context c, Intent i, Folder folder) {
+            if (mFolder.getFolderId() == folder.getParentId()) {
+                final List<Folder> subFolders = getSubFolders();
+                final int index = Iterables.indexOf(subFolders, folder.filterById());
+                if (index >= 0) {
+                    subFolders.remove(index);
+                    subFolders.add(index, folder);
+                    notifyDataSetChanged();
+                } else {
+                    Logs.w(TAG, "cannot find the updated entry in the list; folder: " + folder);
+                }
             }
         }
     };
 
-    private final EntryReceiver mEntryReceiver = onCreateEntryReceiver();
+    private final EntryReceiver mEntryReceiver = new EntryReceiver() {
+        @Override
+        public void onDelete(Context context, Intent intent, NPEntry entry) {
+            onDeleteEntry(entry);
+        }
 
-    protected EntryReceiver onCreateEntryReceiver() {
-        return new EntryReceiver() {
-            @Override
-            public void onDelete(Context context, Intent intent, NPEntry entry) {
-                EntryList entryList = getEntryList();
-                if (entryList != null) {
-                    entryList.getEntries().remove(entry);
-                    getListAdapter().notifyDataSetChanged();
-                }
-            }
+        @Override
+        public void onNew(Context context, Intent intent, NPEntry entry) {
+            onNewEntry(entry);
+        }
 
-            @Override
-            public void onNew(Context context, Intent intent, NPEntry entry) {
-                EntryList entryList = getEntryList();
-                if (entryList != null) {
-                    entryList.getEntries().add(entry);
-                    getListAdapter().notifyDataSetChanged();
-                }
-            }
-        };
-    }
+        @Override
+        public void onUpdate(Context context, Intent intent, NPEntry entry) {
+            onUpdateEntry(entry);
+        }
+    };
 
     private final Lazy<SingleAdapter<View>> mLoadMoreAdapter = new Lazy<SingleAdapter<View>>() {
         @Override
@@ -136,15 +151,15 @@ public abstract class EntriesFragment extends ListFragment {
     private final EntryListCallback mEntryListCallback = new EntryListCallback(this);
 
     private EntryList mEntryList;
+
     private Callback mCallback;
     private int mCurrentPage;
     private Folder mFolder;
-
     private ModuleId mModuleId;
 
     /**
-     * @see #getTemplate()
      * @return one of the {@code *_MODULE} constants in {@link ServiceConstants}
+     * @see #getTemplate()
      */
     protected int getModule() {
         if (mModuleId == null) {
@@ -163,13 +178,59 @@ public abstract class EntriesFragment extends ListFragment {
         return mModuleId.template();
     }
 
-    protected abstract void onNewFolder(Context c, Intent i, Folder f);
+    protected List<Folder> getSubFolders() {
+        return mEntryList.getFolder().getSubFolders();
+    }
+
+    protected void notifyDataSetChanged() {
+        getListAdapter().notifyDataSetChanged();
+    }
+
+    protected void onDeleteEntry(NPEntry entry) {
+        EntryList entryList = getEntryList();
+        if (entryList != null) {
+            if (Iterables.removeIf(entryList.getEntries(), entry.filterById())) {
+                notifyDataSetChanged();
+            } else {
+                Logs.w(TAG, "entry deleted on the server, but no matching ID exists in the list. " + entry);
+            }
+        }
+    }
+
+    protected void onNewEntry(NPEntry entry) {
+        EntryList entryList = getEntryList();
+        if (entryList != null) {
+            final List<NPEntry> entries = entryList.getEntries();
+            if (!Iterables.tryFind(entries, entry.filterById()).isPresent()) {
+                entries.add(entry);
+                notifyDataSetChanged();
+            } else {
+                Logs.w(TAG, "entry created on the server, but ID already exists in the list, updating instead: " + entry);
+                onUpdateEntry(entry);
+            }
+        }
+    }
+
+    protected void onUpdateEntry(NPEntry entry) {
+        final EntryList entryList = getEntryList();
+        if (entryList != null) {
+            final List<NPEntry> entries = entryList.getEntries();
+            final int index = Iterables.indexOf(entries, entry.filterById());
+            if (index >= 0) {
+                entries.remove(index);
+                entries.add(index, entry);
+                notifyDataSetChanged();
+            } else {
+                Logs.w(TAG, "cannot find the updated entry in the list; entry: " + entry);
+            }
+        }
+    }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         if (activity instanceof Callback) {
-            mCallback = (Callback)activity;
+            mCallback = (Callback) activity;
         } else {
             throw new IllegalStateException(activity + " must implement Callback.");
         }
@@ -223,16 +284,18 @@ public abstract class EntriesFragment extends ListFragment {
         if (listView != null) {
             listView.setItemsCanFocus(true);
             listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-            listView.setOnScrollListener(new OnListEndListener() {
-                @Override
-                protected void onListEnd(int page) {
-                    queryEntriesAync(getCurrentPage() + 1);
-                }
-            });
+            if (isAutoLoadMoreEnabled()) {
+                listView.setOnScrollListener(new OnListEndListener() {
+                    @Override
+                    protected void onListEnd(int _) {
+                        queryEntriesAync(getCurrentPage() + 1);
+                    }
+                });
+            }
         }
 
         if (savedInstanceState != null) {
-            onListLoadedInternal(savedInstanceState.<EntryList> getParcelable(KEY_ENTRY_LIST));
+            onListLoadedInternal(savedInstanceState.<EntryList>getParcelable(KEY_ENTRY_LIST));
         } else if (isLoadListEnabled()) {
             queryEntriesAync();
         }
@@ -243,6 +306,13 @@ public abstract class EntriesFragment extends ListFragment {
      *         automatically after view is created; false to disable it
      */
     protected boolean isLoadListEnabled() {
+        return true;
+    }
+
+    /**
+     * @return if the {@link EntryList} should be updated when the list reaches the end
+     */
+    protected boolean isAutoLoadMoreEnabled() {
         return true;
     }
 
@@ -294,7 +364,7 @@ public abstract class EntriesFragment extends ListFragment {
      * implementation calls
      * {@link EntryListService#getEntriesInFolder(Folder, EntryTemplate, int, int)}
      * .
-     * <p>
+     * <p/>
      * You may override this method to use other mechanisms, such as
      * {@link EntryListService#getEntriesBetweenDates(Folder, EntryTemplate, Date, Date, int, int)}
      */
@@ -308,7 +378,7 @@ public abstract class EntriesFragment extends ListFragment {
     }
 
     protected int getEntriesCountPerPage() {
-       return PAGE_COUNT;
+        return PAGE_COUNT;
     }
 
     protected void onListLoaded(EntryList list) {
@@ -327,16 +397,15 @@ public abstract class EntriesFragment extends ListFragment {
     /**
      * Add the entries to the current {@code EntryList} from another
      * {@code EntryList}.
-     * 
-     * @param o
-     *            other {@code EntryList}
+     *
+     * @param o other {@code EntryList}
      */
     private void expandEntryList(EntryList o) {
-        List<NPEntry> oldEntries = mEntryList.getEntries();
-        List<NPEntry> newEntries = o.getEntries();
+        final List<NPEntry> oldEntries = mEntryList.getEntries();
+        final List<NPEntry> newEntries = o.getEntries();
 
         for (NPEntry newEntry : newEntries) {
-            if (!oldEntries.contains(newEntry)) {
+            if (!Iterables.tryFind(oldEntries, newEntry.filterById()).isPresent()) {
                 oldEntries.add(newEntry);
             }
         }
@@ -353,17 +422,17 @@ public abstract class EntriesFragment extends ListFragment {
         getEntryService().safeDeleteEntry(getActivity(), entry);
     }
 
-    protected FoldersAdapter newFoldersAdapter(EntryList list) {
-        FoldersAdapter foldersAdapter = new FoldersAdapter(getActivity(), list.getFolder().getSubFolders());
+    protected FoldersAdapter newFoldersAdapter() {
+        FoldersAdapter foldersAdapter = new FoldersAdapter(getActivity(), getSubFolders());
         OnFolderMenuClickListener listener = new OnFolderMenuClickListener(getListView(), mFolder, getFolderService());
         foldersAdapter.setOnMenuClickListener(listener);
         return foldersAdapter;
     }
 
     /**
-     * @see CompoundAdapter
      * @return an adapter that is used to indicate it is loading more entries at
      *         the end of the lit
+     * @see CompoundAdapter
      */
     protected SingleAdapter<View> getLoadMoreAdapter() {
         return mLoadMoreAdapter.get();
@@ -374,9 +443,8 @@ public abstract class EntriesFragment extends ListFragment {
     }
 
     /**
+     * @throws UnsupportedOperationException every time this method is invoked
      * @deprecated use {@link #setListAdapter(BaseAdapter)}
-     * @throws UnsupportedOperationException
-     *             every time this method is invoked
      */
     @Override
     @Deprecated
@@ -390,7 +458,7 @@ public abstract class EntriesFragment extends ListFragment {
 
     @Override
     public BaseAdapter getListAdapter() {
-        return (BaseAdapter)super.getListAdapter();
+        return (BaseAdapter) super.getListAdapter();
     }
 
     public Folder getFolder() {
@@ -423,7 +491,7 @@ public abstract class EntriesFragment extends ListFragment {
         @Override
         public void successfulRetrieval(EntryList list) {
             EntriesFragment fragment = mEntriesFragment.get();
-            if ( (fragment != null) && fragment.isAdded()) {
+            if ((fragment != null) && fragment.isAdded()) {
                 fragment.onListLoadedInternal(list);
             }
         }
@@ -431,7 +499,7 @@ public abstract class EntriesFragment extends ListFragment {
         @Override
         public void failureCallback(ServiceError error) {
             EntriesFragment fragment = mEntriesFragment.get();
-            if ( (fragment != null) && fragment.isAdded()) {
+            if ((fragment != null) && fragment.isAdded()) {
                 Toast.makeText(fragment.getActivity(), R.string.err_internal, Toast.LENGTH_LONG).show();
             }
         }

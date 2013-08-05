@@ -133,15 +133,9 @@ public class NewFolderFragment extends SherlockDialogFragment {
     }
 
     public Folder getEditedFolder() {
-        Folder folder = mOriginalFolder != null ? mOriginalFolder : new Folder(mParentFolder.getModuleId());
-
+        Folder folder = mOriginalFolder == null ? new Folder(mParentFolder.getModuleId()) : new Folder(mOriginalFolder);
         folder.setParent(mParentFolder);
         folder.setFolderName(mFolderNameV.getText().toString());
-        try {
-            folder.setOwner(AccountManager.currentAccount());
-        } catch (NPException e) {
-            throw new AssertionError("I thought I'm logged in.");
-        }
         return folder;
     }
 
