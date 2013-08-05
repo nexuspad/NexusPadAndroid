@@ -72,11 +72,6 @@ public class JournalsFragment extends EntriesFragment {
         return new JournalsAdapter(entries, getFolder(), getChildFragmentManager());
     }
 
-    @Override
-    protected void onNewFolder(Context c, Intent i, Folder f) {
-        throw new UnsupportedOperationException();
-    }
-
     private static class JournalsAdapter extends FragmentPagerAdapter {
         private final List<? extends Journal> mList;
         private final Folder mFolder;

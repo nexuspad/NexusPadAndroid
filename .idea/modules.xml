@@ -13,6 +13,7 @@
       <module fileurl="file://$PROJECT_DIR$/../libs/aFileChooser/aFileChooser/aFileChooser.iml" filepath="$PROJECT_DIR$/../libs/aFileChooser/aFileChooser/aFileChooser.iml" />
       <module fileurl="file://$PROJECT_DIR$/../picasso/picasso/picasso.iml" filepath="$PROJECT_DIR$/../picasso/picasso/picasso.iml" />
       <module fileurl="file://$PROJECT_DIR$/../libs/StickyListHeaders/library/stickylistheaders.iml" filepath="$PROJECT_DIR$/../libs/StickyListHeaders/library/stickylistheaders.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../NexusPadCore/test/test.iml" filepath="$PROJECT_DIR$/../NexusPadCore/test/test.iml" />
     </modules>
   </component>
 </project>

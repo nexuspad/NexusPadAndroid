@@ -88,12 +88,6 @@ public class DocsFragment extends EntriesFragment {
     }
 
     @Override
-    protected void onNewFolder(Context c, Intent i, Folder f) {
-        getEntryList().getFolder().getSubFolders().add(f);
-        getListAdapter().notifyDataSetChanged();
-    }
-
-    @Override
     protected void onListLoaded(EntryList list) {
         super.onListLoaded(list);
 
@@ -108,7 +102,7 @@ public class DocsFragment extends EntriesFragment {
 
         ListView listView = getListView();
 
-        FoldersAdapter foldersAdapter = newFoldersAdapter(list);
+        FoldersAdapter foldersAdapter = newFoldersAdapter();
         DocsAdapter docsAdapter = newDocsAdapter(list);
 
         FoldersDocsAdapter foldersDocsAdapter;

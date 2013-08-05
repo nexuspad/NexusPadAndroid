@@ -14,8 +14,10 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.widget.SearchView;
+import com.edmondapps.utils.android.Logs;
 import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.edmondapps.utils.java.WrapperList;
+import com.google.common.collect.Iterables;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
 import com.nexuspad.bookmark.ui.BookmarksAdapter;
@@ -25,13 +27,14 @@ import com.nexuspad.datamodel.EntryList;
 import com.nexuspad.datamodel.EntryTemplate;
 import com.nexuspad.datamodel.Folder;
 import com.nexuspad.dataservice.EntryService;
-import com.nexuspad.dataservice.NPException;
 import com.nexuspad.dataservice.ServiceConstants;
 import com.nexuspad.ui.FolderEntriesAdapter;
 import com.nexuspad.ui.FoldersAdapter;
 import com.nexuspad.ui.OnEntryMenuClickListener;
 import com.nexuspad.ui.activity.NewEntryActivity.Mode;
 import com.nexuspad.ui.fragment.EntriesFragment;
+
+import java.util.List;
 
 /**
  * @author Edmond
@@ -133,12 +136,6 @@ public class BookmarksFragment extends EntriesFragment {
     }
 
     @Override
-    protected void onNewFolder(Context c, Intent i, Folder f) {
-        getEntryList().getFolder().getSubFolders().add(f);
-        getListAdapter().notifyDataSetChanged();
-    }
-
-    @Override
     protected void onListLoaded(EntryList list) {
         super.onListLoaded(list);
 
@@ -154,7 +151,7 @@ public class BookmarksFragment extends EntriesFragment {
         ListView listView = getListView();
 
         BookmarksAdapter bookmarksAdapter = newBookmarksAdapter(list);
-        FoldersAdapter foldersAdapter = newFoldersAdapter(list);
+        FoldersAdapter foldersAdapter = newFoldersAdapter();
 
         FolderBookmarksAdapter adapter;
 

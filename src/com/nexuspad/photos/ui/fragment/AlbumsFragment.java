@@ -144,11 +144,6 @@ public class AlbumsFragment extends EntriesFragment {
         AlbumActivity.startWith(album, getFolder(), getActivity());
     }
 
-    @Override
-    protected void onNewFolder(Context c, Intent i, Folder f) {
-        throw new UnsupportedOperationException();
-    }
-
     private static class ViewHolder {
         ImageView thumbnail;
         TextView title;

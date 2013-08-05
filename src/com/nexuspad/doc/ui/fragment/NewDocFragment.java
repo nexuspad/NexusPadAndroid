@@ -3,8 +3,6 @@
  */
 package com.nexuspad.doc.ui.fragment;
 
-import static com.edmondapps.utils.android.view.ViewUtils.findView;
-import static com.edmondapps.utils.android.view.ViewUtils.isAllTextNotEmpty;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -16,7 +14,6 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
-
 import com.commonsware.cwac.richedit.RichEditText;
 import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.nexuspad.R;
@@ -26,6 +23,9 @@ import com.nexuspad.datamodel.Folder;
 import com.nexuspad.dataservice.ServiceConstants;
 import com.nexuspad.ui.activity.FoldersActivity;
 import com.nexuspad.ui.fragment.NewEntryFragment;
+
+import static com.edmondapps.utils.android.view.ViewUtils.findView;
+import static com.edmondapps.utils.android.view.ViewUtils.isAllTextNotEmpty;
 
 /**
  * @author Edmond
@@ -82,7 +82,7 @@ public class NewDocFragment extends NewEntryFragment<Doc> {
         }
         switch (requestCode) {
             case REQ_FOLDER:
-                setFolder(data.<Folder> getParcelableExtra(FoldersActivity.KEY_FOLDER));
+                setFolder(data.<Folder>getParcelableExtra(FoldersActivity.KEY_FOLDER));
                 break;
             default:
                 throw new AssertionError("unknown requestCode: " + requestCode);
@@ -135,19 +135,17 @@ public class NewDocFragment extends NewEntryFragment<Doc> {
     public Doc getEditedEntry() {
         // BUG: the cursor underlines the EditText automatically, affecting the
         // returned Editable of getText()
-        InputMethodManager m = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        InputMethodManager m = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         m.hideSoftInputFromWindow(mNoteV.getWindowToken(), 0);
         mNoteV.clearFocus();
 
-        Doc entry = getDetailEntryIfExist();
-        if (entry == null) {
-            entry = new Doc(getFolder());
-        }
-        entry.setTitle(mTitleV.getText().toString());
-        entry.setNote(Html.toHtml(mNoteV.getText()));
-        entry.setTags(mTagsV.getText().toString());
+        final Doc entry = getDetailEntryIfExist();
+        Doc doc = new Doc(entry == null ? new Doc(getFolder()) : entry);
+        doc.setTitle(mTitleV.getText().toString());
+        doc.setNote(Html.toHtml(mNoteV.getText()));
+        doc.setTags(mTagsV.getText().toString());
 
-        setDetailEntry(entry);
-        return entry;
+        setDetailEntry(doc);
+        return doc;
     }
 }

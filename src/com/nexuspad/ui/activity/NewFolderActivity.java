@@ -10,8 +10,10 @@ import android.support.v4.app.Fragment;
 import com.edmondapps.utils.android.Logs;
 import com.edmondapps.utils.android.activity.DoneDiscardActivity;
 import com.nexuspad.R;
+import com.nexuspad.account.AccountManager;
 import com.nexuspad.datamodel.Folder;
 import com.nexuspad.dataservice.FolderService;
+import com.nexuspad.dataservice.NPException;
 import com.nexuspad.ui.fragment.NewFolderFragment;
 
 /**
@@ -76,6 +78,11 @@ public class NewFolderActivity extends DoneDiscardActivity {
         if (fragment.isEditedFolderValid()) {
             final Folder editedFolder = fragment.getEditedFolder();
             if (!editedFolder.equals(mOriginalFolder)) {
+                try {
+                    editedFolder.setOwner(AccountManager.currentAccount());
+                } catch (NPException e) {
+                    throw new AssertionError("I thought I'm logged in.");
+                }
                 mFolderService.updateFolder(editedFolder);
             } else {
                 Logs.w(TAG, "folder not updated because no changes when made: " + editedFolder);

@@ -201,9 +201,4 @@ public class PhotoFragment extends EntriesFragment {
             }
         };
     }
-
-    @Override
-    protected void onNewFolder(Context c, Intent i, Folder f) {
-        throw new UnsupportedOperationException();
-    }
 }

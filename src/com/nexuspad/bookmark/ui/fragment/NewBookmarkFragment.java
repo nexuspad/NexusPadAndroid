@@ -3,8 +3,6 @@
  */
 package com.nexuspad.bookmark.ui.fragment;
 
-import static com.edmondapps.utils.android.view.ViewUtils.findView;
-import static com.edmondapps.utils.android.view.ViewUtils.isAllTextNotEmpty;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
-
 import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
@@ -22,6 +19,9 @@ import com.nexuspad.datamodel.Folder;
 import com.nexuspad.dataservice.ServiceConstants;
 import com.nexuspad.ui.activity.FoldersActivity;
 import com.nexuspad.ui.fragment.NewEntryFragment;
+
+import static com.edmondapps.utils.android.view.ViewUtils.findView;
+import static com.edmondapps.utils.android.view.ViewUtils.isAllTextNotEmpty;
 
 /**
  * @author Edmond
@@ -76,7 +76,7 @@ public class NewBookmarkFragment extends NewEntryFragment<Bookmark> {
         }
         switch (requestCode) {
             case REQ_FOLDER:
-                setFolder(data.<Folder> getParcelableExtra(FoldersActivity.KEY_FOLDER));
+                setFolder(data.<Folder>getParcelableExtra(FoldersActivity.KEY_FOLDER));
                 break;
             default:
                 throw new AssertionError("unknown requestCode: " + requestCode);
@@ -123,10 +123,8 @@ public class NewBookmarkFragment extends NewEntryFragment<Bookmark> {
 
     @Override
     public Bookmark getEditedEntry() {
-        Bookmark bookmark = getDetailEntryIfExist();
-        if (bookmark == null) {
-            bookmark = new Bookmark(getFolder());
-        }
+        final Bookmark entry = getDetailEntryIfExist();
+        Bookmark bookmark = new Bookmark(entry == null ? new Bookmark(getFolder()) : entry);
         bookmark.setWebAddress(mWebAddressV.getText().toString());
         bookmark.setNote(mNoteV.getText().toString());
         bookmark.setTags(mTagsV.getText().toString());

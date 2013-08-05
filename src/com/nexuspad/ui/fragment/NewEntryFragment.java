@@ -76,8 +76,9 @@ public abstract class NewEntryFragment<T extends NPEntry> extends EntryFragment<
 
     public void updateEntry() {
         if (isEditedEntryValid()) {
-            T entry = getEditedEntry();
-            if (!entry.equals(getDetailEntryIfExist())) {
+            final T originalEntry = getDetailEntryIfExist();
+            final T entry = getEditedEntry();
+            if (!entry.equals(originalEntry)) {
                 try {
                     entry.setOwner(AccountManager.currentAccount());
                 } catch (NPException e) {
