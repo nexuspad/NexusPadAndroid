@@ -1,8 +1,6 @@
 package com.nexuspad.contacts.ui.fragment;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -11,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
+import android.widget.SectionIndexer;
+import com.edmondapps.utils.android.Logs;
 import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.edmondapps.utils.java.WrapperList;
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersAdapter;
@@ -24,8 +24,8 @@ import com.nexuspad.ui.OnEntryMenuClickListener;
 import com.nexuspad.ui.fragment.EntriesFragment;
 import com.squareup.picasso.Picasso;
 
-import java.util.Collections;
-import java.util.List;
+import java.lang.ref.WeakReference;
+import java.util.*;
 
 @FragmentName(ContactsFragment.TAG)
 @ModuleId(moduleId = ServiceConstants.CONTACT_MODULE, template = EntryTemplate.CONTACT)
@@ -71,30 +71,11 @@ public class ContactsFragment extends EntriesFragment {
         super.onListLoaded(list);
 
         mContacts = new WrapperList<Person>(list.getEntries());
-
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... params) {
-                Collections.sort(mContacts, NPEntry.ORDERING_BY_TITLE);
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                if (isAdded()) {
-                    final BaseAdapter adapter = getListAdapter();
-                    if (adapter == null) {
-                        setListAdapter(newContactsAdapter());
-                    } else {
-                        adapter.notifyDataSetChanged();
-                    }
-                }
-            }
-        }.execute((Void[]) null);
+        new SortTask(mContacts, this, getString(R.string.others)).execute((Void[]) null);
     }
 
-    private ContactsAdapter newContactsAdapter() {
-        final ContactsAdapter a = new ContactsAdapter(getActivity());
+    private ContactsAdapter newContactsAdapter(Map<String, Integer> map) {
+        final ContactsAdapter a = new ContactsAdapter(getActivity(), map);
         final ListView listView = getListView();
         a.setOnMenuClickListener(new OnEntryMenuClickListener<Person>(listView, getEntryService()) {
             @Override
@@ -108,30 +89,25 @@ public class ContactsFragment extends EntriesFragment {
         return a;
     }
 
-    private class ContactsAdapter extends EntriesAdapter<Person> implements StickyListHeadersAdapter {
-        private final Picasso mPicasso;
+    private static String[] toArray(Collection<String> set) {
+        final String[] strings = new String[set.size()];
+        return set.toArray(strings);
+    }
 
-        private ContactsAdapter(Activity a) {
+    private class ContactsAdapter extends EntriesAdapter<Person> implements StickyListHeadersAdapter, SectionIndexer {
+        private final Picasso mPicasso;
+        private final Map<String, Integer> mSectionMap;
+        private final String[] mSections;
+
+        private ContactsAdapter(Activity a, Map<String, Integer> sectionMap) {
             super(a, mContacts);
+            mSectionMap = sectionMap;
+            mSections = toArray(mSectionMap.keySet());
             mPicasso = Picasso.with(a);
         }
 
         private String getDisplayString(int position) {
-            final Person p = getItem(position);
-
-            if (true) {
-                return p.getTitle();
-            }
-
-            final String lastName = p.getLastName();
-            final String firstName = p.getFirstName();
-            final String middleName = p.getMiddleName();
-
-            if (lastName == null || firstName == null) {
-                return getString(R.string.others);
-            }
-
-            return getString(R.string.formatted_person_name, lastName, firstName, middleName);
+            return getItem(position).getTitle();
         }
 
         @Override
@@ -192,6 +168,80 @@ public class ContactsFragment extends EntriesFragment {
         @Override
         protected int getEntryStringId() {
             return 0;
+        }
+
+        @Override
+        public Object[] getSections() {
+            return mSections;
+        }
+
+        @Override
+        public int getPositionForSection(int section) {
+            return mSectionMap.get(mSections[section]);
+        }
+
+        @Override
+        public int getSectionForPosition(int position) {
+            final Integer boxedPos = position;
+            Integer previous = 0;
+            for (Integer integer : mSectionMap.values()) {
+                if (previous.compareTo(boxedPos) > 0) {
+                    return previous;
+                }
+                previous = integer;
+            }
+            Logs.w(TAG, "cannot find section for position: " + position);
+            return previous;
+        }
+    }
+
+    private static class SortTask extends AsyncTask<Void, Void, Void> {
+        private final List<? extends NPEntry> mCollection;
+        private final String mPlaceHolder;
+        private final WeakReference<ContactsFragment> mFragment;
+        private final Map<String, Integer> mMap = new LinkedHashMap<String, Integer>(26);
+
+        private SortTask(List<? extends NPEntry> collection, ContactsFragment fragment, String placeHolder) {
+            mCollection = collection;
+            mFragment = new WeakReference<ContactsFragment>(fragment);
+            mPlaceHolder = placeHolder;
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            Collections.sort(mCollection, NPEntry.ORDERING_BY_TITLE);
+
+            for (int i = 0, mCollectionSize = mCollection.size(); i < mCollectionSize; i++) {
+                NPEntry entry = mCollection.get(i);
+                final String title = entry.getTitle();
+                if (title != null && title.length() > 1) {
+                    final String firstChar = title.substring(0, 1);
+                    putIfAbsent(mMap, firstChar, i);
+                } else {
+                    putIfAbsent(mMap, mPlaceHolder, i);
+                }
+            }
+
+            return null;
+        }
+
+        private static <K, V> void putIfAbsent(Map<K, V> map, K key, V value) {
+            if (!map.containsKey(key)) {
+                map.put(key, value);
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            final ContactsFragment fragment = mFragment.get();
+            if (fragment != null && fragment.isAdded()) {
+                final BaseAdapter adapter = fragment.getListAdapter();
+                if (adapter == null) {
+                    fragment.setListAdapter(fragment.newContactsAdapter(mMap));
+                } else {
+                    adapter.notifyDataSetChanged();
+                }
+            }
         }
     }
 }

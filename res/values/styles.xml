@@ -2,6 +2,10 @@
 
     <style name="AppTheme" parent="@style/Theme.Sherlock.Light.DarkActionBar"/>
 
+    <style name="FastscrollThemedListView" parent="@style/AppTheme">
+        <item name="android:textColorPrimary">?android:textColorPrimaryInverse</item>
+    </style>
+
     <style name="Transparent" parent="@style/Theme.Sherlock">
         <item name="windowNoTitle">true</item>
         <item name="android:windowIsTranslucent">true</item>
