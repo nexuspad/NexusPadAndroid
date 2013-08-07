@@ -16,6 +16,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.edmondapps.utils.android.annotaion.FragmentName;
+import com.google.common.collect.Iterables;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
 import com.nexuspad.datamodel.EntryTemplate;
@@ -80,7 +81,7 @@ public class PhotoFragment extends EntriesFragment {
         mPicasso = Picasso.with(getActivity());
         mPhotos = arguments.getParcelableArrayList(KEY_PHOTOS);
         final Photo photo = arguments.getParcelable(KEY_PHOTO);
-        mInitialPhotoIndex = mPhotos.indexOf(photo);
+        mInitialPhotoIndex = Iterables.indexOf(mPhotos, photo.filterById());
     }
 
     @Override
