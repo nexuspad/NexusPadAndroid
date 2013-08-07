@@ -3,22 +3,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-    <GridView
-        android:id="@+id/grid_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:verticalSpacing="2dp"
-        android:horizontalSpacing="2dp"
-        android:scrollingCache="true"
-        android:smoothScrollbar="true"
-        android:clipChildren="true"
-        android:alwaysDrawnWithCache="true"
-        android:numColumns="auto_fit"
-        android:columnWidth="@dimen/photo_grid_column_width"
-        android:stretchMode="spacingWidthUniform"
-        android:background="@android:color/white"
-        android:drawSelectorOnTop="true"
-        android:listSelector="?attr/selectableItemBackground"/>
+    <include layout="@layout/include_grid_view" />
 
     <FrameLayout
         android:id="@+id/sticky"

@@ -14,6 +14,7 @@ import com.nexuspad.datamodel.Album;
 import com.nexuspad.datamodel.EntryTemplate;
 import com.nexuspad.datamodel.Folder;
 import com.nexuspad.dataservice.ServiceConstants;
+import com.nexuspad.photos.ui.activity.PhotosSelectActivity;
 import com.nexuspad.ui.fragment.NewEntryFragment;
 
 import static com.edmondapps.utils.android.view.ViewUtils.findView;
@@ -50,14 +51,15 @@ public class NewAlbumFragment extends NewEntryFragment<Album> {
         mAddMoreV = findView(view, R.id.pick_img);
         mNumPhotosV = findView(view, R.id.lbl_num_photos);
         mNumPhotosV.setText(getResources().getQuantityString(R.plurals.numberOfPhotos, 0, 0));
-//        mAddMoreV.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
+        mAddMoreV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 //                final FragmentActivity activity = getActivity();
 //                pick images
 //                startActivityForResult(intent, REQ_PICK_IMAGES);
-//            }
-//        });
+                PhotosSelectActivity.start(getActivity());
+            }
+        });
     }
 
     @Override

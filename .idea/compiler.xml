@@ -23,13 +23,15 @@
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
         <module name="library" />
-        <module name="PhotoView" />
         <module name="picasso" />
+        <module name="sample" />
         <module name="stickylistheaders" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="picasso" target="1.6" />
+      <module name="picasso-parent" target="1.6" />
+      <module name="picasso-sample" target="1.6" />
       <module name="stickylistheaders" target="1.6" />
     </bytecodeTargetLevel>
   </component>

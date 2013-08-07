@@ -71,6 +71,7 @@ public class PhotoActivity extends SinglePaneActivity implements EntriesFragment
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.hide();
+            actionBar.setIcon(R.drawable.back_to_dashboard);
         }
     }
 
@@ -87,6 +88,6 @@ public class PhotoActivity extends SinglePaneActivity implements EntriesFragment
 
     @Override
     public void onListLoaded(EntriesFragment f, EntryList list) {
-        // i don't give a ____ :P
+        // do nothing
     }
 }
