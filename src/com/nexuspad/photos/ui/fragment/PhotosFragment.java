@@ -171,6 +171,8 @@ public class PhotosFragment extends EntriesFragment implements OnItemClickListen
 
     private class PhotosAdapter extends BaseAdapter {
 
+        private Picasso mPicasso = Picasso.with(getActivity());
+
         @Override
         public int getCount() {
             return mPhotos.size();
@@ -198,8 +200,8 @@ public class PhotosFragment extends EntriesFragment implements OnItemClickListen
                 view = (ImageView) convertView;
             }
 
-            String url = NPService.addAuthToken(getItem(position).getTnUrl());
-            Picasso.with(activity).load(url)
+            final String url = NPService.addAuthToken(getItem(position).getTnUrl());
+            mPicasso.load(url)
                     .placeholder(R.drawable.placeholder)
                     .error(R.drawable.ic_launcher)
                     .resizeDimen(R.dimen.photo_grid_width, R.dimen.photo_grid_height)

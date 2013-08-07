@@ -1,4 +1,4 @@
-package com.nexuspad.ui;
+package com.nexuspad.ui.view;
 
 import android.content.Context;
 import android.graphics.RectF;

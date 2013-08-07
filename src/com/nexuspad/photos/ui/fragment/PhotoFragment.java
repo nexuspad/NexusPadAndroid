@@ -3,8 +3,6 @@
  */
 package com.nexuspad.photos.ui.fragment;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -25,11 +23,12 @@ import com.nexuspad.datamodel.Folder;
 import com.nexuspad.datamodel.Photo;
 import com.nexuspad.dataservice.NPService;
 import com.nexuspad.dataservice.ServiceConstants;
-import com.nexuspad.ui.ZoomableImageView;
 import com.nexuspad.ui.fragment.EntriesFragment;
+import com.nexuspad.ui.view.ZoomableImageView;
 import com.squareup.picasso.Picasso;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -157,17 +156,7 @@ public class PhotoFragment extends EntriesFragment {
                 mPicasso.load(url)
                         .placeholder(R.drawable.placeholder)
                         .error(R.drawable.ic_launcher)
-                        .into(imageView, new com.squareup.picasso.Callback() {
-                            @Override
-                            public void onSuccess() {
-                                imageView.update();
-                            }
-
-                            @Override
-                            public void onError() {
-                                imageView.update();
-                            }
-                        });
+                        .into(imageView, new ZoomableImageViewCallback(imageView));
 
                 container.addView(frame, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
                 return frame;
@@ -200,5 +189,31 @@ public class PhotoFragment extends EntriesFragment {
                 return mPhotos.size();
             }
         };
+    }
+
+    private static class ZoomableImageViewCallback implements com.squareup.picasso.Callback {
+
+        private WeakReference<ZoomableImageView> mReference;
+
+        private ZoomableImageViewCallback(ZoomableImageView imageView) {
+            mReference = new WeakReference<ZoomableImageView>(imageView);
+        }
+
+        @Override
+        public void onSuccess() {
+            update();
+        }
+
+        @Override
+        public void onError() {
+            update();
+        }
+
+        private void update() {
+            final ZoomableImageView view = mReference.get();
+            if (view != null) {
+                view.update();
+            }
+        }
     }
 }

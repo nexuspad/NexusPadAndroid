@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@android:color/black" >
 
-    <com.nexuspad.ui.ZoomableImageView
+    <com.nexuspad.ui.view.ZoomableImageView
         android:id="@android:id/icon"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

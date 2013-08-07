@@ -2,7 +2,7 @@
 
     <style name="AppTheme" parent="@style/Theme.Sherlock.Light.DarkActionBar"/>
 
-    <style name="FastscrollThemedListView" parent="@style/AppTheme">
+    <style name="fastscrollThemedListView" parent="@style/AppTheme">
         <item name="android:textColorPrimary">?android:textColorPrimaryInverse</item>
     </style>
 

@@ -1,8 +1,9 @@
-package com.nexuspad.ui;
+package com.nexuspad.ui.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 /**
@@ -12,17 +13,17 @@ import android.widget.LinearLayout;
  * @author Edmond
  * 
  */
-public class DuplicateParentStateAwareLinearLayout extends LinearLayout {
+public class DuplicateParentStateAwareFrameLayout extends FrameLayout {
 
-    public DuplicateParentStateAwareLinearLayout(Context context) {
+    public DuplicateParentStateAwareFrameLayout(Context context) {
         super(context);
     }
 
-    public DuplicateParentStateAwareLinearLayout(Context context, AttributeSet attrs) {
+    public DuplicateParentStateAwareFrameLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public DuplicateParentStateAwareLinearLayout(Context context, AttributeSet attrs, int defStyle) {
+    public DuplicateParentStateAwareFrameLayout(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
 

@@ -21,8 +21,8 @@
         android:layout_height="match_parent"
         android:visibility="gone" >
 
-        <com.emilsjolander.components.stickylistheaders.StickyListHeadersListView
-            style="@style/FastscrollThemedListView"
+        <view
+            class="com.nexuspad.ui.view.ListWrappers$StickyWrapper"
             android:id="@android:id/list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
