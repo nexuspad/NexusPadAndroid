@@ -177,7 +177,7 @@ public class ContactsFragment extends EntriesFragment {
 
         @Override
         public int getPositionForSection(int section) {
-            return mSectionMap.get(mSections[section]);
+            return mSectionMap.get(mSections[section >= mSections.length ? mSections.length -1 : section]);
         }
 
         @Override

@@ -3,24 +3,21 @@
  */
 package com.nexuspad.ui;
 
-import static com.edmondapps.utils.android.view.ViewUtils.findView;
-
-import java.util.List;
-
 import android.app.Activity;
+import android.database.DataSetObserver;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
+import android.widget.*;
 import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.BaseAdapter;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.TextView;
-
 import com.nexuspad.R;
+import com.nexuspad.app.IdMap;
 import com.nexuspad.datamodel.Folder;
+
+import java.util.List;
+
+import static com.edmondapps.utils.android.view.ViewUtils.findView;
 
 /**
  * @author Edmond
@@ -34,6 +31,7 @@ public class FoldersAdapter extends BaseAdapter implements OnItemLongClickListen
     private final List<? extends Folder> mSubFolders;
     private final boolean mUseSubFolderButtons;
 
+    private IdMap<Folder> mIdMap;
     private OnClickListener mOnMenuClickListener;
     private OnClickListener mOnSubFolderClickListener;
 
@@ -44,7 +42,22 @@ public class FoldersAdapter extends BaseAdapter implements OnItemLongClickListen
     public FoldersAdapter(Activity a, List<? extends Folder> folders, boolean useSubFolderButtons) {
         mUseSubFolderButtons = useSubFolderButtons;
         mInflater = a.getLayoutInflater();
+        mIdMap = fillIdMap(new IdMap<Folder>(), folders);
         mSubFolders = folders;
+        registerDataSetObserver(new DataSetObserver() {
+            @Override
+            public void onChanged() {
+                super.onChanged();
+                mIdMap = fillIdMap(mIdMap, mSubFolders);
+            }
+        });
+    }
+
+    private static <K extends Folder> IdMap<K> fillIdMap(IdMap<K> map, List<? extends K> list) {
+        for (final K key : list) {
+            map.addIf(key, key.filterById());
+        }
+        return map;
     }
 
     private static class ViewHolder {
@@ -55,7 +68,7 @@ public class FoldersAdapter extends BaseAdapter implements OnItemLongClickListen
     }
 
     private static ViewHolder getHolder(View convertView) {
-        ViewHolder holder = (ViewHolder)convertView.getTag();
+        ViewHolder holder = (ViewHolder) convertView.getTag();
         if (holder == null) {
             holder = new ViewHolder();
             holder.icon = findView(convertView, android.R.id.icon);
@@ -102,7 +115,7 @@ public class FoldersAdapter extends BaseAdapter implements OnItemLongClickListen
 
             c.setTag(holder);
         } else {
-            holder = (ViewHolder)c.getTag();
+            holder = (ViewHolder) c.getTag();
         }
         holder.text1.setText(R.string.empty_folder);
         holder.text1.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.empty_subfolders, 0, 0);
@@ -134,7 +147,7 @@ public class FoldersAdapter extends BaseAdapter implements OnItemLongClickListen
 
     @Override
     public int getItemViewType(int position) {
-        if ( (position == 0)) {
+        if ((position == 0)) {
             return TYPE_HEADER;
         }
         return isSubfoldersEmpty() ? TYPE_EMPTY_FOLDER : TYPE_FOLDER;
@@ -169,8 +182,23 @@ public class FoldersAdapter extends BaseAdapter implements OnItemLongClickListen
     }
 
     @Override
+    public boolean hasStableIds() {
+        return true;
+    }
+
+    @Override
     public long getItemId(int position) {
-        return position;
+        switch (getItemViewType(position)) {
+            case TYPE_FOLDER:
+                final Folder folder = getItem(position);
+                return mIdMap.getIdIf(folder, folder.filterById());
+            case TYPE_HEADER:
+                return Long.MIN_VALUE;
+            case TYPE_EMPTY_FOLDER:
+                return 0;
+            default:
+                throw new AssertionError("unknown view type: " + getItemViewType(position) + " at position: " + position);
+        }
     }
 
     @Override
@@ -197,7 +225,7 @@ public class FoldersAdapter extends BaseAdapter implements OnItemLongClickListen
 
             convertView.setTag(holder);
         } else {
-            holder = (ViewHolder)convertView.getTag();
+            holder = (ViewHolder) convertView.getTag();
         }
 
         holder.text1.setText(R.string.folders);

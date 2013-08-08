@@ -44,20 +44,20 @@ import static com.edmondapps.utils.android.view.ViewUtils.findView;
 public class PhotoFragment extends EntriesFragment {
     public static final String TAG = "PhotoFragment";
 
-    public static final String KEY_PHOTOS = "key_photos";
     public static final String KEY_PHOTO = "key_photo";
 
-    private ViewPager mViewPager;
+    private static List<? extends Photo> sPhotos;
 
+    private ViewPager mViewPager;
     private Picasso mPicasso;
-    private List<Photo> mPhotos;
     private int mInitialPhotoIndex;
 
-    public static PhotoFragment of(Folder f, Photo photo, ArrayList<? extends Photo> photos) {
+    public static PhotoFragment of(Folder f, Photo photo, List<? extends Photo> photos) {
         Bundle bundle = new Bundle();
         bundle.putParcelable(KEY_FOLDER, f);
-        bundle.putParcelableArrayList(KEY_PHOTOS, photos);
         bundle.putParcelable(KEY_PHOTO, photo);
+
+        sPhotos = new ArrayList<Photo>(photos); // parceling is too slow
 
         PhotoFragment fragment = new PhotoFragment();
         fragment.setArguments(bundle);
@@ -79,9 +79,8 @@ public class PhotoFragment extends EntriesFragment {
         final Bundle arguments = getArguments();
 
         mPicasso = Picasso.with(getActivity());
-        mPhotos = arguments.getParcelableArrayList(KEY_PHOTOS);
         final Photo photo = arguments.getParcelable(KEY_PHOTO);
-        mInitialPhotoIndex = Iterables.indexOf(mPhotos, photo.filterById());
+        mInitialPhotoIndex = Iterables.indexOf(sPhotos, photo.filterById());
     }
 
     @Override
@@ -94,9 +93,9 @@ public class PhotoFragment extends EntriesFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.delete:
-                final Photo photo = mPhotos.get(mViewPager.getCurrentItem());
+                final Photo photo = sPhotos.get(mViewPager.getCurrentItem());
                 deleteEntry(photo);
-                mPhotos.remove(photo);
+                sPhotos.remove(photo);
                 stableNotifyAdapter();
                 return true;
             default:
@@ -133,7 +132,7 @@ public class PhotoFragment extends EntriesFragment {
         return new PagerAdapter() {
             @Override
             public Object instantiateItem(ViewGroup container, int position) {
-                final Photo photo = mPhotos.get(position);
+                final Photo photo = sPhotos.get(position);
 
                 final SherlockFragmentActivity activity = getSherlockActivity();
                 final ActionBar actionBar = getSherlockActivity().getSupportActionBar();
@@ -173,7 +172,7 @@ public class PhotoFragment extends EntriesFragment {
             @Override
             public void setPrimaryItem(ViewGroup container, int position, Object object) {
                 super.setPrimaryItem(container, position, object);
-                final Photo photo = mPhotos.get(position);
+                final Photo photo = sPhotos.get(position);
                 final ActionBar actionBar = getSherlockActivity().getSupportActionBar();
                 if (actionBar != null) {
                     actionBar.setTitle(photo.getTitle());
@@ -187,7 +186,7 @@ public class PhotoFragment extends EntriesFragment {
 
             @Override
             public int getCount() {
-                return mPhotos.size();
+                return sPhotos.size();
             }
         };
     }

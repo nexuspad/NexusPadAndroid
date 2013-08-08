@@ -71,6 +71,7 @@ public class FoldersFragment extends ListFragment {
 
         @Override
         protected void onDelete(Context c, Intent i, Folder folder) {
+            animateNextLayout();
             if (Iterables.removeIf(mSubFolders, folder.filterById())) {
                 notifyDataSetChanged();
             } else {
@@ -81,6 +82,7 @@ public class FoldersFragment extends ListFragment {
         @Override
         protected void onNew(Context c, Intent i, Folder f) {
             if (!Iterables.tryFind(mSubFolders, f.filterById()).isPresent()) {
+                animateNextLayout();
                 mSubFolders.add(f);
                 notifyDataSetChanged();
             } else {
@@ -93,6 +95,7 @@ public class FoldersFragment extends ListFragment {
         protected void onUpdate(Context c, Intent i, Folder folder) {
             final int index = Iterables.indexOf(mSubFolders, folder.filterById());
             if (index >= 0) {
+                animateNextLayout();
                 mSubFolders.remove(index);
                 mSubFolders.add(index, folder);
                 notifyDataSetChanged();

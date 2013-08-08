@@ -86,6 +86,7 @@ public abstract class EntriesFragment extends ListFragment {
         protected void onNew(Context c, Intent i, Folder f) {
             final List<Folder> subFolders = getSubFolders();
             if (mFolder.getFolderId() == f.getParentId()) {
+                animateNextLayout();
                 if (!Iterables.tryFind(subFolders, f.filterById()).isPresent()) {
                     subFolders.add(f);
                     notifyDataSetChanged();
@@ -99,6 +100,7 @@ public abstract class EntriesFragment extends ListFragment {
         @Override
         protected void onDelete(Context c, Intent i, Folder folder) {
             if (mFolder.getFolderId() == folder.getParentId()) {
+                animateNextLayout();
                 if (Iterables.removeIf(getSubFolders(), folder.filterById())) {
                     notifyDataSetChanged();
                 } else {
@@ -113,6 +115,7 @@ public abstract class EntriesFragment extends ListFragment {
                 final List<Folder> subFolders = getSubFolders();
                 final int index = Iterables.indexOf(subFolders, folder.filterById());
                 if (index >= 0) {
+                    animateNextLayout();
                     subFolders.remove(index);
                     subFolders.add(index, folder);
                     notifyDataSetChanged();
@@ -189,10 +192,11 @@ public abstract class EntriesFragment extends ListFragment {
     protected void onDeleteEntry(NPEntry entry) {
         EntryList entryList = getEntryList();
         if (entryList != null) {
+            animateNextLayout();
             if (Iterables.removeIf(entryList.getEntries(), entry.filterById())) {
                 notifyDataSetChanged();
             } else {
-                Logs.w(TAG, "entry deleted on the server, but no matching ID exists in the list. " + entry);
+                Logs.w(TAG, "entry deleted on the server, but no matching ID exists in the list. " + entry.getEntryId());
             }
         }
     }
@@ -201,6 +205,7 @@ public abstract class EntriesFragment extends ListFragment {
         EntryList entryList = getEntryList();
         if (entryList != null) {
             final List<NPEntry> entries = entryList.getEntries();
+            animateNextLayout();
             if (!Iterables.tryFind(entries, entry.filterById()).isPresent()) {
                 entries.add(entry);
                 notifyDataSetChanged();
@@ -217,6 +222,7 @@ public abstract class EntriesFragment extends ListFragment {
             final List<NPEntry> entries = entryList.getEntries();
             final int index = Iterables.indexOf(entries, entry.filterById());
             if (index >= 0) {
+                animateNextLayout();
                 entries.remove(index);
                 entries.add(index, entry);
                 notifyDataSetChanged();
