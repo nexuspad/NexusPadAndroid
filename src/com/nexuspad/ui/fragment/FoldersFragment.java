@@ -22,6 +22,7 @@ import com.google.common.collect.Iterables;
 import com.nexuspad.Manifest;
 import com.nexuspad.R;
 import com.nexuspad.account.AccountManager;
+import com.nexuspad.app.App;
 import com.nexuspad.datamodel.Folder;
 import com.nexuspad.dataservice.FolderService;
 import com.nexuspad.dataservice.FolderService.FolderReceiver;
@@ -71,7 +72,6 @@ public class FoldersFragment extends ListFragment {
 
         @Override
         protected void onDelete(Context c, Intent i, Folder folder) {
-            animateNextLayout();
             if (Iterables.removeIf(mSubFolders, folder.filterById())) {
                 notifyDataSetChanged();
             } else {
@@ -82,7 +82,6 @@ public class FoldersFragment extends ListFragment {
         @Override
         protected void onNew(Context c, Intent i, Folder f) {
             if (!Iterables.tryFind(mSubFolders, f.filterById()).isPresent()) {
-                animateNextLayout();
                 mSubFolders.add(f);
                 notifyDataSetChanged();
             } else {
@@ -95,7 +94,6 @@ public class FoldersFragment extends ListFragment {
         protected void onUpdate(Context c, Intent i, Folder folder) {
             final int index = Iterables.indexOf(mSubFolders, folder.filterById());
             if (index >= 0) {
-                animateNextLayout();
                 mSubFolders.remove(index);
                 mSubFolders.add(index, folder);
                 notifyDataSetChanged();
@@ -117,11 +115,7 @@ public class FoldersFragment extends ListFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        if (activity instanceof Callback) {
-            mCallback = (Callback) activity;
-        } else {
-            throw new IllegalStateException(activity + " must implement Callback.");
-        }
+        mCallback = App.getCallback(activity, Callback.class);
         setHasOptionsMenu(true);
     }
 

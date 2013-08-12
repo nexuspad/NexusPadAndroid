@@ -123,8 +123,6 @@ public class ContactsFragment extends EntriesFragment {
                 mPicasso.load(url)
                         .placeholder(R.drawable.placeholder)
                         .error(R.drawable.ic_launcher)
-                        .resizeDimen(R.dimen.magic_length, R.dimen.magic_length)
-                        .centerCrop()
                         .into(holder.icon);
             }
 

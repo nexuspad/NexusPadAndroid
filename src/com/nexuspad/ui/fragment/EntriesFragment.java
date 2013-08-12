@@ -23,6 +23,7 @@ import com.nexuspad.Manifest;
 import com.nexuspad.R;
 import com.nexuspad.account.AccountManager;
 import com.nexuspad.annotation.ModuleId;
+import com.nexuspad.app.App;
 import com.nexuspad.datamodel.EntryList;
 import com.nexuspad.datamodel.EntryTemplate;
 import com.nexuspad.datamodel.Folder;
@@ -37,7 +38,6 @@ import com.nexuspad.ui.OnListEndListener;
 import com.nexuspad.ui.activity.NewFolderActivity;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -86,10 +86,9 @@ public abstract class EntriesFragment extends ListFragment {
         protected void onNew(Context c, Intent i, Folder f) {
             final List<Folder> subFolders = getSubFolders();
             if (mFolder.getFolderId() == f.getParentId()) {
-                animateNextLayout();
                 if (!Iterables.tryFind(subFolders, f.filterById()).isPresent()) {
                     subFolders.add(f);
-                    notifyDataSetChanged();
+                    onEntryListUpdated();
                 } else {
                     Logs.w(TAG, "folder created on the server, but ID already exists in the list, updating instead: " + f);
                     onUpdate(c, i, f);
@@ -100,9 +99,8 @@ public abstract class EntriesFragment extends ListFragment {
         @Override
         protected void onDelete(Context c, Intent i, Folder folder) {
             if (mFolder.getFolderId() == folder.getParentId()) {
-                animateNextLayout();
                 if (Iterables.removeIf(getSubFolders(), folder.filterById())) {
-                    notifyDataSetChanged();
+                    onEntryListUpdated();
                 } else {
                     Logs.w(TAG, "folder deleted from the server, but no matching ID found in the list. " + folder);
                 }
@@ -115,10 +113,9 @@ public abstract class EntriesFragment extends ListFragment {
                 final List<Folder> subFolders = getSubFolders();
                 final int index = Iterables.indexOf(subFolders, folder.filterById());
                 if (index >= 0) {
-                    animateNextLayout();
                     subFolders.remove(index);
                     subFolders.add(index, folder);
-                    notifyDataSetChanged();
+                    onEntryListUpdated();
                 } else {
                     Logs.w(TAG, "cannot find the updated entry in the list; folder: " + folder);
                 }
@@ -185,16 +182,18 @@ public abstract class EntriesFragment extends ListFragment {
         return mEntryList.getFolder().getSubFolders();
     }
 
-    protected void notifyDataSetChanged() {
-        getListAdapter().notifyDataSetChanged();
+    protected void onEntryListUpdated() {
+        final BaseAdapter adapter = getListAdapter();
+        if (adapter != null) {
+            adapter.notifyDataSetChanged();
+        }
     }
 
     protected void onDeleteEntry(NPEntry entry) {
         EntryList entryList = getEntryList();
         if (entryList != null) {
-            animateNextLayout();
             if (Iterables.removeIf(entryList.getEntries(), entry.filterById())) {
-                notifyDataSetChanged();
+                onEntryListUpdated();
             } else {
                 Logs.w(TAG, "entry deleted on the server, but no matching ID exists in the list. " + entry.getEntryId());
             }
@@ -205,10 +204,9 @@ public abstract class EntriesFragment extends ListFragment {
         EntryList entryList = getEntryList();
         if (entryList != null) {
             final List<NPEntry> entries = entryList.getEntries();
-            animateNextLayout();
             if (!Iterables.tryFind(entries, entry.filterById()).isPresent()) {
                 entries.add(entry);
-                notifyDataSetChanged();
+                onEntryListUpdated();
             } else {
                 Logs.w(TAG, "entry created on the server, but ID already exists in the list, updating instead: " + entry);
                 onUpdateEntry(entry);
@@ -222,10 +220,9 @@ public abstract class EntriesFragment extends ListFragment {
             final List<NPEntry> entries = entryList.getEntries();
             final int index = Iterables.indexOf(entries, entry.filterById());
             if (index >= 0) {
-                animateNextLayout();
                 entries.remove(index);
                 entries.add(index, entry);
-                notifyDataSetChanged();
+                onEntryListUpdated();
             } else {
                 Logs.w(TAG, "cannot find the updated entry in the list; entry: " + entry);
             }
@@ -235,12 +232,7 @@ public abstract class EntriesFragment extends ListFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        if (activity instanceof Callback) {
-            mCallback = (Callback) activity;
-        } else {
-            throw new IllegalStateException(activity + " must implement Callback.");
-        }
-
+        mCallback = App.getCallback(activity, Callback.class);
         mModuleId = getClass().getAnnotation(ModuleId.class);
     }
 
@@ -301,7 +293,12 @@ public abstract class EntriesFragment extends ListFragment {
         }
 
         if (savedInstanceState != null) {
-            onListLoadedInternal(savedInstanceState.<EntryList>getParcelable(KEY_ENTRY_LIST));
+            final EntryList entryList = savedInstanceState.getParcelable(KEY_ENTRY_LIST);
+            if (entryList != null) {
+                onListLoadedInternal(entryList);
+            } else {
+                queryEntriesAync();
+            }
         } else if (isLoadListEnabled()) {
             queryEntriesAync();
         }

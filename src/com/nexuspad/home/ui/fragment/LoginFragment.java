@@ -24,6 +24,7 @@ import com.edmondapps.utils.android.view.LoadingViews;
 import com.edmondapps.utils.java.Lazy;
 import com.nexuspad.R;
 import com.nexuspad.account.AccountManager;
+import com.nexuspad.app.App;
 import com.nexuspad.datamodel.NPUser;
 import com.nineoldandroids.view.ViewHelper;
 
@@ -75,11 +76,7 @@ public class LoginFragment extends SherlockFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        if (activity instanceof Callback) {
-            mCallback = (Callback)activity;
-        } else {
-            throw new IllegalStateException(activity + " must implement Callback.");
-        }
+        mCallback = App.getCallback(activity, Callback.class);
     }
 
     @Override

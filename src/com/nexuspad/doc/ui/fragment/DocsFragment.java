@@ -4,8 +4,6 @@
 package com.nexuspad.doc.ui.fragment;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.BaseAdapter;
@@ -18,6 +16,7 @@ import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.edmondapps.utils.java.WrapperList;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
+import com.nexuspad.app.App;
 import com.nexuspad.datamodel.Doc;
 import com.nexuspad.datamodel.EntryList;
 import com.nexuspad.datamodel.EntryTemplate;
@@ -62,11 +61,7 @@ public class DocsFragment extends EntriesFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        if (activity instanceof Callback) {
-            mCallback = (Callback)activity;
-        } else {
-            throw new IllegalStateException(activity + " must implement Callback.");
-        }
+        mCallback = App.getCallback(activity, Callback.class);
         setHasOptionsMenu(true);
     }
 

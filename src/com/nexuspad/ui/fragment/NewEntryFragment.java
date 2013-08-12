@@ -3,11 +3,13 @@
  */
 package com.nexuspad.ui.fragment;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import com.edmondapps.utils.android.Logs;
+import com.nexuspad.R;
 import com.nexuspad.account.AccountManager;
 import com.nexuspad.annotation.ModuleId;
 import com.nexuspad.datamodel.Folder;
@@ -16,7 +18,10 @@ import com.nexuspad.dataservice.ErrorCode;
 import com.nexuspad.dataservice.NPException;
 import com.nexuspad.dataservice.ServiceConstants;
 import com.nexuspad.dataservice.ServiceError;
+import com.nexuspad.photos.ui.activity.PhotosSelectActivity;
 import com.nexuspad.ui.activity.FoldersActivity;
+
+import java.util.List;
 
 /**
  * Annotate it with {@link ModuleId}.
@@ -36,7 +41,9 @@ public abstract class NewEntryFragment<T extends NPEntry> extends EntryFragment<
     /**
      * Callers of this method should first check with
      * {@link #isEditedEntryValid()} to guarantee the validity of the edited
-     * entry.
+     * entry.<p>
+     * Do not modify the detail entry here, create a copy and use {@link #setDetailEntry(NPEntry)} instead.
+     * Or else equality checks will fail, and no entries will be updated.
      *
      * @return an edited entry that reflects the user's changes
      */
@@ -100,5 +107,19 @@ public abstract class NewEntryFragment<T extends NPEntry> extends EntryFragment<
                 startActivityForResult(intent, REQ_FOLDER);
             }
         });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode) {
+            case REQ_FOLDER:
+                if (resultCode == Activity.RESULT_OK) {
+                    final Folder folder = data.getParcelableExtra(FoldersActivity.KEY_FOLDER);
+                    setFolder(folder);
+                }
+                break;
+        }
     }
 }

@@ -8,7 +8,7 @@
     <FrameLayout
         android:id="@+id/sticky"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="@dimen/abs__action_bar_default_height"
         android:layout_gravity="bottom"
         android:background="#7F000000">
 
@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:drawableLeft="@drawable/ic_np_folder"
-            android:drawablePadding="@dimen/ed__padding_small"
+            android:drawablePadding="@dimen/abs__action_bar_title_text_size"
             android:ellipsize="end"
             android:maxLines="1"
             android:scrollHorizontally="true"

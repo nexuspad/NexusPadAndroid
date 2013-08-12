@@ -6,26 +6,33 @@
     <include layout="@layout/include_grid_view" />
 
     <LinearLayout
-        android:id="@+id/sticky"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="@dimen/abs__action_bar_default_height"
         android:layout_alignParentBottom="true"
         android:background="#7F000000"
         android:showDividers="middle"
         android:orientation="horizontal">
 
-        <Button
+        <TextView
             android:id="@+id/btn_cancel"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:gravity="center"
+            android:background="?attr/selectableItemBackground"
+            android:textSize="@dimen/abs__action_bar_title_text_size"
+            android:textColor="@android:color/white"
             android:text="@android:string/cancel" />
 
-        <Button
+        <TextView
             android:id="@+id/btn_ok"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:gravity="center"
+            android:background="?attr/selectableItemBackground"
+            android:textSize="@dimen/abs__action_bar_title_text_size"
+            android:textColor="@android:color/white"
             android:text="@android:string/ok"/>
     </LinearLayout>
 </RelativeLayout>

@@ -63,11 +63,7 @@ public class BookmarkFragment extends EntryFragment<Bookmark> {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        if (activity instanceof Callback) {
-            mCallback = (Callback)activity;
-        } else {
-            throw new IllegalStateException(activity + " must implement Callback.");
-        }
+        mCallback = App.getCallback(activity, Callback.class);
         setHasOptionsMenu(true);
     }
 

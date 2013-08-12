@@ -23,6 +23,7 @@
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
         <module name="library" />
+        <module name="PhotoView" />
         <module name="picasso" />
         <module name="sample" />
         <module name="stickylistheaders" />

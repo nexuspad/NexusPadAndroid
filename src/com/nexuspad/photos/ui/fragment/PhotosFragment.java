@@ -61,17 +61,25 @@ public class PhotosFragment extends EntriesFragment implements OnItemClickListen
 
     @Override
     protected void onNewEntry(NPEntry entry) {
+        if (entry instanceof Photo) {  // or album, which will be handled at AlbumsFragment
+            Photo photo = (Photo) entry;
+            mPhotos.add(photo);
+        }
         super.onNewEntry(entry);
-        mPhotos.add((Photo) entry);
-        BaseAdapter adapter = (BaseAdapter) mGridView.getAdapter();
-        stableNotifyAdapter(adapter);
     }
 
     @Override
     protected void onDeleteEntry(NPEntry entry) {
+        if (entry instanceof Photo) {
+            final Photo photo = (Photo) entry;
+            mPhotos.remove(photo);
+        }
         super.onDeleteEntry(entry);
-        final Photo photo = (Photo) entry;
-        mPhotos.remove(photo);
+    }
+
+    @Override
+    protected void onEntryListUpdated() {
+        super.onEntryListUpdated();
         BaseAdapter adapter = (BaseAdapter) mGridView.getAdapter();
         stableNotifyAdapter(adapter);
     }

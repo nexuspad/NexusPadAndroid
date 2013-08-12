@@ -27,7 +27,9 @@ import com.nexuspad.ui.fragment.ListFragment;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static com.edmondapps.utils.android.view.ViewUtils.findView;
 import static com.nexuspad.photos.service.PhotoUploadService.PhotosUploadBinder;
@@ -66,7 +68,7 @@ public class PhotosUploadFragment extends ListFragment {
         }
     };
     private final List<Request> mRequests = new ArrayList<Request>();
-    private final List<Request> mPendingRequests = new ArrayList<Request>();
+    private final Set<Request> mPendingRequests = new HashSet<Request>();
     private PhotosUploadBinder mBinder;
     private boolean mViewCreated;
     private PhotosUploadAdapter mAdapter;
@@ -111,6 +113,12 @@ public class PhotosUploadFragment extends ListFragment {
             mBinder.removeCallback(mCallback);
         }
         getActivity().unbindService(mConnection);
+    }
+
+    public void uploadPhotos(Iterable<? extends Uri> uris, Folder folder) {
+        for (Uri uri : uris) {
+            uploadPhoto(uri, folder);
+        }
     }
 
     public void uploadPhoto(Uri uri, Folder folder) {

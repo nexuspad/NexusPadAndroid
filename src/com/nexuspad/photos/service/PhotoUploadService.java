@@ -48,7 +48,7 @@ public class PhotoUploadService extends Service {
             addRequest(new Request(uri, folder));
         }
 
-        public void addRequests(Collection<? extends Request> requests) {
+        public void addRequests(Iterable<? extends Request> requests) {
             for (Request request : requests) {
                 addRequest(request);
             }

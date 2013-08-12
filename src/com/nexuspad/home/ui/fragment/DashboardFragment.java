@@ -23,6 +23,7 @@ import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.nexuspad.R;
 import com.nexuspad.about.activity.AboutActivity;
 import com.nexuspad.account.AccountManager;
+import com.nexuspad.app.App;
 import com.nexuspad.dataservice.ServiceConstants;
 import com.nexuspad.home.ui.activity.LoginActivity;
 import com.nexuspad.ui.IconListAdapter;
@@ -70,12 +71,7 @@ public class DashboardFragment extends ListFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        if (activity instanceof Callback) {
-            mCallback = (Callback)activity;
-        } else {
-            throw new IllegalStateException(activity + " must implement Callback.");
-        }
-
+        mCallback = App.getCallback(activity, Callback.class);
         setHasOptionsMenu(true);
     }
 

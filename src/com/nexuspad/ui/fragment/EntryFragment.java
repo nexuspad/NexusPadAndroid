@@ -14,17 +14,15 @@ import com.edmondapps.utils.android.Logs;
 import com.edmondapps.utils.java.Lazy;
 import com.nexuspad.R;
 import com.nexuspad.account.AccountManager;
+import com.nexuspad.app.App;
 import com.nexuspad.core.Manifest;
 import com.nexuspad.datamodel.Folder;
 import com.nexuspad.datamodel.NPEntry;
 import com.nexuspad.dataservice.EntryService;
 import com.nexuspad.dataservice.EntryService.EntryReceiver;
-import com.nexuspad.dataservice.EntryServiceCallback;
 import com.nexuspad.dataservice.NPException;
 import com.nexuspad.dataservice.ServiceError;
 import com.nexuspad.ui.activity.FoldersActivity;
-
-import java.lang.ref.WeakReference;
 
 /**
  * You must pass in a {@code Folder} with the key {@link EntryFragment#KEY_FOLDER}
@@ -72,6 +70,11 @@ public abstract class EntryFragment<T extends NPEntry> extends SherlockDialogFra
         public void onGot(Context context, Intent intent, NPEntry entry) {
             onDetailEntryUpdatedInternal(entry);
         }
+
+        @Override
+        protected void onUpdate(Context context, Intent intent, NPEntry entry) {
+            onDetailEntryUpdatedInternal(entry);
+        }
     };
 
     private T mEntry;
@@ -83,11 +86,7 @@ public abstract class EntryFragment<T extends NPEntry> extends SherlockDialogFra
     @SuppressWarnings("unchecked")
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        if (activity instanceof Callback) {
-            mCallback = (Callback<T>) activity;
-        } else {
-            throw new IllegalStateException(activity + " must implement Callback.");
-        }
+        mCallback = App.getCallback(activity, Callback.class);
     }
 
     @Override
@@ -268,14 +267,6 @@ public abstract class EntryFragment<T extends NPEntry> extends SherlockDialogFra
     }
 
     protected void onEntryUpdateFailed(ServiceError error) {
-    }
-
-    @SuppressWarnings("unchecked")
-    private void onEntryUpdatedInternal(NPEntry e) {
-        T entry = (T) e;
-        mEntry = entry;
-
-        onEntryUpdated(entry);
     }
 
     @SuppressWarnings("unchecked")

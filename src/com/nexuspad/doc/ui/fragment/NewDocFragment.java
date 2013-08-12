@@ -75,21 +75,6 @@ public class NewDocFragment extends NewEntryFragment<Doc> {
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode != Activity.RESULT_OK) {
-            return;
-        }
-        switch (requestCode) {
-            case REQ_FOLDER:
-                setFolder(data.<Folder>getParcelableExtra(FoldersActivity.KEY_FOLDER));
-                break;
-            default:
-                throw new AssertionError("unknown requestCode: " + requestCode);
-        }
-    }
-
-    @Override
     protected void onEntryUpdated(Doc entry) {
         super.onEntryUpdated(entry);
         updateUI();

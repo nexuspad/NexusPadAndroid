@@ -31,7 +31,6 @@ import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
  */
 public abstract class ListFragment extends SherlockFragment {
     public static final String TAG = "ListFragment";
-    private static final long MOVE_DURATION = 1500L;
 
     private ListView mListV;
     private ListAdapter mAdapter;
@@ -100,73 +99,6 @@ public abstract class ListFragment extends SherlockFragment {
      * @see ListFragment#onListItemClick(ListView, View, int, long)
      */
     public void onListItemClick(ListView l, View v, int position, long id) {
-    }
-
-    /**
-     * Animates the list view to reflect data set changes,
-     * this method must be called <b>before</b> the adapter's data has changed, and idiom would be:
-     * <pre>
-     *    animateNextLayout();
-     *    adapter.remove(something);
-     *    adapter.notifyDataSetChanged();
-     * </pre>
-     */
-    protected void animateNextLayout() {
-        final ListView listView = getListView();
-        final ListAdapter adapter = getListAdapter();
-        if (listView == null) {
-            Logs.w(TAG, "listView is null, no animate is scheduled");
-            return;
-        }
-        if (!adapter.hasStableIds()) {
-            Logs.w(TAG, "adapter has no stable IDs, no animate is scheduled");
-            return;
-        }
-        final int childCount = listView.getChildCount();
-
-        final LongSparseArray<Integer> mIdToTopMap = new LongSparseArray<Integer>(childCount);
-        for (int i = 0; i < childCount; ++i) {
-            final View child = listView.getChildAt(i);
-            final int viewTop = child.getTop();
-            final int positionForView = listView.getPositionForView(child);
-            final long itemId = adapter.getItemId(positionForView);
-            mIdToTopMap.put(itemId, viewTop);
-        }
-
-        final ViewTreeObserver observer = listView.getViewTreeObserver();
-        observer.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-            public boolean onPreDraw() {
-                observer.removeOnPreDrawListener(this);
-
-                final int childCount = listView.getChildCount();
-
-                for (int i = 0; i < childCount; ++i) {
-                    final View child = listView.getChildAt(i);
-                    final int viewTop = child.getTop();
-                    final int positionForView = listView.getPositionForView(child);
-                    final long itemId = adapter.getItemId(positionForView);
-                    final Integer startTop = mIdToTopMap.get(itemId);
-                    if (startTop != null) {
-                        final int startTopInt = startTop;
-                        if (viewTop != startTopInt) {
-                            final int delta = startTopInt - viewTop;
-                            translateView(child, delta);
-                        }
-                    } else {
-                        final int childHeight = child.getHeight() + listView.getDividerHeight();
-                        final int startTopInt = viewTop + (i == 0 ? -childHeight : childHeight);
-                        final int delta = startTopInt - viewTop;
-                        translateView(child, delta);
-                    }
-                }
-                return true;
-            }
-        });
-    }
-
-    private void translateView(View view, int delta) {
-        ViewHelper.setTranslationY(view, delta);
-        animate(view).setDuration(MOVE_DURATION).translationY(0);
     }
 
     /**

@@ -4,10 +4,10 @@
 package com.nexuspad.photos.ui.fragment;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +34,8 @@ import com.nexuspad.ui.fragment.EntriesFragment;
 import com.nineoldandroids.view.ViewPropertyAnimator;
 import com.squareup.picasso.Picasso;
 
+import java.util.List;
+
 import static com.edmondapps.utils.android.view.ViewUtils.findView;
 
 /**
@@ -55,7 +57,7 @@ public class AlbumsFragment extends EntriesFragment {
 
     private static final int REQ_FOLDER = 1;
 
-    private WrapperList<Album> mAlbums;
+    private List<Album> mAlbums;
 
     private View mQuickReturnView;
     private TextView mFolderView;
@@ -182,14 +184,19 @@ public class AlbumsFragment extends EntriesFragment {
 
             final Album album = getItem(position);
             holder.title.setText(album.getTitle());
-            final String url = NPService.addAuthToken(album.getTnUrl());
-            Picasso.with(getActivity())
-                    .load(url)
-                    .resizeDimen(R.dimen.photo_grid_width, R.dimen.photo_grid_height)
-                    .centerCrop()
-                    .placeholder(R.drawable.placeholder)
-                    .error(R.drawable.ic_launcher)
-                    .into(holder.thumbnail);
+            final String tnUrl = album.getTnUrl();
+            if (!TextUtils.isEmpty(tnUrl)) {
+                final String url = NPService.addAuthToken(tnUrl);
+                Picasso.with(getActivity())
+                        .load(url)
+                        .resizeDimen(R.dimen.photo_grid_width, R.dimen.photo_grid_height)
+                        .centerCrop()
+                        .placeholder(R.drawable.placeholder)
+                        .error(R.drawable.ic_launcher)
+                        .into(holder.thumbnail);
+            } else {
+                holder.thumbnail.setImageResource(R.drawable.placeholder);
+            }
 
             return convertView;
         }

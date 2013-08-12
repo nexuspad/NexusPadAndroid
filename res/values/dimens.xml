@@ -1,6 +1,5 @@
 <resources>
 
-    <dimen name="magic_length">48dp</dimen>
     <dimen name="ed__activity_margin_vertical">8dp</dimen>
     <dimen name="photo_grid_width">99dp</dimen>
     <dimen name="photo_grid_height">99dp</dimen>

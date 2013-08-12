@@ -4,7 +4,6 @@
 package com.nexuspad.ui;
 
 import android.app.Activity;
-import android.database.DataSetObserver;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -12,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.*;
 import android.widget.AdapterView.OnItemLongClickListener;
 import com.nexuspad.R;
-import com.nexuspad.app.IdMap;
 import com.nexuspad.datamodel.NPEntry;
 
 import java.util.List;
@@ -31,28 +29,12 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter impl
     private final LayoutInflater mInflater;
     private final int mEntryHeaderId;
 
-    private IdMap<T> mIdMap;
     private OnClickListener mOnMenuClickListener;
 
     public EntriesAdapter(Activity a, List<? extends T> entries) {
-        mIdMap = fillIdMap(new IdMap<T>(), entries);
         mEntries = entries;
         mInflater = a.getLayoutInflater();
         mEntryHeaderId = getEntryStringId();
-        registerDataSetObserver(new DataSetObserver() {
-            @Override
-            public void onChanged() {
-                super.onChanged();
-                mIdMap = fillIdMap(mIdMap, mEntries);
-            }
-        });
-    }
-
-    private static <K extends NPEntry> IdMap<K> fillIdMap(IdMap<K> map, List<? extends K> list) {
-        for (final K key : list) {
-            map.addIf(key, key.filterById());
-        }
-        return map;
     }
 
     protected abstract View getEntryView(T entry, int position, View convertView, ViewGroup parent);
@@ -156,23 +138,8 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter impl
     }
 
     @Override
-    public boolean hasStableIds() {
-        return true;
-    }
-
-    @Override
     public long getItemId(int position) {
-        switch (getItemViewType(position)) {
-            case TYPE_ENTRY:
-                final T item = getItem(position);
-                return mIdMap.getIdIf(item, item.filterById());
-            case TYPE_HEADER:
-                return Long.MIN_VALUE;
-            case TYPE_EMPTY_ENTRY:
-                return 0;
-            default:
-                throw new AssertionError("unknown view type: " + getItemViewType(position) + " at position: " + position);
-        }
+        return position;
     }
 
     @Override

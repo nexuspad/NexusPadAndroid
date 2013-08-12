@@ -11,6 +11,7 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.edmondapps.utils.android.Logs;
 import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.nexuspad.account.AccountManager;
+import com.nexuspad.app.App;
 import com.nexuspad.datamodel.NPUser;
 import com.nexuspad.dataservice.NPException;
 
@@ -35,11 +36,7 @@ public class MainFragment extends SherlockFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        if (activity instanceof Callback) {
-            mCallback = (Callback)activity;
-        } else {
-            throw new IllegalStateException(activity + " must implement Callback.");
-        }
+        mCallback = App.getCallback(activity, Callback.class);
     }
 
     @Override

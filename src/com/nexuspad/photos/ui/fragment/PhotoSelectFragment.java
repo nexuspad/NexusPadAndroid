@@ -15,22 +15,25 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.CheckBox;
 import android.widget.GridView;
 import android.widget.ImageView;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.edmondapps.utils.android.annotaion.FragmentName;
-import com.edmondapps.utils.android.view.RunnableAnimatorListener;
+import com.edmondapps.utils.android.view.ViewUtils;
 import com.nexuspad.R;
-import com.nexuspad.ui.DirectionalScrollListener;
-import com.nineoldandroids.view.ViewPropertyAnimator;
+import com.nexuspad.app.App;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import static com.edmondapps.utils.android.view.ViewUtils.findView;
 
 @FragmentName(PhotoSelectFragment.TAG)
-public class PhotoSelectFragment extends SherlockFragment implements LoaderManager.LoaderCallbacks<Cursor>, AdapterView.OnItemSelectedListener {
+public class PhotoSelectFragment extends SherlockFragment implements
+        LoaderManager.LoaderCallbacks<Cursor>,
+        AdapterView.OnItemClickListener {
     public static final String TAG = "PhotoSelectFragment";
 
     public interface Callback {
@@ -45,8 +48,7 @@ public class PhotoSelectFragment extends SherlockFragment implements LoaderManag
 
     private Callback mCallback;
     private GridView mGridView;
-    private PhotosAdapter mAdapter;
-    private View mQuickReturnView;
+    private PhotosCursorAdapter mAdapter;
     private View mOkButton;
     private View mCancelButton;
 
@@ -54,11 +56,7 @@ public class PhotoSelectFragment extends SherlockFragment implements LoaderManag
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
-        if (activity instanceof Callback) {
-            mCallback = (Callback) activity;
-        } else {
-            throw new IllegalStateException(activity + " must implement Callback.");
-        }
+        mCallback = App.getCallback(activity, Callback.class);
     }
 
     @Override
@@ -71,29 +69,9 @@ public class PhotoSelectFragment extends SherlockFragment implements LoaderManag
         super.onViewCreated(view, savedInstanceState);
         findViews(view);
 
-        mQuickReturnView.setVisibility(View.GONE);
-
-        mAdapter = new PhotosAdapter(getActivity());
+        mAdapter = new PhotosCursorAdapter(getActivity());
         mGridView.setAdapter(mAdapter);
-        mGridView.setOnItemSelectedListener(this);
-        mGridView.setOnScrollListener(new DirectionalScrollListener(0) {
-            @Override
-            public void onScrollDirectionChanged(final boolean showing) {
-                final int height = showing ? 0 : mQuickReturnView.getHeight();
-                ViewPropertyAnimator.animate(mQuickReturnView)
-                        .translationY(height)
-                        .setDuration(200L)
-                        .setListener(new RunnableAnimatorListener(true).withEndAction(new Runnable() {
-                            @Override
-                            public void run() {
-                                mOkButton.setClickable(showing);
-                                mOkButton.setFocusable(showing);
-                                mCancelButton.setClickable(showing);
-                                mCancelButton.setFocusable(showing);
-                            }
-                        }));
-            }
-        });
+        mGridView.setOnItemClickListener(this);
 
         mOkButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -112,7 +90,6 @@ public class PhotoSelectFragment extends SherlockFragment implements LoaderManag
     }
 
     private void findViews(View view) {
-        mQuickReturnView = findView(view, R.id.sticky);
         mGridView = findView(view, R.id.grid_view);
         mOkButton = findView(view, R.id.btn_ok);
         mCancelButton = findView(view, R.id.btn_cancel);
@@ -132,10 +109,11 @@ public class PhotoSelectFragment extends SherlockFragment implements LoaderManag
 
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
+        final String[] projection = {BaseColumns._ID, MediaStore.Images.Media.DATA, MediaStore.Images.Thumbnails.DATA};
         return new CursorLoader(
                 getActivity(),
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                new String[]{BaseColumns._ID, MediaStore.Images.Media.DATA},
+                projection,
                 null,
                 null,
                 null);
@@ -152,25 +130,30 @@ public class PhotoSelectFragment extends SherlockFragment implements LoaderManag
     }
 
     @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         final String original = mFilePaths.get(position); // original/false by default
-        final String newValue = original == null ? mAdapter.getFilePath(position) : null; // flips the original state
-        mFilePaths.put(position, newValue);
+        final String newPath = original == null ? mAdapter.getFilePath(position) : null; // flips the original state
+        mFilePaths.put(position, newPath);
+
+        final ViewHolder holder = (ViewHolder) view.getTag();
+        holder.checkBox.setChecked(newPath != null);
     }
 
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
+    private static class ViewHolder {
+        public ImageView imageView;
+        public CheckBox checkBox;
     }
 
-    private static class PhotosAdapter extends CursorAdapter {
-        public static class ViewHolder {
-            ImageView imageView;
-        }
+    /**
+     * A {@link CursorAdapter} that loads the thumbnails into an {@code ImageView}. <br>
+     * The {@code Cursor} must contain the {@link MediaStore.Images.Thumbnails#DATA} column.
+     */
+    private class PhotosCursorAdapter extends CursorAdapter {
 
         private final LayoutInflater mInflater;
         private final Picasso mPicasso;
 
-        private PhotosAdapter(Context context) {
+        public PhotosCursorAdapter(Context context) {
             super(context, null, 0);
             mInflater = LayoutInflater.from(context);
             mPicasso = Picasso.with(context);
@@ -181,7 +164,8 @@ public class PhotoSelectFragment extends SherlockFragment implements LoaderManag
             final View view = mInflater.inflate(R.layout.layout_selectable_photo_grid, parent, false);
 
             final ViewHolder holder = new ViewHolder();
-            holder.imageView = findView(view, android.R.id.icon);
+            holder.imageView = ViewUtils.findView(view, android.R.id.icon);
+            holder.checkBox = ViewUtils.findView(view, android.R.id.checkbox);
 
             view.setTag(holder);
             return view;
@@ -190,11 +174,15 @@ public class PhotoSelectFragment extends SherlockFragment implements LoaderManag
         @Override
         public void bindView(View view, Context context, Cursor cursor) {
             final ViewHolder holder = (ViewHolder) view.getTag();
-            final String path = getFilePath(cursor);
-            mPicasso.load(path)
+            final String path = getTnFilePath(cursor);
+            mPicasso.load(new File(path))
                     .resizeDimen(R.dimen.photo_grid_width, R.dimen.photo_grid_height)
                     .centerCrop()
+                    .placeholder(R.drawable.placeholder)
+                    .error(R.drawable.ic_launcher)
                     .into(holder.imageView);
+
+            holder.checkBox.setChecked(mFilePaths.get(cursor.getPosition()) != null);
         }
 
         @Override
@@ -207,12 +195,19 @@ public class PhotoSelectFragment extends SherlockFragment implements LoaderManag
             return null;
         }
 
+        /**
+         * @return the file path from the {@code Cursor}, which must contain the {@link MediaStore.Images.Media#DATA} column
+         */
         public String getFilePath(int position) {
             return getFilePath(getItem(position));
         }
 
         private String getFilePath(Cursor cursor) {
             return cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
+        }
+
+        private String getTnFilePath(Cursor cursor) {
+            return cursor.getString(cursor.getColumnIndex(MediaStore.Images.Thumbnails.DATA));
         }
     }
 }
