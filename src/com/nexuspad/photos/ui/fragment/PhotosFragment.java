@@ -119,7 +119,7 @@ public class PhotosFragment extends EntriesFragment implements OnItemClickListen
             @Override
             public void onClick(View v) {
                 final FragmentActivity activity = getActivity();
-                final Intent intent = FoldersActivity.ofParentFolder(activity, Folder.rootFolderOf(PHOTO_MODULE));
+                final Intent intent = FoldersActivity.ofParentFolder(activity, Folder.rootFolderOf(PHOTO_MODULE, activity));
                 startActivityForResult(intent, REQ_FOLDER);
                 activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             }

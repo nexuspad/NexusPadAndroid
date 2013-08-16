@@ -83,8 +83,8 @@ public class AlbumsFragment extends EntriesFragment {
         mFolderView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final Folder folder = Folder.rootFolderOf(ServiceConstants.PHOTO_MODULE);
                 final FragmentActivity activity = getActivity();
+                final Folder folder = Folder.rootFolderOf(ServiceConstants.PHOTO_MODULE, activity);
                 startActivityForResult(FoldersActivity.ofParentFolder(activity, folder), REQ_FOLDER);
                 activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             }

@@ -76,7 +76,7 @@ public class PhotosUploadActivity extends SinglePaneActivity {
     protected Fragment onCreateFragment() {
         Folder folder = getIntent().getParcelableExtra(KEY_FOLDER);
         if (folder == null) {
-            folder = Folder.rootFolderOf(PHOTO_MODULE);
+            folder = Folder.rootFolderOf(PHOTO_MODULE, this);
         }
         final PhotosUploadFragment fragment = new PhotosUploadFragment();
         for (Uri uri : mUris) {

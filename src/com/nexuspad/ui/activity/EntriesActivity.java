@@ -50,7 +50,7 @@ public abstract class EntriesActivity extends SinglePaneActivity implements Entr
         if (folder != null) {
             mFolder = folder;
         } else {
-            mFolder = Folder.rootFolderOf(getModule());
+            mFolder = Folder.rootFolderOf(getModule(), this);
         }
 
         super.onCreate(savedState);

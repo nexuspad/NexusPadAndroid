@@ -158,7 +158,7 @@ public class ContactsFragment extends EntriesFragment {
         public long getHeaderId(int position) {
             final String string = getDisplayString(position);
             if (!TextUtils.isEmpty(string) && string.length() > 1) {
-                return string.substring(0, 1).charAt(0);
+                return string.substring(0, 1).toUpperCase().charAt(0);
             }
             return 0;
         }
@@ -213,7 +213,7 @@ public class ContactsFragment extends EntriesFragment {
                 NPEntry entry = mCollection.get(i);
                 final String title = entry.getTitle();
                 if (title != null && title.length() > 1) {
-                    final String firstChar = title.substring(0, 1);
+                    final String firstChar = title.substring(0, 1).toUpperCase();
                     putIfAbsent(mMap, firstChar, i);
                 } else {
                     putIfAbsent(mMap, mPlaceHolder, i);

@@ -79,9 +79,14 @@ public class FoldersAdapter extends BaseAdapter implements OnItemLongClickListen
         holder.text1.setText(folder.getFolderName());
         holder.menu.setOnClickListener(getOnMenuClickListener());
 
-        if (mUseSubFolderButtons && !folder.getSubFolders().isEmpty()) {
-            holder.icon2.setImageResource(R.drawable.subfolder);
-            holder.icon2.setOnClickListener(mOnSubFolderClickListener);
+        if (mUseSubFolderButtons) {
+            if (!folder.getSubFolders().isEmpty()) {
+                holder.icon2.setVisibility(View.VISIBLE);
+                holder.icon2.setImageResource(R.drawable.subfolder);
+                holder.icon2.setOnClickListener(mOnSubFolderClickListener);
+            } else {
+                holder.icon2.setVisibility(View.INVISIBLE);
+            }
         }
 
         return c;
@@ -195,9 +200,13 @@ public class FoldersAdapter extends BaseAdapter implements OnItemLongClickListen
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.text1.setText(R.string.folders);
+        holder.text1.setText(getHeaderText(position, convertView, parent));
 
         return convertView;
+    }
+
+    protected CharSequence getHeaderText(int position, View convertView, ViewGroup parent) {
+        return parent.getResources().getText(R.string.folders);
     }
 
     public final void setOnSubFolderClickListener(OnClickListener onSubFolderClickListener) {

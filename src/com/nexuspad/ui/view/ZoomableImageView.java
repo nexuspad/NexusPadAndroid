@@ -7,11 +7,12 @@ import android.net.Uri;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
+import com.edmondapps.utils.android.Logs;
 import uk.co.senab.photoview.IPhotoView;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
 public class ZoomableImageView extends ImageView implements IPhotoView {
-
+    public static final String TAG = "ZoomableImageView";
 
     private final PhotoViewAttacher mAttacher;
 
@@ -94,7 +95,12 @@ public class ZoomableImageView extends ImageView implements IPhotoView {
 
     public void update() {
         if (mAttacher != null) {
-            mAttacher.update();
+            try {
+                mAttacher.update();
+            } catch (IllegalStateException e) {
+                // Picasso's callback fires even when the image view is not referenced
+                Logs.e(TAG, e);
+            }
         }
     }
 

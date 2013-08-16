@@ -78,6 +78,8 @@
     <string name="add_more">Add More…</string>
 
     <string name="others">Others</string>
+    <!-- example: Folders under Dev Libs -->
+    <string name="formatted_sub_folders">Folders under %1$s</string>
 
     <plurals name="numberOfPhotos">
         <item quantity="one">1 photo</item>

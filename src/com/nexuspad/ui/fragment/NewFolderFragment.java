@@ -6,6 +6,7 @@ package com.nexuspad.ui.fragment;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -97,8 +98,9 @@ public class NewFolderFragment extends SherlockDialogFragment {
         mFolderV.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Folder root = Folder.rootFolderOf(mParentFolder.getModuleId());
-                Intent intent = FoldersActivity.ofParentFolder(getActivity(), root);
+                final FragmentActivity activity = getActivity();
+                Folder root = Folder.rootFolderOf(mParentFolder.getModuleId(), activity);
+                Intent intent = FoldersActivity.ofParentFolder(activity, root);
                 startActivityForResult(intent, REQ_FOLDER);
             }
         });

@@ -187,8 +187,12 @@ public abstract class EntryFragment<T extends NPEntry> extends SherlockDialogFra
     }
 
     private void onFolderUpdatedInternal(Folder folder) {
-        mEntry.setFolder(folder);
-        mDetailEntry.setFolder(folder);
+        if (mEntry != null) {
+            mEntry.setFolder(folder);
+        }
+        if (mDetailEntry != null) {
+            mDetailEntry.setFolder(folder);
+        }
         onFolderUpdated(folder);
     }
 

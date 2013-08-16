@@ -3,11 +3,11 @@
  */
 package com.nexuspad.ui.activity;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-
+import com.actionbarsherlock.app.ActionBar;
 import com.edmondapps.utils.android.activity.SinglePaneActivity;
 import com.nexuspad.R;
 import com.nexuspad.datamodel.Folder;
@@ -15,26 +15,21 @@ import com.nexuspad.ui.fragment.FoldersFragment;
 
 /**
  * @author Edmond
- * 
  */
 public class FoldersActivity extends SinglePaneActivity implements FoldersFragment.Callback {
+    public static final String TAG = "FoldersActivity";
     public static final String KEY_FOLDER = "com.nexuspad.ui.activity.FoldersActivity.folder";
 
     private static final int REQ_FOLDER = 1;
 
     /**
-     * 
-     * @param a
-     *            the {@code Activity Context}, it will also become the parent
-     *            {@code Activity}
-     * @param folder
-     *            the parent folder of the folders list
+     * @param c      the {@code Context}
+     * @param folder the parent folder of the folders list
      * @return an {@code Intent} with the correct extras.
      */
-    public static Intent ofParentFolder(Activity a, Folder folder) {
-        Intent intent = new Intent(a, FoldersActivity.class);
+    public static Intent ofParentFolder(Context c, Folder folder) {
+        Intent intent = new Intent(c, FoldersActivity.class);
         intent.putExtra(KEY_FOLDER, folder);
-        intent.putExtra(KEY_PARENT_ACTIVITY, a.getClass());
         return intent;
     }
 
@@ -52,7 +47,10 @@ public class FoldersActivity extends SinglePaneActivity implements FoldersFragme
         setResult(RESULT_CANCELED);
         super.onCreate(savedState);
 
-        getSupportActionBar().setIcon(R.drawable.back_to_dashboard);
+        final ActionBar actionBar = getSupportActionBar();
+        actionBar.setIcon(R.drawable.back_to_dashboard);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        setTitle(mParentFolder.getFolderName());
     }
 
     @Override
@@ -68,9 +66,21 @@ public class FoldersActivity extends SinglePaneActivity implements FoldersFragme
 
     @Override
     public void onSubFolderClicked(FoldersFragment f, Folder folder) {
-        Intent intent = FoldersActivity.ofParentFolder(this, folder);
-        // intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
+        final Intent intent = FoldersActivity.ofParentFolder(this, folder);
         startActivityForResult(intent, REQ_FOLDER);
+    }
+
+    @Override
+    public void onUpFolderClicked(FoldersFragment f) {
+        onUpPressed();
+    }
+
+    @Override
+    protected boolean onUpPressed() {
+        final Intent upIntent = getUpIntent(FoldersActivity.class);
+        startActivity(upIntent);
+        finish();
+        return true;
     }
 
     @Override

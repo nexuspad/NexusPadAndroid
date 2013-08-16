@@ -7,17 +7,19 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.BaseAdapter;
-import android.widget.ListAdapter;
-import android.widget.ListView;
-import android.widget.Toast;
+import android.view.ViewGroup;
+import android.widget.*;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.edmondapps.utils.android.Logs;
 import com.edmondapps.utils.android.annotaion.FragmentName;
+import com.edmondapps.utils.android.ui.CompoundAdapter;
+import com.edmondapps.utils.android.ui.SingleAdapter;
+import com.edmondapps.utils.android.view.ViewUtils;
 import com.google.common.collect.Iterables;
 import com.nexuspad.Manifest;
 import com.nexuspad.R;
@@ -61,6 +63,13 @@ public class FoldersFragment extends ListFragment {
         void onFolderClicked(FoldersFragment f, Folder folder);
 
         void onSubFolderClicked(FoldersFragment f, Folder folder);
+
+        /**
+         * Called when the "up" folder is clicked, the activity should navigate to the parent of the current parent folder
+         *
+         * @param f
+         */
+        void onUpFolderClicked(FoldersFragment f);
     }
 
     private final FolderReceiver mFolderReceiver = new FolderReceiver() {
@@ -103,7 +112,7 @@ public class FoldersFragment extends ListFragment {
         }
 
         private void notifyDataSetChanged() {
-            ((BaseAdapter) getListView().getAdapter()).notifyDataSetChanged();
+            getListAdapter().notifyDataSetChanged();
         }
     };
 
@@ -180,10 +189,22 @@ public class FoldersFragment extends ListFragment {
      * @param folders same as {@link #getSubFolders()}
      */
     protected void onSubFoldersLoaded(List<Folder> folders) {
-        FoldersAdapter adapter = newFoldersAdapter(folders);
+        final UpFolderAdapter upFolderAdapter = new UpFolderAdapter(getActivity(), mParentFolder);
+        final FoldersAdapter foldersAdapter = onCreateFoldersAdapter(folders);
+        final CompoundAdapter adapter = new CompoundAdapter(upFolderAdapter, foldersAdapter);
 
         super.setListAdapter(adapter);
-        getListView().setOnItemLongClickListener(adapter);
+        getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                if (position != 0) {
+                    final int realPos = getListAdapter().getPositionForAdapter(position);
+                    return getFoldersAdapter().onItemLongClick(parent, view, realPos, id);
+                } else {
+                    return false;
+                }
+            }
+        });
     }
 
     /**
@@ -192,21 +213,23 @@ public class FoldersFragment extends ListFragment {
      * @param folders the folders to be displayed
      * @return an instance of {@link FoldersAdapter}
      */
-    protected FoldersAdapter newFoldersAdapter(List<Folder> folders) {
-        final FoldersAdapter adapter = new FoldersAdapter(getActivity(), folders, true);
+    protected FoldersAdapter onCreateFoldersAdapter(List<Folder> folders) {
+        final FoldersAdapter adapter = new NamedFoldersAdapter(getActivity(), folders, mParentFolder);
         ListView listView = getListView();
         adapter.setOnMenuClickListener(new OnFolderMenuClickListener(listView, mParentFolder, mFolderService) {
             @Override
             public void onClick(View v) {
-                int pos = getListView().getPositionForView(v);
-                onFolderClick(adapter.getItem(pos), pos, v);
+                final int pos = getListView().getPositionForView(v);
+                final int realPos = getListAdapter().getPositionForAdapter(pos);
+                onFolderClick(adapter.getItem(realPos), realPos, v);
             }
         });
         adapter.setOnSubFolderClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                int pos = getListView().getPositionForView(v);
-                Folder folder = adapter.getItem(pos);
+                final int pos = getListView().getPositionForView(v);
+                final int realPos = getListAdapter().getPositionForAdapter(pos);
+                final Folder folder = adapter.getItem(realPos);
                 mCallback.onSubFolderClicked(FoldersFragment.this, folder);
             }
         });
@@ -216,13 +239,22 @@ public class FoldersFragment extends ListFragment {
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-        mCallback.onFolderClicked(this, getListAdapter().getItem(position));
+        if (position == 0) {
+            if (mParentFolder.getFolderId() == Folder.ROOT_FOLDER) {
+                mCallback.onFolderClicked(this, mParentFolder);
+            } else {
+                mCallback.onUpFolderClicked(this);
+            }
+        } else {
+            final int realPos = getListAdapter().getPositionForAdapter(position);
+            mCallback.onFolderClicked(this, getFoldersAdapter().getItem(realPos));
+        }
     }
 
     /**
      * This {@code Fragment} guarantees the use of {@link FoldersAdapter}.
      * <p/>
-     * Override {@link #newFoldersAdapter(List)} instead.
+     * Override {@link #onCreateFoldersAdapter(List)} instead.
      *
      * @throws UnsupportedOperationException every time this method is invoked
      */
@@ -233,8 +265,12 @@ public class FoldersFragment extends ListFragment {
     }
 
     @Override
-    public FoldersAdapter getListAdapter() {
-        return (FoldersAdapter) super.getListAdapter();
+    public CompoundAdapter getListAdapter() {
+        return (CompoundAdapter) super.getListAdapter();
+    }
+
+    public FoldersAdapter getFoldersAdapter() {
+        return (FoldersAdapter) getListAdapter().getAdapter(1);
     }
 
     protected FolderService getFolderService() {
@@ -243,5 +279,46 @@ public class FoldersFragment extends ListFragment {
 
     protected List<Folder> getSubFolders() {
         return mSubFolders;
+    }
+
+    private static class UpFolderAdapter extends SingleAdapter<View> {
+
+        public UpFolderAdapter(Context context, Folder folder) {
+            super(createView(context, folder));
+        }
+
+        private static View createView(Context context, Folder folder) {
+            final boolean isRoot = folder.getFolderId() == Folder.ROOT_FOLDER;
+            final View view = LayoutInflater.from(context).inflate(R.layout.list_item_icon_2, null);
+
+            final TextView title = ViewUtils.findView(view, android.R.id.text1);
+            final ImageView icon = ViewUtils.findView(view, android.R.id.icon);
+            final View icon2 = ViewUtils.findView(view, android.R.id.icon2);
+            final View menu = ViewUtils.findView(view, R.id.menu);
+
+            title.setText(isRoot ? folder.getFolderName() : context.getText(R.string.up));
+            icon.setImageResource(R.drawable.ic_np_folder);
+            menu.setVisibility(View.GONE);
+            menu.setFocusable(false);
+            icon2.setVisibility(View.INVISIBLE);
+            icon2.setFocusable(false);
+
+            return view;
+        }
+    }
+
+    private static class NamedFoldersAdapter extends FoldersAdapter {
+
+        private final Folder mParent;
+
+        public NamedFoldersAdapter(Activity a, List<? extends Folder> folders, Folder parent) {
+            super(a, folders, true);
+            mParent = parent;
+        }
+
+        @Override
+        protected CharSequence getHeaderText(int position, View convertView, ViewGroup parent) {
+            return parent.getResources().getString(R.string.formatted_sub_folders, mParent.getFolderName());
+        }
     }
 }

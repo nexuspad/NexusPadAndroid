@@ -6,6 +6,7 @@ package com.nexuspad.ui.fragment;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import com.edmondapps.utils.android.Logs;
@@ -102,8 +103,9 @@ public abstract class NewEntryFragment<T extends NPEntry> extends EntryFragment<
         v.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Folder folder = Folder.rootFolderOf(getModule());
-                Intent intent = FoldersActivity.ofParentFolder(getActivity(), folder);
+                final FragmentActivity activity = getActivity();
+                final Folder folder = Folder.rootFolderOf(getModule(), activity);
+                final Intent intent = FoldersActivity.ofParentFolder(activity, folder);
                 startActivityForResult(intent, REQ_FOLDER);
             }
         });

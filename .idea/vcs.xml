@@ -4,6 +4,7 @@
     <mapping directory="$PROJECT_DIR$/../EdmondAppsAndroidUtils" vcs="Git" />
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/../NexusPadCore" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../libs/HanselAndGretel" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/../libs/PhotoView" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/../libs/StickyListHeaders" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/../libs/aFileChooser" vcs="Git" />

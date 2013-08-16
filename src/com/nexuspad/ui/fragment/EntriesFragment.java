@@ -9,14 +9,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
-import android.widget.BaseAdapter;
-import android.widget.ListAdapter;
-import android.widget.ListView;
-import android.widget.Toast;
+import android.widget.*;
 import com.actionbarsherlock.view.MenuItem;
 import com.edmondapps.utils.android.Logs;
 import com.edmondapps.utils.android.ui.CompoundAdapter;
 import com.edmondapps.utils.android.ui.SingleAdapter;
+import com.edmondapps.utils.android.view.RunnableAnimatorListener;
 import com.edmondapps.utils.java.Lazy;
 import com.google.common.collect.Iterables;
 import com.nexuspad.Manifest;
@@ -32,10 +30,12 @@ import com.nexuspad.dataservice.*;
 import com.nexuspad.dataservice.EntryService.EntryReceiver;
 import com.nexuspad.dataservice.FolderService.FolderReceiver;
 import com.nexuspad.home.ui.activity.LoginActivity;
+import com.nexuspad.ui.DirectionalScrollListener;
 import com.nexuspad.ui.FoldersAdapter;
 import com.nexuspad.ui.OnFolderMenuClickListener;
 import com.nexuspad.ui.OnListEndListener;
 import com.nexuspad.ui.activity.NewFolderActivity;
+import com.nineoldandroids.view.ViewPropertyAnimator;
 
 import java.lang.ref.WeakReference;
 import java.util.Date;
@@ -248,7 +248,7 @@ public abstract class EntriesFragment extends ListFragment {
         }
 
         if (mFolder == null) {
-            mFolder = Folder.rootFolderOf(getModule());
+            mFolder = Folder.rootFolderOf(getModule(), activity);
         }
 
         activity.registerReceiver(
