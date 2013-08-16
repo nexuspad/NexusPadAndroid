@@ -42,7 +42,7 @@ public class ContactsFragment extends EntriesFragment {
         return fragment;
     }
 
-    private List<Person> mContacts;
+    private List<Contact> mContacts;
 
     @Override
     protected int getEntriesCountPerPage() {
@@ -70,19 +70,19 @@ public class ContactsFragment extends EntriesFragment {
     protected void onListLoaded(EntryList list) {
         super.onListLoaded(list);
 
-        mContacts = new WrapperList<Person>(list.getEntries());
+        mContacts = new WrapperList<Contact>(list.getEntries());
         new SortTask(mContacts, this, getString(R.string.others)).execute((Void[]) null);
     }
 
     private ContactsAdapter newContactsAdapter(Map<String, Integer> map) {
         final ContactsAdapter a = new ContactsAdapter(getActivity(), map);
         final ListView listView = getListView();
-        a.setOnMenuClickListener(new OnEntryMenuClickListener<Person>(listView, getEntryService()) {
+        a.setOnMenuClickListener(new OnEntryMenuClickListener<Contact>(listView, getEntryService()) {
             @Override
             public void onClick(View v) {
                 final int i = listView.getPositionForView(v);
-                final Person person = a.getItem(i);
-                onEntryClick(person, i, v);
+                final Contact contact = a.getItem(i);
+                onEntryClick(contact, i, v);
             }
         });
         listView.setOnItemLongClickListener(a);
@@ -94,7 +94,7 @@ public class ContactsFragment extends EntriesFragment {
         return set.toArray(strings);
     }
 
-    private class ContactsAdapter extends EntriesAdapter<Person> implements StickyListHeadersAdapter, SectionIndexer {
+    private class ContactsAdapter extends EntriesAdapter<Contact> implements StickyListHeadersAdapter, SectionIndexer {
         private final Picasso mPicasso;
         private final Map<String, Integer> mSectionMap;
         private final String[] mSections;
@@ -111,7 +111,7 @@ public class ContactsFragment extends EntriesFragment {
         }
 
         @Override
-        protected View getEntryView(Person p, int position, View convertView, ViewGroup parent) {
+        protected View getEntryView(Contact p, int position, View convertView, ViewGroup parent) {
             if (convertView == null) {
                 convertView = getLayoutInflater().inflate(R.layout.list_item_icon, parent, false);
             }
