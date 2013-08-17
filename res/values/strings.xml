@@ -19,6 +19,8 @@
     <string name="password">Password</string>
     <string name="first_name">First Name</string>
     <string name="last_name">Last Name</string>
+    <string name="middle_name">Middle Name</string>
+    <string name="business_name">Business Name</string>
     <string name="login">Login</string>
     <string name="sign_up">Sign Up</string>
     <string name="lbl_sign_up">First time here? Click here to sign up.</string>

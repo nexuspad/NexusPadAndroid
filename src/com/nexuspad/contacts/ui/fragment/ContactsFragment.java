@@ -16,6 +16,7 @@ import com.edmondapps.utils.java.WrapperList;
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersAdapter;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
+import com.nexuspad.contacts.ui.activity.ContactActivity;
 import com.nexuspad.datamodel.*;
 import com.nexuspad.dataservice.NPService;
 import com.nexuspad.dataservice.ServiceConstants;
@@ -29,7 +30,7 @@ import java.util.*;
 
 @FragmentName(ContactsFragment.TAG)
 @ModuleId(moduleId = ServiceConstants.CONTACT_MODULE, template = EntryTemplate.CONTACT)
-public class ContactsFragment extends EntriesFragment {
+public final class ContactsFragment extends EntriesFragment {
     public static final String TAG = "ContactsFragment";
 
     public static ContactsFragment of(Folder folder) {
@@ -74,6 +75,11 @@ public class ContactsFragment extends EntriesFragment {
         new SortTask(mContacts, this, getString(R.string.others)).execute((Void[]) null);
     }
 
+    @Override
+    public ContactsAdapter getListAdapter() {
+        return (ContactsAdapter) super.getListAdapter();
+    }
+
     private ContactsAdapter newContactsAdapter(Map<String, Integer> map) {
         final ContactsAdapter a = new ContactsAdapter(getActivity(), map);
         final ListView listView = getListView();
@@ -92,6 +98,13 @@ public class ContactsFragment extends EntriesFragment {
     private static String[] toArray(Collection<String> set) {
         final String[] strings = new String[set.size()];
         return set.toArray(strings);
+    }
+
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        super.onListItemClick(l, v, position, id);
+        final Contact contact = getListAdapter().getItem(position);
+        ContactActivity.startWith(getActivity(), contact, getFolder());
     }
 
     private class ContactsAdapter extends EntriesAdapter<Contact> implements StickyListHeadersAdapter, SectionIndexer {

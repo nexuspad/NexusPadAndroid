@@ -5,23 +5,18 @@ package com.nexuspad.ui.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.util.LongSparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import com.actionbarsherlock.app.SherlockFragment;
-import com.edmondapps.utils.android.Logs;
 import com.nexuspad.R;
-import com.nineoldandroids.view.ViewHelper;
 
 import static android.view.animation.AnimationUtils.loadAnimation;
 import static com.edmondapps.utils.android.view.ViewUtils.findView;
-import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
 
 /**
  * Unlike {@link android.support.v4.app.ListFragment}, this {@code Fragment}
