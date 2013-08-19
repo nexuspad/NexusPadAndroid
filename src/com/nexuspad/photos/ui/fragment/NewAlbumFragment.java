@@ -3,7 +3,9 @@ package com.nexuspad.photos.ui.fragment;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,7 +50,7 @@ public class NewAlbumFragment extends NewEntryFragment<Album> {
 
     private static final int REQ_PICK_IMAGES = 2;
 
-    private final ArrayList<String> mPaths = new ArrayList<String>();
+    private final ArrayList<Uri> mUris = new ArrayList<Uri>();
     private PhotosAdapter mAdapter;
 
     private TextView mNumPhotosV;
@@ -59,14 +61,14 @@ public class NewAlbumFragment extends NewEntryFragment<Album> {
     public void onSaveInstanceState(Bundle b) {
         super.onSaveInstanceState(b);
 
-        b.putStringArrayList(KEY_PATHS, mPaths);
+        b.putParcelableArrayList(KEY_PATHS, mUris);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
-            final List<String> list = savedInstanceState.getStringArrayList(KEY_PATHS);
+            final List<Uri> list = savedInstanceState.getParcelableArrayList(KEY_PATHS);
             addIfAbsent(list);
         }
     }
@@ -83,10 +85,10 @@ public class NewAlbumFragment extends NewEntryFragment<Album> {
 
         installFolderSelectorListener(mFolderV);
 
-        final int size = mPaths.size();
+        final int size = mUris.size();
         mNumPhotosV.setText(getResources().getQuantityString(R.plurals.numberOfPhotos, size, size));
 
-        mAdapter = new PhotosAdapter(mPaths, getActivity());
+        mAdapter = new PhotosAdapter(mUris, getActivity());
         ViewUtils.<GridView>findView(view, R.id.grid_view).setAdapter(mAdapter);
 
         findView(view, R.id.pick_img).setOnClickListener(new View.OnClickListener() {
@@ -117,11 +119,11 @@ public class NewAlbumFragment extends NewEntryFragment<Album> {
         switch (requestCode) {
             case REQ_PICK_IMAGES:
                 if (resultCode == Activity.RESULT_OK) {
-                    final List<String> paths = data.getStringArrayListExtra(PhotosSelectActivity.KEY_FILES_PATHS);
+                    final List<Uri> paths = data.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
                     addIfAbsent(paths);
                     mAdapter.notifyDataSetChanged();
 
-                    final int size = mPaths.size();
+                    final int size = mUris.size();
                     mNumPhotosV.setText(getResources().getQuantityString(R.plurals.numberOfPhotos, size, size));
                 }
                 break;
@@ -130,10 +132,10 @@ public class NewAlbumFragment extends NewEntryFragment<Album> {
         }
     }
 
-    private void addIfAbsent(Iterable<String> paths) {
-        for (String path : paths) {
-            if (!mPaths.contains(path)) {
-                mPaths.add(path);
+    private void addIfAbsent(Iterable<Uri> uris) {
+        for (Uri uri : uris) {
+            if (!mUris.contains(uri)) {
+                mUris.add(uri);
             }
         }
     }
@@ -157,9 +159,9 @@ public class NewAlbumFragment extends NewEntryFragment<Album> {
 
     private void addPathsToAlbum(Album album) {
         final Folder folder = getFolder();
-        for (String path : mPaths) {
+        for (Uri uri : mUris) {
             final NPUpload npUpload = new NPUpload(folder);
-            npUpload.setFileName(path);
+            npUpload.setFileName(uri.getPath());
             album.addAttachment(npUpload);
         }
     }
@@ -173,22 +175,22 @@ public class NewAlbumFragment extends NewEntryFragment<Album> {
             public ImageView imageView;
         }
 
-        private final List<? extends String> mFilePaths;
+        private final List<? extends Uri> mUris;
 
-        private PhotosAdapter(List<? extends String> files, Context context) {
-            mFilePaths = files;
+        private PhotosAdapter(List<? extends Uri> uris, Context context) {
+            mUris = uris;
             mInflater = LayoutInflater.from(context);
             mPicasso = Picasso.with(context);
         }
 
         @Override
         public int getCount() {
-            return mFilePaths.size();
+            return mUris.size();
         }
 
         @Override
-        public String getItem(int position) {
-            return mFilePaths.get(position);
+        public Uri getItem(int position) {
+            return mUris.get(position);
         }
 
         @Override
@@ -210,7 +212,7 @@ public class NewAlbumFragment extends NewEntryFragment<Album> {
                 holder = (ViewHolder) convertView.getTag();
             }
 
-            mPicasso.load(new File(getItem(position)))
+            mPicasso.load(new File(getItem(position).getPath()))
                     .resizeDimen(R.dimen.photo_grid_width, R.dimen.photo_grid_height)
                     .centerCrop()
                     .placeholder(R.drawable.placeholder)

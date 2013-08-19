@@ -1,6 +1,9 @@
 package com.nexuspad.contacts.ui.fragment;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,11 +12,12 @@ import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.edmondapps.utils.android.view.ViewUtils;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
-import com.nexuspad.datamodel.Contact;
-import com.nexuspad.datamodel.EntryTemplate;
-import com.nexuspad.datamodel.Folder;
+import com.nexuspad.app.App;
+import com.nexuspad.datamodel.*;
 import com.nexuspad.dataservice.ServiceConstants;
 import com.nexuspad.ui.fragment.EntryFragment;
+
+import java.util.List;
 
 import static com.edmondapps.utils.android.view.ViewUtils.findView;
 
@@ -42,6 +46,12 @@ public class ContactFragment extends EntryFragment<Contact> {
     private TextView mLastNameV;
     private TextView mBussinessNameV;
 
+    private View mPhoneHeaderV;
+    private View mEmailHeaderV;
+
+    private ViewGroup mPhoneFrameV;
+    private ViewGroup mEmailFrameV;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.contact_frag, container, false);
@@ -55,6 +65,12 @@ public class ContactFragment extends EntryFragment<Contact> {
         mLastNameV = findView(view, R.id.lbl_last_name);
         mBussinessNameV = findView(view, R.id.lbl_bussiness_name);
 
+        mPhoneHeaderV = findView(view, R.id.lbl_phones);
+        mEmailHeaderV = findView(view, R.id.lbl_emails);
+
+        mPhoneFrameV = findView(view, R.id.phones_frame);
+        mEmailFrameV = findView(view, R.id.emails_frame);
+
         updateUI();
         super.onViewCreated(view, savedInstanceState);
     }
@@ -67,7 +83,83 @@ public class ContactFragment extends EntryFragment<Contact> {
             mMiddleNameV.setText(contact.getMiddleName());
             mLastNameV.setText(contact.getLastName());
             mBussinessNameV.setText(contact.getBusinessName());
+
+            updatePhones(contact);
+            updateEmails(contact);
+            updateVisibility(contact);
         }
+    }
+
+    private void updatePhones(Contact contact) {
+        mPhoneFrameV.removeAllViews();
+        final List<Phone> phones = contact.getPhones();
+        if (!phones.isEmpty()) {
+            final LayoutInflater inflater = LayoutInflater.from(getActivity());
+            for (Phone phone : phones) {
+                addBasicItem(phone, mPhoneFrameV, inflater);
+            }
+        }
+    }
+
+    private void updateEmails(Contact contact) {
+        mEmailFrameV.removeAllViews();
+        final List<Email> emails = contact.getEmails();
+        if (!emails.isEmpty()) {
+            final LayoutInflater inflater = LayoutInflater.from(getActivity());
+            for (Email email : emails) {
+                addBasicItem(email, mEmailFrameV, inflater);
+            }
+        }
+    }
+
+    private void addBasicItem(BasicItem item, ViewGroup target, LayoutInflater inflater) {
+        final ViewGroup frame = (ViewGroup) inflater.inflate(R.layout.layout_selectable_frame, null);
+        final View view = inflater.inflate(R.layout.list_item_icon, null);
+
+        final TextView text = findView(view, android.R.id.text1);
+        final View menu = findView(view, R.id.menu);
+
+        text.setLinksClickable(false);
+        text.setAutoLinkMask(Linkify.ALL);
+        text.setText(item.getValue());
+        menu.setVisibility(View.GONE);
+
+        frame.setOnClickListener(onCreateOnClickListener(item));
+
+        frame.addView(view);
+        target.addView(frame);
+    }
+
+    private View.OnClickListener onCreateOnClickListener(BasicItem item) {
+        final String value = item.getValue();
+        switch (item.getType()) {
+            case PHONE:
+                return new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        final Intent phone = new Intent(Intent.ACTION_DIAL);
+                        phone.setData(Uri.parse("tel:" + value));
+                        startActivity(phone);
+                    }
+                };
+            case EMAIL:
+                return  new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        App.sendEmail(value, getActivity());
+                    }
+                };
+            default:
+                throw new AssertionError("unexpected type: " + item.getType());
+        }
+    }
+
+    private void updateVisibility(Contact contact) {
+        final int phonesFlag = contact.getPhones().isEmpty() ? View.GONE : View.VISIBLE;
+        final int emailsFlag = contact.getEmails().isEmpty() ? View.GONE : View.VISIBLE;
+
+        mPhoneHeaderV.setVisibility(phonesFlag);
+        mEmailHeaderV.setVisibility(emailsFlag);
     }
 
     @Override

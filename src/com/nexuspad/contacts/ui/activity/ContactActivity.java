@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import com.edmondapps.utils.android.annotaion.ParentActivity;
 import com.nexuspad.contacts.ui.fragment.ContactFragment;
 import com.nexuspad.datamodel.Contact;
 import com.nexuspad.datamodel.Folder;
@@ -13,6 +14,7 @@ import com.nexuspad.ui.activity.EntryActivity;
 /**
  * Author: edmond
  */
+@ParentActivity(ContactsActivity.class)
 public class ContactActivity extends EntryActivity<Contact> {
 
     public static void startWith(Context context, Contact contact, Folder folder) {

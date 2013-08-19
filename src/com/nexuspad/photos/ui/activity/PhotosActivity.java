@@ -76,9 +76,7 @@ public class PhotosActivity extends EntriesActivity implements OnNavigationListe
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.new_photos:
-                final Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.setType("image/*");
-                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                final Intent intent = PhotosSelectActivity.of(this);
                 startActivityForResult(intent, REQ_CHOOSE_FILE);
                 return true;
             case R.id.new_albums:
@@ -135,8 +133,8 @@ public class PhotosActivity extends EntriesActivity implements OnNavigationListe
         switch (requestCode) {
             case REQ_CHOOSE_FILE:
                 if (resultCode == Activity.RESULT_OK) {
-                    Uri uri = data.getData();
-                    uploadFile(uri);
+                    final ArrayList<Uri> uris = data.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
+                    PhotosUploadActivity.startWith(uris, getFolder(), this);
                 }
                 break;
             default:
@@ -145,12 +143,9 @@ public class PhotosActivity extends EntriesActivity implements OnNavigationListe
         }
     }
 
-    private void uploadFile(Uri uri) {
-        PhotosUploadActivity.startWith(uri, getFolder(), this);
-    }
-
     @Override
     protected Fragment onCreateFragment() {
+        // we manage fragments on our own
         return null;
     }
 

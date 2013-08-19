@@ -20,6 +20,7 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.nexuspad.R;
 import com.nexuspad.account.AccountManager;
+import com.nexuspad.app.App;
 import com.nexuspad.datamodel.NPUser;
 import com.nexuspad.datamodel.UserSetting;
 import com.nexuspad.dataservice.NPException;
@@ -106,16 +107,7 @@ public class AboutFragment extends SherlockFragment {
     }
 
     private void sendEmailTo(String email) {
-        Intent intent = new Intent(Intent.ACTION_SENDTO);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.setType("plain/text");
-        intent.setData(Uri.fromParts("mailto", email, null));
-        try {
-            getActivity().startActivity(intent);
-        } catch (ActivityNotFoundException a) {
-            // very rare, but anyway
-            Toast.makeText(getActivity(), R.string.err_no_email_app, Toast.LENGTH_SHORT).show();
-        }
+        App.sendEmail(email, getActivity());
     }
 
     private void updateUI() {

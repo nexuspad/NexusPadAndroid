@@ -78,5 +78,35 @@
             android:hint="@string/business_name"
             android:layout_marginBottom="@dimen/ed__padding_small"
             android:textSize="@dimen/ed__textsize_medium" />
+
+        <TextView
+            android:id="@+id/lbl_phones"
+            style="?android:attr/listSeparatorTextViewStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/phones"
+            />
+
+        <LinearLayout
+            android:id="@+id/phones_frame"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            />
+
+        <TextView
+            android:id="@+id/lbl_emails"
+            style="?android:attr/listSeparatorTextViewStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/email"
+            />
+
+        <LinearLayout
+            android:id="@+id/emails_frame"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            />
     </LinearLayout>
 </ScrollView>

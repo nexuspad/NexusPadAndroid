@@ -25,6 +25,10 @@ import static com.nexuspad.dataservice.ServiceConstants.PHOTO_MODULE;
 public class PhotosUploadActivity extends SinglePaneActivity {
     public static final String KEY_FOLDER = "key_folder";
 
+    public static void startWith(ArrayList<Uri> uris, Folder folder, Context c) {
+        c.startActivity(PhotosUploadActivity.of(uris, folder, c));
+    }
+
     public static void startWith(Uri uri, Folder folder, Context c) {
         c.startActivity(PhotosUploadActivity.of(uri, folder, c));
     }
@@ -32,6 +36,13 @@ public class PhotosUploadActivity extends SinglePaneActivity {
     public static Intent of(Uri uri, Folder folder, Context c) {
         Intent intent = new Intent(c, PhotosUploadActivity.class);
         intent.setData(uri);
+        intent.putExtra(KEY_FOLDER, folder);
+        return intent;
+    }
+
+    public static Intent of(ArrayList<Uri> uris, Folder folder, Context c) {
+        Intent intent = new Intent(c, PhotosUploadActivity.class);
+        intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
         intent.putExtra(KEY_FOLDER, folder);
         return intent;
     }

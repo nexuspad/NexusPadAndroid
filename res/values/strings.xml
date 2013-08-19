@@ -55,6 +55,7 @@
     <string name="loading_more">Loading More…</string>
     <string name="title">Title</string>
     <string name="web_address">Web Address</string>
+    <string name="address">Address</string>
     <string name="note">Note</string>
     <string name="doc">Doc</string>
     <string name="tags">Tags</string>
@@ -82,6 +83,7 @@
     <string name="others">Others</string>
     <!-- example: Folders under Dev Libs -->
     <string name="formatted_sub_folders">Folders under %1$s</string>
+    <string name="phones">Phones</string>
 
     <plurals name="numberOfPhotos">
         <item quantity="one">1 photo</item>

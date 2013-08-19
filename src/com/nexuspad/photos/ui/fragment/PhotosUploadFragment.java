@@ -202,6 +202,8 @@ public class PhotosUploadFragment extends ListFragment {
 
             Picasso.with(activity)
                     .load(request.getUri())
+                    .placeholder(R.drawable.placeholder)
+                    .error(R.drawable.ic_launcher)
                     .resizeDimen(R.dimen.photo_grid_width, R.dimen.photo_grid_height)
                     .centerCrop()
                     .into(holder.icon);

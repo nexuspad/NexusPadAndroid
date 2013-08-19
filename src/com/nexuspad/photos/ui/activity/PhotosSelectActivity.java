@@ -2,6 +2,7 @@ package com.nexuspad.photos.ui.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import com.edmondapps.utils.android.Logs;
@@ -11,15 +12,11 @@ import com.nexuspad.R;
 import com.nexuspad.photos.ui.fragment.PhotoSelectFragment;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @ParentActivity(PhotosActivity.class)
 public class PhotosSelectActivity extends SinglePaneActivity implements PhotoSelectFragment.Callback {
     public static final String TAG = "PhotosSelectActivity";
-    public static final String KEY_FILES_PATHS = "key_files_paths";
-
-    public static void start(Context context) {
-        context.startActivity(PhotosSelectActivity.of(context));
-    }
 
     public static Intent of(Context context) {
         return new Intent(context, PhotosSelectActivity.class);
@@ -50,8 +47,17 @@ public class PhotosSelectActivity extends SinglePaneActivity implements PhotoSel
     @Override
     public void onOk(PhotoSelectFragment f, ArrayList<String> paths) {
         Logs.d(TAG, paths.toString());
-        final Intent data = new Intent().putExtra(KEY_FILES_PATHS, paths);
+
+        final Intent data = new Intent().putParcelableArrayListExtra(Intent.EXTRA_STREAM, fromString(paths));
         setResult(RESULT_OK, data);
         finish();
+    }
+
+    private static ArrayList<Uri> fromString(Iterable<String> paths) {
+        final ArrayList<Uri> uris = new ArrayList<Uri>();
+        for (String path : paths) {
+            uris.add(Uri.parse(path));
+        }
+        return uris;
     }
 }
