@@ -3,13 +3,13 @@ package com.nexuspad.contacts.ui.fragment;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import com.edmondapps.utils.android.annotaion.FragmentName;
-import com.edmondapps.utils.android.view.ViewUtils;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
 import com.nexuspad.app.App;
@@ -45,9 +45,15 @@ public class ContactFragment extends EntryFragment<Contact> {
     private TextView mMiddleNameV;
     private TextView mLastNameV;
     private TextView mBussinessNameV;
+    private TextView mWebAddressV;
+    private TextView mTagsV;
+    private TextView mNoteV;
 
     private View mPhoneHeaderV;
     private View mEmailHeaderV;
+    private TextView mWebAddressHeaderV;
+    private TextView mTagsHeaderV;
+    private TextView mNoteHeaderV;
 
     private ViewGroup mPhoneFrameV;
     private ViewGroup mEmailFrameV;
@@ -64,9 +70,15 @@ public class ContactFragment extends EntryFragment<Contact> {
         mMiddleNameV = findView(view, R.id.lbl_middle_name);
         mLastNameV = findView(view, R.id.lbl_last_name);
         mBussinessNameV = findView(view, R.id.lbl_bussiness_name);
+        mWebAddressV = findView(view, R.id.lbl_web_address);
+        mTagsV = findView(view, R.id.lbl_tags);
+        mNoteV = findView(view, R.id.lbl_note);
 
         mPhoneHeaderV = findView(view, R.id.lbl_phones);
         mEmailHeaderV = findView(view, R.id.lbl_emails);
+        mWebAddressHeaderV = findView(view, R.id.lbl_web_address_frame);
+        mTagsHeaderV = findView(view, R.id.lbl_tags_frame);
+        mNoteHeaderV = findView(view, R.id.lbl_note_frame);
 
         mPhoneFrameV = findView(view, R.id.phones_frame);
         mEmailFrameV = findView(view, R.id.emails_frame);
@@ -83,6 +95,9 @@ public class ContactFragment extends EntryFragment<Contact> {
             mMiddleNameV.setText(contact.getMiddleName());
             mLastNameV.setText(contact.getLastName());
             mBussinessNameV.setText(contact.getBusinessName());
+            mWebAddressV.setText(contact.getWebAddress());
+            mTagsV.setText(contact.getTags());
+            mNoteV.setText(contact.getNote());
 
             updatePhones(contact);
             updateEmails(contact);
@@ -96,7 +111,7 @@ public class ContactFragment extends EntryFragment<Contact> {
         if (!phones.isEmpty()) {
             final LayoutInflater inflater = LayoutInflater.from(getActivity());
             for (Phone phone : phones) {
-                addBasicItem(phone, mPhoneFrameV, inflater);
+                addBasicItemView(phone, mPhoneFrameV, inflater);
             }
         }
     }
@@ -107,12 +122,12 @@ public class ContactFragment extends EntryFragment<Contact> {
         if (!emails.isEmpty()) {
             final LayoutInflater inflater = LayoutInflater.from(getActivity());
             for (Email email : emails) {
-                addBasicItem(email, mEmailFrameV, inflater);
+                addBasicItemView(email, mEmailFrameV, inflater);
             }
         }
     }
 
-    private void addBasicItem(BasicItem item, ViewGroup target, LayoutInflater inflater) {
+    private void addBasicItemView(BasicItem item, ViewGroup target, LayoutInflater inflater) {
         final ViewGroup frame = (ViewGroup) inflater.inflate(R.layout.layout_selectable_frame, null);
         final View view = inflater.inflate(R.layout.list_item_icon, null);
 
@@ -157,9 +172,20 @@ public class ContactFragment extends EntryFragment<Contact> {
     private void updateVisibility(Contact contact) {
         final int phonesFlag = contact.getPhones().isEmpty() ? View.GONE : View.VISIBLE;
         final int emailsFlag = contact.getEmails().isEmpty() ? View.GONE : View.VISIBLE;
+        final int webAddressFlag = TextUtils.isEmpty(contact.getWebAddress()) ? View.GONE : View.VISIBLE;
+        final int tagsFlag = TextUtils.isEmpty(contact.getTags()) ? View.GONE : View.VISIBLE;
+        final int noteFlag = TextUtils.isEmpty(contact.getNote()) ? View.GONE : View.VISIBLE;
 
         mPhoneHeaderV.setVisibility(phonesFlag);
         mEmailHeaderV.setVisibility(emailsFlag);
+
+        mWebAddressHeaderV.setVisibility(webAddressFlag);
+        mTagsHeaderV.setVisibility(tagsFlag);
+        mNoteHeaderV.setVisibility(noteFlag);
+
+        mWebAddressV.setVisibility(webAddressFlag);
+        mTagsV.setVisibility(tagsFlag);
+        mNoteV.setVisibility(noteFlag);
     }
 
     @Override

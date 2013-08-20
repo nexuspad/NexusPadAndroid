@@ -84,7 +84,7 @@
             style="?android:attr/listSeparatorTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/phones"
+            android:text="@string/phones"
             />
 
         <LinearLayout
@@ -99,7 +99,7 @@
             style="?android:attr/listSeparatorTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/email"
+            android:text="@string/email"
             />
 
         <LinearLayout
@@ -108,5 +108,51 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             />
+
+        <TextView
+            android:id="@+id/lbl_web_address_frame"
+            style="?android:attr/listSeparatorTextViewStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/web_address"/>
+
+        <TextView
+            android:id="@+id/lbl_web_address"
+            style="@style/selectableTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autoLink="web"
+            android:hint="@string/web_address"
+            android:linksClickable="false" />
+
+        <TextView
+            android:id="@+id/lbl_tags_frame"
+            style="?android:attr/listSeparatorTextViewStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/tags"/>
+
+        <TextView
+            android:id="@+id/lbl_tags"
+            style="@style/listItemTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autoLink="all"
+            android:hint="@string/tags"/>
+
+        <TextView
+            android:id="@+id/lbl_note_frame"
+            style="?android:attr/listSeparatorTextViewStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/note"/>
+
+        <TextView
+            android:id="@+id/lbl_note"
+            style="@style/listItemTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autoLink="all"
+            android:hint="@string/note"/>
     </LinearLayout>
 </ScrollView>

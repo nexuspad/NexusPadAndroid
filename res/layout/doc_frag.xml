@@ -30,6 +30,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/doc"
+            android:autoLink="all"
             android:minLines="8"
             />
 
@@ -46,6 +47,7 @@
             style="@style/listItemTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:autoLink="all"
             android:hint="@string/tags"
             />
     </LinearLayout>

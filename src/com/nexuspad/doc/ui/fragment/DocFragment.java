@@ -104,8 +104,6 @@ public class DocFragment extends EntryFragment<Doc> {
         mAttachmentsFrameV = findView(view, R.id.attachments_frame);
 
         mTitleV.setTypeface(App.getRobotoLight());
-        // magic to make the links inside the <a></a> tags clickable
-        mNoteV.setMovementMethod(LinkMovementMethod.getInstance());
 
         updateUI();
     }
