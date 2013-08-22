@@ -80,7 +80,7 @@ public class DocFragment extends EntryFragment<Doc> {
         switch (item.getItemId()) {
             case R.id.edit:
                 Doc doc = getDetailEntryIfExist();
-                NewDocActivity.startWithDoc(doc, getFolder(), Mode.EDIT, getActivity());
+                NewDocActivity.startWithDoc(doc, getFolder(), getActivity());
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

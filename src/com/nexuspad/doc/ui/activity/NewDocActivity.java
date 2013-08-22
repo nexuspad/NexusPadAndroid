@@ -17,24 +17,20 @@ import com.nexuspad.ui.activity.NewEntryActivity;
 
 /**
  * @author Edmond
- * 
  */
 @ParentActivity(DocsActivity.class)
 @ModuleId(moduleId = ServiceConstants.DOC_MODULE)
 public class NewDocActivity extends NewEntryActivity<Doc> {
 
-    public static void startWithDoc(Doc doc, Folder f, Mode m, Context c) {
+    public static void startWithFolder(Folder f, Context c) {
+        NewDocActivity.startWithDoc(null, f, c);
+    }
+
+    public static void startWithDoc(Doc doc, Folder f, Context c) {
         Intent intent = new Intent(c, NewDocActivity.class);
         intent.putExtra(KEY_ENTRY, doc);
         intent.putExtra(KEY_FOLDER, f);
-        intent.putExtra(KEY_MODE, m);
-        c.startActivity(intent);
-    }
-
-    public static void startWithFolder(Folder f, Mode m, Context c) {
-        Intent intent = new Intent(c, NewDocActivity.class);
-        intent.putExtra(KEY_FOLDER, f);
-        intent.putExtra(KEY_MODE, m);
+        intent.putExtra(KEY_MODE, doc == null ? Mode.NEW : Mode.EDIT);
         c.startActivity(intent);
     }
 
@@ -50,6 +46,6 @@ public class NewDocActivity extends NewEntryActivity<Doc> {
 
     @Override
     protected NewDocFragment getFragment() {
-        return (NewDocFragment)super.getFragment();
+        return (NewDocFragment) super.getFragment();
     }
 }

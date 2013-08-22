@@ -1,6 +1,7 @@
 package com.nexuspad.photos.ui.fragment;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,9 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.nexuspad.R;
 import com.nexuspad.datamodel.Album;
@@ -16,6 +20,7 @@ import com.nexuspad.datamodel.Folder;
 import com.nexuspad.datamodel.NPUpload;
 import com.nexuspad.datamodel.Photo;
 import com.nexuspad.dataservice.NPService;
+import com.nexuspad.photos.ui.activity.NewAlbumActivity;
 import com.nexuspad.photos.ui.activity.PhotoActivity;
 import com.nexuspad.ui.fragment.EntryFragment;
 import com.squareup.picasso.Picasso;
@@ -46,6 +51,30 @@ public class AlbumFragment extends EntryFragment<Album> implements AdapterView.O
     private GridView mGridView;
     private List<NPUpload> mPhotos;
     private PhotosAdapter mPhotosAdapter;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.album_frag, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.edit:
+                final Intent intent = NewAlbumActivity.of(getDetailEntryIfExist(), getFolder(), getActivity());
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

@@ -8,34 +8,63 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
 import com.edmondapps.utils.android.service.FileUploadService;
+import com.google.common.base.Objects;
+import com.google.common.base.Preconditions;
 import com.nexuspad.datamodel.Folder;
+import com.nexuspad.datamodel.NPEntry;
 
 import java.io.File;
+import java.io.ObjectStreamClass;
 import java.lang.ref.WeakReference;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * @author Edmond
  */
-public class Request implements Comparable<Request> {
+public class Request {
     private static final String[] FILE_PATH_COLUMN = new String[]{MediaStore.Images.Media.DATA};
+
+    /**
+     * The destination of the uploading file
+     */
+    public enum Target {
+        FOLDER, ENTRY
+    }
+
+    public static Request forFolder(Uri uri, Folder folder, FileUploadService.Callback callback) {
+        return new Request(uri, folder, Target.FOLDER, callback);
+    }
+
+    public static Request forEntry(Uri uri, NPEntry entry, FileUploadService.Callback callback) {
+        return new Request(uri, entry, Target.ENTRY, callback);
+    }
 
     private final long mTimeStamp;
     private final Uri mUri;
+    private final NPEntry mNPEntry;
     private final Folder mFolder;
+    private final Target mTarget;
 
     private File mFile;
     private WeakReference<FileUploadService.Callback> mCallback;
-    private boolean mCancelled;
 
-    public Request(Uri uri, Folder folder) {
-        this(uri, folder, null);
+    private Request(Uri uri, Folder folder, Target target, FileUploadService.Callback callback) {
+        mNPEntry = null;
+        mUri = checkNotNull(uri);
+        mFolder = checkNotNull(folder);
+        mTarget = checkNotNull(target);
+        mCallback = new WeakReference<FileUploadService.Callback>(callback);
+        mTimeStamp = System.nanoTime();
     }
 
-    public Request(Uri uri, Folder folder, FileUploadService.Callback callback) {
-        mUri = uri;
-        mFolder = folder;
+    private Request(Uri uri, NPEntry entry, Target target, FileUploadService.Callback callback) {
+        mFolder = null;
+        mUri = checkNotNull(uri);
+        mNPEntry = checkNotNull(entry);
+        mTarget = checkNotNull(target);
         mCallback = new WeakReference<FileUploadService.Callback>(callback);
-        mTimeStamp = System.currentTimeMillis();
+        mTimeStamp = System.nanoTime();
     }
 
     /**
@@ -89,8 +118,18 @@ public class Request implements Comparable<Request> {
         };
     }
 
+    /**
+     * @return a {@link Folder} if {@link #getTarget()} is {@link Target#FOLDER}; null otherwise
+     */
     public Folder getFolder() {
         return mFolder;
+    }
+
+    /**
+     * @return a {@link NPEntry} if {@link #getTarget()} is {@link Target#ENTRY}; null otherwise
+     */
+    public NPEntry getNPEntry() {
+        return mNPEntry;
     }
 
     public Uri getUri() {
@@ -100,6 +139,11 @@ public class Request implements Comparable<Request> {
     public long getTimeStamp() {
         return mTimeStamp;
     }
+
+    public Target getTarget() {
+        return mTarget;
+    }
+
 
     @Override
     public int hashCode() {
@@ -131,7 +175,7 @@ public class Request implements Comparable<Request> {
         return true;
     }
 
-    @Override
+    // XXX remove
     public int compareTo(Request o) {
         if (mTimeStamp == o.mTimeStamp) {
             return 0;

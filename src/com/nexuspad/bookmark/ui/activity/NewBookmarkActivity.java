@@ -23,18 +23,15 @@ import com.nexuspad.ui.activity.NewEntryActivity;
 @ModuleId(moduleId = ServiceConstants.BOOKMARK_MODULE)
 public class NewBookmarkActivity extends NewEntryActivity<Bookmark> {
 
-    public static void startWithBookmark(Bookmark b, Folder f, Mode m, Context c) {
+    public static void startWithFolder(Folder f, Context c) {
+        NewBookmarkActivity.startWithBookmark(null, f, c);
+    }
+
+    public static void startWithBookmark(Bookmark b, Folder f, Context c) {
         Intent intent = new Intent(c, NewBookmarkActivity.class);
         intent.putExtra(KEY_ENTRY, b);
         intent.putExtra(KEY_FOLDER, f);
-        intent.putExtra(KEY_MODE, m);
-        c.startActivity(intent);
-    }
-
-    public static void startWithFolder(Folder f, Mode m, Context c) {
-        Intent intent = new Intent(c, NewBookmarkActivity.class);
-        intent.putExtra(KEY_FOLDER, f);
-        intent.putExtra(KEY_MODE, m);
+        intent.putExtra(KEY_MODE, b == null ? Mode.NEW : Mode.EDIT);
         c.startActivity(intent);
     }
 
@@ -70,6 +67,6 @@ public class NewBookmarkActivity extends NewEntryActivity<Bookmark> {
 
     @Override
     protected NewBookmarkFragment getFragment() {
-        return (NewBookmarkFragment)super.getFragment();
+        return (NewBookmarkFragment) super.getFragment();
     }
 }

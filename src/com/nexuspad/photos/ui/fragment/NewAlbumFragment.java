@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.edmondapps.utils.android.view.ViewUtils;
+import com.edmondapps.utils.java.Lazy;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
 import com.nexuspad.datamodel.Album;
@@ -22,6 +23,7 @@ import com.nexuspad.datamodel.EntryTemplate;
 import com.nexuspad.datamodel.Folder;
 import com.nexuspad.datamodel.NPUpload;
 import com.nexuspad.dataservice.ServiceConstants;
+import com.nexuspad.dataservice.UploadService;
 import com.nexuspad.photos.ui.activity.PhotosSelectActivity;
 import com.nexuspad.ui.fragment.NewEntryFragment;
 import com.squareup.picasso.Picasso;
@@ -39,7 +41,12 @@ public class NewAlbumFragment extends NewEntryFragment<Album> {
     private static final String KEY_PATHS = "key_paths";
 
     public static NewAlbumFragment of(Folder folder) {
+        return NewAlbumFragment.of(null, folder);
+    }
+
+    public static NewAlbumFragment of(Album album, Folder folder) {
         final Bundle bundle = new Bundle();
+        bundle.putParcelable(KEY_ENTRY, album);
         bundle.putParcelable(KEY_FOLDER, folder);
 
         final NewAlbumFragment fragment = new NewAlbumFragment();
@@ -50,6 +57,12 @@ public class NewAlbumFragment extends NewEntryFragment<Album> {
 
     private static final int REQ_PICK_IMAGES = 2;
 
+    private final Lazy<UploadService> mUploadService = new Lazy<UploadService>() {
+        @Override
+        protected UploadService onCreate() {
+            return new UploadService(getActivity());
+        }
+    };
     private final ArrayList<Uri> mUris = new ArrayList<Uri>();
     private PhotosAdapter mAdapter;
 
@@ -98,6 +111,8 @@ public class NewAlbumFragment extends NewEntryFragment<Album> {
                 startActivityForResult(intent, REQ_PICK_IMAGES);
             }
         });
+
+        updateUI();
     }
 
     private void findViews(View parent) {
@@ -109,7 +124,15 @@ public class NewAlbumFragment extends NewEntryFragment<Album> {
     @Override
     protected void onFolderUpdated(Folder folder) {
         super.onFolderUpdated(folder);
-        mFolderV.setText(folder.getFolderName());
+        updateUI();
+    }
+
+    private void updateUI() {
+        mFolderV.setText(getFolder().getFolderName());
+        final Album album = getDetailEntryIfExist();
+        if (album != null) {
+            mTitleV.setText(album.getTitle());
+        }
     }
 
     @Override
@@ -155,6 +178,18 @@ public class NewAlbumFragment extends NewEntryFragment<Album> {
 
         setDetailEntry(album);
         return album;
+    }
+
+    @Override
+    protected void onAddEntry(Album entry) {
+        super.onAddEntry(entry);
+        mUploadService.get().uploadAllAttachments(entry);
+    }
+
+    @Override
+    protected void onUpdateEntry(Album entry) {
+        super.onUpdateEntry(entry);
+        mUploadService.get().uploadAllAttachments(entry);
     }
 
     private void addPathsToAlbum(Album album) {

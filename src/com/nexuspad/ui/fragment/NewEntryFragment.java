@@ -15,6 +15,7 @@ import com.nexuspad.account.AccountManager;
 import com.nexuspad.annotation.ModuleId;
 import com.nexuspad.datamodel.Folder;
 import com.nexuspad.datamodel.NPEntry;
+import com.nexuspad.dataservice.EntryService;
 import com.nexuspad.dataservice.ErrorCode;
 import com.nexuspad.dataservice.NPException;
 import com.nexuspad.dataservice.ServiceConstants;
@@ -68,7 +69,7 @@ public abstract class NewEntryFragment<T extends NPEntry> extends EntryFragment<
         mModuleId = getClass().getAnnotation(ModuleId.class);
     }
 
-    public void addEntry() {
+    public final void addEntry() {
         if (isEditedEntryValid()) {
             T entry = getEditedEntry();
             try {
@@ -76,13 +77,26 @@ public abstract class NewEntryFragment<T extends NPEntry> extends EntryFragment<
             } catch (NPException e) {
                 throw new AssertionError("WTF, I thought I am logged in!");
             }
-            getEntryService().addEntry(entry);
+            onAddEntry(entry);
         } else {
             onEntryUpdateFailed(new ServiceError(ErrorCode.MISSING_PARAM, "entry is not valid"));
         }
     }
 
-    public void updateEntry() {
+    /**
+     * Called when the entry is proven valid, and owner info is set correctly.
+     * <p/>
+     * The default implementation calls {@link EntryService#addEntry(NPEntry)}.
+     *
+     * @param entry the edited entry
+     * @see #isEditedEntryValid()
+     * @see #getEditedEntry()
+     */
+    protected void onAddEntry(T entry) {
+        getEntryService().addEntry(entry);
+    }
+
+    public final void updateEntry() {
         if (isEditedEntryValid()) {
             final T originalEntry = getDetailEntryIfExist();
             final T entry = getEditedEntry();
@@ -92,11 +106,24 @@ public abstract class NewEntryFragment<T extends NPEntry> extends EntryFragment<
                 } catch (NPException e) {
                     throw new AssertionError("WTF, I thought I am logged in!");
                 }
-                getEntryService().updateEntry(entry);
+                onUpdateEntry(entry);
             } else {
                 Logs.w(TAG, "entry not updated because no changes when made: " + entry);
             }
         }
+    }
+
+    /**
+     * Called when the entry is proven valid, and owner info is set correctly.
+     * <p/>
+     * The default implementation calls {@link EntryService#updateEntry(NPEntry)}.
+     *
+     * @param entry the edited entry
+     * @see #isEditedEntryValid()
+     * @see #getEditedEntry()
+     */
+    protected void onUpdateEntry(T entry) {
+        getEntryService().updateEntry(entry);
     }
 
     protected void installFolderSelectorListener(View v) {
