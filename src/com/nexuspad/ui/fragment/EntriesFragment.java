@@ -17,6 +17,7 @@ import com.edmondapps.utils.android.ui.SingleAdapter;
 import com.edmondapps.utils.android.view.RunnableAnimatorListener;
 import com.edmondapps.utils.java.Lazy;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.nexuspad.Manifest;
 import com.nexuspad.R;
 import com.nexuspad.account.AccountManager;
@@ -87,7 +88,11 @@ public abstract class EntriesFragment extends ListFragment {
             final List<Folder> subFolders = getSubFolders();
             if (mFolder.getFolderId() == f.getParentId()) {
                 if (!Iterables.tryFind(subFolders, f.filterById()).isPresent()) {
-                    subFolders.add(f);
+                    if (subFolders.size() == 0) {
+                        subFolders.add(f);
+                    } else {
+                        subFolders.add(0, f);
+                    }
                     onEntryListUpdated();
                 } else {
                     Logs.w(TAG, "folder created on the server, but ID already exists in the list, updating instead: " + f);
@@ -205,7 +210,11 @@ public abstract class EntriesFragment extends ListFragment {
         if (entryList != null) {
             final List<NPEntry> entries = entryList.getEntries();
             if (!Iterables.tryFind(entries, entry.filterById()).isPresent()) {
-                entries.add(entry);
+                if (entries.size() == 0) {
+                    entries.add(entry);
+                } else {
+                    entries.add(0, entry);
+                }
                 onEntryListUpdated();
             } else {
                 Logs.w(TAG, "entry created on the server, but ID already exists in the list, updating instead: " + entry);
