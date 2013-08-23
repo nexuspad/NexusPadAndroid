@@ -15,20 +15,7 @@
         android:layout_marginRight="@dimen/ed__padding_small"
         android:orientation="vertical">
 
-        <TextView
-            style="?android:attr/listSeparatorTextViewStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/folder"/>
-
-        <include layout="@layout/folder_selector_include"/>
-
-        <EditText
-            android:id="@+id/txt_album_name"
-            style="@style/formMargin"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/title"/>
+        <include layout="@layout/include_album_new" />
 
         <TextView
             style="?android:attr/listSeparatorTextViewStyle"

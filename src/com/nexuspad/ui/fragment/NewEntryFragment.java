@@ -22,6 +22,7 @@ import com.nexuspad.dataservice.ServiceConstants;
 import com.nexuspad.dataservice.ServiceError;
 import com.nexuspad.photos.ui.activity.PhotosSelectActivity;
 import com.nexuspad.ui.activity.FoldersActivity;
+import com.nexuspad.ui.activity.NewEntryActivity;
 
 import java.util.List;
 
@@ -52,6 +53,11 @@ public abstract class NewEntryFragment<T extends NPEntry> extends EntryFragment<
     public abstract T getEditedEntry();
 
     private ModuleId mModuleId;
+    private NewEntryActivity.Mode mMode;
+
+    protected NewEntryActivity.Mode getMode() {
+        return mMode;
+    }
 
     /**
      * @return one of the {@code *_MODULE} constants in {@link ServiceConstants}
@@ -67,9 +73,13 @@ public abstract class NewEntryFragment<T extends NPEntry> extends EntryFragment<
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mModuleId = getClass().getAnnotation(ModuleId.class);
+        mMode = getDetailEntryIfExist() == null ? NewEntryActivity.Mode.NEW : NewEntryActivity.Mode.EDIT;
     }
 
     public final void addEntry() {
+        if(!NewEntryActivity.Mode.NEW.equals(mMode)) {
+            throw new IllegalStateException("not in Mode.NEW");
+        }
         if (isEditedEntryValid()) {
             T entry = getEditedEntry();
             try {
@@ -97,6 +107,9 @@ public abstract class NewEntryFragment<T extends NPEntry> extends EntryFragment<
     }
 
     public final void updateEntry() {
+        if(!NewEntryActivity.Mode.EDIT.equals(mMode)) {
+            throw new IllegalStateException("not in Mode.EDIT");
+        }
         if (isEditedEntryValid()) {
             final T originalEntry = getDetailEntryIfExist();
             final T entry = getEditedEntry();

@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +12,7 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.edmondapps.utils.android.Logs;
 import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.edmondapps.utils.android.view.ViewUtils;
 import com.edmondapps.utils.java.Lazy;
@@ -25,6 +25,7 @@ import com.nexuspad.datamodel.NPUpload;
 import com.nexuspad.dataservice.ServiceConstants;
 import com.nexuspad.dataservice.UploadService;
 import com.nexuspad.photos.ui.activity.PhotosSelectActivity;
+import com.nexuspad.ui.activity.NewEntryActivity;
 import com.nexuspad.ui.fragment.NewEntryFragment;
 import com.squareup.picasso.Picasso;
 
@@ -88,7 +89,18 @@ public class NewAlbumFragment extends NewEntryFragment<Album> {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.album_new_frag, container, false);
+        return inflater.inflate(getLayoutId(), container, false);
+    }
+
+    private int getLayoutId() {
+        switch (getMode()) {
+            case NEW:
+                return R.layout.album_new_frag;
+            case EDIT:
+                return R.layout.album_edit_frag;
+            default:
+                throw new AssertionError("unexpected mode: " + getMode());
+        }
     }
 
     @Override
@@ -98,19 +110,21 @@ public class NewAlbumFragment extends NewEntryFragment<Album> {
 
         installFolderSelectorListener(mFolderV);
 
-        final int size = mUris.size();
-        mNumPhotosV.setText(getResources().getQuantityString(R.plurals.numberOfPhotos, size, size));
+        if (NewEntryActivity.Mode.EDIT.equals(getMode())) {
+            final int size = mUris.size();
+            mNumPhotosV.setText(getResources().getQuantityString(R.plurals.numberOfPhotos, size, size));
 
-        mAdapter = new PhotosAdapter(mUris, getActivity());
-        ViewUtils.<GridView>findView(view, R.id.grid_view).setAdapter(mAdapter);
+            mAdapter = new PhotosAdapter(mUris, getActivity());
+            ViewUtils.<GridView>findView(view, R.id.grid_view).setAdapter(mAdapter);
 
-        findView(view, R.id.pick_img).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final Intent intent = PhotosSelectActivity.of(getActivity());
-                startActivityForResult(intent, REQ_PICK_IMAGES);
-            }
-        });
+            findView(view, R.id.pick_img).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    final Intent intent = PhotosSelectActivity.of(getActivity());
+                    startActivityForResult(intent, REQ_PICK_IMAGES);
+                }
+            });
+        }
 
         updateUI();
     }
@@ -183,12 +197,16 @@ public class NewAlbumFragment extends NewEntryFragment<Album> {
     @Override
     protected void onAddEntry(Album entry) {
         super.onAddEntry(entry);
-        mUploadService.get().uploadAllAttachments(entry);
+        final List<NPUpload> attachments = entry.getAttachments();
+        if (!attachments.isEmpty()) {
+            Logs.e(TAG, "attachments are not uploaded (entry not created yet): " + attachments);
+        }
     }
 
     @Override
     protected void onUpdateEntry(Album entry) {
         super.onUpdateEntry(entry);
+        // upload the photos right the way because we already know the entry ID
         mUploadService.get().uploadAllAttachments(entry);
     }
 
