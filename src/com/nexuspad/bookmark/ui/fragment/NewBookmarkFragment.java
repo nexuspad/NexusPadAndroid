@@ -109,7 +109,7 @@ public class NewBookmarkFragment extends NewEntryFragment<Bookmark> {
     @Override
     public Bookmark getEditedEntry() {
         final Bookmark entry = getDetailEntryIfExist();
-        Bookmark bookmark = new Bookmark(entry == null ? new Bookmark(getFolder()) : entry);
+        Bookmark bookmark = entry == null ? new Bookmark(getFolder()) : new Bookmark(entry);
         bookmark.setWebAddress(mWebAddressV.getText().toString());
         bookmark.setNote(mNoteV.getText().toString());
         bookmark.setTags(mTagsV.getText().toString());
