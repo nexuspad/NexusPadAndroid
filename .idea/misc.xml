@@ -26,7 +26,7 @@
     </option>
     <option name="ignoredFiles">
       <set>
-        <option value="$PROJECT_DIR$/../libs/HanselAndGretel/library/pom.xml" />
+        <option value="$PROJECT_DIR$/../libs/PhotoView/library/pom.xml" />
         <option value="$PROJECT_DIR$/../libs/PhotoView/pom.xml" />
         <option value="$PROJECT_DIR$/../libs/PhotoView/sample/pom.xml" />
         <option value="$PROJECT_DIR$/../libs/picasso/picasso-sample/pom.xml" />
@@ -34,6 +34,8 @@
       </set>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_6" assert-keyword="true" jdk-15="true" project-jdk-name="Android 4.2.2 Platform" project-jdk-type="Android SDK" />
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_6" assert-keyword="true" jdk-15="true" project-jdk-name="Android 4.2.2 Platform" project-jdk-type="Android SDK">
+    <output url="file://$PROJECT_DIR$/../intellij-output" />
+  </component>
 </project>
 
