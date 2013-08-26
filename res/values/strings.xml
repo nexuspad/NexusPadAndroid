@@ -39,7 +39,7 @@
     <string name="new_">New</string>
     <string name="search">Search</string>
     <string name="new_photos">New Photos</string>
-    <string name="new_albums">New Albums</string>
+    <string name="new_album">New Album</string>
     <string name="new_folder">New Folder</string>
     <string name="new_bookmark">New Bookmark</string>
     <string name="new_doc">New Doc</string>
@@ -84,6 +84,7 @@
     <!-- example: Folders under Dev Libs -->
     <string name="formatted_sub_folders">Folders under %1$s</string>
     <string name="phones">Phones</string>
+    <string name="empty_potos_promt">Click on the camera to add photos.</string>
 
     <plurals name="numberOfPhotos">
         <item quantity="one">1 photo</item>

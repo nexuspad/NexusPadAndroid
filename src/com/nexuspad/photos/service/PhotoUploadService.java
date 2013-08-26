@@ -44,10 +44,6 @@ public class PhotoUploadService extends Service {
             mCallbacks.remove(callback);
         }
 
-        public void addRequest(Uri uri, Folder folder) {
-            addRequest(new Request(uri, folder));
-        }
-
         public void addRequests(Iterable<? extends Request> requests) {
             for (Request request : requests) {
                 addRequest(request);
@@ -92,24 +88,40 @@ public class PhotoUploadService extends Service {
         return START_STICKY;
     }
 
-    public void onNewRequest(final Request r) {
-        final FileUploadService.Callback callback = r.getCallback();
-        mUploadService.addUploadToFolder(r.getFile(this), r.getFolder(), new FileUploadService.Callback() {
-            @Override
-            public boolean onProgress(long progress, long total) {
-                if (callback != null) {
-                    return callback.onProgress(progress, total);
-                }
-                return true;
-            }
+    public void onNewRequest(Request r) {
+        switch (r.getTarget()) {
+            case FOLDER:
+                mUploadService.addUploadToFolder(r.getFile(this), r.getFolder(), new CallbackWrapper(r));
+                break;
+            case ENTRY:
+                mUploadService.addUploadToEntry(r.getFile(this), r.getNPEntry(), new CallbackWrapper(r));
+                break;
+        }
+    }
 
-            @Override
-            public void onDone(boolean success) {
-                if (callback != null) {
-                    callback.onDone(success);
-                }
-                mQueue.remove(r);
+    private class CallbackWrapper implements FileUploadService.Callback {
+        private final Request mRequest;
+
+        private CallbackWrapper(Request request) {
+            mRequest = request;
+        }
+
+        @Override
+        public boolean onProgress(long progress, long total) {
+            final FileUploadService.Callback callback = mRequest.getCallback();
+            if (callback != null) {
+                return callback.onProgress(progress, total);
             }
-        });
+            return true;
+        }
+
+        @Override
+        public void onDone(boolean success) {
+            mQueue.remove(mRequest);
+            final FileUploadService.Callback callback = mRequest.getCallback();
+            if (callback != null) {
+                callback.onDone(success);
+            }
+        }
     }
 }

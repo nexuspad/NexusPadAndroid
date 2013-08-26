@@ -122,10 +122,11 @@ public class PhotosUploadFragment extends ListFragment {
     }
 
     public void uploadPhoto(Uri uri, Folder folder) {
+        final Request request = Request.forFolder(uri, folder, null);
         if (mBinder != null) {
-            mBinder.addRequest(uri, folder);
+            mBinder.addRequest(request);
         } else {
-            mPendingRequests.add(new Request(uri, folder));
+            mPendingRequests.add(request);
         }
     }
 

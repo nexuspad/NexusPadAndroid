@@ -20,4 +20,6 @@ local.properties
 screenshots/
 .classpath
 
-.idea/workspace.xml
+.idea/
+*.eml
+*.iml

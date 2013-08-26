@@ -15,7 +15,7 @@
             android:layout_height="wrap_content"
             android:text="@string/parent_folder" />
 
-        <include layout="@layout/folder_selector_include" />
+        <include layout="@layout/include_folder_selector" />
 
         <TextView
             style="?android:attr/listSeparatorTextViewStyle"

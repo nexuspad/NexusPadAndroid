@@ -111,7 +111,7 @@
             android:label="@string/photos" />
         <activity
             android:name="com.nexuspad.photos.ui.activity.NewAlbumActivity"
-            android:label="@string/new_albums" />
+            android:label="@string/new_album" />
 
         <activity
             android:name="com.nexuspad.contacts.ui.activity.ContactsActivity"

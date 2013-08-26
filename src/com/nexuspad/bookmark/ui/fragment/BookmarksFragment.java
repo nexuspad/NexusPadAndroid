@@ -117,7 +117,7 @@ public class BookmarksFragment extends EntriesFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.new_bookmark:
-                NewBookmarkActivity.startWithFolder(getFolder(), Mode.NEW, getActivity());
+                NewBookmarkActivity.startWithFolder(getFolder(), getActivity());
                 return true;
             case R.id.search:
                 return true;

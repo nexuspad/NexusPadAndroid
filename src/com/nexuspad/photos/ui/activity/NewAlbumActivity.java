@@ -28,23 +28,31 @@ import java.util.List;
 public class NewAlbumActivity extends NewEntryActivity<Album> {
 
     public static Intent of(Folder folder, Context context) {
+        return NewAlbumActivity.of(null, folder, context);
+    }
+
+    public static Intent of(Album album, Folder folder, Context context) {
         final Intent intent = new Intent(context, NewAlbumActivity.class);
+        intent.putExtra(KEY_ENTRY, album);
         intent.putExtra(KEY_FOLDER, folder);
-        intent.putExtra(KEY_MODE, Mode.NEW);
+        intent.putExtra(KEY_MODE, album == null ? Mode.NEW : Mode.EDIT);
         return intent;
     }
 
+    private Album mAlbum;
     private Folder mFolder;
 
     @Override
     protected void onCreate(Bundle savedState) {
-        mFolder = getIntent().getParcelableExtra(KEY_FOLDER);
+        final Intent intent = getIntent();
+        mAlbum = intent.getParcelableExtra(KEY_ENTRY);
+        mFolder = intent.getParcelableExtra(KEY_FOLDER);
 
         super.onCreate(savedState);
     }
 
     @Override
     protected Fragment onCreateFragment() {
-        return NewAlbumFragment.of(mFolder);
+        return NewAlbumFragment.of(mAlbum, mFolder);
     }
 }

@@ -80,7 +80,7 @@ public class DocFragment extends EntryFragment<Doc> {
         switch (item.getItemId()) {
             case R.id.edit:
                 Doc doc = getDetailEntryIfExist();
-                NewDocActivity.startWithDoc(doc, getFolder(), Mode.EDIT, getActivity());
+                NewDocActivity.startWithDoc(doc, getFolder(), getActivity());
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -104,8 +104,6 @@ public class DocFragment extends EntryFragment<Doc> {
         mAttachmentsFrameV = findView(view, R.id.attachments_frame);
 
         mTitleV.setTypeface(App.getRobotoLight());
-        // magic to make the links inside the <a></a> tags clickable
-        mNoteV.setMovementMethod(LinkMovementMethod.getInstance());
 
         updateUI();
     }

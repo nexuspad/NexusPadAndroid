@@ -118,14 +118,8 @@ public class NewDocFragment extends NewEntryFragment<Doc> {
 
     @Override
     public Doc getEditedEntry() {
-        // BUG: the cursor underlines the EditText automatically, affecting the
-        // returned Editable of getText()
-        InputMethodManager m = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        m.hideSoftInputFromWindow(mNoteV.getWindowToken(), 0);
-        mNoteV.clearFocus();
-
         final Doc entry = getDetailEntryIfExist();
-        Doc doc = new Doc(entry == null ? new Doc(getFolder()) : entry);
+        Doc doc = entry == null ? new Doc(getFolder()) : new Doc(entry);
         doc.setTitle(mTitleV.getText().toString());
         doc.setNote(Html.toHtml(mNoteV.getText()));
         doc.setTags(mTagsV.getText().toString());

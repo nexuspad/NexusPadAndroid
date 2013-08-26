@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:text="@string/folder"/>
 
-        <include layout="@layout/folder_selector_include"/>
+        <include layout="@layout/include_folder_selector"/>
 
         <EditText
             android:id="@+id/txt_web_address"

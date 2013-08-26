@@ -1,14 +1,15 @@
 package com.nexuspad.photos.ui.fragment;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
-import android.widget.GridView;
-import android.widget.ImageView;
+import android.widget.*;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.nexuspad.R;
 import com.nexuspad.datamodel.Album;
@@ -16,6 +17,7 @@ import com.nexuspad.datamodel.Folder;
 import com.nexuspad.datamodel.NPUpload;
 import com.nexuspad.datamodel.Photo;
 import com.nexuspad.dataservice.NPService;
+import com.nexuspad.photos.ui.activity.NewAlbumActivity;
 import com.nexuspad.photos.ui.activity.PhotoActivity;
 import com.nexuspad.ui.fragment.EntryFragment;
 import com.squareup.picasso.Picasso;
@@ -43,21 +45,55 @@ public class AlbumFragment extends EntryFragment<Album> implements AdapterView.O
         return fragment;
     }
 
-    private GridView mGridView;
-    private List<NPUpload> mPhotos;
-    private PhotosAdapter mPhotosAdapter;
+    private final PhotosAdapter mPhotosAdapter = new PhotosAdapter();
+    private List<NPUpload> mPhotos = new ArrayList<NPUpload>();
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.album_frag, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.edit:
+                onEdit();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void onEdit() {
+        final Intent intent = NewAlbumActivity.of(getDetailEntryIfExist(), getFolder(), getActivity());
+        startActivity(intent);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.photos_frag, container, false);
+        return inflater.inflate(R.layout.album_frag, container, false);
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        mGridView = findView(view, R.id.grid_view);
-        mGridView.setOnItemClickListener(this);
+        final GridView gridView = findView(view, R.id.grid_view);
+        gridView.setOnItemClickListener(this);
+        gridView.setAdapter(mPhotosAdapter);
+        gridView.setEmptyView(findView(view, android.R.id.empty));
 
-        findView(view, R.id.sticky).setVisibility(View.GONE);
+        findView(view, R.id.edit).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onEdit();
+            }
+        });
 
         super.onViewCreated(view, savedInstanceState);
     }
@@ -79,13 +115,8 @@ public class AlbumFragment extends EntryFragment<Album> implements AdapterView.O
         if (album != null) {
             final List<NPUpload> attachments = album.getAttachments();
             if (attachments != null) {
-                mPhotos = new ArrayList<NPUpload>(attachments);
-                if (mPhotosAdapter == null) {
-                    mPhotosAdapter = new PhotosAdapter();
-                    mGridView.setAdapter(mPhotosAdapter);
-                } else {
-                    mPhotosAdapter.notifyDataSetChanged();
-                }
+                mPhotos.addAll(attachments);
+                mPhotosAdapter.notifyDataSetChanged();
             }
         }
     }

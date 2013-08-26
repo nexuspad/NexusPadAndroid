@@ -37,6 +37,7 @@
             style="@style/listItemTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:autoLink="all"
             android:hint="@string/tags" />
 
         <TextView
@@ -51,6 +52,7 @@
             style="@style/listItemTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:autoLink="all"
             android:hint="@string/note" />
     </LinearLayout>
 
