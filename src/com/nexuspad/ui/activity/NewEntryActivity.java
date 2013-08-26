@@ -7,13 +7,11 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.edmondapps.utils.android.activity.DoneDiscardActivity;
-import com.edmondapps.utils.android.annotaion.ParentActivity;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
 import com.nexuspad.datamodel.Folder;
 import com.nexuspad.datamodel.NPEntry;
 import com.nexuspad.dataservice.ServiceConstants;
-import com.nexuspad.photos.ui.activity.PhotosActivity;
 import com.nexuspad.ui.fragment.EntryFragment;
 import com.nexuspad.ui.fragment.NewEntryFragment;
 

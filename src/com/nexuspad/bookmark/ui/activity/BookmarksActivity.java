@@ -15,7 +15,6 @@ import com.nexuspad.datamodel.Folder;
 import com.nexuspad.dataservice.ServiceConstants;
 import com.nexuspad.home.ui.activity.DashboardActivity;
 import com.nexuspad.ui.activity.EntriesActivity;
-import com.nexuspad.ui.activity.NewEntryActivity.Mode;
 
 /**
  * @author Edmond

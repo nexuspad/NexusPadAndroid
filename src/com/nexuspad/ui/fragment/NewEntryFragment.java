@@ -10,7 +10,6 @@ import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import com.edmondapps.utils.android.Logs;
-import com.nexuspad.R;
 import com.nexuspad.account.AccountManager;
 import com.nexuspad.annotation.ModuleId;
 import com.nexuspad.datamodel.Folder;
@@ -20,11 +19,8 @@ import com.nexuspad.dataservice.ErrorCode;
 import com.nexuspad.dataservice.NPException;
 import com.nexuspad.dataservice.ServiceConstants;
 import com.nexuspad.dataservice.ServiceError;
-import com.nexuspad.photos.ui.activity.PhotosSelectActivity;
 import com.nexuspad.ui.activity.FoldersActivity;
 import com.nexuspad.ui.activity.NewEntryActivity;
-
-import java.util.List;
 
 /**
  * Annotate it with {@link ModuleId}.
