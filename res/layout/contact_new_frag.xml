@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/scrollableFrame"
+    android:paddingLeft="@dimen/ed__padding_medium"
+    android:paddingRight="@dimen/ed__padding_medium"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/ed__padding_small"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@android:id/icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="centerCrop"
+                android:maxWidth="@dimen/photo_grid_width"
+                android:maxHeight="@dimen/photo_grid_height"
+                android:src="@drawable/ic_launcher"
+                tools:ignore="ContentDescription" />
+
+            <EditText
+                android:id="@android:id/title"
+                android:layout_gravity="center_vertical"
+                android:padding="@dimen/ed__padding_small"
+                android:textSize="@dimen/ed__textsize_medium"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginLeft="@dimen/ed__padding_small"
+                android:hint="@string/title" />
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/formMargin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/txt_first_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="@string/first_name"
+                android:textSize="@dimen/ed__textsize_medium" />
+
+            <EditText
+                android:id="@+id/txt_middle_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="@string/middle_name"
+                android:textSize="@dimen/ed__textsize_medium" />
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/txt_last_name"
+            style="@style/formMargin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/last_name"
+            android:textSize="@dimen/ed__textsize_medium" />
+
+        <EditText
+            android:id="@+id/txt_bussiness_name"
+            style="@style/formMargin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/business_name"
+            android:layout_marginBottom="@dimen/ed__padding_small"
+            android:textSize="@dimen/ed__textsize_medium" />
+
+        <TextView
+            android:id="@+id/txt_phones"
+            style="?android:attr/listSeparatorTextViewStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/phones" />
+
+        <LinearLayout
+            android:id="@+id/phones_frame"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"/>
+
+        <TextView
+            android:id="@+id/txt_emails"
+            style="?android:attr/listSeparatorTextViewStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/email" />
+
+        <LinearLayout
+            android:id="@+id/emails_frame"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+
+        <EditText
+            android:id="@+id/txt_web_address"
+            style="@style/formMargin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/web_address"
+            android:linksClickable="false" />
+
+        <EditText
+            android:id="@+id/txt_tags"
+            style="@style/formMargin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/tags" />
+
+        <EditText
+            android:id="@+id/txt_note"
+            style="@style/formMargin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/note" />
+    </LinearLayout>
+</ScrollView>

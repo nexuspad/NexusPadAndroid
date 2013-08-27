@@ -84,6 +84,7 @@
     <!-- example: Folders under Dev Libs -->
     <string name="formatted_sub_folders">Folders under %1$s</string>
     <string name="phones">Phones</string>
+    <string name="phone">Phone</string>
     <string name="empty_potos_promt">Click on the camera to add photos.</string>
 
     <plurals name="numberOfPhotos">

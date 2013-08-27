@@ -31,7 +31,6 @@ public class NewBookmarkActivity extends NewEntryActivity<Bookmark> {
         Intent intent = new Intent(c, NewBookmarkActivity.class);
         intent.putExtra(KEY_ENTRY, b);
         intent.putExtra(KEY_FOLDER, f);
-        intent.putExtra(KEY_MODE, b == null ? Mode.NEW : Mode.EDIT);
         c.startActivity(intent);
     }
 

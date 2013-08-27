@@ -25,7 +25,6 @@ public class NewAlbumActivity extends NewEntryActivity<Album> {
         final Intent intent = new Intent(context, NewAlbumActivity.class);
         intent.putExtra(KEY_ENTRY, album);
         intent.putExtra(KEY_FOLDER, folder);
-        intent.putExtra(KEY_MODE, album == null ? Mode.NEW : Mode.EDIT);
         return intent;
     }
 
