@@ -20,6 +20,8 @@ import com.nexuspad.dataservice.ServiceConstants;
 import com.nexuspad.ui.fragment.NewEntryFragment;
 import org.jetbrains.annotations.Nullable;
 
+import java.lang.annotation.Documented;
+
 import static com.edmondapps.utils.android.view.ViewUtils.findView;
 
 /**
@@ -147,10 +149,10 @@ public class NewContactFragment extends NewEntryFragment<Contact> {
     private void addBasicItemView(@Nullable final BasicItem basicItem, final BasicItem.ItemType type) {
         final ViewGroup parent = getParentFor(type);
         final int hintId = getHintIdFor(type);
-        final View view = mInflater.inflate(R.layout.list_item_edittext_cancel, parent, false);
+        final View view = mInflater.inflate(R.layout.list_item_edittext_btn, parent, false);
 
         final EditText editText = findView(view, android.R.id.edit);
-        final View closeButton = findView(view, android.R.id.closeButton);
+        final View closeButton = findView(view, android.R.id.button1);
 
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override

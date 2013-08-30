@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/lbl_folder"
     style="@style/selectableTextView"
     android:layout_width="match_parent"
@@ -10,6 +10,5 @@
     android:maxLines="1"
     android:scrollHorizontally="true"
     android:text="@string/root"
-    android:textSize="@dimen/ed__textsize_medium"
-    xmlns:android="http://schemas.android.com/apk/res/android" />
+    android:textSize="@dimen/ed__textsize_medium" />
 

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/abs__action_bar_default_height">
+
+        <TextView
+            android:id="@+id/lbl_upload"
+            style="@style/listItemTextView"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:drawablePadding="@dimen/ed__padding_small"
+            android:drawableLeft="@drawable/ic_upload"
+            android:textColor="@android:color/white"
+            android:text="3" />
+
+        <TextView
+            android:id="@+id/lbl_download"
+            style="@style/listItemTextView"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:drawablePadding="@dimen/ed__padding_small"
+            android:drawableLeft="@drawable/ic_download"
+            android:textColor="@android:color/white"
+            android:text="1" />
+    </LinearLayout>
+</merge>
