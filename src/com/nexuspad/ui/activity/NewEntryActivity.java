@@ -7,13 +7,11 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.edmondapps.utils.android.activity.DoneDiscardActivity;
-import com.edmondapps.utils.android.annotaion.ParentActivity;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
 import com.nexuspad.datamodel.Folder;
 import com.nexuspad.datamodel.NPEntry;
 import com.nexuspad.dataservice.ServiceConstants;
-import com.nexuspad.photos.ui.activity.PhotosActivity;
 import com.nexuspad.ui.fragment.EntryFragment;
 import com.nexuspad.ui.fragment.NewEntryFragment;
 
@@ -24,7 +22,6 @@ import com.nexuspad.ui.fragment.NewEntryFragment;
  * 
  */
 public abstract class NewEntryActivity<T extends NPEntry> extends DoneDiscardActivity implements EntryFragment.Callback<T> {
-    public static final String KEY_MODE = "com.nexuspad.ui.activity.NewEntryActivity.mode";
     public static final String KEY_ENTRY = "com.nexuspad.ui.activity.NewEntryActivity.entry";
     public static final String KEY_FOLDER = "com.nexuspad.ui.activity.NewEntryActivity.folder";
 
@@ -69,19 +66,12 @@ public abstract class NewEntryActivity<T extends NPEntry> extends DoneDiscardAct
     }
 
     protected void handleIntent(Intent i) {
-        Mode mode = (Mode)i.getSerializableExtra(KEY_MODE);
-        if ( (mode != null) && (mMode != mode)) {
-            mMode = mode;
-            onNewMode(mode);
-        }
         mEntry = i.getParcelableExtra(KEY_ENTRY);
         mFolder = i.getParcelableExtra(KEY_FOLDER);
         if (mFolder == null) {
             mFolder = Folder.rootFolderOf(getModule(), this);
         }
-    }
-
-    protected void onNewMode(Mode mode) {
+        mMode = mEntry == null ? Mode.NEW : Mode.EDIT;
     }
 
     /**

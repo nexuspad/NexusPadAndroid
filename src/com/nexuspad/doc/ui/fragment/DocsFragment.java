@@ -28,7 +28,6 @@ import com.nexuspad.doc.ui.activity.NewDocActivity;
 import com.nexuspad.ui.FolderEntriesAdapter;
 import com.nexuspad.ui.FoldersAdapter;
 import com.nexuspad.ui.OnEntryMenuClickListener;
-import com.nexuspad.ui.activity.NewEntryActivity.Mode;
 import com.nexuspad.ui.fragment.EntriesFragment;
 
 /**

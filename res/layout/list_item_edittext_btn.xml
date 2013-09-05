@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!--suppress AndroidLintTextFields -->
+    <EditText
+        android:id="@android:id/edit"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
+
+    <ImageView
+        android:id="@android:id/button1"
+        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:src="@android:drawable/ic_delete"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?attr/selectableItemBackground"
+        android:contentDescription="@android:string/cancel" />
+</LinearLayout>

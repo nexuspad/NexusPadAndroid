@@ -1,29 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <include layout="@layout/include_grid_view" />
 
-    <FrameLayout
+    <LinearLayout
         android:id="@+id/sticky"
         android:layout_width="match_parent"
         android:layout_height="@dimen/abs__action_bar_default_height"
+        android:orientation="horizontal"
         android:layout_alignParentBottom="true"
-        android:background="#7F000000">
+        android:background="@color/transparent_black">
 
-        <TextView
-            android:id="@+id/lbl_folder"
-            style="@style/selectableTextView"
-            android:layout_width="match_parent"
+        <com.nexuspad.ui.view.FolderSelectBarView
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:drawableLeft="@drawable/ic_np_folder"
-            android:drawablePadding="@dimen/ed__padding_small"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:scrollHorizontally="true"
-            android:textColor="#FFFF"
-            android:text="@string/root"
-            android:textSize="@dimen/abs__action_bar_title_text_size"/>
-    </FrameLayout>
+            android:layout_weight="1" />
+
+        <com.nexuspad.ui.view.UploadBarView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="right" />
+    </LinearLayout>
 </RelativeLayout>

@@ -1,5 +1,6 @@
 package com.nexuspad.contacts.ui.fragment;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,10 +10,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
 import com.nexuspad.app.App;
+import com.nexuspad.contacts.ui.activity.NewContactActivity;
 import com.nexuspad.datamodel.*;
 import com.nexuspad.dataservice.ServiceConstants;
 import com.nexuspad.ui.fragment.EntryFragment;
@@ -40,6 +45,8 @@ public class ContactFragment extends EntryFragment<Contact> {
         return fragment;
     }
 
+    private LayoutInflater mInflater;
+
     private TextView mTitleV;
     private TextView mFirstNameV;
     private TextView mMiddleNameV;
@@ -57,6 +64,35 @@ public class ContactFragment extends EntryFragment<Contact> {
 
     private ViewGroup mPhoneFrameV;
     private ViewGroup mEmailFrameV;
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mInflater = LayoutInflater.from(activity);
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.contact_frag, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.edit:
+                NewContactActivity.startWith(getActivity(), getDetailEntryIfExist(), getFolder());
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -109,9 +145,8 @@ public class ContactFragment extends EntryFragment<Contact> {
         mPhoneFrameV.removeAllViews();
         final List<Phone> phones = contact.getPhones();
         if (!phones.isEmpty()) {
-            final LayoutInflater inflater = LayoutInflater.from(getActivity());
             for (Phone phone : phones) {
-                addBasicItemView(phone, mPhoneFrameV, inflater);
+                addBasicItemView(phone, mPhoneFrameV);
             }
         }
     }
@@ -122,14 +157,14 @@ public class ContactFragment extends EntryFragment<Contact> {
         if (!emails.isEmpty()) {
             final LayoutInflater inflater = LayoutInflater.from(getActivity());
             for (Email email : emails) {
-                addBasicItemView(email, mEmailFrameV, inflater);
+                addBasicItemView(email, mEmailFrameV);
             }
         }
     }
 
-    private void addBasicItemView(BasicItem item, ViewGroup target, LayoutInflater inflater) {
-        final ViewGroup frame = (ViewGroup) inflater.inflate(R.layout.layout_selectable_frame, null);
-        final View view = inflater.inflate(R.layout.list_item_icon, null);
+    private void addBasicItemView(BasicItem item, ViewGroup target) {
+        final ViewGroup frame = (ViewGroup) mInflater.inflate(R.layout.layout_selectable_frame, null);
+        final View view = mInflater.inflate(R.layout.list_item_icon, null);
 
         final TextView text = findView(view, android.R.id.text1);
         final View menu = findView(view, R.id.menu);

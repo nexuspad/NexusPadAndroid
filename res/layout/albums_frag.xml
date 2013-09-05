@@ -1,29 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <include layout="@layout/list_content"/>
-    <FrameLayout
+    <include layout="@layout/list_content" />
+
+    <LinearLayout
         android:id="@+id/sticky"
         android:layout_width="match_parent"
         android:layout_height="@dimen/abs__action_bar_default_height"
         android:layout_gravity="bottom"
-        android:background="#7F000000">
+        android:orientation="horizontal"
+        android:background="@color/transparent_black">
 
-        <TextView
-            android:id="@+id/lbl_folder"
-            style="@style/selectableTextView"
-            android:layout_width="match_parent"
+        <com.nexuspad.ui.view.FolderSelectBarView
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:drawableLeft="@drawable/ic_np_folder"
-            android:drawablePadding="@dimen/abs__action_bar_title_text_size"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:scrollHorizontally="true"
-            android:textColor="#FFFF"
-            android:text="@string/root"
-            android:textSize="@dimen/ed__textsize_medium"/>
-    </FrameLayout>
+            android:layout_weight="1" />
+
+        <com.nexuspad.ui.view.UploadBarView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="right" />
+    </LinearLayout>
 </FrameLayout>

@@ -17,6 +17,7 @@ import com.emilsjolander.components.stickylistheaders.StickyListHeadersAdapter;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
 import com.nexuspad.contacts.ui.activity.ContactActivity;
+import com.nexuspad.contacts.ui.activity.NewContactActivity;
 import com.nexuspad.datamodel.*;
 import com.nexuspad.dataservice.NPService;
 import com.nexuspad.dataservice.ServiceConstants;
@@ -89,6 +90,17 @@ public final class ContactsFragment extends EntriesFragment {
                 final int i = listView.getPositionForView(v);
                 final Contact contact = a.getItem(i);
                 onEntryClick(contact, i, v);
+            }
+
+            @Override
+            protected boolean onEntryMenuClick(Contact contact, int menuId) {
+                switch (menuId) {
+                    case R.id.edit:
+                        NewContactActivity.startWith(getActivity(), contact, getFolder());
+                        return true;
+                    default:
+                        return super.onEntryMenuClick(contact, menuId);
+                }
             }
         });
         listView.setOnItemLongClickListener(a);

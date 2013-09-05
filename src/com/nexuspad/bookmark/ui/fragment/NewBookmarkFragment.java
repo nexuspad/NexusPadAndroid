@@ -3,8 +3,6 @@
  */
 package com.nexuspad.bookmark.ui.fragment;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +15,6 @@ import com.nexuspad.annotation.ModuleId;
 import com.nexuspad.datamodel.Bookmark;
 import com.nexuspad.datamodel.Folder;
 import com.nexuspad.dataservice.ServiceConstants;
-import com.nexuspad.ui.activity.FoldersActivity;
 import com.nexuspad.ui.fragment.NewEntryFragment;
 
 import static com.edmondapps.utils.android.view.ViewUtils.findView;

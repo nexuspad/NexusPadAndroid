@@ -30,7 +30,6 @@ public class NewDocActivity extends NewEntryActivity<Doc> {
         Intent intent = new Intent(c, NewDocActivity.class);
         intent.putExtra(KEY_ENTRY, doc);
         intent.putExtra(KEY_FOLDER, f);
-        intent.putExtra(KEY_MODE, doc == null ? Mode.NEW : Mode.EDIT);
         c.startActivity(intent);
     }
 
