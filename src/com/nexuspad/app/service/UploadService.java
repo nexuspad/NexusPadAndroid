@@ -1,47 +1,52 @@
-package com.nexuspad.photos.service;
+package com.nexuspad.app.service;
 
 import android.app.Service;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Binder;
 import android.os.IBinder;
 import com.edmondapps.utils.android.service.FileUploadService;
-import com.nexuspad.datamodel.Folder;
-import com.nexuspad.dataservice.UploadService;
-import com.nexuspad.photos.Request;
+import com.nexuspad.app.Request;
+import com.nexuspad.dataservice.EntryUploadService;
 
 import java.lang.ref.WeakReference;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Author: Edmond
  */
-public class PhotoUploadService extends Service {
+public final class UploadService extends Service {
 
-    public interface Callback {
+    public interface OnUploadCountChangeListener {
+        void onUploadCountChanged(int uploadCount);
+    }
+
+    public interface OnNewRequestListener {
         void onNewRequest(Request request);
     }
 
-    public static class PhotosUploadBinder extends Binder {
-        private final WeakReference<PhotoUploadService> mService;
-        private final List<Callback> mCallbacks = new ArrayList<Callback>();
+    public static class UploadBinder extends Binder {
+        private final WeakReference<UploadService> mService;
+        private final List<OnNewRequestListener> mOnNewRequestListeners = new ArrayList<OnNewRequestListener>();
 
-        private PhotosUploadBinder(PhotoUploadService service) {
-            mService = new WeakReference<PhotoUploadService>(service);
+        private UploadBinder(UploadService service) {
+            mService = new WeakReference<UploadService>(service);
         }
 
         /**
-         * Remember to call {@link #removeCallback(Callback)}
+         * Remember to call {@link #removeCallback(com.nexuspad.app.service.UploadService.OnNewRequestListener)}
          */
-        public void addCallback(Callback callback) {
-            mCallbacks.add(callback);
+        public void addCallback(OnNewRequestListener onNewRequestListener) {
+            mOnNewRequestListeners.add(onNewRequestListener);
         }
 
         /**
-         * @see #addCallback(Callback)
+         * @see #addCallback(com.nexuspad.app.service.UploadService.OnNewRequestListener)
          */
-        public void removeCallback(Callback callback) {
-            mCallbacks.remove(callback);
+        public void removeCallback(OnNewRequestListener onNewRequestListener) {
+            mOnNewRequestListeners.remove(onNewRequestListener);
         }
 
         public void addRequests(Iterable<? extends Request> requests) {
@@ -51,12 +56,12 @@ public class PhotoUploadService extends Service {
         }
 
         public void addRequest(Request request) {
-            final PhotoUploadService service = getService();
+            final UploadService service = getService();
             if (!service.mQueue.contains(request)) {
                 service.mQueue.add(request);
                 service.onNewRequest(request);
-                for (Callback callback : mCallbacks) {
-                    callback.onNewRequest(request);
+                for (OnNewRequestListener onNewRequestListener : mOnNewRequestListeners) {
+                    onNewRequestListener.onNewRequest(request);
                 }
             }
         }
@@ -65,8 +70,8 @@ public class PhotoUploadService extends Service {
             return Collections.unmodifiableCollection(getService().mQueue);
         }
 
-        private PhotoUploadService getService() {
-            final PhotoUploadService service = mService.get();
+        private UploadService getService() {
+            final UploadService service = mService.get();
             if (service != null) {
                 return service;
             }
@@ -74,9 +79,16 @@ public class PhotoUploadService extends Service {
         }
     }
 
+    private static int sUploadCount;
+    private static List<OnUploadCountChangeListener> sUploadCountChangeListeners = new ArrayList<OnUploadCountChangeListener>();
+
+    public static void addOnUploadCountChangeListener(OnUploadCountChangeListener listener) {
+        sUploadCountChangeListeners.add(listener);
+    }
+
     private final List<Request> mQueue = new ArrayList<Request>();
-    private final PhotosUploadBinder mBinder = new PhotosUploadBinder(this);
-    private final UploadService mUploadService = new UploadService(this);
+    private final UploadBinder mBinder = new UploadBinder(this);
+    private final EntryUploadService mUploadService = new EntryUploadService(this);
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -88,7 +100,18 @@ public class PhotoUploadService extends Service {
         return START_STICKY;
     }
 
+    private void updateUploadCount() {
+        final int oldCount = sUploadCount;
+        sUploadCount = mQueue.size();
+        if (oldCount != sUploadCount) {
+            for (OnUploadCountChangeListener listener : sUploadCountChangeListeners) {
+                listener.onUploadCountChanged(sUploadCount);
+            }
+        }
+    }
+
     public void onNewRequest(Request r) {
+        updateUploadCount();
         switch (r.getTarget()) {
             case FOLDER:
                 mUploadService.addUploadToFolder(r.getFile(this), r.getFolder(), new CallbackWrapper(r));
@@ -109,6 +132,7 @@ public class PhotoUploadService extends Service {
         @Override
         public boolean onProgress(long progress, long total) {
             final FileUploadService.Callback callback = mRequest.getCallback();
+            //noinspection SimplifiableIfStatement
             if (callback != null) {
                 return callback.onProgress(progress, total);
             }
@@ -118,6 +142,7 @@ public class PhotoUploadService extends Service {
         @Override
         public void onDone(boolean success) {
             mQueue.remove(mRequest);
+            updateUploadCount();
             final FileUploadService.Callback callback = mRequest.getCallback();
             if (callback != null) {
                 callback.onDone(success);
