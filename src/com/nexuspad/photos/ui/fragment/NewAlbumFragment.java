@@ -56,6 +56,7 @@ public class NewAlbumFragment extends NewEntryFragment<Album> {
         return fragment;
     }
 
+    // 1 is used by REQ_FOLDER (NewEntryFragment)
     private static final int REQ_PICK_IMAGES = 2;
 
     private final Lazy<UploadService> mUploadService = new Lazy<UploadService>() {

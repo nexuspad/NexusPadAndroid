@@ -1,6 +1,7 @@
 package com.nexuspad.contacts.ui.fragment;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
@@ -55,12 +57,14 @@ public class ContactFragment extends EntryFragment<Contact> {
     private TextView mWebAddressV;
     private TextView mTagsV;
     private TextView mNoteV;
+    private TextView mAddressV;
 
     private View mPhoneHeaderV;
     private View mEmailHeaderV;
     private TextView mWebAddressHeaderV;
     private TextView mTagsHeaderV;
     private TextView mNoteHeaderV;
+    private TextView mAddressHeaderV;
 
     private ViewGroup mPhoneFrameV;
     private ViewGroup mEmailFrameV;
@@ -109,12 +113,14 @@ public class ContactFragment extends EntryFragment<Contact> {
         mWebAddressV = findView(view, R.id.lbl_web_address);
         mTagsV = findView(view, R.id.lbl_tags);
         mNoteV = findView(view, R.id.lbl_note);
+        mAddressV = findView(view, R.id.lbl_address);
 
         mPhoneHeaderV = findView(view, R.id.lbl_phones);
         mEmailHeaderV = findView(view, R.id.lbl_emails);
         mWebAddressHeaderV = findView(view, R.id.lbl_web_address_frame);
         mTagsHeaderV = findView(view, R.id.lbl_tags_frame);
         mNoteHeaderV = findView(view, R.id.lbl_note_frame);
+        mAddressHeaderV = findView(view, R.id.lbl_address_frame);
 
         mPhoneFrameV = findView(view, R.id.phones_frame);
         mEmailFrameV = findView(view, R.id.emails_frame);
@@ -134,6 +140,20 @@ public class ContactFragment extends EntryFragment<Contact> {
             mWebAddressV.setText(contact.getWebAddress());
             mTagsV.setText(contact.getTags());
             mNoteV.setText(contact.getNote());
+            mAddressV.setText(contact.getLocation().getFullAddress());
+            mAddressV.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    final String fullAddress = contact.getLocation().getFullAddress();
+                    final Uri uri = Uri.parse("geo:0,0?q=" + fullAddress);
+                    final Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                    try {
+                        startActivity(intent);
+                    } catch (ActivityNotFoundException e) {
+                        Toast.makeText(getActivity(), R.string.err_no_map, Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
 
             updatePhones(contact);
             updateEmails(contact);
@@ -155,7 +175,6 @@ public class ContactFragment extends EntryFragment<Contact> {
         mEmailFrameV.removeAllViews();
         final List<Email> emails = contact.getEmails();
         if (!emails.isEmpty()) {
-            final LayoutInflater inflater = LayoutInflater.from(getActivity());
             for (Email email : emails) {
                 addBasicItemView(email, mEmailFrameV);
             }
@@ -164,15 +183,17 @@ public class ContactFragment extends EntryFragment<Contact> {
 
     private void addBasicItemView(BasicItem item, ViewGroup target) {
         final ViewGroup frame = (ViewGroup) mInflater.inflate(R.layout.layout_selectable_frame, null);
-        final View view = mInflater.inflate(R.layout.list_item_icon, null);
+        final ViewGroup view = (ViewGroup) mInflater.inflate(R.layout.list_item_icon, frame, false);
 
         final TextView text = findView(view, android.R.id.text1);
+        final View icon = findView(view, android.R.id.icon);
         final View menu = findView(view, R.id.menu);
 
         text.setLinksClickable(false);
         text.setAutoLinkMask(Linkify.ALL);
         text.setText(item.getValue());
-        menu.setVisibility(View.GONE);
+        view.removeView(icon);
+        view.removeView(menu);
 
         frame.setOnClickListener(onCreateOnClickListener(item));
 
@@ -193,7 +214,7 @@ public class ContactFragment extends EntryFragment<Contact> {
                     }
                 };
             case EMAIL:
-                return  new View.OnClickListener() {
+                return new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         App.sendEmail(value, getActivity());
@@ -210,6 +231,7 @@ public class ContactFragment extends EntryFragment<Contact> {
         final int webAddressFlag = TextUtils.isEmpty(contact.getWebAddress()) ? View.GONE : View.VISIBLE;
         final int tagsFlag = TextUtils.isEmpty(contact.getTags()) ? View.GONE : View.VISIBLE;
         final int noteFlag = TextUtils.isEmpty(contact.getNote()) ? View.GONE : View.VISIBLE;
+        final int addressFlag = TextUtils.isEmpty(contact.getLocation().getFullAddress()) ? View.GONE : View.VISIBLE;
 
         mPhoneHeaderV.setVisibility(phonesFlag);
         mEmailHeaderV.setVisibility(emailsFlag);
@@ -217,10 +239,12 @@ public class ContactFragment extends EntryFragment<Contact> {
         mWebAddressHeaderV.setVisibility(webAddressFlag);
         mTagsHeaderV.setVisibility(tagsFlag);
         mNoteHeaderV.setVisibility(noteFlag);
+        mAddressHeaderV.setVisibility(addressFlag);
 
         mWebAddressV.setVisibility(webAddressFlag);
         mTagsV.setVisibility(tagsFlag);
         mNoteV.setVisibility(noteFlag);
+        mAddressV.setVisibility(addressFlag);
     }
 
     @Override

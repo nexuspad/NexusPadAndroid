@@ -123,6 +123,9 @@
             android:name=".contacts.ui.activity.NewContactActivity"
             android:label="@string/contacts" />
         <activity
+            android:name=".contacts.ui.activity.NewLocationActivity"
+            android:label="@string/contacts" />
+        <activity
             android:name="com.nexuspad.ui.activity.NewFolderActivity"
             android:label="@string/new_folder" />
         <activity
