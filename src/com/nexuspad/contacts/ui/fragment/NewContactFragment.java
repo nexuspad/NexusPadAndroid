@@ -1,6 +1,7 @@
 package com.nexuspad.contacts.ui.fragment;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
@@ -15,12 +16,10 @@ import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.edmondapps.utils.android.view.ViewUtils;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
+import com.nexuspad.contacts.ui.activity.NewLocationActivity;
 import com.nexuspad.datamodel.*;
 import com.nexuspad.dataservice.ServiceConstants;
 import com.nexuspad.ui.fragment.NewEntryFragment;
-import org.jetbrains.annotations.Nullable;
-
-import java.lang.annotation.Documented;
 
 import static com.edmondapps.utils.android.view.ViewUtils.findView;
 
@@ -43,6 +42,9 @@ public class NewContactFragment extends NewEntryFragment<Contact> {
         return fragment;
     }
 
+    // 1 is used by REQ_FOLDER (NewEntryFragment)
+    private static final int REQ_LOCATION = 2;
+
     private LayoutInflater mInflater;
 
     private EditText mTitleV;
@@ -53,6 +55,8 @@ public class NewContactFragment extends NewEntryFragment<Contact> {
     private TextView mWebAddressV;
     private TextView mTagsV;
     private TextView mNoteV;
+    // setTag()/getTag() is used for storing the Location object
+    private TextView mAddressV;
 
     private ViewGroup mPhoneFrameV;
     private ViewGroup mEmailFrameV;
@@ -61,6 +65,20 @@ public class NewContactFragment extends NewEntryFragment<Contact> {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         mInflater = LayoutInflater.from(activity);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case REQ_LOCATION:
+                if (resultCode != Activity.RESULT_OK) break;
+                final Location location = data.getParcelableExtra(NewLocationActivity.KEY_LOCATION);
+                updateAddressView(location);
+                break;
+            default:
+                throw new AssertionError("unexpected requestCode: " + requestCode);
+        }
     }
 
     @Override
@@ -78,6 +96,7 @@ public class NewContactFragment extends NewEntryFragment<Contact> {
         mWebAddressV = findView(view, R.id.txt_web_address);
         mTagsV = findView(view, R.id.txt_tags);
         mNoteV = findView(view, R.id.txt_note);
+        mAddressV = findView(view, R.id.txt_address);
 
         mPhoneFrameV = findView(view, R.id.phones_frame);
         mEmailFrameV = findView(view, R.id.emails_frame);
@@ -97,10 +116,23 @@ public class NewContactFragment extends NewEntryFragment<Contact> {
             mWebAddressV.setText(contact.getWebAddress());
             mTagsV.setText(contact.getTags());
             mNoteV.setText(contact.getNote());
+            updateAddressView(contact.getLocation());
+            mAddressV.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    final Intent intent = NewLocationActivity.of(getActivity(), (Location) mAddressV.getTag());
+                    startActivityForResult(intent, REQ_LOCATION);
+                }
+            });
 
             updatePhones(contact);
             updateEmails(contact);
         }
+    }
+
+    private void updateAddressView(Location location) {
+        mAddressV.setText(location.getFullAddress());
+        mAddressV.setTag(location);
     }
 
     private void updatePhones(Contact contact) {
@@ -122,7 +154,7 @@ public class NewContactFragment extends NewEntryFragment<Contact> {
      *
      * @param email used to set the text field if not null
      */
-    private void addEmailView(@Nullable final Email email) {
+    private void addEmailView(final Email email) {
         addBasicItemView(email, BasicItem.ItemType.EMAIL);
     }
 
@@ -131,11 +163,11 @@ public class NewContactFragment extends NewEntryFragment<Contact> {
      *
      * @param phone used to set the text field if not null
      */
-    private void addPhoneView(@Nullable final Phone phone) {
+    private void addPhoneView(final Phone phone) {
         addBasicItemView(phone, BasicItem.ItemType.PHONE);
     }
 
-    private void addBasicItemViewIfNeeded(@Nullable BasicItem basicItem, final BasicItem.ItemType type) {
+    private void addBasicItemViewIfNeeded(BasicItem basicItem, final BasicItem.ItemType type) {
         final ViewGroup frame = getParentFor(type);
         final int childCount = frame.getChildCount();
         if (childCount <= 0) return;
@@ -146,7 +178,7 @@ public class NewContactFragment extends NewEntryFragment<Contact> {
         }
     }
 
-    private void addBasicItemView(@Nullable final BasicItem basicItem, final BasicItem.ItemType type) {
+    private void addBasicItemView(final BasicItem basicItem, final BasicItem.ItemType type) {
         final ViewGroup parent = getParentFor(type);
         final int hintId = getHintIdFor(type);
         final View view = mInflater.inflate(R.layout.list_item_edittext_btn, parent, false);
@@ -218,6 +250,7 @@ public class NewContactFragment extends NewEntryFragment<Contact> {
         final Contact entry = getDetailEntryIfExist();
         final Contact contact = entry == null ? new Contact(getFolder()) : new Contact(entry);
 
+        contact.setLocation((Location) mAddressV.getTag());
         contact.setTitle(mTitleV.getText().toString());
         contact.setFirstName(mFirstNameV.getText().toString());
         contact.setMiddleName(mMiddleNameV.getText().toString());

@@ -1,13 +1,9 @@
-/*
- * Copyright (C), NexusPad LLC
- */
-package com.nexuspad.photos.ui.fragment;
+package com.nexuspad.ui.fragment;
 
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.FragmentActivity;
@@ -18,12 +14,12 @@ import android.view.ViewGroup;
 import android.widget.*;
 import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.edmondapps.utils.android.service.FileUploadService;
+import com.edmondapps.utils.android.ui.CompoundAdapter;
 import com.edmondapps.utils.android.view.PopupMenu;
 import com.nexuspad.R;
-import com.nexuspad.datamodel.Folder;
-import com.nexuspad.photos.Request;
-import com.nexuspad.photos.service.PhotoUploadService;
-import com.nexuspad.ui.fragment.ListFragment;
+import com.nexuspad.app.Request;
+import com.nexuspad.app.service.UploadService;
+import com.nexuspad.datamodel.EntryTemplate;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -32,33 +28,32 @@ import java.util.List;
 import java.util.Set;
 
 import static com.edmondapps.utils.android.view.ViewUtils.findView;
-import static com.nexuspad.photos.service.PhotoUploadService.PhotosUploadBinder;
 
 /**
- * @author Edmond
+ * Author: edmond
  */
-@FragmentName(PhotosUploadFragment.TAG)
-public class PhotosUploadFragment extends ListFragment {
-    public static final String TAG = "PhotosUploadFragment";
+@FragmentName(UploadCenterFragment.TAG)
+public class UploadCenterFragment extends ListFragment {
+    public static final String TAG = "UploadCenterFragment";
 
-    private final PhotoUploadService.Callback mCallback = new PhotoUploadService.Callback() {
+    private final UploadService.OnNewRequestListener mOnNewRequestListener = new UploadService.OnNewRequestListener() {
         @Override
         public void onNewRequest(Request request) {
-            mRequests.add(request);
+            addRequestToList(request);
             updateUI();
         }
     };
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            mBinder = (PhotosUploadBinder) service;
+            mBinder = (UploadService.UploadBinder) service;
 
             mBinder.addRequests(mPendingRequests);
             mPendingRequests.clear();
 
-            mRequests.addAll(mBinder.peekRequests());
+            addAllRequestsToList(mBinder.peekRequests());
 
-            mBinder.addCallback(mCallback);
+            mBinder.addCallback(mOnNewRequestListener);
             updateUI();
         }
 
@@ -67,11 +62,39 @@ public class PhotosUploadFragment extends ListFragment {
             mBinder = null;
         }
     };
-    private final List<Request> mRequests = new ArrayList<Request>();
+    private final List<Request> mAlbumRequests = new ArrayList<Request>();
+    private final List<Request> mPhotoRequests = new ArrayList<Request>();
     private final Set<Request> mPendingRequests = new HashSet<Request>();
-    private PhotosUploadBinder mBinder;
+    private UploadAdapter mAdapter;
+    private UploadService.UploadBinder mBinder;
     private boolean mViewCreated;
-    private PhotosUploadAdapter mAdapter;
+
+    private void addAllRequestsToList(Iterable<Request> requests) {
+        for (Request request : requests) {
+            addRequestToList(request);
+        }
+    }
+
+    private void addRequestToList(Request request) {
+        switch (request.getTarget()) {
+            case FOLDER:
+                mPhotoRequests.add(request);
+                break;
+            case ENTRY:
+                if (EntryTemplate.ALBUM.equals(request.getNPEntry().getTemplate())) {
+                    mAlbumRequests.add(request);
+                }
+                break;
+            default:
+                throw new AssertionError("unexpected request target: " + request.getTarget());
+        }
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mAdapter = new UploadAdapter(getActivity(), mAlbumRequests, mPhotoRequests);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -82,15 +105,12 @@ public class PhotosUploadFragment extends ListFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mViewCreated = true;
+        setListAdapter(mAdapter);
         updateUI();
     }
 
     private void updateUI() {
         if (mViewCreated) {
-            if (mAdapter == null) {
-                mAdapter = new PhotosUploadAdapter();
-                setListAdapter(mAdapter);
-            }
             mAdapter.notifyDataSetChanged();
         }
     }
@@ -100,7 +120,7 @@ public class PhotosUploadFragment extends ListFragment {
         super.onActivityCreated(savedInstanceState);
 
         final FragmentActivity activity = getActivity();
-        final Intent service = new Intent(activity, PhotoUploadService.class);
+        final Intent service = new Intent(activity, UploadService.class);
         activity.startService(service);
         activity.bindService(service, mConnection, Context.BIND_AUTO_CREATE);
     }
@@ -110,23 +130,16 @@ public class PhotosUploadFragment extends ListFragment {
         super.onDestroy();
 
         if (mBinder != null) {
-            mBinder.removeCallback(mCallback);
+            mBinder.removeCallback(mOnNewRequestListener);
         }
         getActivity().unbindService(mConnection);
     }
 
-    public void uploadPhotos(Iterable<? extends Uri> uris, Folder folder) {
-        for (Uri uri : uris) {
-            uploadPhoto(uri, folder);
-        }
-    }
-
-    public void uploadPhoto(Uri uri, Folder folder) {
-        final Request request = Request.forFolder(uri, folder, null);
-        if (mBinder != null) {
-            mBinder.addRequest(request);
-        } else {
+    public void addRequest(Request request) {
+        if (mBinder == null) {
             mPendingRequests.add(request);
+        } else {
+            mBinder.addRequest(request);
         }
     }
 
@@ -158,20 +171,63 @@ public class PhotosUploadFragment extends ListFragment {
         };
     }
 
-    private class PhotosUploadAdapter extends BaseAdapter {
+    private static class UploadAdapter extends CompoundAdapter {
+        public UploadAdapter(Context c, List<Request> albumRequests, List<Request> photoRequests) {
+            super(new RequestAdapter(c, albumRequests, R.string.albums),
+                    new RequestAdapter(c, photoRequests, R.string.photos));
+        }
+    }
+
+    private static class RequestAdapter extends BaseAdapter {
+        private static final int VIEW_TYPE_HEADER = 0;
+        private static final int VIEW_TYPE_REQUEST = 1;
+
+        private final Context mContext;
+        private final List<Request> mRequests;
+        private final int mHeaderRes;
+
+        private RequestAdapter(Context context, List<Request> requests, int headerRes) {
+            mContext = context;
+            mRequests = requests;
+            mHeaderRes = headerRes;
+        }
+
+        @Override
+        public int getViewTypeCount() {
+            return 2;
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            if (position == 0) return VIEW_TYPE_HEADER;
+            return VIEW_TYPE_REQUEST;
+        }
+
+        @Override
+        public boolean isEmpty() {
+            return mRequests.isEmpty();
+        }
+
         @Override
         public int getCount() {
-            return mRequests.size();
+            return mRequests.size() + 1;
         }
 
         @Override
         public Request getItem(int position) {
-            return mRequests.get(position);
+            return mRequests.get(position - 1);
         }
 
         @Override
         public long getItemId(int position) {
-            return getItem(position).getTimeStamp();
+            switch (getItemViewType(position)) {
+                case VIEW_TYPE_HEADER:
+                    return -1;
+                case VIEW_TYPE_REQUEST:
+                    return getItem(position).getTimeStamp();
+                default:
+                    throw new AssertionError("unexpected view type at pos: " + position);
+            }
         }
 
         @Override
@@ -181,10 +237,37 @@ public class PhotosUploadFragment extends ListFragment {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            final FragmentActivity activity = getActivity();
+            switch (getItemViewType(position)) {
+                case VIEW_TYPE_HEADER:
+                    return getHeaderView(convertView, parent);
+                case VIEW_TYPE_REQUEST:
+                    return getPhotoRequestView(position, convertView, parent);
+                default:
+                    throw new AssertionError("unexpected view type at pos: " + position);
+            }
+        }
+
+        private View getHeaderView(View convertView, ViewGroup parent) {
             final ViewHolder holder;
             if (convertView == null) {
-                convertView = activity.getLayoutInflater().inflate(R.layout.list_item_upload_photo, parent, false);
+                convertView = LayoutInflater.from(mContext).inflate(R.layout.list_header, parent, false);
+
+                holder = new ViewHolder();
+                holder.title = findView(convertView, android.R.id.text1);
+
+                convertView.setTag(holder);
+            } else {
+                holder = (ViewHolder) convertView.getTag();
+            }
+
+            holder.title.setText(mHeaderRes);
+            return convertView;
+        }
+
+        private View getPhotoRequestView(int position, View convertView, ViewGroup parent) {
+            final ViewHolder holder;
+            if (convertView == null) {
+                convertView = LayoutInflater.from(mContext).inflate(R.layout.list_item_upload_photo, parent, false);
 
                 holder = new ViewHolder();
                 holder.icon = findView(convertView, android.R.id.icon);
@@ -201,7 +284,7 @@ public class PhotosUploadFragment extends ListFragment {
             final Request request = getItem(position);
             request.setCallback(holder.callback);
 
-            Picasso.with(activity)
+            Picasso.with(mContext)
                     .load(request.getUri())
                     .placeholder(R.drawable.placeholder)
                     .error(R.drawable.ic_launcher)
@@ -209,11 +292,11 @@ public class PhotosUploadFragment extends ListFragment {
                     .centerCrop()
                     .into(holder.icon);
 
-            holder.title.setText(request.getFile(activity).getName());
+            holder.title.setText(request.getFile(mContext).getName());
             holder.menu.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    final PopupMenu popupMenu = PopupMenu.newInstance(activity, v);
+                    final PopupMenu popupMenu = PopupMenu.newInstance(mContext, v);
                     popupMenu.inflate(R.menu.photos_upload);
                     popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                         @Override

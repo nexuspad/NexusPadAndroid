@@ -93,7 +93,7 @@ public abstract class EntryFragment<T extends NPEntry> extends SherlockDialogFra
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Bundle bundle = savedInstanceState == null ? getArguments() : savedInstanceState;
+        final Bundle bundle = savedInstanceState == null ? getArguments() : savedInstanceState;
         initWithBundle(bundle);
 
         if (mFolder == null) {

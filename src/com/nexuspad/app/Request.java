@@ -1,20 +1,17 @@
 /*
  * Copyright (C), NexusPad LLC
  */
-package com.nexuspad.photos;
+package com.nexuspad.app;
 
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
 import com.edmondapps.utils.android.service.FileUploadService;
-import com.google.common.base.Objects;
-import com.google.common.base.Preconditions;
 import com.nexuspad.datamodel.Folder;
 import com.nexuspad.datamodel.NPEntry;
 
 import java.io.File;
-import java.io.ObjectStreamClass;
 import java.lang.ref.WeakReference;
 
 import static com.google.common.base.Preconditions.checkNotNull;

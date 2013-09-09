@@ -30,6 +30,7 @@
     <string name="err_invalid_bookmark">Please check the web address of the bookmark.</string>
     <string name="err_no_email_app">No email app installed.</string>
     <string name="err_no_browser">No browser installed.</string>
+    <string name="err_no_map">No map installed.</string>
     <string name="formatted_err_delete_failed">Failed to delete \"%s\". Please try again later.</string>
     <string name="err_network">Please check your network connection.</string>
     <string name="err_internal">An internal error has occurred. Please try again later.</string>
@@ -86,6 +87,10 @@
     <string name="phones">Phones</string>
     <string name="phone">Phone</string>
     <string name="empty_potos_promt">Click on the camera to add photos.</string>
+    <string name="country">Country</string>
+    <string name="city">City</string>
+    <string name="state">State</string>
+    <string name="zip_code">Zip Code</string>
 
     <plurals name="numberOfPhotos">
         <item quantity="one">1 photo</item>

@@ -22,10 +22,11 @@ import com.nexuspad.datamodel.Album;
 import com.nexuspad.datamodel.EntryTemplate;
 import com.nexuspad.datamodel.Folder;
 import com.nexuspad.datamodel.NPUpload;
+import com.nexuspad.dataservice.EntryUploadService;
 import com.nexuspad.dataservice.ServiceConstants;
-import com.nexuspad.dataservice.UploadService;
 import com.nexuspad.photos.ui.activity.PhotosSelectActivity;
 import com.nexuspad.ui.activity.NewEntryActivity;
+import com.nexuspad.ui.activity.UploadCenterActivity;
 import com.nexuspad.ui.fragment.NewEntryFragment;
 import com.squareup.picasso.Picasso;
 
@@ -56,12 +57,13 @@ public class NewAlbumFragment extends NewEntryFragment<Album> {
         return fragment;
     }
 
+    // 1 is used by REQ_FOLDER (NewEntryFragment)
     private static final int REQ_PICK_IMAGES = 2;
 
-    private final Lazy<UploadService> mUploadService = new Lazy<UploadService>() {
+    private final Lazy<EntryUploadService> mUploadService = new Lazy<EntryUploadService>() {
         @Override
-        protected UploadService onCreate() {
-            return new UploadService(getActivity());
+        protected EntryUploadService onCreate() {
+            return new EntryUploadService(getActivity());
         }
     };
     private final ArrayList<Uri> mUris = new ArrayList<Uri>();
@@ -206,8 +208,7 @@ public class NewAlbumFragment extends NewEntryFragment<Album> {
     @Override
     protected void onUpdateEntry(Album entry) {
         super.onUpdateEntry(entry);
-        // upload the photos right the way because we already know the entry ID
-        mUploadService.get().uploadAllAttachments(entry);
+        UploadCenterActivity.startWith(mUris, entry, getActivity());
     }
 
     private void addPathsToAlbum(Album album) {

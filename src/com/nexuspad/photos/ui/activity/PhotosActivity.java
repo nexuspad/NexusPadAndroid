@@ -24,6 +24,7 @@ import com.nexuspad.home.ui.activity.DashboardActivity;
 import com.nexuspad.photos.ui.fragment.AlbumsFragment;
 import com.nexuspad.photos.ui.fragment.PhotosFragment;
 import com.nexuspad.ui.activity.EntriesActivity;
+import com.nexuspad.ui.activity.UploadCenterActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -134,7 +135,7 @@ public class PhotosActivity extends EntriesActivity implements OnNavigationListe
             case REQ_CHOOSE_FILE:
                 if (resultCode == Activity.RESULT_OK) {
                     final ArrayList<Uri> uris = data.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
-                    PhotosUploadActivity.startWith(uris, getFolder(), this);
+                    UploadCenterActivity.startWith(uris, getFolder(), this);
                 }
                 break;
             default:

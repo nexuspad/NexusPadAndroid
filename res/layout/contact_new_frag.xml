@@ -81,6 +81,20 @@
             android:textSize="@dimen/ed__textsize_medium" />
 
         <TextView
+            style="?android:attr/listSeparatorTextViewStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/address" />
+
+        <TextView
+            style="@style/selectableTextView"
+            android:id="@+id/txt_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/address"
+            android:drawableRight="@android:drawable/ic_menu_edit"/>
+
+        <TextView
             android:id="@+id/txt_phones"
             style="?android:attr/listSeparatorTextViewStyle"
             android:layout_width="match_parent"
