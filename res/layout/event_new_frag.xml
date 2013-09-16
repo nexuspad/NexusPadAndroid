@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            style="@style/scrollableFrame"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            style="?android:attr/listSeparatorTextViewStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/folder"/>
+
+        <include layout="@layout/include_folder_selector"/>
+
+        <EditText
+            android:id="@+id/txt_title"
+            style="@style/formMargin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/title"/>
+
+        <com.commonsware.cwac.richedit.RichEditText
+            android:id="@+id/txt_note"
+            style="@style/formMargin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/note"
+            android:imeOptions="flagNoExtractUi"
+            android:inputType="textMultiLine"
+            android:gravity="top"
+            android:minLines="@integer/notes_min_lines"/>
+
+        <EditText
+            android:id="@+id/txt_tags"
+            style="@style/formMargin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/tags"/>
+    </LinearLayout>
+
+</ScrollView>
