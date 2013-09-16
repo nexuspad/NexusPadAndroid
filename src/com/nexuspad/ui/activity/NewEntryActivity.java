@@ -5,7 +5,6 @@ package com.nexuspad.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-
 import com.edmondapps.utils.android.activity.DoneDiscardActivity;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
@@ -17,9 +16,10 @@ import com.nexuspad.ui.fragment.NewEntryFragment;
 
 /**
  * An {@code Activity} with done/discard {@code ActionBar} enabled.
- * 
+ * <p/>
+ * Annotate the class with ModuleId.
+ *
  * @author Edmond
- * 
  */
 public abstract class NewEntryActivity<T extends NPEntry> extends DoneDiscardActivity implements EntryFragment.Callback<T> {
     public static final String KEY_ENTRY = "com.nexuspad.ui.activity.NewEntryActivity.entry";
@@ -96,13 +96,12 @@ public abstract class NewEntryActivity<T extends NPEntry> extends DoneDiscardAct
     /**
      * Called when the "DONE" button is pressed in {@link Mode#EDIT}. The
      * default implementation updates the entry and calls {@link #goUp()}.
-     * <p>
+     * <p/>
      * This method assumes {@link #getFragment()} returns a type of
      * {@link NewEntryFragment}.
-     * 
-     * @throws ClassCastException
-     *             if {@link #getFragment()} is not a type of
-     *             {@link NewEntryFragment}
+     *
+     * @throws ClassCastException if {@link #getFragment()} is not a type of
+     *                            {@link NewEntryFragment}
      */
     protected void onDoneEditing() {
         NewEntryFragment<T> fragment = getFragment();
@@ -115,13 +114,12 @@ public abstract class NewEntryActivity<T extends NPEntry> extends DoneDiscardAct
     /**
      * Called when the "DONE" button is pressed in {@link Mode#NEW}. The
      * default implementation updates the entry and calls {@link #goUp()}.
-     * <p>
+     * <p/>
      * This method assumes {@link #getFragment()} returns a type of
      * {@link NewEntryFragment}.
-     * 
-     * @throws ClassCastException
-     *             if {@link #getFragment()} is not a type of
-     *             {@link NewEntryFragment}
+     *
+     * @throws ClassCastException if {@link #getFragment()} is not a type of
+     *                            {@link NewEntryFragment}
      */
     protected void onDoneAdding() {
         NewEntryFragment<T> fragment = getFragment();
@@ -175,6 +173,6 @@ public abstract class NewEntryActivity<T extends NPEntry> extends DoneDiscardAct
     @Override
     @SuppressWarnings("unchecked")
     protected NewEntryFragment<T> getFragment() {
-        return (NewEntryFragment<T>)super.getFragment();
+        return (NewEntryFragment<T>) super.getFragment();
     }
 }

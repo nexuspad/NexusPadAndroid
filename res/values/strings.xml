@@ -91,6 +91,11 @@
     <string name="city">City</string>
     <string name="state">State</string>
     <string name="zip_code">Zip Code</string>
+    <string name="location">Location</string>
+    <string name="from">FROM</string>
+    <string name="to">TO</string>
+    <string name="all_day">ALL DAY</string>
+    <string name="event">Event</string>
 
     <plurals name="numberOfPhotos">
         <item quantity="one">1 photo</item>

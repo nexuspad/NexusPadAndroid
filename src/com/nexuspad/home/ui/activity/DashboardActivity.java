@@ -10,6 +10,7 @@ import com.edmondapps.utils.android.Logs;
 import com.edmondapps.utils.android.activity.SinglePaneActivity;
 import com.nexuspad.R;
 import com.nexuspad.bookmark.ui.activity.BookmarksActivity;
+import com.nexuspad.calendar.ui.activity.EventsActivity;
 import com.nexuspad.contacts.ui.activity.ContactsActivity;
 import com.nexuspad.doc.ui.activity.DocsActivity;
 import com.nexuspad.home.ui.fragment.DashboardFragment;
@@ -52,10 +53,10 @@ public class DashboardActivity extends SinglePaneActivity implements DashboardFr
         switch (moduleType) {
             case BOOKMARK_MODULE:
                 return BookmarksActivity.class;
+            case CALENDAR_MODULE:
+                return EventsActivity.class;
             case DOC_MODULE:
                 return DocsActivity.class;
-            // case JOURNAL_MODULE:
-            // return JournalActivity.class;
             case PHOTO_MODULE:
                 return PhotosActivity.class;
             case CONTACT_MODULE:

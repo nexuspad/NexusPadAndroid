@@ -3,9 +3,6 @@
  */
 package com.nexuspad.journal.ui.fragment;
 
-import java.util.Date;
-import java.util.List;
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -14,7 +11,6 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.edmondapps.utils.android.R;
 import com.edmondapps.utils.android.view.ViewUtils;
 import com.edmondapps.utils.java.WrapperList;
@@ -27,6 +23,9 @@ import com.nexuspad.dataservice.EntryListService;
 import com.nexuspad.dataservice.NPException;
 import com.nexuspad.dataservice.ServiceConstants;
 import com.nexuspad.ui.fragment.EntriesFragment;
+
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author Edmond
@@ -55,7 +54,7 @@ public class JournalsFragment extends EntriesFragment {
         Date start = new Date(2013 - 1900, 0, 1);
         Date end = new Date();
 
-        service.getEntriesBetweenDates(folder, getTemplate(), start, end, page, PAGE_COUNT);
+        service.getEntriesBetweenDates(folder, getTemplate(), start, end, page, getEntriesCountPerPage());
     }
 
     @Override

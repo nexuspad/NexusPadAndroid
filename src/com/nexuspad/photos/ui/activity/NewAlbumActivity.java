@@ -2,7 +2,6 @@ package com.nexuspad.photos.ui.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import com.edmondapps.utils.android.annotaion.ParentActivity;
 import com.nexuspad.annotation.ModuleId;
@@ -29,21 +28,9 @@ public class NewAlbumActivity extends NewEntryActivity<Album> {
         return intent;
     }
 
-    private Album mAlbum;
-    private Folder mFolder;
-
-    @Override
-    protected void onCreate(Bundle savedState) {
-        final Intent intent = getIntent();
-        mAlbum = intent.getParcelableExtra(KEY_ENTRY);
-        mFolder = intent.getParcelableExtra(KEY_FOLDER);
-
-        super.onCreate(savedState);
-    }
-
     @Override
     protected Fragment onCreateFragment() {
-        return NewAlbumFragment.of(mAlbum, mFolder);
+        return NewAlbumFragment.of(getEntry(), getFolder());
     }
 
     @Override

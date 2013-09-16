@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/scrollableFrame"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/lbl_title"
+            style="@style/listTitleTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/title"
+            />
+
+        <TextView
+            android:id="@+id/lbl_date_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/ed__textsize_small"
+            android:text="Date time string"/>
+
+        <TextView
+            android:id="@+id/lbl_location_frame"
+            style="?android:attr/listSeparatorTextViewStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/location" />
+
+        <TextView
+            android:id="@+id/lbl_location"
+            style="@style/selectableTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autoLink="map"
+            android:linksClickable="false"
+            android:hint="@string/location" />
+
+        <TextView
+            android:id="@+id/lbl_tags_frame"
+            style="?android:attr/listSeparatorTextViewStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/tags" />
+
+        <TextView
+            android:id="@+id/lbl_tags"
+            style="@style/listItemTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autoLink="all"
+            android:hint="@string/tags" />
+
+        <TextView
+            android:id="@+id/lbl_note_frame"
+            style="?android:attr/listSeparatorTextViewStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/note" />
+
+        <TextView
+            android:id="@+id/lbl_note"
+            style="@style/listItemTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autoLink="all"
+            android:hint="@string/note" />
+    </LinearLayout>
+
+</ScrollView>

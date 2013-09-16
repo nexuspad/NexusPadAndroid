@@ -91,7 +91,7 @@ public class UploadCenterActivity extends SinglePaneActivity {
         if (entry == null) {
             final Folder folder = getIntent().getParcelableExtra(KEY_FOLDER);
             if (folder == null) {
-                throw new AssertionError("entry and folder is null");
+                throw new AssertionError("both entry and folder is null");
             }
             for (Uri uri : mUris) {
                 fragment.addRequest(Request.forFolder(uri, folder, null));
