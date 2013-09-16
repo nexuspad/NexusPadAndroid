@@ -48,8 +48,8 @@ import java.util.List;
  */
 public abstract class EntriesFragment extends ListFragment {
     public static final String KEY_FOLDER = "key_folder";
-    public static final int PAGE_COUNT = 20;
 
+    private static final int PAGE_COUNT = 20;
     private static final String TAG = "EntriesFragment";
     private static final String KEY_ENTRY_LIST = "key_entry_list";
 

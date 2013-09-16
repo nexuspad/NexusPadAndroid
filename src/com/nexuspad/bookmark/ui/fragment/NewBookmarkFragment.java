@@ -66,18 +66,6 @@ public class NewBookmarkFragment extends NewEntryFragment<Bookmark> {
     }
 
     @Override
-    protected void onEntryUpdated(Bookmark entry) {
-        super.onEntryUpdated(entry);
-        updateUI();
-    }
-
-    @Override
-    protected void onDetailEntryUpdated(Bookmark entry) {
-        super.onDetailEntryUpdated(entry);
-        updateUI();
-    }
-
-    @Override
     protected void onFolderUpdated(Folder folder) {
         super.onFolderUpdated(folder);
         updateFolderView();
@@ -87,7 +75,8 @@ public class NewBookmarkFragment extends NewEntryFragment<Bookmark> {
         mFolderV.setText(getFolder().getFolderName());
     }
 
-    private void updateUI() {
+    @Override
+    protected void updateUI() {
         updateFolderView();
 
         Bookmark bookmark = getDetailEntryIfExist();

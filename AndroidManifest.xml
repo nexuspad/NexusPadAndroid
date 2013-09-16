@@ -20,17 +20,17 @@
     <uses-permission android:name="com.nexuspad.core.permission.LISTEN_FOLDER_CHANGES" />
 
     <application
-        android:name="com.nexuspad.app.App"
+        android:name=".app.App"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <service
             android:name=".app.service.UploadService"
-            android:exported="false"></service>
+            android:exported="false"/>
 
         <activity
-            android:name="com.nexuspad.home.ui.activity.MainActivity"
+            android:name=".home.ui.activity.MainActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -39,23 +39,23 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.nexuspad.home.ui.activity.LoginActivity"
+            android:name=".home.ui.activity.LoginActivity"
             android:label="@string/app_name"
             android:theme="@style/Theme.Sherlock.Light.NoActionBar" />
         <activity
-            android:name="com.nexuspad.home.ui.activity.DashboardActivity"
+            android:name=".home.ui.activity.DashboardActivity"
             android:label="@string/app_name" />
         <activity
-            android:name="com.nexuspad.about.activity.AboutActivity"
+            android:name=".about.activity.AboutActivity"
             android:label="@string/app_name" />
         <activity
-            android:name="com.nexuspad.bookmark.ui.activity.BookmarkActivity"
+            android:name=".bookmark.ui.activity.BookmarkActivity"
             android:label="@string/bookmark" />
         <activity
-            android:name="com.nexuspad.bookmark.ui.activity.BookmarksActivity"
+            android:name=".bookmark.ui.activity.BookmarksActivity"
             android:label="@string/bookmarks" />
         <activity
-            android:name="com.nexuspad.bookmark.ui.activity.NewBookmarkActivity"
+            android:name=".bookmark.ui.activity.NewBookmarkActivity"
             android:exported="true"
             android:label="@string/bookmark">
             <intent-filter>
@@ -67,26 +67,25 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.nexuspad.doc.ui.activity.DocActivity"
+            android:name=".doc.ui.activity.DocActivity"
             android:label="@string/docs" />
         <activity
-            android:name="com.nexuspad.doc.ui.activity.DocsActivity"
+            android:name=".doc.ui.activity.DocsActivity"
             android:label="@string/docs" />
         <activity
-            android:name="com.nexuspad.doc.ui.activity.NewDocActivity"
-            android:label="@string/docs" />
+            android:name=".doc.ui.activity.NewDocActivity" />
         <activity
-            android:name="com.nexuspad.journal.ui.activity.JournalActivity"
+            android:name=".journal.ui.activity.JournalActivity"
             android:label="@string/journal" />
         <activity
-            android:name="com.nexuspad.photos.ui.activity.PhotosActivity"
+            android:name=".photos.ui.activity.PhotosActivity"
             android:label="@string/photos" />
         <activity
-            android:name="com.nexuspad.photos.ui.activity.PhotoActivity"
+            android:name=".photos.ui.activity.PhotoActivity"
             android:label="@string/photos"
             android:theme="@style/Transparent" />
         <activity
-            android:name="com.nexuspad.photos.ui.activity.PhotosSelectActivity"
+            android:name=".photos.ui.activity.PhotosSelectActivity"
             android:label="@string/photos" />
         <activity
             android:name=".ui.activity.UploadCenterActivity"
@@ -107,29 +106,33 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.nexuspad.photos.ui.activity.AlbumActivity"
+            android:name=".photos.ui.activity.AlbumActivity"
             android:label="@string/photos" />
         <activity
-            android:name="com.nexuspad.photos.ui.activity.NewAlbumActivity"
-            android:label="@string/new_album" />
-
+            android:name=".photos.ui.activity.NewAlbumActivity" />
         <activity
-            android:name="com.nexuspad.contacts.ui.activity.ContactsActivity"
+            android:name=".contacts.ui.activity.ContactsActivity"
             android:label="@string/contacts" />
         <activity
             android:name=".contacts.ui.activity.ContactActivity"
             android:label="@string/contacts" />
         <activity
-            android:name=".contacts.ui.activity.NewContactActivity"
-            android:label="@string/contacts" />
+            android:name=".contacts.ui.activity.NewContactActivity" />
         <activity
-            android:name=".contacts.ui.activity.NewLocationActivity"
-            android:label="@string/contacts" />
+            android:name=".contacts.ui.activity.NewLocationActivity" />
         <activity
-            android:name="com.nexuspad.ui.activity.NewFolderActivity"
+            android:name=".calendar.ui.activity.EventActivity"
+            android:label="@string/event" />
+        <activity
+            android:name=".calendar.ui.activity.EventsActivity"
+            android:label="@string/events" />
+        <activity
+            android:name=".calendar.ui.activity.NewEventActivity" />
+        <activity
+            android:name=".ui.activity.NewFolderActivity"
             android:label="@string/new_folder" />
         <activity
-            android:name="com.nexuspad.ui.activity.FoldersActivity"
+            android:name=".ui.activity.FoldersActivity"
             android:label="@string/folders" />
     </application>
 

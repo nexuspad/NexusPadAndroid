@@ -4,14 +4,11 @@
 package com.nexuspad.doc.ui.fragment;
 
 import android.app.Activity;
-import android.app.DownloadManager;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.TextUtils;
-import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +18,6 @@ import android.widget.TextView;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-import com.edmondapps.utils.android.Logs;
 import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.edmondapps.utils.android.view.ViewUtils;
 import com.nexuspad.R;
@@ -30,7 +26,6 @@ import com.nexuspad.datamodel.Doc;
 import com.nexuspad.datamodel.Folder;
 import com.nexuspad.datamodel.NPUpload;
 import com.nexuspad.doc.ui.activity.NewDocActivity;
-import com.nexuspad.ui.activity.NewEntryActivity.Mode;
 import com.nexuspad.ui.fragment.EntryFragment;
 
 import java.util.List;
@@ -109,18 +104,7 @@ public class DocFragment extends EntryFragment<Doc> {
     }
 
     @Override
-    protected void onEntryUpdated(Doc entry) {
-        super.onEntryUpdated(entry);
-        updateUI();
-    }
-
-    @Override
-    protected void onDetailEntryUpdated(Doc entry) {
-        super.onDetailEntryUpdated(entry);
-        updateUI();
-    }
-
-    private void updateUI() {
+    protected void updateUI() {
         Doc doc = getDetailEntryIfExist();
         if (doc != null) {
             mTitleV.setText(doc.getTitle());

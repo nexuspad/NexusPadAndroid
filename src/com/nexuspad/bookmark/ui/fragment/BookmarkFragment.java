@@ -3,7 +3,6 @@
  */
 package com.nexuspad.bookmark.ui.fragment;
 
-import static com.edmondapps.utils.android.view.ViewUtils.findView;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -16,7 +15,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
@@ -26,6 +24,8 @@ import com.nexuspad.app.App;
 import com.nexuspad.datamodel.Bookmark;
 import com.nexuspad.datamodel.Folder;
 import com.nexuspad.ui.fragment.EntryFragment;
+
+import static com.edmondapps.utils.android.view.ViewUtils.findView;
 
 /**
  * @author Edmond
@@ -108,18 +108,7 @@ public class BookmarkFragment extends EntryFragment<Bookmark> {
     }
 
     @Override
-    protected void onEntryUpdated(Bookmark entry) {
-        super.onEntryUpdated(entry);
-        updateUI();
-    }
-
-    @Override
-    protected void onDetailEntryUpdated(Bookmark entry) {
-        super.onDetailEntryUpdated(entry);
-        updateUI();
-    }
-
-    private void updateUI() {
+    protected void updateUI() {
         Bookmark bookmark = getDetailEntryIfExist();
         if (bookmark != null) {
             mNameV.setText(bookmark.getTitle());

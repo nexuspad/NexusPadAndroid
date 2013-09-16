@@ -247,27 +247,42 @@ public abstract class EntryFragment<T extends NPEntry> extends SherlockDialogFra
     /**
      * Called when a folder is updated (usually from the result of selecting a
      * folder).
+     * <p>
+     * Default implementation calls {@link #updateUI()}.
      *
      * @param folder the new {@link Folder}
      * @see FoldersActivity
      */
     protected void onFolderUpdated(Folder folder) {
+        updateUI();
     }
 
     /**
      * Called when the original entry is updated.
+     * <p>
+     * Default implementation calls {@link #updateUI()}.
      *
      * @param entry the new entry
      */
     protected void onEntryUpdated(T entry) {
+        updateUI();
     }
 
     /**
      * Called when the detailed entry is retrieved from the server.
+     * <p>
+     * Default implementation calls {@link #updateUI()}.
      *
      * @param entry the new detailed entry
      */
     protected void onDetailEntryUpdated(T entry) {
+        updateUI();
+    }
+
+    /**
+     * Called when the UI requires an update (entry/detail/folder entry updated)
+     */
+    protected void updateUI() {
     }
 
     protected void onEntryUpdateFailed(ServiceError error) {

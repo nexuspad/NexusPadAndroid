@@ -99,18 +99,7 @@ public class AlbumFragment extends EntryFragment<Album> implements AdapterView.O
     }
 
     @Override
-    protected void onEntryUpdated(Album entry) {
-        super.onEntryUpdated(entry);
-        updateUI();
-    }
-
-    @Override
-    protected void onDetailEntryUpdated(Album entry) {
-        super.onDetailEntryUpdated(entry);
-        updateUI();
-    }
-
-    private void updateUI() {
+    protected void updateUI() {
         final Album album = getDetailEntry();
         if (album != null) {
             final List<NPUpload> attachments = album.getAttachments();

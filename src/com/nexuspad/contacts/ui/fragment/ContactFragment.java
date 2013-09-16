@@ -129,7 +129,8 @@ public class ContactFragment extends EntryFragment<Contact> {
         super.onViewCreated(view, savedInstanceState);
     }
 
-    private void updateUI() {
+    @Override
+    protected void updateUI() {
         final Contact contact = getDetailEntryIfExist();
         if (contact != null) {
             mTitleV.setText(contact.getTitle());
@@ -245,17 +246,5 @@ public class ContactFragment extends EntryFragment<Contact> {
         mTagsV.setVisibility(tagsFlag);
         mNoteV.setVisibility(noteFlag);
         mAddressV.setVisibility(addressFlag);
-    }
-
-    @Override
-    protected void onEntryUpdated(Contact entry) {
-        super.onEntryUpdated(entry);
-        updateUI();
-    }
-
-    @Override
-    protected void onDetailEntryUpdated(Contact entry) {
-        super.onDetailEntryUpdated(entry);
-        updateUI();
     }
 }

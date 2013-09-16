@@ -105,7 +105,8 @@ public class NewContactFragment extends NewEntryFragment<Contact> {
         super.onViewCreated(view, savedInstanceState);
     }
 
-    private void updateUI() {
+    @Override
+    protected void updateUI() {
         final Contact contact = getDetailEntryIfExist();
         if (contact != null) {
             mTitleV.setText(contact.getTitle());

@@ -138,12 +138,7 @@ public class NewAlbumFragment extends NewEntryFragment<Album> {
     }
 
     @Override
-    protected void onFolderUpdated(Folder folder) {
-        super.onFolderUpdated(folder);
-        updateUI();
-    }
-
-    private void updateUI() {
+    protected void updateUI() {
         mFolderV.setText(getFolder().getFolderName());
         final Album album = getDetailEntryIfExist();
         if (album != null) {

@@ -87,8 +87,8 @@
             android:text="@string/address" />
 
         <TextView
-            style="@style/selectableTextView"
             android:id="@+id/txt_address"
+            style="@style/selectableTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/address"

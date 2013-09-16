@@ -53,22 +53,11 @@ public class JournalFragment extends EntryFragment<Journal> {
         updateUI();
     }
 
-    private void updateUI() {
+    @Override
+    protected void updateUI() {
         Journal entry = getDetailEntryIfExist();
         if (entry != null) {
             mNoteV.setText(entry.getNote());
         }
-    }
-
-    @Override
-    protected void onEntryUpdated(Journal entry) {
-        super.onEntryUpdated(entry);
-        updateUI();
-    }
-
-    @Override
-    protected void onDetailEntryUpdated(Journal entry) {
-        super.onDetailEntryUpdated(entry);
-        updateUI();
     }
 }

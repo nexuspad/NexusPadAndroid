@@ -70,18 +70,6 @@ public class NewDocFragment extends NewEntryFragment<Doc> {
     }
 
     @Override
-    protected void onEntryUpdated(Doc entry) {
-        super.onEntryUpdated(entry);
-        updateUI();
-    }
-
-    @Override
-    protected void onDetailEntryUpdated(Doc entry) {
-        super.onDetailEntryUpdated(entry);
-        updateUI();
-    }
-
-    @Override
     protected void onFolderUpdated(Folder folder) {
         super.onFolderUpdated(folder);
         updateFolderView();
@@ -91,7 +79,8 @@ public class NewDocFragment extends NewEntryFragment<Doc> {
         mFolderV.setText(getFolder().getFolderName());
     }
 
-    private void updateUI() {
+    @Override
+    protected void updateUI() {
         updateFolderView();
 
         Doc doc = getDetailEntryIfExist();

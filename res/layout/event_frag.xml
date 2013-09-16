@@ -10,102 +10,65 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/txt_title"
-            style="@style/formMargin"
+        <TextView
+            android:id="@+id/lbl_title"
+            style="@style/listTitleTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/title" />
+            android:hint="@string/title"
+            />
 
-        <EditText
-            android:id="@+id/txt_location"
-            style="@style/formMargin"
+        <TextView
+            android:id="@+id/lbl_date_time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textSize="@dimen/ed__textsize_small"
+            android:text="Date time string"/>
+
+        <TextView
+            android:id="@+id/lbl_location_frame"
+            style="?android:attr/listSeparatorTextViewStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/location" />
+
+        <TextView
+            android:id="@+id/lbl_location"
+            style="@style/selectableTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autoLink="map"
+            android:linksClickable="false"
             android:hint="@string/location" />
 
         <TextView
+            android:id="@+id/lbl_tags_frame"
+            style="?android:attr/listSeparatorTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/ed__textsize_small"
-            android:text="@string/from"/>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <com.actionbarsherlock.internal.widget.IcsSpinner
-                android:id="@+id/spinner_from_day"
-                style="@style/formMargin"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="5"
-                android:layout_marginTop="0dp"/>
-            <com.actionbarsherlock.internal.widget.IcsSpinner
-                android:id="@+id/spinner_from_time"
-                style="@style/formMargin"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:layout_marginTop="0dp" />
-        </LinearLayout>
+            android:text="@string/tags" />
 
         <TextView
+            android:id="@+id/lbl_tags"
+            style="@style/listItemTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/ed__textsize_small"
-            android:text="@string/to"/>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <com.actionbarsherlock.internal.widget.IcsSpinner
-                android:id="@+id/spinner_to_day"
-                style="@style/formMargin"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="5"
-                android:layout_marginTop="0dp"/>
-            <com.actionbarsherlock.internal.widget.IcsSpinner
-                android:id="@+id/spinner_to_time"
-                style="@style/formMargin"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:layout_marginTop="0dp" />
-        </LinearLayout>
-
-        <CheckBox
-            android:id="@+id/chk_all_day"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/ed__textsize_small"
-            android:text="@string/all_day"/>
-
-        <com.actionbarsherlock.internal.widget.IcsSpinner
-            android:id="@+id/spinner_repeat"
-            style="@style/formMargin"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="0dp" />
-
-        <EditText
-            android:id="@+id/txt_tags"
-            style="@style/formMargin"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:autoLink="all"
             android:hint="@string/tags" />
 
-        <EditText
-            android:id="@+id/txt_note"
-            style="@style/formMargin"
+        <TextView
+            android:id="@+id/lbl_note_frame"
+            style="?android:attr/listSeparatorTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minLines="@integer/notes_min_lines"
-            android:gravity="top"
+            android:text="@string/note" />
+
+        <TextView
+            android:id="@+id/lbl_note"
+            style="@style/listItemTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autoLink="all"
             android:hint="@string/note" />
     </LinearLayout>
 
