@@ -14,10 +14,14 @@
     <permission
         android:name="com.nexuspad.core.permission.LISTEN_FOLDER_CHANGES"
         android:protectionLevel="signature" />
+    <permission
+        android:name="com.nexuspad.core.permission.RECEIVE_ENTRY_LIST"
+        android:protectionLevel="signature" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="com.nexuspad.core.permission.LISTEN_ENTRY_CHANGES" />
     <uses-permission android:name="com.nexuspad.core.permission.LISTEN_FOLDER_CHANGES" />
+    <uses-permission android:name="com.nexuspad.core.permission.RECEIVE_ENTRY_LIST" />
 
     <application
         android:name=".app.App"

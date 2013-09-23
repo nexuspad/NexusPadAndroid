@@ -9,7 +9,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
-import android.widget.*;
+import android.widget.BaseAdapter;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.Toast;
 import com.actionbarsherlock.view.MenuItem;
 import com.edmondapps.utils.android.Logs;
 import com.edmondapps.utils.android.ui.CompoundAdapter;
@@ -34,9 +37,9 @@ import com.nexuspad.ui.OnFolderMenuClickListener;
 import com.nexuspad.ui.OnListEndListener;
 import com.nexuspad.ui.activity.NewFolderActivity;
 
-import java.lang.ref.WeakReference;
-import java.util.Date;
 import java.util.List;
+
+import static com.nexuspad.dataservice.EntryListService.EntryListReceiver;
 
 /**
  * Manages an EntryList.
@@ -51,7 +54,7 @@ public abstract class EntriesFragment extends ListFragment {
 
     private static final int PAGE_COUNT = 20;
     private static final String TAG = "EntriesFragment";
-    private static final String KEY_ENTRY_LIST = "key_entry_list";
+    private static EntryList sCachedEntryList;
 
     public interface Callback {
         void onListLoaded(EntriesFragment f, EntryList list);
@@ -74,7 +77,19 @@ public abstract class EntriesFragment extends ListFragment {
     private final Lazy<EntryListService> mEntryListService = new Lazy<EntryListService>() {
         @Override
         protected EntryListService onCreate() {
-            return new EntryListService(getActivity(), mEntryListCallback);
+            return new EntryListService(getActivity());
+        }
+    };
+
+    private final EntryListReceiver mEntryListReceiver = new EntryListReceiver() {
+        @Override
+        protected void onGotAll(Context c, Intent i, String key) {
+            onListLoadedInternal(mEntryListService.get().getEntryListFromKey(key));
+        }
+
+        @Override
+        protected void onError(Context context, Intent intent, ServiceError error) {
+            Toast.makeText(getActivity(), R.string.err_internal, Toast.LENGTH_LONG).show();
         }
     };
 
@@ -148,8 +163,6 @@ public abstract class EntriesFragment extends ListFragment {
                     .inflate(R.layout.list_item_load_more, null, false));
         }
     };
-
-    private final EntryListCallback mEntryListCallback = new EntryListCallback(this);
 
     private EntryList mEntryList;
 
@@ -256,23 +269,26 @@ public abstract class EntriesFragment extends ListFragment {
             mFolder = Folder.rootFolderOf(getModule(), activity);
         }
 
-        activity.registerReceiver(
-                mFolderReceiver,
+        activity.registerReceiver(mFolderReceiver,
                 FolderReceiver.getIntentFilter(),
                 Manifest.permission.LISTEN_FOLDER_CHANGES,
                 null);
 
-        activity.registerReceiver(
-                mEntryReceiver,
+        activity.registerReceiver(mEntryReceiver,
                 EntryReceiver.getIntentFilter(),
                 Manifest.permission.LISTEN_ENTRY_CHANGES,
+                null);
+
+        activity.registerReceiver(mEntryListReceiver,
+                EntryListReceiver.getIntentFilter(),
+                Manifest.permission.RECEIVE_ENTRY_LIST,
                 null);
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelable(KEY_ENTRY_LIST, mEntryList);
+        sCachedEntryList = mEntryList;
     }
 
     /**
@@ -297,13 +313,10 @@ public abstract class EntriesFragment extends ListFragment {
             }
         }
 
-        if (savedInstanceState != null) {
-            final EntryList entryList = savedInstanceState.getParcelable(KEY_ENTRY_LIST);
-            if (entryList != null) {
-                onListLoadedInternal(entryList);
-            } else {
-                queryEntriesAync();
-            }
+        if (sCachedEntryList != null) {
+            mEntryList = sCachedEntryList;
+            onListLoadedInternal(mEntryList);
+            sCachedEntryList = null;
         } else if (isLoadListEnabled()) {
             queryEntriesAync();
         }
@@ -342,6 +355,7 @@ public abstract class EntriesFragment extends ListFragment {
         FragmentActivity activity = getActivity();
         activity.unregisterReceiver(mFolderReceiver);
         activity.unregisterReceiver(mEntryReceiver);
+        activity.unregisterReceiver(mEntryListReceiver);
     }
 
     public void queryEntriesAync() {
@@ -374,7 +388,7 @@ public abstract class EntriesFragment extends ListFragment {
      * .
      * <p/>
      * You may override this method to use other mechanisms, such as
-     * {@link EntryListService#getEntriesBetweenDates(Folder, EntryTemplate, Date, Date, int, int)}
+     * {@link EntryListService#getEntriesBetweenDates(Folder, EntryTemplate, long, long, int, int)}
      */
     protected void getEntriesInFolder(EntryListService service, Folder folder, int page) throws NPException {
         service.getEntriesInFolder(mFolder, getTemplate(), page, getEntriesCountPerPage());
@@ -487,29 +501,5 @@ public abstract class EntriesFragment extends ListFragment {
 
     public final EntryListService getEntryListService() {
         return mEntryListService.get();
-    }
-
-    private static class EntryListCallback implements EntryListServiceCallback {
-        private final WeakReference<EntriesFragment> mEntriesFragment;
-
-        public EntryListCallback(EntriesFragment f) {
-            mEntriesFragment = new WeakReference<EntriesFragment>(f);
-        }
-
-        @Override
-        public void successfulRetrieval(EntryList list) {
-            EntriesFragment fragment = mEntriesFragment.get();
-            if ((fragment != null) && fragment.isAdded()) {
-                fragment.onListLoadedInternal(list);
-            }
-        }
-
-        @Override
-        public void failureCallback(ServiceError error) {
-            EntriesFragment fragment = mEntriesFragment.get();
-            if ((fragment != null) && fragment.isAdded()) {
-                Toast.makeText(fragment.getActivity(), R.string.err_internal, Toast.LENGTH_LONG).show();
-            }
-        }
     }
 }
