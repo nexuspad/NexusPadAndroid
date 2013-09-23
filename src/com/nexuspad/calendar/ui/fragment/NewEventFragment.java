@@ -1,17 +1,25 @@
 package com.nexuspad.calendar.ui.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.TextView;
 import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
+import com.nexuspad.contacts.ui.activity.NewLocationActivity;
 import com.nexuspad.datamodel.EntryTemplate;
 import com.nexuspad.datamodel.Event;
 import com.nexuspad.datamodel.Folder;
 import com.nexuspad.ui.fragment.NewEntryFragment;
+
+import java.text.DateFormat;
+import java.util.Date;
 
 import static com.edmondapps.utils.android.view.ViewUtils.findView;
 import static com.nexuspad.dataservice.ServiceConstants.CALENDAR_MODULE;
@@ -34,8 +42,26 @@ public class NewEventFragment extends NewEntryFragment<Event> {
         return fragment;
     }
 
+    private DateFormat mDateFormat;
+    private DateFormat mTimeFormat;
+
     private EditText mTitleV;
-    private EditText mLocationV;
+    private TextView mLocationV;
+    private TextView mFromDayV;
+    private TextView mFromTimeV;
+    private TextView mToDayV;
+    private TextView mToTimeV;
+    private CheckBox mAllDayV;
+    private Spinner mRepeatV;
+    private EditText mTagsV;
+    private EditText mNoteV;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mDateFormat = android.text.format.DateFormat.getDateFormat(getActivity());
+        mTimeFormat = android.text.format.DateFormat.getTimeFormat(getActivity());
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -44,11 +70,57 @@ public class NewEventFragment extends NewEntryFragment<Event> {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        mTitleV = findView(view, R.id.txt_title);
-        mLocationV = findView(view, R.id.txt_location);
-        //TODO work-in-progress
+        findViews(view);
+
+        mLocationV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Event event = getDetailEntryIfExist();
+                final Intent intent = NewLocationActivity.of(getActivity(), event == null ? null : event.getLocation());
+                startActivity(intent); //TODO receive result
+            }
+        });
 
         super.onViewCreated(view, savedInstanceState);
+    }
+
+    private void findViews(View view) {
+        mTitleV = findView(view, R.id.txt_title);
+        mLocationV = findView(view, R.id.txt_location);
+
+        mFromDayV = findView(view, R.id.spinner_from_day);
+        mFromTimeV = findView(view, R.id.spinner_from_time);
+        mToDayV = findView(view, R.id.spinner_to_day);
+        mToTimeV = findView(view, R.id.spinner_to_time);
+
+        mAllDayV = findView(view, R.id.chk_all_day);
+        mRepeatV = findView(view, R.id.spinner_repeat);
+        mTagsV = findView(view, R.id.txt_tags);
+        mNoteV = findView(view, R.id.txt_note);
+    }
+
+    @Override
+    protected void updateUI() {
+        super.updateUI();
+        final Event event = getDetailEntryIfExist();
+        if (event != null) {
+            mTitleV.setText(event.getTitle());
+            mLocationV.setText(event.getLocation().getFullAddress());
+
+            final Date startTime = new Date(event.getStartTime());
+            mFromDayV.setText(mDateFormat.format(startTime));
+            mFromTimeV.setText(mTimeFormat.format(startTime));
+
+            final Date endTime = new Date(event.getEndTime());
+            mToDayV.setText(mDateFormat.format(endTime));
+            mToTimeV.setText(mTimeFormat.format(endTime));
+
+            mAllDayV.setChecked(event.isAllDayEvent());
+
+            //TODO repeat
+            mTagsV.setText(event.getTags());
+            mNoteV.setTag(event.getNote());
+        }
     }
 
     @Override

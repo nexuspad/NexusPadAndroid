@@ -9,7 +9,6 @@ import com.nexuspad.dataservice.EntryListService;
 import com.nexuspad.dataservice.NPException;
 import com.nexuspad.ui.fragment.EntriesFragment;
 
-import java.util.Date;
 import java.util.List;
 
 import static com.nexuspad.dataservice.ServiceConstants.CALENDAR_MODULE;
@@ -24,7 +23,7 @@ public class EventsFragment extends EntriesFragment {
 
     @Override
     protected void getEntriesInFolder(EntryListService service, Folder folder, int page) throws NPException {
-        service.getEntriesBetweenDates(folder, getTemplate(), new Date(0), new Date(), page, getEntriesCountPerPage());
+        service.getEntriesBetweenDates(folder, getTemplate(), 0, System.currentTimeMillis(), page, getEntriesCountPerPage());
     }
 
     @Override

@@ -14,11 +14,26 @@ import com.nexuspad.ui.activity.UploadCenterActivity;
 
 import static com.edmondapps.utils.android.Utils.hasJellyBean;
 import static com.edmondapps.utils.android.view.ViewUtils.findView;
+import static com.nexuspad.app.service.UploadService.OnUploadCountChangeListener;
 
 /**
  * Author: edmond
  */
 public class UploadBarView extends FrameLayout {
+
+    /**
+     * Maintain a reference since {@link UploadService#addOnUploadCountChangeListener(OnUploadCountChangeListener) addOnUploadCountChangeListener}
+     * holds a {@code WeakReference} to the listener.<p>
+     * Anonymous inner class will cause the listener to be
+     * garbage collected, thus a field reference is needed. (The listener holds a reference to the {@code UploadBarView},
+     * leaking memory if it is strongly referenced in {@code UploadService}.
+     */
+    private OnUploadCountChangeListener mListener = new OnUploadCountChangeListener() {
+        @Override
+        public void onUploadCountChanged(int uploadCount) {
+            setUploadCount(uploadCount);
+        }
+    };
 
     public UploadBarView(Context context) {
         this(context, null, 0);
@@ -39,12 +54,7 @@ public class UploadBarView extends FrameLayout {
         array.recycle();
         setBackgroundCompat(background);
 
-        UploadService.addOnUploadCountChangeListener(new UploadService.OnUploadCountChangeListener() {
-            @Override
-            public void onUploadCountChanged(int uploadCount) {
-                setUploadCount(uploadCount);
-            }
-        });
+        UploadService.addOnUploadCountChangeListener(mListener);
 
         super.setOnClickListener(new OnClickListener() {
             @Override

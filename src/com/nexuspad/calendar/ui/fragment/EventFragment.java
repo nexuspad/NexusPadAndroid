@@ -98,7 +98,7 @@ public class EventFragment extends EntryFragment<Event> {
         final Event event = getDetailEntryIfExist();
         if (event != null) {
             mTitleV.setText(event.getTitle());
-            final long eventTime = event.getStartTime().getTime();
+            final long eventTime = event.getStartTime();
             mDateTimeV.setText(DateUtils.getRelativeTimeSpanString(eventTime, System.currentTimeMillis(), DateUtils.HOUR_IN_MILLIS));
             mLocationV.setText(event.getLocation().getFullAddress());
             mTagsV.setText(event.getTags());
