@@ -182,7 +182,7 @@ public class ContactFragment extends EntryFragment<Contact> {
         }
     }
 
-    private void addBasicItemView(BasicItem item, ViewGroup target) {
+    private void addBasicItemView(NPItem item, ViewGroup target) {
         final ViewGroup frame = (ViewGroup) mInflater.inflate(R.layout.layout_selectable_frame, null);
         final ViewGroup view = (ViewGroup) mInflater.inflate(R.layout.list_item_icon, frame, false);
 
@@ -202,7 +202,7 @@ public class ContactFragment extends EntryFragment<Contact> {
         target.addView(frame);
     }
 
-    private View.OnClickListener onCreateOnClickListener(BasicItem item) {
+    private View.OnClickListener onCreateOnClickListener(NPItem item) {
         final String value = item.getValue();
         switch (item.getType()) {
             case PHONE:

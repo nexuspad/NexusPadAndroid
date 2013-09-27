@@ -1,5 +1,6 @@
 package com.nexuspad.calendar.ui.fragment;
 
+import java.util.Date;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
@@ -98,8 +99,8 @@ public class EventFragment extends EntryFragment<Event> {
         final Event event = getDetailEntryIfExist();
         if (event != null) {
             mTitleV.setText(event.getTitle());
-            final long eventTime = event.getStartTime();
-            mDateTimeV.setText(DateUtils.getRelativeTimeSpanString(eventTime, System.currentTimeMillis(), DateUtils.HOUR_IN_MILLIS));
+            final Date eventTime = event.getStartTime();
+            mDateTimeV.setText(DateUtils.getRelativeTimeSpanString(eventTime.getTime(), System.currentTimeMillis(), DateUtils.HOUR_IN_MILLIS));
             mLocationV.setText(event.getLocation().getFullAddress());
             mTagsV.setText(event.getTags());
             mNoteV.setText(event.getNote());

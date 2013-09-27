@@ -388,7 +388,7 @@ public abstract class EntriesFragment extends ListFragment {
      * .
      * <p/>
      * You may override this method to use other mechanisms, such as
-     * {@link EntryListService#getEntriesBetweenDates(Folder, EntryTemplate, long, long, int, int)}
+     *
      */
     protected void getEntriesInFolder(EntryListService service, Folder folder, int page) throws NPException {
         service.getEntriesInFolder(mFolder, getTemplate(), page, getEntriesCountPerPage());

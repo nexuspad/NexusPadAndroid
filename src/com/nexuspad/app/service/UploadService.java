@@ -4,9 +4,9 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
-import com.edmondapps.utils.android.service.FileUploadService;
 import com.google.common.collect.Lists;
 import com.nexuspad.app.Request;
+import com.nexuspad.dataservice.FileUploadService;
 import com.nexuspad.dataservice.EntryUploadService;
 
 import java.lang.ref.WeakReference;

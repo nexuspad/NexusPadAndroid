@@ -19,7 +19,8 @@ import com.nexuspad.annotation.ModuleId;
 import com.nexuspad.contacts.ui.activity.ContactActivity;
 import com.nexuspad.contacts.ui.activity.NewContactActivity;
 import com.nexuspad.datamodel.*;
-import com.nexuspad.dataservice.NPService;
+import com.nexuspad.dataservice.NPException;
+import com.nexuspad.dataservice.NPWebServiceUtil;
 import com.nexuspad.dataservice.ServiceConstants;
 import com.nexuspad.ui.EntriesAdapter;
 import com.nexuspad.ui.OnEntryMenuClickListener;
@@ -144,11 +145,17 @@ public final class ContactsFragment extends EntriesFragment {
 
             final String profileImageUrl = p.getProfileImageUrl();
             if (!TextUtils.isEmpty(profileImageUrl)) {
-                final String url = NPService.addAuthToken(profileImageUrl);
-                mPicasso.load(url)
-                        .placeholder(R.drawable.placeholder)
-                        .error(R.drawable.ic_launcher)
-                        .into(holder.icon);
+                try {
+                    final String url = NPWebServiceUtil.fullUrlWithAuthenticationTokens(profileImageUrl, getActivity());
+
+                    mPicasso.load(url)
+                            .placeholder(R.drawable.placeholder)
+                            .error(R.drawable.ic_launcher)
+                            .into(holder.icon);
+
+                } catch (NPException e) {
+                    // TODO handle error
+                }
             }
 
             holder.text1.setText(getDisplayString(position));

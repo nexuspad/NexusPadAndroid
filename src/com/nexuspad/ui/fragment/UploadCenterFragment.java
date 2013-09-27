@@ -13,12 +13,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import com.edmondapps.utils.android.annotaion.FragmentName;
-import com.edmondapps.utils.android.service.FileUploadService;
 import com.edmondapps.utils.android.ui.CompoundAdapter;
 import com.edmondapps.utils.android.view.PopupMenu;
 import com.nexuspad.R;
 import com.nexuspad.app.Request;
 import com.nexuspad.app.service.UploadService;
+import com.nexuspad.dataservice.FileUploadService;
 import com.nexuspad.datamodel.EntryTemplate;
 import com.squareup.picasso.Picasso;
 

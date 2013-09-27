@@ -18,7 +18,8 @@ import com.edmondapps.utils.java.WrapperList;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
 import com.nexuspad.datamodel.*;
-import com.nexuspad.dataservice.NPService;
+import com.nexuspad.dataservice.NPException;
+import com.nexuspad.dataservice.NPWebServiceUtil;
 import com.nexuspad.photos.ui.activity.PhotoActivity;
 import com.nexuspad.photos.ui.activity.PhotosActivity;
 import com.nexuspad.ui.DirectionalScrollListener;
@@ -208,13 +209,19 @@ public class PhotosFragment extends EntriesFragment implements OnItemClickListen
                 view = (ImageView) convertView;
             }
 
-            final String url = NPService.addAuthToken(getItem(position).getTnUrl());
-            mPicasso.load(url)
-                    .placeholder(R.drawable.placeholder)
-                    .error(R.drawable.ic_launcher)
-                    .resizeDimen(R.dimen.photo_grid_width, R.dimen.photo_grid_height)
-                    .centerCrop()
-                    .into(view);
+            try {
+                final String url = NPWebServiceUtil.fullUrlWithAuthenticationTokens(getItem(position).getTnUrl(), getActivity());
+
+                mPicasso.load(url)
+                        .placeholder(R.drawable.placeholder)
+                        .error(R.drawable.ic_launcher)
+                        .resizeDimen(R.dimen.photo_grid_width, R.dimen.photo_grid_height)
+                        .centerCrop()
+                        .into(view);
+
+            } catch (NPException e) {
+                // TODO handle error
+            }
 
             return view;
         }

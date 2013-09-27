@@ -156,7 +156,7 @@ public class NewContactFragment extends NewEntryFragment<Contact> {
      * @param email used to set the text field if not null
      */
     private void addEmailView(final Email email) {
-        addBasicItemView(email, BasicItem.ItemType.EMAIL);
+        addNPItemView(email, NPItem.ItemType.EMAIL);
     }
 
     /**
@@ -165,21 +165,21 @@ public class NewContactFragment extends NewEntryFragment<Contact> {
      * @param phone used to set the text field if not null
      */
     private void addPhoneView(final Phone phone) {
-        addBasicItemView(phone, BasicItem.ItemType.PHONE);
+        addNPItemView(phone, NPItem.ItemType.PHONE);
     }
 
-    private void addBasicItemViewIfNeeded(BasicItem basicItem, final BasicItem.ItemType type) {
+    private void addNPItemViewIfNeeded(NPItem NPItem, final NPItem.ItemType type) {
         final ViewGroup frame = getParentFor(type);
         final int childCount = frame.getChildCount();
         if (childCount <= 0) return;
         final View parent = frame.getChildAt(childCount - 1);
         final EditText editText = findView(parent, android.R.id.edit);
         if (!TextUtils.isEmpty(editText.getText().toString())) {
-            addBasicItemView(basicItem, type);
+            addNPItemView(NPItem, type);
         }
     }
 
-    private void addBasicItemView(final BasicItem basicItem, final BasicItem.ItemType type) {
+    private void addNPItemView(final NPItem NPItem, final NPItem.ItemType type) {
         final ViewGroup parent = getParentFor(type);
         final int hintId = getHintIdFor(type);
         final View view = mInflater.inflate(R.layout.list_item_edittext_btn, parent, false);
@@ -193,22 +193,22 @@ public class NewContactFragment extends NewEntryFragment<Contact> {
                 parent.removeView(view);
             }
         });
-        if (basicItem != null) {
-            editText.setText(basicItem.getValue());
+        if (NPItem != null) {
+            editText.setText(NPItem.getValue());
         }
         editText.setHint(hintId);
         editText.setInputType(getInputTypeFor(type));
         editText.addTextChangedListener(new EmptyTextWatcher() {
             @Override
             protected void onTextNotEmpty(CharSequence sequence) {
-                addBasicItemViewIfNeeded(basicItem, type);
+                addNPItemViewIfNeeded(NPItem, type);
             }
         });
 
         parent.addView(view);
     }
 
-    private ViewGroup getParentFor(BasicItem.ItemType type) {
+    private ViewGroup getParentFor(NPItem.ItemType type) {
         switch (type) {
             case PHONE:
                 return mPhoneFrameV;
@@ -219,7 +219,7 @@ public class NewContactFragment extends NewEntryFragment<Contact> {
         }
     }
 
-    private int getHintIdFor(BasicItem.ItemType type) {
+    private int getHintIdFor(NPItem.ItemType type) {
         switch (type) {
             case PHONE:
                 return R.string.phone;
@@ -230,7 +230,7 @@ public class NewContactFragment extends NewEntryFragment<Contact> {
         }
     }
 
-    private int getInputTypeFor(BasicItem.ItemType type) {
+    private int getInputTypeFor(NPItem.ItemType type) {
         switch (type) {
             case PHONE:
                 return InputType.TYPE_CLASS_PHONE;

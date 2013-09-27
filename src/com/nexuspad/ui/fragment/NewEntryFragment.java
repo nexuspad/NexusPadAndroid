@@ -99,7 +99,10 @@ public abstract class NewEntryFragment<T extends NPEntry> extends EntryFragment<
      * @see #getEditedEntry()
      */
     protected void onAddEntry(T entry) {
-        getEntryService().addEntry(entry);
+        try {
+            getEntryService().addEntry(entry);
+        } catch (NPException e) {
+        }
     }
 
     public final void updateEntry() {
@@ -132,7 +135,10 @@ public abstract class NewEntryFragment<T extends NPEntry> extends EntryFragment<
      * @see #getEditedEntry()
      */
     protected void onUpdateEntry(T entry) {
-        getEntryService().updateEntry(entry);
+        try {
+            getEntryService().updateEntry(entry);
+        } catch (NPException e) {
+        }
     }
 
     protected void installFolderSelectorListener(View v) {

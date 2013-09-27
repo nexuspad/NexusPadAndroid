@@ -8,11 +8,11 @@ import android.os.Bundle;
 import android.text.TextUtils;
 
 import com.actionbarsherlock.app.SherlockFragment;
-import com.edmondapps.utils.android.Logs;
 import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.nexuspad.account.AccountManager;
 import com.nexuspad.app.App;
 import com.nexuspad.datamodel.NPUser;
+import com.nexuspad.util.Logs;
 import com.nexuspad.dataservice.NPException;
 
 /**
@@ -52,7 +52,7 @@ public class MainFragment extends SherlockFragment {
             } else {
                 String email = currentUser.getEmail();
                 String password = currentUser.getPassword();
-                AccountManager.autoSignInAsync(email, password, new AccountManager.Callback() {
+                AccountManager.autoSignInAsync(email, password, getActivity(), new AccountManager.Callback() {
                     @Override
                     public void onLoginFailed(String userName, String password) {
                         mCallback.onLoginFailed(MainFragment.this, userName, password);

@@ -7,7 +7,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
-import com.edmondapps.utils.android.service.FileUploadService;
+import com.nexuspad.dataservice.FileUploadService;
 import com.nexuspad.datamodel.Folder;
 import com.nexuspad.datamodel.NPEntry;
 

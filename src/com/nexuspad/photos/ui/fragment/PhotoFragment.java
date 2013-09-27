@@ -22,7 +22,8 @@ import com.nexuspad.annotation.ModuleId;
 import com.nexuspad.datamodel.EntryTemplate;
 import com.nexuspad.datamodel.Folder;
 import com.nexuspad.datamodel.Photo;
-import com.nexuspad.dataservice.NPService;
+import com.nexuspad.dataservice.NPException;
+import com.nexuspad.dataservice.NPWebServiceUtil;
 import com.nexuspad.dataservice.ServiceConstants;
 import com.nexuspad.ui.fragment.EntriesFragment;
 import com.nexuspad.ui.view.ZoomableImageView;
@@ -151,12 +152,18 @@ public class PhotoFragment extends EntriesFragment {
                         }
                     }
                 });
-                final String url = NPService.addAuthToken(photo.getPhotoUrl());
 
-                mPicasso.load(url)
-                        .placeholder(R.drawable.placeholder)
-                        .error(R.drawable.ic_launcher)
-                        .into(imageView, new ZoomableImageViewCallback(imageView));
+                try {
+                    final String url = NPWebServiceUtil.fullUrlWithAuthenticationTokens(photo.getPhotoUrl(), getActivity());
+
+                    mPicasso.load(url)
+                            .placeholder(R.drawable.placeholder)
+                            .error(R.drawable.ic_launcher)
+                            .into(imageView, new ZoomableImageViewCallback(imageView));
+
+                } catch (NPException e) {
+                    // TODO handle error
+                }
 
                 container.addView(frame, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
                 return frame;

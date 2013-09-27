@@ -54,7 +54,12 @@ public class JournalsFragment extends EntriesFragment {
         long start = new Date(2013 - 1900, 0, 1).getTime();
         long end = System.currentTimeMillis();
 
-        service.getEntriesBetweenDates(folder, getTemplate(), start, end, page, getEntriesCountPerPage());
+        /*
+        FROM REN:
+        The start date is the first date of the month, the end date is the end date of the month.
+        They are based on the current date of journal.
+         */
+        service.getEntriesBetweenDates(folder, getTemplate(), null, null, page, getEntriesCountPerPage());
     }
 
     @Override

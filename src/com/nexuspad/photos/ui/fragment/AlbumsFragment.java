@@ -24,7 +24,8 @@ import com.nexuspad.datamodel.Album;
 import com.nexuspad.datamodel.EntryList;
 import com.nexuspad.datamodel.EntryTemplate;
 import com.nexuspad.datamodel.Folder;
-import com.nexuspad.dataservice.NPService;
+import com.nexuspad.dataservice.NPException;
+import com.nexuspad.dataservice.NPWebServiceUtil;
 import com.nexuspad.dataservice.ServiceConstants;
 import com.nexuspad.photos.ui.activity.AlbumActivity;
 import com.nexuspad.photos.ui.activity.PhotosActivity;
@@ -186,14 +187,22 @@ public class AlbumsFragment extends EntriesFragment {
             holder.title.setText(album.getTitle());
             final String tnUrl = album.getTnUrl();
             if (!TextUtils.isEmpty(tnUrl)) {
-                final String url = NPService.addAuthToken(tnUrl);
-                Picasso.with(getActivity())
-                        .load(url)
-                        .resizeDimen(R.dimen.photo_grid_width, R.dimen.photo_grid_height)
-                        .centerCrop()
-                        .placeholder(R.drawable.placeholder)
-                        .error(R.drawable.ic_launcher)
-                        .into(holder.thumbnail);
+
+                try {
+                    final String url = NPWebServiceUtil.fullUrlWithAuthenticationTokens(tnUrl, getActivity());
+
+                    Picasso.with(getActivity())
+                            .load(url)
+                            .resizeDimen(R.dimen.photo_grid_width, R.dimen.photo_grid_height)
+                            .centerCrop()
+                            .placeholder(R.drawable.placeholder)
+                            .error(R.drawable.ic_launcher)
+                            .into(holder.thumbnail);
+
+                } catch (NPException e) {
+                    // TODO handle error
+                }
+
             } else {
                 holder.thumbnail.setImageResource(R.drawable.placeholder);
             }

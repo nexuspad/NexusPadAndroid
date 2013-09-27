@@ -107,13 +107,11 @@ public class NewEventFragment extends NewEntryFragment<Event> {
             mTitleV.setText(event.getTitle());
             mLocationV.setText(event.getLocation().getFullAddress());
 
-            final Date startTime = new Date(event.getStartTime());
-            mFromDayV.setText(mDateFormat.format(startTime));
-            mFromTimeV.setText(mTimeFormat.format(startTime));
+            mFromDayV.setText(mDateFormat.format(event.getStartTime()));
+            mFromTimeV.setText(mTimeFormat.format(event.getStartTime()));
 
-            final Date endTime = new Date(event.getEndTime());
-            mToDayV.setText(mDateFormat.format(endTime));
-            mToTimeV.setText(mTimeFormat.format(endTime));
+            mToDayV.setText(mDateFormat.format(event.getEndTime()));
+            mToTimeV.setText(mTimeFormat.format(event.getEndTime()));
 
             mAllDayV.setChecked(event.isAllDayEvent());
 

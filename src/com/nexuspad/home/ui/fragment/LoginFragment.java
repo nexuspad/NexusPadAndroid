@@ -170,7 +170,7 @@ public class LoginFragment extends SherlockFragment {
                     // login
                     String userName = mUserNameV.getText().toString();
                     String password = mPasswordV.getText().toString();
-                    AccountManager.autoSignInAsync(userName, password, new AccountManager.Callback() {
+                    AccountManager.autoSignInAsync(userName, password, getActivity(), new AccountManager.Callback() {
                         @Override
                         public void onLoginFailed(String userName, String password) {
                             mLoadingViews.doneLoading();
