@@ -51,8 +51,8 @@ public class JournalsFragment extends EntriesFragment {
     @Override
     protected void getEntriesInFolder(EntryListService service, Folder folder, int page) throws NPException {
         @SuppressWarnings("deprecation")
-        Date start = new Date(2013 - 1900, 0, 1);
-        Date end = new Date();
+        long start = new Date(2013 - 1900, 0, 1).getTime();
+        long end = System.currentTimeMillis();
 
         service.getEntriesBetweenDates(folder, getTemplate(), start, end, page, getEntriesCountPerPage());
     }

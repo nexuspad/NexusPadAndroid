@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 import com.edmondapps.utils.android.service.FileUploadService;
+import com.google.common.collect.Lists;
 import com.nexuspad.app.Request;
 import com.nexuspad.dataservice.EntryUploadService;
 
@@ -80,10 +81,15 @@ public final class UploadService extends Service {
     }
 
     private static int sUploadCount;
-    private static List<OnUploadCountChangeListener> sUploadCountChangeListeners = new ArrayList<OnUploadCountChangeListener>();
+    private static List<WeakReference<OnUploadCountChangeListener>> sUploadCountChangeListeners = Lists.newArrayList();
 
+    /**
+     * Adds a listener to be notified of upload count changes.
+     * <p>
+     * Listeners are stored in a {@code WeakReference}, thus, anonymous inner class cannot be used.
+     */
     public static void addOnUploadCountChangeListener(OnUploadCountChangeListener listener) {
-        sUploadCountChangeListeners.add(listener);
+        sUploadCountChangeListeners.add(new WeakReference<OnUploadCountChangeListener>(listener));
     }
 
     private final List<Request> mQueue = new ArrayList<Request>();
@@ -104,8 +110,11 @@ public final class UploadService extends Service {
         final int oldCount = sUploadCount;
         sUploadCount = mQueue.size();
         if (oldCount != sUploadCount) {
-            for (OnUploadCountChangeListener listener : sUploadCountChangeListeners) {
-                listener.onUploadCountChanged(sUploadCount);
+            for (WeakReference<OnUploadCountChangeListener> reference : sUploadCountChangeListeners) {
+                final OnUploadCountChangeListener listener = reference.get();
+                if (listener != null) {
+                    listener.onUploadCountChanged(sUploadCount);
+                }
             }
         }
     }

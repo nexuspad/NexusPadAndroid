@@ -1,6 +1,6 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="AppTheme" parent="@style/Theme.Sherlock.Light.DarkActionBar"/>
+    <style name="AppTheme" parent="@style/Theme.Sherlock.Light.DarkActionBar" />
 
     <style name="fastscrollThemedListView" parent="@style/AppTheme">
         <item name="android:textColorPrimary">?android:textColorPrimaryInverse</item>
@@ -12,7 +12,7 @@
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 
-    <style name="autoMargin"/>
+    <style name="autoMargin" />
 
     <style name="formMargin">
         <item name="android:layout_marginBottom">@dimen/ed__padding_small</item>
