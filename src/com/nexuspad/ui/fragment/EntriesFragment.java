@@ -54,7 +54,6 @@ public abstract class EntriesFragment extends ListFragment {
 
     private static final int PAGE_COUNT = 20;
     private static final String TAG = "EntriesFragment";
-    private static EntryList sCachedEntryList;
 
     public interface Callback {
         void onListLoaded(EntriesFragment f, EntryList list);
@@ -63,28 +62,30 @@ public abstract class EntriesFragment extends ListFragment {
     private final Lazy<FolderService> mFolderService = new Lazy<FolderService>() {
         @Override
         protected FolderService onCreate() {
-            return new FolderService(getActivity());
+            return FolderService.getInstance(getActivity());
         }
     };
 
     private final Lazy<EntryService> mEntryService = new Lazy<EntryService>() {
         @Override
         protected EntryService onCreate() {
-            return new EntryService(getActivity());
+            return EntryService.getInstance(getActivity());
         }
     };
 
     private final Lazy<EntryListService> mEntryListService = new Lazy<EntryListService>() {
         @Override
         protected EntryListService onCreate() {
-            return new EntryListService(getActivity());
+            return EntryListService.getInstance(getActivity());
         }
     };
 
     private final EntryListReceiver mEntryListReceiver = new EntryListReceiver() {
         @Override
-        protected void onGotAll(Context c, Intent i, String key) {
-            onListLoadedInternal(mEntryListService.get().getEntryListFromKey(key));
+        protected void onGotAll(Context c, Intent i, EntryTemplate entryTemplate, String key) {
+            if (mModuleId.template().equals(entryTemplate)) {
+                onListLoadedInternal(mEntryListService.get().getEntryListFromKey(key));
+            }
         }
 
         @Override
@@ -258,16 +259,22 @@ public abstract class EntriesFragment extends ListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        FragmentActivity activity = getActivity();
-        Bundle arguments = getArguments();
+        final FragmentActivity activity = getActivity();
+        final Bundle arguments = getArguments();
 
         if (arguments != null) {
             mFolder = arguments.getParcelable(KEY_FOLDER);
         }
 
         if (mFolder == null) {
-            mFolder = Folder.rootFolderOf(getModule(), activity);
+            throw new IllegalArgumentException("you did not pass in a folder with KEY_FOLDER");
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        final FragmentActivity activity = getActivity();
 
         activity.registerReceiver(mFolderReceiver,
                 FolderReceiver.getIntentFilter(),
@@ -286,9 +293,13 @@ public abstract class EntriesFragment extends ListFragment {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        sCachedEntryList = mEntryList;
+    public void onPause() {
+        super.onPause();
+        final FragmentActivity activity = getActivity();
+
+        activity.unregisterReceiver(mFolderReceiver);
+        activity.unregisterReceiver(mEntryReceiver);
+        activity.unregisterReceiver(mEntryListReceiver);
     }
 
     /**
@@ -313,11 +324,7 @@ public abstract class EntriesFragment extends ListFragment {
             }
         }
 
-        if (sCachedEntryList != null) {
-            mEntryList = sCachedEntryList;
-            onListLoadedInternal(mEntryList);
-            sCachedEntryList = null;
-        } else if (isLoadListEnabled()) {
+        if (isLoadListEnabled()) {
             queryEntriesAync();
         }
     }
@@ -346,16 +353,6 @@ public abstract class EntriesFragment extends ListFragment {
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-
-        FragmentActivity activity = getActivity();
-        activity.unregisterReceiver(mFolderReceiver);
-        activity.unregisterReceiver(mEntryReceiver);
-        activity.unregisterReceiver(mEntryListReceiver);
     }
 
     public void queryEntriesAync() {

@@ -63,7 +63,7 @@ public class PhotosFragment extends EntriesFragment implements OnItemClickListen
     @Override
     protected void onNewEntry(NPEntry entry) {
         if (entry instanceof Photo) {  // or album, which will be handled at AlbumsFragment
-            Photo photo = (Photo) entry;
+            final Photo photo = (Photo) entry;
             mPhotos.add(photo);
         }
         super.onNewEntry(entry);
@@ -220,7 +220,7 @@ public class PhotosFragment extends EntriesFragment implements OnItemClickListen
                         .into(view);
 
             } catch (NPException e) {
-                // TODO handle error
+                throw new RuntimeException(e);
             }
 
             return view;

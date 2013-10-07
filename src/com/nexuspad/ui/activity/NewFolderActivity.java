@@ -43,7 +43,7 @@ public class NewFolderActivity extends DoneDiscardActivity {
         c.startActivity(intent);
     }
 
-    private final FolderService mFolderService = new FolderService(this);
+    private final FolderService mFolderService = FolderService.getInstance(this);
 
     private Folder mParentFolder;
     private Folder mOriginalFolder;

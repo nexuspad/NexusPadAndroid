@@ -1,5 +1,6 @@
 package com.nexuspad.calendar.ui.fragment;
 
+import android.os.Bundle;
 import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.nexuspad.annotation.ModuleId;
 import com.nexuspad.calendar.ui.activity.EventActivity;
@@ -21,6 +22,15 @@ import static com.nexuspad.dataservice.ServiceConstants.CALENDAR_MODULE;
 @ModuleId(moduleId = CALENDAR_MODULE, template = EntryTemplate.EVENT)
 public class EventsFragment extends EntriesFragment {
     public static final String TAG = "EventsFragment";
+
+    public static EventsFragment of(Folder folder) {
+        final Bundle bundle = new Bundle();
+        bundle.putParcelable(KEY_FOLDER, folder);
+
+        final EventsFragment fragment = new EventsFragment();
+        fragment.setArguments(bundle);
+        return fragment;
+    }
 
     @Override
     protected void getEntriesInFolder(EntryListService service, Folder folder, int page) throws NPException {

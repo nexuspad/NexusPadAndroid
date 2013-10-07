@@ -5,6 +5,7 @@ import com.edmondapps.utils.android.annotaion.ParentActivity;
 import com.nexuspad.annotation.ModuleId;
 import com.nexuspad.calendar.ui.fragment.EventsFragment;
 import com.nexuspad.datamodel.EntryTemplate;
+import com.nexuspad.datamodel.Folder;
 import com.nexuspad.home.ui.activity.DashboardActivity;
 import com.nexuspad.ui.activity.EntriesActivity;
 
@@ -19,6 +20,6 @@ public class EventsActivity extends EntriesActivity {
 
     @Override
     protected Fragment onCreateFragment() {
-        return new EventsFragment();
+        return EventsFragment.of(Folder.rootFolderOf(getModule(), this));
     }
 }

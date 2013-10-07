@@ -61,7 +61,7 @@ public abstract class EntryFragment<T extends NPEntry> extends SherlockDialogFra
     private final Lazy<EntryService> mEntryService = new Lazy<EntryService>() {
         @Override
         protected EntryService onCreate() {
-            return new EntryService(getActivity());
+            return EntryService.getInstance(getActivity());
         }
     };
 
