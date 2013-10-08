@@ -12,6 +12,7 @@ import com.edmondapps.utils.android.annotaion.ParentActivity;
 import com.nexuspad.annotation.ModuleId;
 import com.nexuspad.bookmark.ui.fragment.NewBookmarkFragment;
 import com.nexuspad.datamodel.Bookmark;
+import com.nexuspad.datamodel.EntryTemplate;
 import com.nexuspad.datamodel.Folder;
 import com.nexuspad.dataservice.ServiceConstants;
 import com.nexuspad.ui.activity.NewEntryActivity;
@@ -20,7 +21,7 @@ import com.nexuspad.ui.activity.NewEntryActivity;
  * @author Edmond
  */
 @ParentActivity(BookmarksActivity.class)
-@ModuleId(moduleId = ServiceConstants.BOOKMARK_MODULE)
+@ModuleId(moduleId = ServiceConstants.BOOKMARK_MODULE, template = EntryTemplate.BOOKMARK)
 public class NewBookmarkActivity extends NewEntryActivity<Bookmark> {
 
     public static void startWithFolder(Folder f, Context c) {

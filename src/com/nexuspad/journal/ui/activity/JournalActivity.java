@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import com.edmondapps.utils.android.annotaion.ParentActivity;
 import com.nexuspad.annotation.ModuleId;
+import com.nexuspad.datamodel.EntryTemplate;
 import com.nexuspad.datamodel.Journal;
 import com.nexuspad.dataservice.ServiceConstants;
 import com.nexuspad.home.ui.activity.DashboardActivity;
@@ -21,7 +22,7 @@ import com.nexuspad.ui.fragment.EntryFragment;
  * 
  */
 @ParentActivity(DashboardActivity.class)
-@ModuleId(moduleId = ServiceConstants.JOURNAL_MODULE)
+@ModuleId(moduleId = ServiceConstants.JOURNAL_MODULE, template = EntryTemplate.JOURNAL)
 public class JournalActivity extends EntriesActivity implements JournalFragment.Callback {
 
     @Override

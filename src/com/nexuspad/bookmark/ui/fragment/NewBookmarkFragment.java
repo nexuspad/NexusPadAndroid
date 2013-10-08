@@ -13,6 +13,7 @@ import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
 import com.nexuspad.datamodel.Bookmark;
+import com.nexuspad.datamodel.EntryTemplate;
 import com.nexuspad.datamodel.Folder;
 import com.nexuspad.dataservice.ServiceConstants;
 import com.nexuspad.ui.fragment.NewEntryFragment;
@@ -24,7 +25,7 @@ import static com.edmondapps.utils.android.view.ViewUtils.isAllTextNotEmpty;
  * @author Edmond
  */
 @FragmentName(NewBookmarkFragment.TAG)
-@ModuleId(moduleId = ServiceConstants.BOOKMARK_MODULE)
+@ModuleId(moduleId = ServiceConstants.BOOKMARK_MODULE, template = EntryTemplate.BOOKMARK)
 public class NewBookmarkFragment extends NewEntryFragment<Bookmark> {
     public static final String TAG = "NewBookmarkFragment";
 

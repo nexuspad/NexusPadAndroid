@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import com.edmondapps.utils.android.annotaion.ParentActivity;
 import com.nexuspad.annotation.ModuleId;
 import com.nexuspad.datamodel.Doc;
+import com.nexuspad.datamodel.EntryTemplate;
 import com.nexuspad.datamodel.Folder;
 import com.nexuspad.dataservice.ServiceConstants;
 import com.nexuspad.doc.ui.fragment.DocsFragment;
@@ -21,7 +22,7 @@ import com.nexuspad.ui.activity.EntriesActivity;
  * 
  */
 @ParentActivity(DashboardActivity.class)
-@ModuleId(moduleId = ServiceConstants.DOC_MODULE)
+@ModuleId(moduleId = ServiceConstants.DOC_MODULE, template = EntryTemplate.DOC)
 public class DocsActivity extends EntriesActivity implements DocsFragment.Callback {
 
     /**

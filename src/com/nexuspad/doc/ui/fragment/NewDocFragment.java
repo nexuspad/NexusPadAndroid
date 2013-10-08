@@ -15,6 +15,7 @@ import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
 import com.nexuspad.datamodel.Doc;
+import com.nexuspad.datamodel.EntryTemplate;
 import com.nexuspad.datamodel.Folder;
 import com.nexuspad.dataservice.ServiceConstants;
 import com.nexuspad.ui.fragment.NewEntryFragment;
@@ -26,7 +27,7 @@ import static com.edmondapps.utils.android.view.ViewUtils.isAllTextNotEmpty;
  * @author Edmond
  */
 @FragmentName(NewDocFragment.TAG)
-@ModuleId(moduleId = ServiceConstants.DOC_MODULE)
+@ModuleId(moduleId = ServiceConstants.DOC_MODULE, template = EntryTemplate.DOC)
 public class NewDocFragment extends NewEntryFragment<Doc> {
     public static final String TAG = "NewDocFragment";
 

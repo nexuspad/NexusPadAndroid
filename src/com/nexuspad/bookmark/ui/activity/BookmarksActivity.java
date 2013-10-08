@@ -11,6 +11,7 @@ import com.edmondapps.utils.android.annotaion.ParentActivity;
 import com.nexuspad.annotation.ModuleId;
 import com.nexuspad.bookmark.ui.fragment.BookmarksFragment;
 import com.nexuspad.datamodel.Bookmark;
+import com.nexuspad.datamodel.EntryTemplate;
 import com.nexuspad.datamodel.Folder;
 import com.nexuspad.dataservice.ServiceConstants;
 import com.nexuspad.home.ui.activity.DashboardActivity;
@@ -21,7 +22,7 @@ import com.nexuspad.ui.activity.EntriesActivity;
  * 
  */
 @ParentActivity(DashboardActivity.class)
-@ModuleId(moduleId = ServiceConstants.BOOKMARK_MODULE)
+@ModuleId(moduleId = ServiceConstants.BOOKMARK_MODULE, template = EntryTemplate.BOOKMARK)
 public class BookmarksActivity extends EntriesActivity implements BookmarksFragment.Callback {
     public static final String TAG = "BookmarksActivity";
 
