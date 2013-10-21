@@ -3,24 +3,12 @@
  */
 package com.nexuspad.home.ui.fragment;
 
-import static com.nexuspad.dataservice.ServiceConstants.BOOKMARK_MODULE;
-import static com.nexuspad.dataservice.ServiceConstants.CALENDAR_MODULE;
-import static com.nexuspad.dataservice.ServiceConstants.CONTACT_MODULE;
-import static com.nexuspad.dataservice.ServiceConstants.DOC_MODULE;
-import static com.nexuspad.dataservice.ServiceConstants.JOURNAL_MODULE;
-import static com.nexuspad.dataservice.ServiceConstants.PHOTO_MODULE;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.ListView;
-
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.nexuspad.R;
 import com.nexuspad.about.activity.AboutActivity;
@@ -30,6 +18,8 @@ import com.nexuspad.dataservice.ServiceConstants;
 import com.nexuspad.home.ui.activity.LoginActivity;
 import com.nexuspad.ui.IconListAdapter;
 import com.nexuspad.ui.fragment.ListFragment;
+
+import static com.nexuspad.dataservice.ServiceConstants.*;
 
 /**
  * @author Edmond

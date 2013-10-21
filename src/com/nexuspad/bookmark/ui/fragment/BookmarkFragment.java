@@ -9,15 +9,10 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
-import android.view.View;
+import android.view.*;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.nexuspad.R;
 import com.nexuspad.app.App;
@@ -92,7 +87,6 @@ public class BookmarkFragment extends EntryFragment<Bookmark> {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
         mNameV = findView(view, R.id.lbl_title);
         mWebAddressV = findView(view, R.id.lbl_web_address);
         mTagsV = findView(view, R.id.lbl_tags);
@@ -103,7 +97,7 @@ public class BookmarkFragment extends EntryFragment<Bookmark> {
 
         mNameV.setTypeface(App.getRobotoLight());
 
-        updateUI();
+        super.onViewCreated(view, savedInstanceState);
         installListeners();
     }
 

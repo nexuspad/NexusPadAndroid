@@ -16,7 +16,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import com.edmondapps.utils.android.annotaion.FragmentName;
-import com.edmondapps.utils.android.view.RunnableAnimatorListener;
 import com.edmondapps.utils.java.WrapperList;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
@@ -32,7 +31,6 @@ import com.nexuspad.photos.ui.activity.PhotosActivity;
 import com.nexuspad.ui.DirectionalScrollListener;
 import com.nexuspad.ui.activity.FoldersActivity;
 import com.nexuspad.ui.fragment.EntriesFragment;
-import com.nineoldandroids.view.ViewPropertyAnimator;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -95,16 +93,16 @@ public class AlbumsFragment extends EntriesFragment {
             @Override
             public void onScrollDirectionChanged(final boolean showing) {
                 final int height = showing ? 0 : mQuickReturnView.getHeight();
-                ViewPropertyAnimator.animate(mQuickReturnView)
+                mQuickReturnView.animate()
                         .translationY(height)
                         .setDuration(200L)
-                        .setListener(new RunnableAnimatorListener(true).withEndAction(new Runnable() {
+                        .withEndAction(new Runnable() {
                             @Override
                             public void run() {
                                 mFolderView.setClickable(showing);
                                 mFolderView.setFocusable(showing);
                             }
-                        }));
+                        });
             }
         });
         updateUI();

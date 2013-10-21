@@ -6,6 +6,7 @@ package com.nexuspad.ui.fragment;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,12 +14,9 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
-import com.actionbarsherlock.app.SherlockDialogFragment;
 import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.nexuspad.R;
-import com.nexuspad.account.AccountManager;
 import com.nexuspad.datamodel.Folder;
-import com.nexuspad.dataservice.NPException;
 import com.nexuspad.ui.activity.FoldersActivity;
 
 import static com.edmondapps.utils.android.view.ViewUtils.findView;
@@ -28,7 +26,7 @@ import static com.edmondapps.utils.android.view.ViewUtils.isAllTextNotEmpty;
  * @author Edmond
  */
 @FragmentName(NewFolderFragment.TAG)
-public class NewFolderFragment extends SherlockDialogFragment {
+public class NewFolderFragment extends DialogFragment {
     public static final String TAG = "NewFolderFragment";
 
     private static final String KEY_FOLDER = "key_folder";

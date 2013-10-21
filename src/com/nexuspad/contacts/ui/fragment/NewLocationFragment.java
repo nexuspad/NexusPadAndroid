@@ -1,11 +1,11 @@
 package com.nexuspad.contacts.ui.fragment;
 
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import com.actionbarsherlock.app.SherlockDialogFragment;
 import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.nexuspad.R;
 import com.nexuspad.datamodel.Location;
@@ -16,7 +16,7 @@ import static com.edmondapps.utils.android.view.ViewUtils.findView;
  * Author: edmond
  */
 @FragmentName(NewLocationFragment.TAG)
-public final class NewLocationFragment extends SherlockDialogFragment {
+public final class NewLocationFragment extends DialogFragment {
     public static final String TAG = "NewLocationFragment";
     public static final String KEY_LOCATION = "key_location";
 

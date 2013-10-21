@@ -8,12 +8,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.BaseAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
-import com.actionbarsherlock.view.MenuItem;
 import com.edmondapps.utils.android.Logs;
 import com.edmondapps.utils.android.ui.CompoundAdapter;
 import com.edmondapps.utils.android.ui.SingleAdapter;
@@ -137,6 +137,12 @@ public abstract class EntriesFragment extends ListFragment {
                     Logs.w(TAG, "cannot find the updated entry in the list; folder: " + folder);
                 }
             }
+        }
+
+        @Override
+        protected void onError(Context context, Intent intent, ServiceError error) {
+            super.onError(context, intent, error);
+            Logs.e(TAG, error.toString());
         }
     };
 

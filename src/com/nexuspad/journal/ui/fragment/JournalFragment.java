@@ -46,11 +46,9 @@ public class JournalFragment extends EntryFragment<Journal> {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
         mNoteV = ViewUtils.findView(view, R.id.txt_note);
 
-        updateUI();
+        super.onViewCreated(view, savedInstanceState);
     }
 
     @Override

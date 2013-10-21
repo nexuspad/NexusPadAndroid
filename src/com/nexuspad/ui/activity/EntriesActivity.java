@@ -55,7 +55,7 @@ public abstract class EntriesActivity extends SinglePaneActivity implements Entr
 
         super.onCreate(savedState);
 
-        getSupportActionBar().setIcon(R.drawable.back_to_dashboard);
+        getActionBar().setIcon(R.drawable.back_to_dashboard);
     }
 
     @Override

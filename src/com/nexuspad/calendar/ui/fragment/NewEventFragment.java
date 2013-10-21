@@ -5,10 +5,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.Spinner;
-import android.widget.TextView;
+import android.widget.*;
+import com.android.datetimepicker.date.DatePickerDialog;
+import com.android.datetimepicker.time.TimePickerDialog;
 import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
@@ -19,7 +18,7 @@ import com.nexuspad.datamodel.Folder;
 import com.nexuspad.ui.fragment.NewEntryFragment;
 
 import java.text.DateFormat;
-import java.util.Date;
+import java.util.Calendar;
 
 import static com.edmondapps.utils.android.view.ViewUtils.findView;
 import static com.nexuspad.dataservice.ServiceConstants.CALENDAR_MODULE;
@@ -29,7 +28,9 @@ import static com.nexuspad.dataservice.ServiceConstants.CALENDAR_MODULE;
  */
 @FragmentName(NewEventFragment.TAG)
 @ModuleId(moduleId = CALENDAR_MODULE, template = EntryTemplate.EVENT)
-public class NewEventFragment extends NewEntryFragment<Event> {
+public class NewEventFragment extends NewEntryFragment<Event> implements
+        DatePickerDialog.OnDateSetListener,
+        TimePickerDialog.OnTimeSetListener {
     public static final String TAG = "NewEventFragment";
 
     public static NewEventFragment of(Event event, Folder folder) {
@@ -72,16 +73,59 @@ public class NewEventFragment extends NewEntryFragment<Event> {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         findViews(view);
 
-        mLocationV.setOnClickListener(new View.OnClickListener() {
+        final View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final Event event = getDetailEntryIfExist();
-                final Intent intent = NewLocationActivity.of(getActivity(), event == null ? null : event.getLocation());
-                startActivity(intent); //TODO receive result
+                switch (v.getId()) {
+                    case R.id.txt_location:
+                        final Intent intent = NewLocationActivity.of(getActivity(), event == null ? null : event.getLocation());
+                        startActivity(intent); //TODO receive result
+                        break;
+                    case R.id.spinner_from_day:
+                        showDatePicker(nowOrEventTime(event), String.valueOf(R.id.spinner_from_day));
+                        break;
+                    case R.id.spinner_from_time:
+                        showTimePicker(nowOrEventTime(event), String.valueOf(R.id.spinner_from_time));
+                        break;
+                    case R.id.spinner_to_day:
+                        showDatePicker(nowOrEventTime(event), String.valueOf(R.id.spinner_to_day));
+                        break;
+                    case R.id.spinner_to_time:
+                        showTimePicker(nowOrEventTime(event), String.valueOf(R.id.spinner_to_time));
+                        break;
+                    default:
+                        throw new AssertionError("unexpected id: " + v.getId());
+                }
             }
-        });
+        };
+
+        mLocationV.setOnClickListener(listener);
+        mFromDayV.setOnClickListener(listener);
+        mFromTimeV.setOnClickListener(listener);
+        mToDayV.setOnClickListener(listener);
+        mToTimeV.setOnClickListener(listener);
 
         super.onViewCreated(view, savedInstanceState);
+    }
+
+    private Calendar nowOrEventTime(Event event) {
+        final long time = event == null ? System.currentTimeMillis() : event.getStartTime().getTime();
+        final Calendar c = Calendar.getInstance();
+        c.setTimeInMillis(time);
+        return c;
+    }
+
+    private void showDatePicker(Calendar c, String fragmentTag) {
+        DatePickerDialog.newInstance(NewEventFragment.this,
+                c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH))
+                .show(getActivity().getFragmentManager(), fragmentTag);
+    }
+
+    private void showTimePicker(Calendar c, String fragmentTag) {
+        TimePickerDialog.newInstance(NewEventFragment.this,
+                c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), false)
+                .show(getActivity().getFragmentManager(), fragmentTag);
     }
 
     private void findViews(View view) {
@@ -129,5 +173,15 @@ public class NewEventFragment extends NewEntryFragment<Event> {
     @Override
     public Event getEditedEntry() {
         return null;
+    }
+
+    @Override
+    public void onDateSet(DatePickerDialog dialog, int year, int monthOfYear, int dayOfMonth) {
+        Toast.makeText(getActivity(), String.format("%s %s %s %s", dialog.getTag(), year, monthOfYear, dayOfMonth), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onTimeSet(TimePickerDialog dialog, int hourOfDay, int minute) {
+        Toast.makeText(getActivity(), String.format("$s %s:%s", dialog.getTag(), hourOfDay, minute), Toast.LENGTH_SHORT).show();
     }
 }

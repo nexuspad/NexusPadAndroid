@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.provider.MediaStore;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -18,7 +19,6 @@ import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.GridView;
 import android.widget.ImageView;
-import com.actionbarsherlock.app.SherlockFragment;
 import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.edmondapps.utils.android.view.ViewUtils;
 import com.nexuspad.R;
@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import static com.edmondapps.utils.android.view.ViewUtils.findView;
 
 @FragmentName(PhotoSelectFragment.TAG)
-public class PhotoSelectFragment extends SherlockFragment implements
+public class PhotoSelectFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor>,
         AdapterView.OnItemClickListener {
     public static final String TAG = "PhotoSelectFragment";

@@ -21,7 +21,7 @@ public class MainActivity extends SinglePaneActivity implements MainFragment.Cal
     protected void onCreate(Bundle savedState) {
         super.onCreate(savedState);
 
-        getSupportActionBar().setIcon(R.drawable.back_to_dashboard);
+        getActionBar().setIcon(R.drawable.back_to_dashboard);
     }
 
     @Override

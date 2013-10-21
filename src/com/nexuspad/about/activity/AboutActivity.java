@@ -3,11 +3,10 @@
  */
 package com.nexuspad.about.activity;
 
+import android.app.ActionBar;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.view.Window;
+import android.view.Window;
 import com.edmondapps.utils.android.activity.SinglePaneActivity;
 import com.edmondapps.utils.android.annotaion.ParentActivity;
 import com.nexuspad.R;
@@ -16,7 +15,6 @@ import com.nexuspad.home.ui.activity.DashboardActivity;
 
 /**
  * @author Edmond
- * 
  */
 @ParentActivity(DashboardActivity.class)
 public class AboutActivity extends SinglePaneActivity {
@@ -30,7 +28,7 @@ public class AboutActivity extends SinglePaneActivity {
         requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
         super.onCreate(savedState);
 
-        final ActionBar actionBar = getSupportActionBar();
+        final ActionBar actionBar = getActionBar();
         actionBar.hide();
         actionBar.setIcon(R.drawable.back_to_dashboard);
     }

@@ -101,7 +101,6 @@ public class NewContactFragment extends NewEntryFragment<Contact> {
         mPhoneFrameV = findView(view, R.id.phones_frame);
         mEmailFrameV = findView(view, R.id.emails_frame);
 
-        updateUI();
         super.onViewCreated(view, savedInstanceState);
     }
 

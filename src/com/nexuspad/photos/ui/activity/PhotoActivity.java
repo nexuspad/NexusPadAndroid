@@ -3,14 +3,13 @@
  */
 package com.nexuspad.photos.ui.activity;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.view.Window;
+import android.view.Window;
 import com.edmondapps.utils.android.activity.SinglePaneActivity;
 import com.edmondapps.utils.android.annotaion.ParentActivity;
 import com.nexuspad.R;
@@ -68,7 +67,7 @@ public class PhotoActivity extends SinglePaneActivity implements EntriesFragment
         mPhotos = intent.getParcelableArrayListExtra(KEY_PHOTOS);
 
         super.onCreate(savedState);
-        ActionBar actionBar = getSupportActionBar();
+        ActionBar actionBar = getActionBar();
         if (actionBar != null) {
             actionBar.hide();
             actionBar.setIcon(R.drawable.back_to_dashboard);

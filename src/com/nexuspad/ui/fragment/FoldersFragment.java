@@ -7,14 +7,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
+import android.view.*;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.widget.*;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.edmondapps.utils.android.Logs;
 import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.edmondapps.utils.android.ui.CompoundAdapter;
@@ -29,6 +24,7 @@ import com.nexuspad.datamodel.Folder;
 import com.nexuspad.dataservice.FolderService;
 import com.nexuspad.dataservice.FolderService.FolderReceiver;
 import com.nexuspad.dataservice.NPException;
+import com.nexuspad.dataservice.ServiceError;
 import com.nexuspad.ui.FoldersAdapter;
 import com.nexuspad.ui.OnFolderMenuClickListener;
 import com.nexuspad.ui.activity.NewFolderActivity;
@@ -109,6 +105,12 @@ public class FoldersFragment extends ListFragment {
             } else {
                 Logs.w(TAG, "cannot find the updated entry in the list; folder: " + folder);
             }
+        }
+
+        @Override
+        protected void onError(Context context, Intent intent, ServiceError error) {
+            super.onError(context, intent, error);
+            Logs.e(TAG, error.toString());
         }
 
         private void notifyDataSetChanged() {

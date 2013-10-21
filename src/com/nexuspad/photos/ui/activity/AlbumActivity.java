@@ -46,7 +46,7 @@ public class AlbumActivity extends SinglePaneActivity implements EntryFragment.C
 
         super.onCreate(savedState);
 
-        getSupportActionBar().setIcon(R.drawable.back_to_dashboard);
+        getActionBar().setIcon(R.drawable.back_to_dashboard);
     }
 
     @Override

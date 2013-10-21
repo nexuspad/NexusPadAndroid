@@ -56,14 +56,13 @@ public class NewBookmarkFragment extends NewEntryFragment<Bookmark> {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
         mFolderV = findView(view, R.id.lbl_folder);
         mWebAddressV = findView(view, R.id.txt_web_address);
         mNoteV = findView(view, R.id.txt_note);
         mTagsV = findView(view, R.id.txt_tags);
 
         installFolderSelectorListener(mFolderV);
-        updateUI();
+        super.onViewCreated(view, savedInstanceState);
     }
 
     @Override

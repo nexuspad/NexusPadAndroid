@@ -107,7 +107,6 @@ public class NewAlbumFragment extends NewEntryFragment<Album> {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
         findViews(view);
 
         installFolderSelectorListener(mFolderV);
@@ -128,7 +127,7 @@ public class NewAlbumFragment extends NewEntryFragment<Album> {
             });
         }
 
-        updateUI();
+        super.onViewCreated(view, savedInstanceState);
     }
 
     private void findViews(View parent) {

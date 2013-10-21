@@ -5,8 +5,7 @@ package com.nexuspad.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-
-import com.actionbarsherlock.view.Window;
+import android.view.Window;
 import com.edmondapps.utils.android.activity.SinglePaneActivity;
 import com.nexuspad.R;
 import com.nexuspad.datamodel.Folder;
@@ -37,9 +36,9 @@ public abstract class EntryActivity<T extends NPEntry> extends SinglePaneActivit
         super.onCreate(savedState);
 
         // have to reset the progress bar here (some kind of bug)
-        setSupportProgressBarIndeterminateVisibility(false);
+        setProgressBarIndeterminateVisibility(false);
 
-        getSupportActionBar().setIcon(R.drawable.back_to_dashboard);
+        getActionBar().setIcon(R.drawable.back_to_dashboard);
     }
 
     @Override
@@ -79,12 +78,12 @@ public abstract class EntryActivity<T extends NPEntry> extends SinglePaneActivit
 
     @Override
     public void onStartLoadingEntry(EntryFragment<T> f, T entry) {
-        setSupportProgressBarIndeterminateVisibility(true);
+        setProgressBarIndeterminateVisibility(true);
     }
 
     @Override
     public void onGotEntry(EntryFragment<T> f, T entry) {
-        setSupportProgressBarIndeterminateVisibility(false);
+        setProgressBarIndeterminateVisibility(false);
     }
 
     protected T getEntry() {

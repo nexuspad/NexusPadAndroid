@@ -3,11 +3,11 @@
  */
 package com.nexuspad.ui.activity;
 
+import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import com.actionbarsherlock.app.ActionBar;
 import com.edmondapps.utils.android.activity.SinglePaneActivity;
 import com.nexuspad.R;
 import com.nexuspad.datamodel.Folder;
@@ -47,7 +47,7 @@ public class FoldersActivity extends SinglePaneActivity implements FoldersFragme
         setResult(RESULT_CANCELED);
         super.onCreate(savedState);
 
-        final ActionBar actionBar = getSupportActionBar();
+        final ActionBar actionBar = getActionBar();
         actionBar.setIcon(R.drawable.back_to_dashboard);
         actionBar.setDisplayHomeAsUpEnabled(true);
         setTitle(mParentFolder.getFolderName());

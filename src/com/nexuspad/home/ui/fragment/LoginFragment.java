@@ -3,11 +3,9 @@
  */
 package com.nexuspad.home.ui.fragment;
 
-import static com.edmondapps.utils.android.view.ViewUtils.findView;
-import static com.edmondapps.utils.android.view.ViewUtils.isAllTextNotEmpty;
-import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -17,8 +15,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.actionbarsherlock.app.SherlockFragment;
 import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.edmondapps.utils.android.view.LoadingViews;
 import com.edmondapps.utils.java.Lazy;
@@ -26,7 +22,9 @@ import com.nexuspad.R;
 import com.nexuspad.account.AccountManager;
 import com.nexuspad.app.App;
 import com.nexuspad.datamodel.NPUser;
-import com.nineoldandroids.view.ViewHelper;
+
+import static com.edmondapps.utils.android.view.ViewUtils.findView;
+import static com.edmondapps.utils.android.view.ViewUtils.isAllTextNotEmpty;
 
 /**
  * A {@code Fragment} that handles both login and signup.
@@ -35,7 +33,7 @@ import com.nineoldandroids.view.ViewHelper;
  * 
  */
 @FragmentName(LoginFragment.TAG)
-public class LoginFragment extends SherlockFragment {
+public class LoginFragment extends Fragment {
     public static final String TAG = "LoginFragment";
 
     public interface Callback {
@@ -120,13 +118,13 @@ public class LoginFragment extends SherlockFragment {
             }
 
             private void translateView(View v, int delta) {
-                ViewHelper.setTranslationY(v, delta);
-                animate(v).translationY(0);
+                v.setTranslationY(delta);
+                v.animate().translationY(0);
             }
 
             private void fade(boolean in, View v) {
-                ViewHelper.setAlpha(v, in ? 0 : 1);
-                animate(v).alpha(in ? 1 : 0);
+                v.setAlpha(in ? 0 : 1);
+                v.animate().alpha(in ? 1 : 0);
             }
 
             private void prepareAnimation(final boolean wasSignUp) {

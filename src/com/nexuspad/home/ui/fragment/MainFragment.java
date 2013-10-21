@@ -5,22 +5,21 @@ package com.nexuspad.home.ui.fragment;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-
-import com.actionbarsherlock.app.SherlockFragment;
 import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.nexuspad.account.AccountManager;
 import com.nexuspad.app.App;
 import com.nexuspad.datamodel.NPUser;
-import com.nexuspad.util.Logs;
 import com.nexuspad.dataservice.NPException;
+import com.nexuspad.util.Logs;
 
 /**
  * @author Edmond
  * 
  */
 @FragmentName(MainFragment.TAG)
-public class MainFragment extends SherlockFragment {
+public class MainFragment extends Fragment {
     public static final String TAG = "MainFragment";
 
     public interface Callback {

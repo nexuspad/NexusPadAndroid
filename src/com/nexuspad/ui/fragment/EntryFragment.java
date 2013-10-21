@@ -7,9 +7,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
-import com.actionbarsherlock.app.SherlockDialogFragment;
-import com.actionbarsherlock.view.MenuItem;
 import com.edmondapps.utils.android.Logs;
 import com.edmondapps.utils.java.Lazy;
 import com.nexuspad.R;
@@ -29,7 +30,7 @@ import com.nexuspad.ui.activity.FoldersActivity;
  *
  * @author Edmond
  */
-public abstract class EntryFragment<T extends NPEntry> extends SherlockDialogFragment {
+public abstract class EntryFragment<T extends NPEntry> extends DialogFragment {
     public static final String KEY_ENTRY = "com.nexuspad.ui.fragment.EntryFragment.entry";
     public static final String KEY_DETAIL_ENTRY = "com.nexuspad.ui.fragment.EntryFragment.detail_entry";
     public static final String KEY_FOLDER = "com.nexuspad.ui.fragment.EntryFragment.folder";
@@ -75,6 +76,12 @@ public abstract class EntryFragment<T extends NPEntry> extends SherlockDialogFra
         protected void onUpdate(Context context, Intent intent, NPEntry entry) {
             onDetailEntryUpdatedInternal(entry);
         }
+
+        @Override
+        protected void onError(Context context, Intent intent, ServiceError error) {
+            super.onError(context, intent, error);
+            Logs.e(TAG, error.toString());
+        }
     };
 
     private T mEntry;
@@ -99,6 +106,12 @@ public abstract class EntryFragment<T extends NPEntry> extends SherlockDialogFra
         if (mFolder == null) {
             throw new IllegalArgumentException("you must pass in a Folder with KEY_FOLDER");
         }
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        updateUI();
     }
 
     private void initWithBundle(Bundle b) {

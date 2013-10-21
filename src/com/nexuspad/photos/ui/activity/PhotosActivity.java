@@ -3,17 +3,16 @@
  */
 package com.nexuspad.photos.ui.activity;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ArrayAdapter;
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.ActionBar.OnNavigationListener;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 import com.edmondapps.utils.android.Logs;
 import com.edmondapps.utils.android.annotaion.ParentActivity;
 import com.nexuspad.R;
@@ -37,7 +36,7 @@ import static com.nexuspad.dataservice.ServiceConstants.PHOTO_MODULE;
  */
 @ParentActivity(DashboardActivity.class)
 @ModuleId(moduleId = PHOTO_MODULE, template = EntryTemplate.PHOTO)
-public class PhotosActivity extends EntriesActivity implements OnNavigationListener {
+public class PhotosActivity extends EntriesActivity implements ActionBar.OnNavigationListener {
     public static final String TAG = "PhotosActivity";
     public static final String KEY_SPINNER_INDEX = "key_spinner_index";
 
@@ -69,7 +68,7 @@ public class PhotosActivity extends EntriesActivity implements OnNavigationListe
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        getSupportMenuInflater().inflate(R.menu.photos_frag, menu);
+        getMenuInflater().inflate(R.menu.photos_frag, menu);
         return true;
     }
 
@@ -93,7 +92,7 @@ public class PhotosActivity extends EntriesActivity implements OnNavigationListe
     protected void onCreate(Bundle savedState) {
         super.onCreate(savedState);
 
-        final ActionBar actionBar = getSupportActionBar();
+        final ActionBar actionBar = getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 
         final List<String> list = new ArrayList<String>();

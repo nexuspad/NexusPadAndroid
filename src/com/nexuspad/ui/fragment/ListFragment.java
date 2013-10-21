@@ -4,6 +4,7 @@
 package com.nexuspad.ui.fragment;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +13,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import com.actionbarsherlock.app.SherlockFragment;
 import com.nexuspad.R;
 
 import static android.view.animation.AnimationUtils.loadAnimation;
@@ -24,7 +24,7 @@ import static com.edmondapps.utils.android.view.ViewUtils.findView;
  *
  * @author Edmond
  */
-public abstract class ListFragment extends SherlockFragment {
+public abstract class ListFragment extends Fragment {
     public static final String TAG = "ListFragment";
 
     private ListView mListV;

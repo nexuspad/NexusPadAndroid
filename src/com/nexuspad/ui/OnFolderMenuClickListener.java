@@ -4,14 +4,13 @@
 package com.nexuspad.ui;
 
 import android.content.Context;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.Toast;
-
 import com.edmondapps.utils.android.Logs;
-import com.edmondapps.utils.android.view.PopupMenu;
-import com.edmondapps.utils.android.view.PopupMenu.OnMenuItemClickListener;
 import com.nexuspad.R;
 import com.nexuspad.account.AccountManager;
 import com.nexuspad.datamodel.Folder;
@@ -25,7 +24,7 @@ public class OnFolderMenuClickListener implements OnClickListener {
     private static PopupMenu getPopupMenu(View view) {
         PopupMenu menu = (PopupMenu)view.getTag();
         if (menu == null) {
-            menu = PopupMenu.newInstance(view.getContext(), view);
+            menu = new PopupMenu(view.getContext(), view);
             menu.inflate(R.menu.folder);
 
             view.setTag(menu);
@@ -63,10 +62,10 @@ public class OnFolderMenuClickListener implements OnClickListener {
 
     public void onFolderClick(final Folder folder, int position, View view) {
         PopupMenu popupMenu = getPopupMenu(view);
-        popupMenu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
-            public boolean onMenuItemClick(int menuId) {
-                return onFolderMenuClick(folder, menuId);
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                return onFolderMenuClick(folder, menuItem.getItemId());
             }
         });
         popupMenu.show();

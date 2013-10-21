@@ -9,12 +9,12 @@ import android.os.IBinder;
 import android.support.v4.app.FragmentActivity;
 import android.text.Html;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.edmondapps.utils.android.ui.CompoundAdapter;
-import com.edmondapps.utils.android.view.PopupMenu;
 import com.nexuspad.R;
 import com.nexuspad.app.Request;
 import com.nexuspad.app.service.UploadService;
@@ -296,17 +296,17 @@ public class UploadCenterFragment extends ListFragment {
             holder.menu.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    final PopupMenu popupMenu = PopupMenu.newInstance(mContext, v);
+                    final PopupMenu popupMenu = new PopupMenu(mContext, v);
                     popupMenu.inflate(R.menu.photos_upload);
                     popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                         @Override
-                        public boolean onMenuItemClick(int menuId) {
-                            switch (menuId) {
+                        public boolean onMenuItemClick(MenuItem menuItem) {
+                            switch (menuItem.getItemId()) {
                                 case R.id.cancel:
                                     holder.cancelled = true;
                                     return true;
                                 default:
-                                    throw new AssertionError("unexpected menuId: " + menuId);
+                                    throw new AssertionError("unexpected menuId: " + menuItem.getItemId());
                             }
                         }
                     });

@@ -3,11 +3,11 @@
  */
 package com.nexuspad.about.fragment;
 
-import static com.edmondapps.utils.android.view.ViewUtils.findView;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -15,8 +15,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.actionbarsherlock.app.SherlockFragment;
 import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.nexuspad.R;
 import com.nexuspad.account.AccountManager;
@@ -26,12 +24,14 @@ import com.nexuspad.datamodel.UserSetting;
 import com.nexuspad.dataservice.NPException;
 import com.squareup.picasso.Picasso;
 
+import static com.edmondapps.utils.android.view.ViewUtils.findView;
+
 /**
  * @author Edmond
  * 
  */
 @FragmentName(AboutFragment.TAG)
-public class AboutFragment extends SherlockFragment {
+public class AboutFragment extends Fragment {
     public static final String TAG = "AboutFragment";
 
     private static final String SUPPORT_EMAIL = "support@nexuspad.com";

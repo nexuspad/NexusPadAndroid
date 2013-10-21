@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
 import com.edmondapps.utils.android.annotaion.FragmentName;
-import com.edmondapps.utils.android.view.RunnableAnimatorListener;
 import com.edmondapps.utils.java.WrapperList;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
@@ -26,7 +25,6 @@ import com.nexuspad.ui.DirectionalScrollListener;
 import com.nexuspad.ui.OnListEndListener;
 import com.nexuspad.ui.activity.FoldersActivity;
 import com.nexuspad.ui.fragment.EntriesFragment;
-import com.nineoldandroids.view.ViewPropertyAnimator;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -154,16 +152,16 @@ public class PhotosFragment extends EntriesFragment implements OnItemClickListen
                 @Override
                 public void onScrollDirectionChanged(final boolean showing) {
                     final int height = showing ? 0 : mQuickReturnView.getHeight();
-                    ViewPropertyAnimator.animate(mQuickReturnView)
+                    mQuickReturnView.animate()
                             .translationY(height)
                             .setDuration(200L)
-                            .setListener(new RunnableAnimatorListener(true).withEndAction(new Runnable() {
+                            .withEndAction(new Runnable() {
                                 @Override
                                 public void run() {
                                     mFolderView.setClickable(showing);
                                     mFolderView.setFocusable(showing);
                                 }
-                            }));
+                            });
                 }
             });
             mGridView.setAdapter(new PhotosAdapter());

@@ -3,12 +3,11 @@
  */
 package com.nexuspad.ui;
 
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ListView;
-
-import com.edmondapps.utils.android.view.PopupMenu;
-import com.edmondapps.utils.android.view.PopupMenu.OnMenuItemClickListener;
+import android.widget.PopupMenu;
 import com.nexuspad.R;
 import com.nexuspad.datamodel.NPEntry;
 import com.nexuspad.dataservice.EntryService;
@@ -19,7 +18,7 @@ public class OnEntryMenuClickListener<T extends NPEntry> implements OnClickListe
     private static PopupMenu getPopupMenu(View view) {
         PopupMenu menu = (PopupMenu)view.getTag();
         if (menu == null) {
-            menu = PopupMenu.newInstance(view.getContext(), view);
+            menu = new PopupMenu(view.getContext(), view);
             menu.inflate(R.menu.entry);
 
             view.setTag(menu);
@@ -52,10 +51,10 @@ public class OnEntryMenuClickListener<T extends NPEntry> implements OnClickListe
 
     protected void onEntryClick(final T entry, int position, View view) {
         PopupMenu popupMenu = getPopupMenu(view);
-        popupMenu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
-            public boolean onMenuItemClick(int menuId) {
-                return onEntryMenuClick(entry, menuId);
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                return onEntryMenuClick(entry, menuItem.getItemId());
             }
         });
         popupMenu.show();

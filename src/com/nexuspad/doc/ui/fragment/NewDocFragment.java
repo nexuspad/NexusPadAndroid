@@ -58,7 +58,6 @@ public class NewDocFragment extends NewEntryFragment<Doc> {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
         mFolderV = findView(view, R.id.lbl_folder);
         mNoteV = findView(view, R.id.txt_note);
         mTitleV = findView(view, R.id.txt_title);
@@ -67,7 +66,7 @@ public class NewDocFragment extends NewEntryFragment<Doc> {
         mNoteV.enableActionModes(false);
 
         installFolderSelectorListener(mFolderV);
-        updateUI();
+        super.onViewCreated(view, savedInstanceState);
     }
 
     @Override

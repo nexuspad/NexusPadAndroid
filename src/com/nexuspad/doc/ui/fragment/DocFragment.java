@@ -9,15 +9,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.edmondapps.utils.android.view.ViewUtils;
 import com.nexuspad.R;
@@ -89,8 +84,6 @@ public class DocFragment extends EntryFragment<Doc> {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
         mTitleV = findView(view, R.id.lbl_title);
         mTagsV = findView(view, R.id.lbl_tags);
         mNoteV = findView(view, R.id.lbl_note);
@@ -100,7 +93,7 @@ public class DocFragment extends EntryFragment<Doc> {
 
         mTitleV.setTypeface(App.getRobotoLight());
 
-        updateUI();
+        super.onViewCreated(view, savedInstanceState);
     }
 
     @Override

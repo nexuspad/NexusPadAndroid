@@ -3,18 +3,13 @@
  */
 package com.nexuspad.photos.ui.fragment;
 
+import android.app.ActionBar;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.ImageView;
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.google.common.collect.Iterables;
 import com.nexuspad.R;
@@ -135,8 +130,8 @@ public class PhotoFragment extends EntriesFragment {
             public Object instantiateItem(ViewGroup container, int position) {
                 final Photo photo = sPhotos.get(position);
 
-                final SherlockFragmentActivity activity = getSherlockActivity();
-                final ActionBar actionBar = getSherlockActivity().getSupportActionBar();
+                final FragmentActivity activity = getActivity();
+                final ActionBar actionBar = activity.getActionBar();
                 final LayoutInflater inflater = LayoutInflater.from(activity);
 
                 final View frame = inflater.inflate(R.layout.photo_layout, container, false);
@@ -180,7 +175,7 @@ public class PhotoFragment extends EntriesFragment {
             public void setPrimaryItem(ViewGroup container, int position, Object object) {
                 super.setPrimaryItem(container, position, object);
                 final Photo photo = sPhotos.get(position);
-                final ActionBar actionBar = getSherlockActivity().getSupportActionBar();
+                final ActionBar actionBar = getActivity().getActionBar();
                 if (actionBar != null) {
                     actionBar.setTitle(photo.getTitle());
                 }

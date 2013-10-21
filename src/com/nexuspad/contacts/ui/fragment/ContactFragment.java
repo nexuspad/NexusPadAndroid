@@ -7,14 +7,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.util.Linkify;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
@@ -125,7 +120,6 @@ public class ContactFragment extends EntryFragment<Contact> {
         mPhoneFrameV = findView(view, R.id.phones_frame);
         mEmailFrameV = findView(view, R.id.emails_frame);
 
-        updateUI();
         super.onViewCreated(view, savedInstanceState);
     }
 

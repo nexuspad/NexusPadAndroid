@@ -1,16 +1,10 @@
 package com.nexuspad.calendar.ui.fragment;
 
-import java.util.Date;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.TextView;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.nexuspad.R;
 import com.nexuspad.app.App;
@@ -18,6 +12,8 @@ import com.nexuspad.calendar.ui.activity.NewEventActivity;
 import com.nexuspad.datamodel.Event;
 import com.nexuspad.datamodel.Folder;
 import com.nexuspad.ui.fragment.EntryFragment;
+
+import java.util.Date;
 
 import static com.edmondapps.utils.android.view.ViewUtils.findView;
 
@@ -90,7 +86,6 @@ public class EventFragment extends EntryFragment<Event> {
 
         mTitleV.setTypeface(App.getRobotoLight());
 
-        updateUI();
         super.onViewCreated(view, savedInstanceState);
     }
 
