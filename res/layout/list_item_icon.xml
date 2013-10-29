@@ -38,6 +38,6 @@
         android:contentDescription="@string/more"
         android:duplicateParentState="false"
         android:scaleType="fitXY"
-        android:src="@drawable/abs__spinner_ab_holo_light" />
+        android:src="@drawable/spinner_ab_holo_light" />
 
 </com.nexuspad.ui.view.DuplicateParentStateAwareLinearLayout>

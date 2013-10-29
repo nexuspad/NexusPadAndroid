@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import com.android.datetimepicker.date.DatePickerDialog;
+import com.android.datetimepicker.time.RadialPickerLayout;
 import com.android.datetimepicker.time.TimePickerDialog;
 import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.nexuspad.R;
@@ -181,7 +182,7 @@ public class NewEventFragment extends NewEntryFragment<Event> implements
     }
 
     @Override
-    public void onTimeSet(TimePickerDialog dialog, int hourOfDay, int minute) {
-        Toast.makeText(getActivity(), String.format("$s %s:%s", dialog.getTag(), hourOfDay, minute), Toast.LENGTH_SHORT).show();
+    public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute) {
+        Toast.makeText(getActivity(), String.format("%s %s:%s", view.getTag(), hourOfDay, minute), Toast.LENGTH_SHORT).show();
     }
 }

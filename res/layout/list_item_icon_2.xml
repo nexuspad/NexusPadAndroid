@@ -11,7 +11,7 @@
         android:id="@android:id/icon2"
         android:layout_width="32dp"
         android:layout_height="match_parent"
-        android:background="?attr/selectableItemBackground"
+        android:background="?android:attr/selectableItemBackground"
         android:duplicateParentState="false"
         android:paddingLeft="@dimen/ed__padding_micro"
         android:paddingRight="@dimen/ed__padding_micro"
@@ -49,6 +49,6 @@
         android:contentDescription="@string/more"
         android:duplicateParentState="false"
         android:scaleType="fitXY"
-        android:src="@drawable/abs__spinner_ab_holo_light" />
+        android:src="@drawable/spinner_ab_holo_light" />
 
 </com.nexuspad.ui.view.DuplicateParentStateAwareLinearLayout>

@@ -1,6 +1,7 @@
 package com.nexuspad.ui.view;
 
 import android.content.Context;
+import android.graphics.Matrix;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -15,6 +16,14 @@ public class ZoomableImageView extends ImageView implements IPhotoView {
     public static final String TAG = "ZoomableImageView";
 
     private final PhotoViewAttacher mAttacher;
+
+    public void onScale(float scaleFactor, float focusX, float focusY) {
+        mAttacher.onScale(scaleFactor, focusX, focusY);
+    }
+
+    public ImageView getImageView() {
+        return mAttacher.getImageView();
+    }
 
     public ZoomableImageView(Context context) {
         this(context, null);
@@ -42,8 +51,23 @@ public class ZoomableImageView extends ImageView implements IPhotoView {
     }
 
     @Override
+    public boolean setDisplayMatrix(Matrix finalMatrix) {
+        return mAttacher.setDisplayMatrix(finalMatrix);
+    }
+
+    @Override
+    public Matrix getDisplayMatrix() {
+        return mAttacher.getDisplayMatrix();
+    }
+
+    @Override
     public float getMinScale() {
         return mAttacher.getMinScale();
+    }
+
+    @Override
+    public float getMinimumScale() {
+        return mAttacher.getMinimumScale();
     }
 
     @Override
@@ -52,8 +76,18 @@ public class ZoomableImageView extends ImageView implements IPhotoView {
     }
 
     @Override
+    public float getMediumScale() {
+        return mAttacher.getMediumScale();
+    }
+
+    @Override
     public float getMaxScale() {
         return mAttacher.getMaxScale();
+    }
+
+    @Override
+    public float getMaximumScale() {
+        return mAttacher.getMaximumScale();
     }
 
     @Override
@@ -72,8 +106,28 @@ public class ZoomableImageView extends ImageView implements IPhotoView {
     }
 
     @Override
+    public void setScale(float scale) {
+        mAttacher.setScale(scale);
+    }
+
+    @Override
+    public void setScale(float scale, boolean animate) {
+        mAttacher.setScale(scale, animate);
+    }
+
+    @Override
+    public void setScale(float scale, float focalX, float focalY, boolean animate) {
+        mAttacher.setScale(scale, focalX, focalY, animate);
+    }
+
+    @Override
     public void setMinScale(float minScale) {
         mAttacher.setMinScale(minScale);
+    }
+
+    @Override
+    public void setMinimumScale(float minimumScale) {
+        mAttacher.setMinimumScale(minimumScale);
     }
 
     @Override
@@ -82,8 +136,18 @@ public class ZoomableImageView extends ImageView implements IPhotoView {
     }
 
     @Override
+    public void setMediumScale(float mediumScale) {
+        mAttacher.setMediumScale(mediumScale);
+    }
+
+    @Override
     public void setMaxScale(float maxScale) {
         mAttacher.setMaxScale(maxScale);
+    }
+
+    @Override
+    public void setMaximumScale(float maximumScale) {
+        mAttacher.setMaximumScale(maximumScale);
     }
 
     @Override
@@ -147,8 +211,8 @@ public class ZoomableImageView extends ImageView implements IPhotoView {
     }
 
     @Override
-    public void zoomTo(float scale, float focalX, float focalY) {
-        mAttacher.zoomTo(scale, focalX, focalY);
+    public void setPhotoViewRotation(float rotationDegree) {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override

@@ -13,7 +13,6 @@ import android.widget.SectionIndexer;
 import com.edmondapps.utils.android.Logs;
 import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.edmondapps.utils.java.WrapperList;
-import com.emilsjolander.components.stickylistheaders.StickyListHeadersAdapter;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
 import com.nexuspad.contacts.ui.activity.ContactActivity;
@@ -26,6 +25,7 @@ import com.nexuspad.ui.EntriesAdapter;
 import com.nexuspad.ui.OnEntryMenuClickListener;
 import com.nexuspad.ui.fragment.EntriesFragment;
 import com.squareup.picasso.Picasso;
+import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
 import java.lang.ref.WeakReference;
 import java.util.*;
@@ -207,7 +207,7 @@ public final class ContactsFragment extends EntriesFragment {
 
         @Override
         public int getPositionForSection(int section) {
-            return mSectionMap.get(mSections[section >= mSections.length ? mSections.length -1 : section]);
+            return mSectionMap.get(mSections[section >= mSections.length ? mSections.length - 1 : section]);
         }
 
         @Override

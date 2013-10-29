@@ -24,7 +24,7 @@
         <view
             class="com.nexuspad.ui.view.ListWrappers$StickyWrapper"
             android:id="@android:id/list"
-            android:listSelector="?attr/selectableItemBackground"
+            android:listSelector="?android:attr/selectableItemBackground"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingBottom="@dimen/ed__padding_small"

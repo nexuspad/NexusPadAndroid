@@ -4,8 +4,8 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.ContextThemeWrapper;
 import android.widget.ListView;
-import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
 import com.nexuspad.R;
+import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
 /**
  * Author: Edmond

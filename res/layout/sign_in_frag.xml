@@ -78,7 +78,7 @@
             android:id="@+id/lbl_sign_up"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackground"
+            android:background="?android:attr/selectableItemBackground"
             android:clickable="true"
             android:focusable="true"
             android:gravity="center"

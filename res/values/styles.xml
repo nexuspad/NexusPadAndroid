@@ -1,13 +1,13 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="AppTheme" parent="@style/Theme.Sherlock.Light.DarkActionBar" />
+    <style name="AppTheme" parent="@android:style/Theme.Holo.Light.DarkActionBar" />
 
     <style name="fastscrollThemedListView" parent="@style/AppTheme">
         <item name="android:textColorPrimary">?android:textColorPrimaryInverse</item>
     </style>
 
-    <style name="Transparent" parent="@style/Theme.Sherlock">
-        <item name="windowNoTitle">true</item>
+    <style name="Transparent" parent="@android:style/Theme.Holo">
+        <item name="android:windowNoTitle">true</item>
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>
@@ -35,7 +35,7 @@
     </style>
 
     <style name="selectableTextView" parent="@style/listItemTextView">
-        <item name="android:background">?attr/selectableItemBackground</item>
+        <item name="android:background">?android:attr/selectableItemBackground</item>
         <item name="android:clickable">true</item>
         <item name="android:focusable">true</item>
     </style>
