@@ -14,9 +14,10 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import com.nexuspad.R;
+import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
+import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
 import static android.view.animation.AnimationUtils.loadAnimation;
-import static com.edmondapps.utils.android.view.ViewUtils.findView;
 
 /**
  * Unlike {@link android.support.v4.app.ListFragment}, this {@code Fragment}
@@ -27,8 +28,7 @@ import static com.edmondapps.utils.android.view.ViewUtils.findView;
 public abstract class ListFragment extends Fragment {
     public static final String TAG = "ListFragment";
 
-    private ListView mListV;
-    private ListAdapter mAdapter;
+    private ListViewManager mListViewManager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -39,12 +39,13 @@ public abstract class ListFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mListV = findView(view, android.R.id.list);
-        if (mListV != null) {
-            mListV.setOnItemClickListener(new OnItemClickListener() {
+        final View listView = view.findViewById(android.R.id.list);
+        if (listView != null) {
+            mListViewManager = ListViewManager.of(listView);
+            mListViewManager.setOnItemClickListener(new OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    onListItemClick(mListV, view, position, id);
+                    onListItemClick(mListViewManager.getListView(), view, position, id);
                 }
             });
         }
@@ -52,7 +53,7 @@ public abstract class ListFragment extends Fragment {
 
     /**
      * If animation is enabled, the view must contain
-     * {@link R.id#frame_progress} and {@link R.id#frame_list} for the animation
+     * {@link com.nexuspad.R.id#frame_progress} and {@link com.nexuspad.R.id#frame_list} for the animation
      * to function.
      * <p/>
      * It has no effect if your layout does not contain
@@ -75,10 +76,9 @@ public abstract class ListFragment extends Fragment {
             progressFrame.setVisibility(View.GONE);
             listFrame.setVisibility(View.VISIBLE);
         }
-        if (mListV != null) {
-            mListV.setAdapter(adapter);
+        if (mListViewManager != null) {
+            mListViewManager.setListAdapter(adapter);
         }
-        mAdapter = adapter;
     }
 
     /**
@@ -100,8 +100,8 @@ public abstract class ListFragment extends Fragment {
      * Controls whether fade-in animation should used when the
      * {@link ListAdapter} is created.
      * <p/>
-     * The view must contain {@link R.id#frame_progress} and
-     * {@link R.id#frame_list} for the animation to function.
+     * The view must contain {@link com.nexuspad.R.id#frame_progress} and
+     * {@link com.nexuspad.R.id#frame_list} for the animation to function.
      *
      * @return false if no animation should be used
      * @see #setListAdapter(ListAdapter)
@@ -115,10 +115,117 @@ public abstract class ListFragment extends Fragment {
      * {@link android.R.id#list}
      */
     public ListView getListView() {
-        return mListV;
+        return mListViewManager.getListView();
     }
 
     public ListAdapter getListAdapter() {
-        return mAdapter;
+        return mListViewManager.getListAdapter();
+    }
+
+    /**
+     * Delegate calls to a {@link ListView} or a {@link StickyListHeadersListView}.
+     */
+    private static abstract class ListViewManager {
+        /**
+         * Automatically returns the correct {@code ListViewManager}.
+         *
+         * @param view supports {@link ListView} and {@link StickyListHeadersListView}
+         * @return the manager
+         * @throws UnsupportedOperationException if the view is neither a {@link ListView} or {@link StickyListHeadersListView}
+         */
+        public static ListViewManager of(View view) {
+            if (view instanceof ListView) {
+                final ListView listView = (ListView) view;
+                return ListViewManager.of(listView);
+            } else if (view instanceof StickyListHeadersListView) {
+                StickyListHeadersListView headersListView = (StickyListHeadersListView) view;
+                return ListViewManager.of(headersListView);
+            }
+            throw new UnsupportedOperationException();
+        }
+
+        public static ListViewManager of(ListView listView) {
+            return new NativeListViewManager(listView);
+        }
+
+        public static ListViewManager of(StickyListHeadersListView listView) {
+            return new StickyListHeadersListViewManager(listView);
+        }
+
+        /**
+         * Register a callback to be invoked when an item in this AdapterView has
+         * been clicked.
+         *
+         * @param listener The callback that will be invoked.
+         */
+        public abstract void setOnItemClickListener(OnItemClickListener listener);
+
+        protected abstract void setListAdapter(ListAdapter adapter);
+
+        protected abstract ListAdapter getListAdapter();
+
+        protected abstract ListView getListView();
+    }
+
+    private static class NativeListViewManager extends ListViewManager {
+
+        private final ListView mListView;
+
+        private NativeListViewManager(ListView listView) {
+            mListView = listView;
+        }
+
+        @Override
+        public void setOnItemClickListener(OnItemClickListener listener) {
+            mListView.setOnItemClickListener(listener);
+        }
+
+        @Override
+        protected void setListAdapter(ListAdapter adapter) {
+            mListView.setAdapter(adapter);
+        }
+
+        @Override
+        protected ListAdapter getListAdapter() {
+            return mListView.getAdapter();
+        }
+
+        @Override
+        protected ListView getListView() {
+            return mListView;
+        }
+    }
+
+    private static class StickyListHeadersListViewManager extends ListViewManager {
+
+        private final StickyListHeadersListView mListView;
+
+        private StickyListHeadersListViewManager(StickyListHeadersListView listView) {
+            mListView = listView;
+        }
+
+        @Override
+        public void setOnItemClickListener(OnItemClickListener listener) {
+            mListView.setOnItemClickListener(listener);
+        }
+
+        @Override
+        protected void setListAdapter(ListAdapter adapter) {
+            try {
+                mListView.setAdapter((StickyListHeadersAdapter) adapter);
+            } catch (ClassCastException e) {
+                throw new IllegalArgumentException(e);
+            }
+        }
+
+        @Override
+        protected ListAdapter getListAdapter() {
+            return mListView.getAdapter();
+        }
+
+        @Override
+        protected ListView getListView() {
+            return mListView.getWrappedList();
+        }
     }
 }

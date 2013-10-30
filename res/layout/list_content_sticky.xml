@@ -22,7 +22,7 @@
         android:visibility="gone" >
 
         <view
-            class="com.nexuspad.ui.view.ListWrappers$StickyWrapper"
+            class="se.emilsjolander.stickylistheaders.StickyListHeadersListView"
             android:id="@android:id/list"
             android:listSelector="?android:attr/selectableItemBackground"
             android:layout_width="match_parent"
