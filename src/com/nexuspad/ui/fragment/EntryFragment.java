@@ -111,7 +111,7 @@ public abstract class EntryFragment<T extends NPEntry> extends DialogFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        updateUI();
+        if(savedInstanceState==null) updateUI();
     }
 
     private void initWithBundle(Bundle b) {

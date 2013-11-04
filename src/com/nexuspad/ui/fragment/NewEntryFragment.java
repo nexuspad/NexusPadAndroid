@@ -42,7 +42,8 @@ public abstract class NewEntryFragment<T extends NPEntry> extends EntryFragment<
      * {@link #isEditedEntryValid()} to guarantee the validity of the edited
      * entry.<p>
      * Do not modify the detail entry here, create a copy and use {@link #setDetailEntry(NPEntry)} instead.
-     * Or else equality checks will fail, and no entries will be updated.
+     * Or else equality checks will fail, and no entries will be updated.<p>
+     *
      *
      * @return an edited entry that reflects the user's changes
      */

@@ -1,27 +1,39 @@
 package com.nexuspad.calendar.ui.fragment;
 
+import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.TextView;
 import com.android.datetimepicker.date.DatePickerDialog;
-import com.android.datetimepicker.time.RadialPickerLayout;
 import com.android.datetimepicker.time.TimePickerDialog;
 import com.edmondapps.utils.android.annotaion.FragmentName;
+import com.edmondapps.utils.android.view.ViewUtils;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
 import com.nexuspad.contacts.ui.activity.NewLocationActivity;
 import com.nexuspad.datamodel.EntryTemplate;
 import com.nexuspad.datamodel.Event;
 import com.nexuspad.datamodel.Folder;
+import com.nexuspad.datamodel.Location;
 import com.nexuspad.ui.fragment.NewEntryFragment;
+import com.nexuspad.ui.view.DateButton;
+import com.nexuspad.ui.view.LocationTextView;
+import com.nexuspad.ui.view.TimeButton;
+import com.nexuspad.util.DateUtil;
 
-import java.text.DateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 import static com.edmondapps.utils.android.view.ViewUtils.findView;
+import static com.edmondapps.utils.android.view.ViewUtils.isTextEmpty;
 import static com.nexuspad.dataservice.ServiceConstants.CALENDAR_MODULE;
 
 /**
@@ -29,10 +41,10 @@ import static com.nexuspad.dataservice.ServiceConstants.CALENDAR_MODULE;
  */
 @FragmentName(NewEventFragment.TAG)
 @ModuleId(moduleId = CALENDAR_MODULE, template = EntryTemplate.EVENT)
-public class NewEventFragment extends NewEntryFragment<Event> implements
-        DatePickerDialog.OnDateSetListener,
-        TimePickerDialog.OnTimeSetListener {
+public class NewEventFragment extends NewEntryFragment<Event> {
     public static final String TAG = "NewEventFragment";
+
+    private static final int REQ_LOCATION = 2;
 
     public static NewEventFragment of(Event event, Folder folder) {
         final Bundle bundle = new Bundle();
@@ -44,30 +56,35 @@ public class NewEventFragment extends NewEntryFragment<Event> implements
         return fragment;
     }
 
-    private DateFormat mDateFormat;
-    private DateFormat mTimeFormat;
-
     private EditText mTitleV;
-    private TextView mLocationV;
-    private TextView mFromDayV;
-    private TextView mFromTimeV;
-    private TextView mToDayV;
-    private TextView mToTimeV;
+    private LocationTextView mLocationV;
+
+    private DateButton mStartDayV;
+    private TimeButton mStartTimeV;
+    private DateButton mToDayV;
+    private TimeButton mToTimeV;
+
     private CheckBox mAllDayV;
     private Spinner mRepeatV;
     private EditText mTagsV;
     private EditText mNoteV;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mDateFormat = android.text.format.DateFormat.getDateFormat(getActivity());
-        mTimeFormat = android.text.format.DateFormat.getTimeFormat(getActivity());
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.event_new_frag, container, false);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.event_new_frag, container, false);
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case REQ_LOCATION:
+                if (resultCode != Activity.RESULT_OK) return;
+                final Location location = data.getParcelableExtra(NewLocationActivity.KEY_LOCATION);
+                mLocationV.setLocation(location);
+                break;
+            default:
+                super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
     @Override
@@ -78,63 +95,76 @@ public class NewEventFragment extends NewEntryFragment<Event> implements
             @Override
             public void onClick(View v) {
                 final Event event = getDetailEntryIfExist();
-                switch (v.getId()) {
+                final int id = v.getId();
+                switch (id) {
                     case R.id.txt_location:
                         final Intent intent = NewLocationActivity.of(getActivity(), event == null ? null : event.getLocation());
-                        startActivity(intent); //TODO receive result
+                        startActivityForResult(intent, REQ_LOCATION);
                         break;
-                    case R.id.spinner_from_day:
-                        showDatePicker(nowOrEventTime(event), String.valueOf(R.id.spinner_from_day));
+                    case R.id.spinner_start_day:
+                        showDatePicker((DateButton) v, nowOrEventTime(event), String.valueOf(id));
                         break;
-                    case R.id.spinner_from_time:
-                        showTimePicker(nowOrEventTime(event), String.valueOf(R.id.spinner_from_time));
+                    case R.id.spinner_start_time:
+                        showTimePicker((TimeButton) v, nowOrEventTime(event), String.valueOf(id));
                         break;
                     case R.id.spinner_to_day:
-                        showDatePicker(nowOrEventTime(event), String.valueOf(R.id.spinner_to_day));
+                        showDatePicker((DateButton) v, nowOrEventTime(event), String.valueOf(id));
                         break;
                     case R.id.spinner_to_time:
-                        showTimePicker(nowOrEventTime(event), String.valueOf(R.id.spinner_to_time));
+                        showTimePicker((TimeButton) v, nowOrEventTime(event), String.valueOf(id));
                         break;
                     default:
-                        throw new AssertionError("unexpected id: " + v.getId());
+                        throw new AssertionError("unexpected id: " + id);
                 }
             }
         };
 
         mLocationV.setOnClickListener(listener);
-        mFromDayV.setOnClickListener(listener);
-        mFromTimeV.setOnClickListener(listener);
+        mStartDayV.setOnClickListener(listener);
+        mStartTimeV.setOnClickListener(listener);
         mToDayV.setOnClickListener(listener);
         mToTimeV.setOnClickListener(listener);
+
+        if (savedInstanceState != null) {
+            final FragmentManager manager = getActivity().getFragmentManager();
+            final TimePickerDialog timePicker = findTimePickerDialog(manager);
+            final DatePickerDialog datePicker = findDatePickerDialog(manager);
+
+            if (timePicker != null) {
+                final int id = Integer.parseInt(timePicker.getTag());
+                timePicker.setOnTimeSetListener(findTimePicker(id));
+            }
+            if (datePicker != null) {
+                final int id = Integer.parseInt(datePicker.getTag());
+                datePicker.setOnDateSetListener(findDatePicker(id));
+            }
+        }
 
         super.onViewCreated(view, savedInstanceState);
     }
 
-    private Calendar nowOrEventTime(Event event) {
-        final long time = event == null ? System.currentTimeMillis() : event.getStartTime().getTime();
-        final Calendar c = Calendar.getInstance();
-        c.setTimeInMillis(time);
-        return c;
+    private TimePickerDialog findTimePickerDialog(FragmentManager manager) {
+        Fragment fragment = manager.findFragmentByTag(String.valueOf(R.id.spinner_start_time));
+        if (fragment == null) {
+            fragment = manager.findFragmentByTag(String.valueOf(R.id.spinner_to_time));
+        }
+        return (TimePickerDialog) fragment;
     }
 
-    private void showDatePicker(Calendar c, String fragmentTag) {
-        DatePickerDialog.newInstance(NewEventFragment.this,
-                c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH))
-                .show(getActivity().getFragmentManager(), fragmentTag);
-    }
-
-    private void showTimePicker(Calendar c, String fragmentTag) {
-        TimePickerDialog.newInstance(NewEventFragment.this,
-                c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), false)
-                .show(getActivity().getFragmentManager(), fragmentTag);
+    private DatePickerDialog findDatePickerDialog(FragmentManager manager) {
+        Fragment fragment = manager.findFragmentByTag(String.valueOf(R.id.spinner_start_day));
+        if (fragment == null) {
+            fragment = manager.findFragmentByTag(String.valueOf(R.id.spinner_to_day));
+        }
+        return (DatePickerDialog) fragment;
     }
 
     private void findViews(View view) {
         mTitleV = findView(view, R.id.txt_title);
         mLocationV = findView(view, R.id.txt_location);
 
-        mFromDayV = findView(view, R.id.spinner_from_day);
-        mFromTimeV = findView(view, R.id.spinner_from_time);
+        mStartDayV = findView(view, R.id.spinner_start_day);
+        mStartTimeV = findView(view, R.id.spinner_start_time);
         mToDayV = findView(view, R.id.spinner_to_day);
         mToTimeV = findView(view, R.id.spinner_to_time);
 
@@ -144,19 +174,64 @@ public class NewEventFragment extends NewEntryFragment<Event> implements
         mNoteV = findView(view, R.id.txt_note);
     }
 
+    // only works after findViews(View)
+    private DateButton findDatePicker(int id) {
+        switch (id) {
+            case R.id.spinner_start_day:
+                return mStartDayV;
+            case R.id.spinner_to_day:
+                return mToDayV;
+            default:
+                throw new AssertionError("unexpected id: " + id);
+        }
+    }
+
+    // only works after findViews(View)
+    private TimeButton findTimePicker(int id) {
+        switch (id) {
+            case R.id.spinner_start_time:
+                return mStartTimeV;
+            case R.id.spinner_to_time:
+                return mToTimeV;
+            default:
+                throw new AssertionError("unexpected id: " + id);
+        }
+    }
+
+    private Calendar nowOrEventTime(Event event) {
+        final long time = event == null ? System.currentTimeMillis() : event.getStartTime().getTime();
+        final Calendar c = Calendar.getInstance();
+        c.setTimeInMillis(time);
+        return c;
+    }
+
+    private void showDatePicker(DateButton dateButton, Calendar c, String fragmentTag) {
+        DatePickerDialog.newInstance(dateButton,
+                c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH))
+                .show(getActivity().getFragmentManager(), fragmentTag);
+    }
+
+    private void showTimePicker(TimeButton timeButton, Calendar c, String fragmentTag) {
+        TimePickerDialog.newInstance(timeButton,
+                c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), false)
+                .show(getActivity().getFragmentManager(), fragmentTag);
+    }
+
     @Override
     protected void updateUI() {
         super.updateUI();
         final Event event = getDetailEntryIfExist();
         if (event != null) {
             mTitleV.setText(event.getTitle());
-            mLocationV.setText(event.getLocation().getFullAddress());
+            mLocationV.setLocation(event.getLocation());
 
-            mFromDayV.setText(mDateFormat.format(event.getStartTime()));
-            mFromTimeV.setText(mTimeFormat.format(event.getStartTime()));
+            final Date startTime = event.getStartTime();
+            mStartTimeV.setTime(startTime);
+            mStartDayV.setTime(startTime);
 
-            mToDayV.setText(mDateFormat.format(event.getEndTime()));
-            mToTimeV.setText(mTimeFormat.format(event.getEndTime()));
+            final Date endTime = event.getEndTime();
+            mToTimeV.setTime(endTime);
+            mToDayV.setTime(endTime);
 
             mAllDayV.setChecked(event.isAllDayEvent());
 
@@ -168,21 +243,33 @@ public class NewEventFragment extends NewEntryFragment<Event> implements
 
     @Override
     public boolean isEditedEntryValid() {
-        return false;
+        return !isTextEmpty(R.string.err_empty_field, mTitleV);
     }
 
     @Override
     public Event getEditedEntry() {
-        return null;
+        final Event entry = getDetailEntryIfExist();
+        Event event = entry == null ? new Event(getFolder()) : new Event(entry);
+
+        event.setTitle(mTitleV.getText().toString());
+        event.setLocation(mLocationV.getLocation());
+        event.setStartTime(combineDateTime(mStartDayV.getTime(), mStartTimeV.getTime()));
+        event.setEndTime(combineDateTime(mToDayV.getTime(), mToTimeV.getTime()));
+        event.setAllDayEvent(mAllDayV.isChecked());
+        event.setTags(mTagsV.getText().toString());
+        event.setNote(mNoteV.getText().toString());
+
+        setDetailEntry(event);
+        return event;
     }
 
-    @Override
-    public void onDateSet(DatePickerDialog dialog, int year, int monthOfYear, int dayOfMonth) {
-        Toast.makeText(getActivity(), String.format("%s %s %s %s", dialog.getTag(), year, monthOfYear, dayOfMonth), Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute) {
-        Toast.makeText(getActivity(), String.format("%s %s:%s", view.getTag(), hourOfDay, minute), Toast.LENGTH_SHORT).show();
+    private Date combineDateTime(Date date, Date time) {
+        final Date out = new Date();
+        out.setMonth(date.getMonth());
+        out.setDate(date.getDate());
+        out.setHours(time.getHours());
+        out.setMinutes(time.getMinutes());
+        out.setSeconds(time.getSeconds());
+        return out;
     }
 }

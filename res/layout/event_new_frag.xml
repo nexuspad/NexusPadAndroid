@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:text="@string/location"/>
 
-        <TextView
+        <com.nexuspad.ui.view.LocationTextView
             android:id="@+id/txt_location"
             style="@style/selectableTextView"
             android:layout_width="match_parent"
@@ -42,15 +42,15 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/spinner_from_day"
+            <com.nexuspad.ui.view.DateButton
+                android:id="@+id/spinner_start_day"
                 style="@style/formMargin"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="5"
                 android:layout_marginTop="0dp"/>
-            <Button
-                android:id="@+id/spinner_from_time"
+            <com.nexuspad.ui.view.TimeButton
+                android:id="@+id/spinner_start_time"
                 style="@style/formMargin"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -69,14 +69,14 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <Button
+            <com.nexuspad.ui.view.DateButton
                 android:id="@+id/spinner_to_day"
                 style="@style/formMargin"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="5"
                 android:layout_marginTop="0dp"/>
-            <Button
+            <com.nexuspad.ui.view.TimeButton
                 android:id="@+id/spinner_to_time"
                 style="@style/formMargin"
                 android:layout_width="0dp"
