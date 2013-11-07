@@ -49,7 +49,7 @@ public class UploadBarView extends FrameLayout {
         setClickable(true);
         setFocusable(true);
 
-        final TypedArray array = context.obtainStyledAttributes(new int[]{R.attr.selectableItemBackground});
+        final TypedArray array = context.obtainStyledAttributes(new int[]{android.R.attr.selectableItemBackground});
         final Drawable background = array.getDrawable(0);
         array.recycle();
         setBackgroundCompat(background);
