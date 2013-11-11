@@ -69,7 +69,7 @@ public class DocFragment extends EntryFragment<Doc> {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.edit:
-                Doc doc = getDetailEntryIfExist();
+                Doc doc = getEntry();
                 NewDocActivity.startWithDoc(doc, getFolder(), getActivity());
                 return true;
             default:
@@ -98,7 +98,7 @@ public class DocFragment extends EntryFragment<Doc> {
 
     @Override
     protected void updateUI() {
-        Doc doc = getDetailEntryIfExist();
+        Doc doc = getEntry();
         if (doc != null) {
             mTitleV.setText(doc.getTitle());
             mTagsV.setText(doc.getTags());

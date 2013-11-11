@@ -71,7 +71,7 @@ public class AlbumFragment extends EntryFragment<Album> implements AdapterView.O
     }
 
     private void onEdit() {
-        final Intent intent = NewAlbumActivity.of(getDetailEntryIfExist(), getFolder(), getActivity());
+        final Intent intent = NewAlbumActivity.of(getEntry(), getFolder(), getActivity());
         startActivity(intent);
     }
 
@@ -99,7 +99,7 @@ public class AlbumFragment extends EntryFragment<Album> implements AdapterView.O
 
     @Override
     protected void updateUI() {
-        final Album album = getDetailEntry();
+        final Album album = getEntry();
         if (album != null) {
             final List<NPUpload> attachments = album.getAttachments();
             if (attachments != null) {

@@ -106,7 +106,7 @@ public class NewContactFragment extends NewEntryFragment<Contact> {
 
     @Override
     protected void updateUI() {
-        final Contact contact = getDetailEntryIfExist();
+        final Contact contact = getEntry();
         if (contact != null) {
             mTitleV.setText(contact.getTitle());
             mFirstNameV.setText(contact.getFirstName());
@@ -247,7 +247,7 @@ public class NewContactFragment extends NewEntryFragment<Contact> {
 
     @Override
     public Contact getEditedEntry() {
-        final Contact entry = getDetailEntryIfExist();
+        final Contact entry = getEntry();
         final Contact contact = entry == null ? new Contact(getFolder()) : new Contact(entry);
 
         contact.setLocation((Location) mAddressV.getTag());
@@ -263,7 +263,7 @@ public class NewContactFragment extends NewEntryFragment<Contact> {
         putPhonesInto(contact);
         putEmailsInto(contact);
 
-        setDetailEntry(contact);
+        setEntry(contact);
         return contact;
     }
 

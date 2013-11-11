@@ -139,16 +139,6 @@ public abstract class NewEntryActivity<T extends NPEntry> extends DoneDiscardAct
         goUp();
     }
 
-    @Override
-    public void onGotEntry(EntryFragment<T> f, T entry) {
-        // do nothing
-    }
-
-    @Override
-    public void onStartLoadingEntry(EntryFragment<T> f, T entry) {
-        // do nothing
-    }
-
     protected void goUp() {
         startActivity(getUpIntent(getUpActivity()));
         finish();

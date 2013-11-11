@@ -35,9 +35,6 @@ public abstract class EntryActivity<T extends NPEntry> extends SinglePaneActivit
         handleIntent(getIntent());
         super.onCreate(savedState);
 
-        // have to reset the progress bar here (some kind of bug)
-        setProgressBarIndeterminateVisibility(false);
-
         getActionBar().setIcon(R.drawable.back_to_dashboard);
     }
 
@@ -74,16 +71,6 @@ public abstract class EntryActivity<T extends NPEntry> extends SinglePaneActivit
     @Override
     public void onDeleting(EntryFragment<T> f, T entry) {
         finish();
-    }
-
-    @Override
-    public void onStartLoadingEntry(EntryFragment<T> f, T entry) {
-        setProgressBarIndeterminateVisibility(true);
-    }
-
-    @Override
-    public void onGotEntry(EntryFragment<T> f, T entry) {
-        setProgressBarIndeterminateVisibility(false);
     }
 
     protected T getEntry() {

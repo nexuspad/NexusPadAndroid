@@ -70,7 +70,7 @@ public class BookmarkFragment extends EntryFragment<Bookmark> {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Bookmark entry = getDetailEntryIfExist();
+        Bookmark entry = getEntry();
         switch (item.getItemId()) {
             case R.id.edit:
                 mCallback.onEdit(this, entry);
@@ -103,7 +103,7 @@ public class BookmarkFragment extends EntryFragment<Bookmark> {
 
     @Override
     protected void updateUI() {
-        Bookmark bookmark = getDetailEntryIfExist();
+        Bookmark bookmark = getEntry();
         if (bookmark != null) {
             mNameV.setText(bookmark.getTitle());
             mWebAddressV.setText(bookmark.getWebAddress());
@@ -134,7 +134,7 @@ public class BookmarkFragment extends EntryFragment<Bookmark> {
     }
 
     private void launchBrowser() {
-        Uri uri = Uri.parse(getDetailEntryIfExist().getWebAddress());
+        Uri uri = Uri.parse(getEntry().getWebAddress());
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(uri);
         try {

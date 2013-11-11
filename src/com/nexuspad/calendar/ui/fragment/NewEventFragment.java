@@ -94,7 +94,7 @@ public class NewEventFragment extends NewEntryFragment<Event> {
         final View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final Event event = getDetailEntryIfExist();
+                final Event event = getEntry();
                 final int id = v.getId();
                 switch (id) {
                     case R.id.txt_location:
@@ -220,7 +220,7 @@ public class NewEventFragment extends NewEntryFragment<Event> {
     @Override
     protected void updateUI() {
         super.updateUI();
-        final Event event = getDetailEntryIfExist();
+        final Event event = getEntry();
         if (event != null) {
             mTitleV.setText(event.getTitle());
             mLocationV.setLocation(event.getLocation());
@@ -248,7 +248,7 @@ public class NewEventFragment extends NewEntryFragment<Event> {
 
     @Override
     public Event getEditedEntry() {
-        final Event entry = getDetailEntryIfExist();
+        final Event entry = getEntry();
         Event event = entry == null ? new Event(getFolder()) : new Event(entry);
 
         event.setTitle(mTitleV.getText().toString());
@@ -259,7 +259,7 @@ public class NewEventFragment extends NewEntryFragment<Event> {
         event.setTags(mTagsV.getText().toString());
         event.setNote(mNoteV.getText().toString());
 
-        setDetailEntry(event);
+        setEntry(event);
         return event;
     }
 

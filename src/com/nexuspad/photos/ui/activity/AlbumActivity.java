@@ -63,14 +63,4 @@ public class AlbumActivity extends SinglePaneActivity implements EntryFragment.C
     public void onDeleting(EntryFragment<Album> f, Album entry) {
         // nothing
     }
-
-    @Override
-    public void onStartLoadingEntry(EntryFragment<Album> f, Album entry) {
-        // nothing
-    }
-
-    @Override
-    public void onGotEntry(EntryFragment<Album> f, Album entry) {
-        // nothing
-    }
 }

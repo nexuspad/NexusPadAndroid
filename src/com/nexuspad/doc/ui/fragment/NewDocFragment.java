@@ -83,7 +83,7 @@ public class NewDocFragment extends NewEntryFragment<Doc> {
     protected void updateUI() {
         updateFolderView();
 
-        Doc doc = getDetailEntryIfExist();
+        Doc doc = getEntry();
         if (doc != null) {
             mTitleV.setText(doc.getTitle());
             mTagsV.setText(doc.getTags());
@@ -102,13 +102,13 @@ public class NewDocFragment extends NewEntryFragment<Doc> {
 
     @Override
     public Doc getEditedEntry() {
-        final Doc entry = getDetailEntryIfExist();
+        final Doc entry = getEntry();
         Doc doc = entry == null ? new Doc(getFolder()) : new Doc(entry);
         doc.setTitle(mTitleV.getText().toString());
         doc.setNote(Html.toHtml(mNoteV.getText()));
         doc.setTags(mTagsV.getText().toString());
 
-        setDetailEntry(doc);
+        setEntry(doc);
         return doc;
     }
 }

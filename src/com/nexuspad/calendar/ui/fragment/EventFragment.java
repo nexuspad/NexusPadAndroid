@@ -60,7 +60,7 @@ public class EventFragment extends EntryFragment<Event> {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.edit:
-                NewEventActivity.startWith(getActivity(), getDetailEntryIfExist(), getFolder());
+                NewEventActivity.startWith(getActivity(), getEntry(), getFolder());
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -91,7 +91,7 @@ public class EventFragment extends EntryFragment<Event> {
 
     @Override
     protected void updateUI() {
-        final Event event = getDetailEntryIfExist();
+        final Event event = getEntry();
         if (event != null) {
             mTitleV.setText(event.getTitle());
             final Date eventTime = event.getStartTime();

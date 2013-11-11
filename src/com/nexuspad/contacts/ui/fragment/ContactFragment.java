@@ -86,7 +86,7 @@ public class ContactFragment extends EntryFragment<Contact> {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.edit:
-                NewContactActivity.startWith(getActivity(), getDetailEntryIfExist(), getFolder());
+                NewContactActivity.startWith(getActivity(), getEntry(), getFolder());
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -125,7 +125,7 @@ public class ContactFragment extends EntryFragment<Contact> {
 
     @Override
     protected void updateUI() {
-        final Contact contact = getDetailEntryIfExist();
+        final Contact contact = getEntry();
         if (contact != null) {
             mTitleV.setText(contact.getTitle());
             mFirstNameV.setText(contact.getFirstName());

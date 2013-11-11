@@ -34,14 +34,4 @@ public class JournalActivity extends EntriesActivity implements JournalFragment.
     public void onDeleting(EntryFragment<Journal> f, Journal entry) {
         Toast.makeText(this, entry.toString(), Toast.LENGTH_LONG).show();
     }
-
-    @Override
-    public void onStartLoadingEntry(EntryFragment<Journal> f, Journal entry) {
-        Toast.makeText(this, entry.toString(), Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void onGotEntry(EntryFragment<Journal> f, Journal entry) {
-        Toast.makeText(this, entry.toString(), Toast.LENGTH_LONG).show();
-    }
 }

@@ -139,7 +139,7 @@ public class NewAlbumFragment extends NewEntryFragment<Album> {
     @Override
     protected void updateUI() {
         mFolderV.setText(getFolder().getFolderName());
-        final Album album = getDetailEntryIfExist();
+        final Album album = getEntry();
         if (album != null) {
             mTitleV.setText(album.getTitle());
         }
@@ -180,13 +180,13 @@ public class NewAlbumFragment extends NewEntryFragment<Album> {
 
     @Override
     public Album getEditedEntry() {
-        final Album entry = getDetailEntryIfExist();
+        final Album entry = getEntry();
         final Album album = entry == null ? new Album(getFolder()) : new Album(entry);
 
         album.setTitle(mTitleV.getText().toString());
         addPathsToAlbum(album);
 
-        setDetailEntry(album);
+        setEntry(album);
         return album;
     }
 

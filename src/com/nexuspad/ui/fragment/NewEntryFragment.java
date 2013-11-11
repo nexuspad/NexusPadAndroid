@@ -70,7 +70,7 @@ public abstract class NewEntryFragment<T extends NPEntry> extends EntryFragment<
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mModuleId = getClass().getAnnotation(ModuleId.class);
-        mMode = getDetailEntryIfExist() == null ? NewEntryActivity.Mode.NEW : NewEntryActivity.Mode.EDIT;
+        mMode = getEntry() == null ? NewEntryActivity.Mode.NEW : NewEntryActivity.Mode.EDIT;
     }
 
     public final void addEntry() {
@@ -111,7 +111,7 @@ public abstract class NewEntryFragment<T extends NPEntry> extends EntryFragment<
             throw new IllegalStateException("not in Mode.EDIT");
         }
         if (isEditedEntryValid()) {
-            final T originalEntry = getDetailEntryIfExist();
+            final T originalEntry = getEntry();
             final T entry = getEditedEntry();
             if (!entry.equals(originalEntry)) {
                 try {
