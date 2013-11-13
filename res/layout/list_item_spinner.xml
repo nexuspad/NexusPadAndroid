@@ -19,7 +19,7 @@
         android:paddingLeft="@dimen/ed__padding_micro"
         android:paddingTop="@dimen/ed__padding_micro"
         android:scrollHorizontally="true"
-        android:textAppearance="?android:attr/actionBarStyle"
+        android:textAppearance="@android:style/TextAppearance.Holo.Widget.ActionBar.Title"
         android:textSize="@dimen/ed__textsize_medium" />
 
 </com.nexuspad.ui.view.DuplicateParentStateAwareLinearLayout>

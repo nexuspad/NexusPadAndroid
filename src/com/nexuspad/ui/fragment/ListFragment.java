@@ -115,11 +115,17 @@ public abstract class ListFragment extends Fragment {
      * {@link android.R.id#list}
      */
     public ListView getListView() {
-        return mListViewManager.getListView();
+        if (mListViewManager != null) {
+            return mListViewManager.getListView();
+        }
+        return null;
     }
 
     public ListAdapter getListAdapter() {
-        return mListViewManager.getListAdapter();
+        if (mListViewManager != null) {
+            return mListViewManager.getListAdapter();
+        }
+        return null;
     }
 
     /**
