@@ -46,6 +46,7 @@ public final class ContactsFragment extends EntriesFragment {
     }
 
     private List<Contact> mContacts;
+    private SortTask mSortTask;
 
     @Override
     protected int getEntriesCountPerPage() {
@@ -74,7 +75,18 @@ public final class ContactsFragment extends EntriesFragment {
         super.onListLoaded(list);
 
         mContacts = new WrapperList<Contact>(list.getEntries());
-        new SortTask(mContacts, this, getString(R.string.others)).execute((Void[]) null);
+        if (mSortTask == null) {
+            mSortTask = new SortTask(mContacts, this, getString(R.string.others));
+        } else {
+            mSortTask.cancel(true);
+        }
+        mSortTask.execute((Void[]) null);
+    }
+
+    @Override
+    public void onDestroy() {
+        mSortTask.cancel(true);
+        super.onDestroy();
     }
 
     @Override
@@ -154,7 +166,7 @@ public final class ContactsFragment extends EntriesFragment {
                             .into(holder.icon);
 
                 } catch (NPException e) {
-                    // TODO handle error
+                    throw new RuntimeException(e);
                 }
             }
 
@@ -250,6 +262,7 @@ public final class ContactsFragment extends EntriesFragment {
                 } else {
                     putIfAbsent(mMap, mPlaceHolder, i);
                 }
+                if (isCancelled()) return null;
             }
 
             return null;

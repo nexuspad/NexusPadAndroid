@@ -1,4 +1,4 @@
-package com.nexuspad.ui.view;
+package com.nexuspad.calendar.ui.view;
 
 import android.content.Context;
 import android.os.Parcel;

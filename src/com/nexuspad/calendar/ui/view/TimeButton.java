@@ -1,15 +1,11 @@
-package com.nexuspad.ui.view;
+package com.nexuspad.calendar.ui.view;
 
 import android.content.Context;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.util.AttributeSet;
-import android.widget.Button;
-import com.android.datetimepicker.date.DatePickerDialog;
 import com.android.datetimepicker.time.RadialPickerLayout;
 import com.android.datetimepicker.time.TimePickerDialog;
+import com.nexuspad.calendar.ui.view.DateTimeButton;
 
-import java.text.DateFormat;
 import java.util.Calendar;
 
 public class TimeButton extends DateTimeButton implements TimePickerDialog.OnTimeSetListener {

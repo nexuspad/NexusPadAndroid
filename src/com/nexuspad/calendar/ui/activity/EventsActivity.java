@@ -3,7 +3,8 @@ package com.nexuspad.calendar.ui.activity;
 import android.support.v4.app.Fragment;
 import com.edmondapps.utils.android.annotaion.ParentActivity;
 import com.nexuspad.annotation.ModuleId;
-import com.nexuspad.calendar.ui.fragment.EventsFragment;
+import com.nexuspad.calendar.ui.fragment.EventsAgendaFragment;
+import com.nexuspad.calendar.ui.fragment.EventsMonthFragment;
 import com.nexuspad.datamodel.EntryTemplate;
 import com.nexuspad.datamodel.Folder;
 import com.nexuspad.home.ui.activity.DashboardActivity;
@@ -20,6 +21,6 @@ public class EventsActivity extends EntriesActivity {
 
     @Override
     protected Fragment onCreateFragment() {
-        return EventsFragment.of(Folder.rootFolderOf(getModule(), this));
+        return EventsAgendaFragment.of(Folder.rootFolderOf(getModule(), this));
     }
 }

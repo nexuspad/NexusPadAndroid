@@ -1,7 +1,11 @@
 package com.nexuspad.calendar.ui.fragment;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import com.edmondapps.utils.android.annotaion.FragmentName;
+import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
 import com.nexuspad.calendar.ui.activity.EventActivity;
 import com.nexuspad.datamodel.*;
@@ -18,18 +22,28 @@ import static com.nexuspad.dataservice.ServiceConstants.CALENDAR_MODULE;
 /**
  * Author: edmond
  */
-@FragmentName(EventsFragment.TAG)
+@FragmentName(EventsMonthFragment.TAG)
 @ModuleId(moduleId = CALENDAR_MODULE, template = EntryTemplate.EVENT)
-public class EventsFragment extends EntriesFragment {
-    public static final String TAG = "EventsFragment";
+public class EventsMonthFragment extends EntriesFragment {
+    public static final String TAG = "EventsMonthFragment";
 
-    public static EventsFragment of(Folder folder) {
+    public static EventsMonthFragment of(Folder folder) {
         final Bundle bundle = new Bundle();
         bundle.putParcelable(KEY_FOLDER, folder);
 
-        final EventsFragment fragment = new EventsFragment();
+        final EventsMonthFragment fragment = new EventsMonthFragment();
         fragment.setArguments(bundle);
         return fragment;
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.events_month_frag, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
     }
 
     @Override
