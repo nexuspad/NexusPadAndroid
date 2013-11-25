@@ -7,7 +7,6 @@ import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import com.edmondapps.utils.android.annotaion.FragmentName;
@@ -43,6 +42,7 @@ import static com.edmondapps.utils.android.view.ViewUtils.findView;
 @ModuleId(moduleId = ServiceConstants.CALENDAR_MODULE, template = EntryTemplate.EVENT)
 public class EventsAgendaFragment extends EntriesFragment {
     public static final String TAG = "EventsAgendaFragment";
+    public static final String KEY_START_DAY = "key_start_day";
 
     public static EventsAgendaFragment of(Folder folder) {
         final Bundle bundle = new Bundle();
@@ -53,12 +53,31 @@ public class EventsAgendaFragment extends EntriesFragment {
         return fragment;
     }
 
+    public static EventsAgendaFragment of(Folder folder, long startDay) {
+        final Bundle bundle = new Bundle();
+        bundle.putParcelable(KEY_FOLDER, folder);
+        bundle.putLong(KEY_START_DAY, startDay);
+
+        final EventsAgendaFragment fragment = new EventsAgendaFragment();
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
     private List<Event> mEvents = new ArrayList<Event>();
+    private long mStartTime = -1;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        final Bundle arguments = getArguments();
+        mStartTime = mStartTime >= 0 ? mStartTime : arguments.getLong(KEY_START_DAY, -1);
+    }
 
     @Override
     protected void getEntriesInFolder(EntryListService service, Folder folder, int page) throws NPException {
-        final Date startDate = DateUtil.addDaysTo(new Date(), -60);
-        final Date endDate = DateUtil.addDaysTo(new Date(), 60);
+        final Date midPoint = mStartTime > 0 ? new Date(mStartTime) : new Date();
+        final Date startDate = DateUtil.addDaysTo(midPoint, -60);
+        final Date endDate = DateUtil.addDaysTo(midPoint, 60);
         service.getEntriesBetweenDates(folder, getTemplate(), startDate, endDate, page, getEntriesCountPerPage());
     }
 
@@ -80,15 +99,33 @@ public class EventsAgendaFragment extends EntriesFragment {
         mEvents.addAll(events);
 
         getListAdapter().notifyDataSetChanged();
+        scrollToStartTime(events);
 
         super.onListLoaded(list);
+    }
+
+    private void scrollToStartTime(List<Event> events) {
+        if (mStartTime >= 0) {
+            for (int i = 0, eventsSize = events.size(); i < eventsSize; i++) {
+                final Event event = events.get(i);
+                if (event.getStartTime().getTime() >= mStartTime) {
+                    smoothScrollToPosition(i);
+                    break;
+                }
+            }
+        }
     }
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
         final EventsAgendaAdapter adapter = (EventsAgendaAdapter) getListAdapter();
-        EventActivity.startWith(getActivity(), adapter.getItem(position),getFolder());
+        EventActivity.startWith(getActivity(), adapter.getItem(position), getFolder());
+    }
+
+    public void setStartTime(long startTime) {
+        mStartTime = startTime;
+        scrollToStartTime(mEvents);
     }
 
     private static class ViewHolder {

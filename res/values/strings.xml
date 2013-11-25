@@ -97,6 +97,8 @@
     <string name="to">TO</string>
     <string name="all_day">ALL DAY</string>
     <string name="event">Event</string>
+    <string name="month">Month</string>
+    <string name="agenda">Agenda</string>
 
     <plurals name="numberOfPhotos">
         <item quantity="one">1 photo</item>

@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import com.edmondapps.utils.android.Logs;
 import com.edmondapps.utils.android.annotaion.ParentActivity;
+import com.google.common.collect.ImmutableList;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
 import com.nexuspad.datamodel.EntryTemplate;
@@ -95,9 +96,8 @@ public class PhotosActivity extends EntriesActivity implements ActionBar.OnNavig
         final ActionBar actionBar = getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 
-        final List<String> list = new ArrayList<String>();
-        list.add(getString(R.string.photos));
-        list.add(getString(R.string.albums));
+        final List<String> list = ImmutableList.of(getString(R.string.photos), getString(R.string.albums));
+
         final ArrayAdapter<?> adapter = new ArrayAdapter<String>(
                 actionBar.getThemedContext(), R.layout.list_item_spinner, android.R.id.text1, list);
 
@@ -124,7 +124,6 @@ public class PhotosActivity extends EntriesActivity implements ActionBar.OnNavig
             mAlbumsFragment = findFragment(getSupportFragmentManager(), AlbumsFragment.TAG);
         }
     }
-
 
 
     @Override

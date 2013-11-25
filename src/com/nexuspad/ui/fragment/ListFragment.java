@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import com.edmondapps.utils.android.Logs;
 import com.nexuspad.R;
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
@@ -128,6 +129,12 @@ public abstract class ListFragment extends Fragment {
         return null;
     }
 
+    public void smoothScrollToPosition(int position) {
+        if (mListViewManager != null) {
+            mListViewManager.smoothScrollToPosition(position);
+        }
+    }
+
     /**
      * Delegate calls to a {@link ListView} or a {@link StickyListHeadersListView}.
      */
@@ -171,6 +178,8 @@ public abstract class ListFragment extends Fragment {
         protected abstract ListAdapter getListAdapter();
 
         protected abstract ListView getListView();
+
+        protected abstract void smoothScrollToPosition(int position);
     }
 
     private static class NativeListViewManager extends ListViewManager {
@@ -199,6 +208,11 @@ public abstract class ListFragment extends Fragment {
         @Override
         protected ListView getListView() {
             return mListView;
+        }
+
+        @Override
+        public void smoothScrollToPosition(int position) {
+            mListView.smoothScrollToPosition(position);
         }
     }
 
@@ -232,6 +246,11 @@ public abstract class ListFragment extends Fragment {
         @Override
         protected ListView getListView() {
             return mListView.getWrappedList();
+        }
+
+        @Override
+        protected void smoothScrollToPosition(int position) {
+            mListView.smoothScrollToPosition(position + mListView.getHeaderViewsCount());
         }
     }
 }
