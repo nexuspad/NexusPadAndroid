@@ -28,7 +28,6 @@ import static com.edmondapps.utils.android.view.ViewUtils.findView;
 
 /**
  * @author Edmond
- * 
  */
 @FragmentName(AboutFragment.TAG)
 public class AboutFragment extends Fragment {
@@ -128,7 +127,7 @@ public class AboutFragment extends Fragment {
         String firstName = user.getFirstName();
         String lastName = user.getLastName();
 
-        if ( (firstName != null) && (lastName != null)) {
+        if ((firstName != null) && (lastName != null)) {
             mNameV.setText(getString(R.string.format_ac_name, firstName, lastName));
             mNameV.setEnabled(true);
         } else {

@@ -15,14 +15,13 @@
             style="@style/listTitleTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/title"
-            />
+            android:hint="@string/title" />
 
         <TextView
             android:id="@+id/lbl_date_time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/ed__textsize_small"/>
+            android:textSize="@dimen/ed__textsize_small" />
 
         <TextView
             android:id="@+id/lbl_location_frame"

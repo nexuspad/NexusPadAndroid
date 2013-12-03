@@ -5,7 +5,6 @@ package com.nexuspad.journal.ui.activity;
 
 import android.support.v4.app.Fragment;
 import android.widget.Toast;
-
 import com.edmondapps.utils.android.annotaion.ParentActivity;
 import com.nexuspad.annotation.ModuleId;
 import com.nexuspad.datamodel.EntryTemplate;
@@ -19,7 +18,6 @@ import com.nexuspad.ui.fragment.EntryFragment;
 
 /**
  * @author Edmond
- * 
  */
 @ParentActivity(DashboardActivity.class)
 @ModuleId(moduleId = ServiceConstants.JOURNAL_MODULE, template = EntryTemplate.JOURNAL)

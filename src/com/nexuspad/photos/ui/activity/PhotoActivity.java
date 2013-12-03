@@ -23,7 +23,6 @@ import java.util.ArrayList;
 
 /**
  * @author Edmond
- * 
  */
 @ParentActivity(PhotosActivity.class)
 public class PhotoActivity extends SinglePaneActivity implements EntriesFragment.Callback {

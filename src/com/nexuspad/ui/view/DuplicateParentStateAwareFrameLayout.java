@@ -4,14 +4,12 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 
 /**
  * http://stackoverflow.com/questions/2607698/click-in-a-listview-item-changes-
  * status-of-elements-inside-the-item
- * 
+ *
  * @author Edmond
- * 
  */
 public class DuplicateParentStateAwareFrameLayout extends FrameLayout {
 

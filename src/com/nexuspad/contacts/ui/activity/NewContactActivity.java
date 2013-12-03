@@ -20,7 +20,7 @@ import com.nexuspad.ui.activity.NewEntryActivity;
 public class NewContactActivity extends NewEntryActivity<Contact> {
 
     public static void startWith(Context context, Contact contact, Folder folder) {
-       context.startActivity(NewContactActivity.of(context, contact, folder));
+        context.startActivity(NewContactActivity.of(context, contact, folder));
     }
 
     public static Intent of(Context context, Contact contact, Folder folder) {

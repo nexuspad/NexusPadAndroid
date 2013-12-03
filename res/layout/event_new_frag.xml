@@ -21,7 +21,7 @@
             style="?android:attr/listSeparatorTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/location"/>
+            android:text="@string/location" />
 
         <com.nexuspad.ui.view.LocationTextView
             android:id="@+id/txt_location"
@@ -35,7 +35,7 @@
             style="?android:attr/listSeparatorTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/from"/>
+            android:text="@string/from" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -48,7 +48,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="5"
-                android:layout_marginTop="0dp"/>
+                android:layout_marginTop="0dp" />
+
             <com.nexuspad.calendar.ui.view.TimeButton
                 android:id="@+id/spinner_start_time"
                 style="@style/formMargin"
@@ -62,7 +63,7 @@
             style="?android:attr/listSeparatorTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/to"/>
+            android:text="@string/to" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -75,7 +76,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="5"
-                android:layout_marginTop="0dp"/>
+                android:layout_marginTop="0dp" />
+
             <com.nexuspad.calendar.ui.view.TimeButton
                 android:id="@+id/spinner_to_time"
                 style="@style/formMargin"
@@ -90,7 +92,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="@dimen/ed__textsize_small"
-            android:text="@string/all_day"/>
+            android:text="@string/all_day" />
 
         <TextView
             android:id="@+id/spinner_repeat"

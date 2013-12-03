@@ -6,8 +6,8 @@ import android.os.Binder;
 import android.os.IBinder;
 import com.google.common.collect.Lists;
 import com.nexuspad.app.Request;
-import com.nexuspad.dataservice.FileUploadService;
 import com.nexuspad.dataservice.EntryUploadService;
+import com.nexuspad.dataservice.FileUploadService;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -85,7 +85,7 @@ public final class UploadService extends Service {
 
     /**
      * Adds a listener to be notified of upload count changes.
-     * <p>
+     * <p/>
      * Listeners are stored in a {@code WeakReference}, thus, anonymous inner class cannot be used.
      */
     public static void addOnUploadCountChangeListener(OnUploadCountChangeListener listener) {

@@ -7,12 +7,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.BaseAdapter;
-
 import com.edmondapps.utils.android.ui.CompoundAdapter;
 
 /**
  * @author Edmond
- * 
  */
 public class FolderEntriesAdapter<T extends EntriesAdapter<?>> extends CompoundAdapter implements OnItemLongClickListener {
     private final FoldersAdapter mFolderAdapter;

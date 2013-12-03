@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            style="@style/scrollableFrame"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+    style="@style/scrollableFrame"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:id="@+id/content"
@@ -14,9 +14,9 @@
             style="?android:attr/listSeparatorTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/folder"/>
+            android:text="@string/folder" />
 
-        <include layout="@layout/include_folder_selector"/>
+        <include layout="@layout/include_folder_selector" />
 
         <EditText
             android:id="@+id/txt_web_address"
@@ -24,14 +24,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/web_address"
-            android:inputType="textUri"/>
+            android:inputType="textUri" />
 
         <EditText
             android:id="@+id/txt_tags"
             style="@style/formMargin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/tags"/>
+            android:hint="@string/tags" />
 
         <EditText
             android:id="@+id/txt_note"
@@ -41,7 +41,7 @@
             android:layout_weight="1"
             android:hint="@string/note"
             android:gravity="top"
-            android:minLines="@integer/notes_min_lines"/>
+            android:minLines="@integer/notes_min_lines" />
     </LinearLayout>
 
 </ScrollView>

@@ -6,7 +6,6 @@ package com.nexuspad.doc.ui.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
-
 import com.edmondapps.utils.android.annotaion.ParentActivity;
 import com.nexuspad.annotation.ModuleId;
 import com.nexuspad.datamodel.Doc;
@@ -19,15 +18,13 @@ import com.nexuspad.ui.activity.EntriesActivity;
 
 /**
  * @author Edmond
- * 
  */
 @ParentActivity(DashboardActivity.class)
 @ModuleId(moduleId = ServiceConstants.DOC_MODULE, template = EntryTemplate.DOC)
 public class DocsActivity extends EntriesActivity implements DocsFragment.Callback {
 
     /**
-     * @param a
-     *            becomes the parent {@code Activity}
+     * @param a becomes the parent {@code Activity}
      * @return an {@code Intent} that starts with the specified {@code Folder}.
      */
     public static Intent of(Activity a, Folder parent) {

@@ -6,7 +6,6 @@ package com.nexuspad.bookmark.ui.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
-
 import com.edmondapps.utils.android.annotaion.ParentActivity;
 import com.nexuspad.annotation.ModuleId;
 import com.nexuspad.bookmark.ui.fragment.BookmarksFragment;
@@ -19,7 +18,6 @@ import com.nexuspad.ui.activity.EntriesActivity;
 
 /**
  * @author Edmond
- * 
  */
 @ParentActivity(DashboardActivity.class)
 @ModuleId(moduleId = ServiceConstants.BOOKMARK_MODULE, template = EntryTemplate.BOOKMARK)

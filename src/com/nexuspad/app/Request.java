@@ -7,9 +7,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
-import com.nexuspad.dataservice.FileUploadService;
 import com.nexuspad.datamodel.Folder;
 import com.nexuspad.datamodel.NPEntry;
+import com.nexuspad.dataservice.FileUploadService;
 
 import java.io.File;
 import java.lang.ref.WeakReference;

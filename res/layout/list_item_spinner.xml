@@ -6,7 +6,7 @@
     android:minHeight="48dp"
     android:orientation="horizontal"
     android:paddingLeft="@dimen/ed__padding_small"
-    tools:context=".home.ui.activity.MainActivity" >
+    tools:context=".home.ui.activity.MainActivity">
 
     <TextView
         android:id="@android:id/text1"

@@ -337,7 +337,7 @@ public abstract class EntriesFragment extends ListFragment {
 
     /**
      * @return true if this Fragment should call {@link #queryEntriesAync()}
-     *         automatically after view is created; false to disable it
+     * automatically after view is created; false to disable it
      */
     protected boolean isLoadListEnabled() {
         return true;
@@ -391,7 +391,6 @@ public abstract class EntriesFragment extends ListFragment {
      * .
      * <p/>
      * You may override this method to use other mechanisms, such as
-     *
      */
     protected void getEntriesInFolder(EntryListService service, Folder folder, int page) throws NPException {
         service.getEntriesInFolder(mFolder, getTemplate(), page, getEntriesCountPerPage());
@@ -456,7 +455,7 @@ public abstract class EntriesFragment extends ListFragment {
 
     /**
      * @return an adapter that is used to indicate it is loading more entries at
-     *         the end of the lit
+     * the end of the lit
      * @see CompoundAdapter
      */
     protected SingleAdapter<View> getLoadMoreAdapter() {

@@ -6,7 +6,6 @@ package com.nexuspad.doc.ui.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
-
 import com.edmondapps.utils.android.annotaion.ParentActivity;
 import com.nexuspad.datamodel.Doc;
 import com.nexuspad.datamodel.Folder;
@@ -15,7 +14,6 @@ import com.nexuspad.ui.activity.EntryActivity;
 
 /**
  * @author Edmond
- * 
  */
 @ParentActivity(DocsActivity.class)
 public class DocActivity extends EntryActivity<Doc> {

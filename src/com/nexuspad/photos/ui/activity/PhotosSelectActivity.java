@@ -5,14 +5,13 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import com.nexuspad.util.Logs;
 import com.edmondapps.utils.android.activity.SinglePaneActivity;
 import com.edmondapps.utils.android.annotaion.ParentActivity;
 import com.nexuspad.R;
 import com.nexuspad.photos.ui.fragment.PhotoSelectFragment;
+import com.nexuspad.util.Logs;
 
 import java.util.ArrayList;
-import java.util.List;
 
 @ParentActivity(PhotosActivity.class)
 public class PhotosSelectActivity extends SinglePaneActivity implements PhotoSelectFragment.Callback {

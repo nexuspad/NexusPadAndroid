@@ -1,6 +1,5 @@
 package com.nexuspad.contacts.ui.activity;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,7 +17,7 @@ import com.nexuspad.ui.activity.EntryActivity;
 public class ContactActivity extends EntryActivity<Contact> {
 
     public static void startWith(Context context, Contact contact, Folder folder) {
-       context.startActivity(ContactActivity.of(context, contact, folder));
+        context.startActivity(ContactActivity.of(context, contact, folder));
     }
 
     public static Intent of(Context context, Contact contact, Folder folder) {

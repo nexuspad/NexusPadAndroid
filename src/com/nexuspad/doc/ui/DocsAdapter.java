@@ -3,20 +3,18 @@
  */
 package com.nexuspad.doc.ui;
 
-import java.util.List;
-
 import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.nexuspad.R;
 import com.nexuspad.datamodel.Doc;
 import com.nexuspad.ui.EntriesAdapter;
 
+import java.util.List;
+
 /**
  * @author Edmond
- * 
  */
 public class DocsAdapter extends EntriesAdapter<Doc> {
 

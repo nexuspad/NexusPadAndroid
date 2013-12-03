@@ -6,17 +6,14 @@ package com.nexuspad.bookmark.ui.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
-
 import com.edmondapps.utils.android.annotaion.ParentActivity;
 import com.nexuspad.bookmark.ui.fragment.BookmarkFragment;
 import com.nexuspad.datamodel.Bookmark;
 import com.nexuspad.datamodel.Folder;
 import com.nexuspad.ui.activity.EntryActivity;
-import com.nexuspad.ui.activity.NewEntryActivity.Mode;
 
 /**
  * @author Edmond
- * 
  */
 @ParentActivity(BookmarksActivity.class)
 public class BookmarkActivity extends EntryActivity<Bookmark> implements BookmarkFragment.Callback {
@@ -49,6 +46,6 @@ public class BookmarkActivity extends EntryActivity<Bookmark> implements Bookmar
 
     @Override
     protected BookmarkFragment getFragment() {
-        return (BookmarkFragment)super.getFragment();
+        return (BookmarkFragment) super.getFragment();
     }
 }

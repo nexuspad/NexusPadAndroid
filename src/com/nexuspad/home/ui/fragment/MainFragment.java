@@ -16,7 +16,6 @@ import com.nexuspad.util.Logs;
 
 /**
  * @author Edmond
- * 
  */
 @FragmentName(MainFragment.TAG)
 public class MainFragment extends Fragment {

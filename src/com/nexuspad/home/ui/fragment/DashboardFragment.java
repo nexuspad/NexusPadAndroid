@@ -23,7 +23,6 @@ import static com.nexuspad.dataservice.ServiceConstants.*;
 
 /**
  * @author Edmond
- * 
  */
 @FragmentName(DashboardFragment.TAG)
 public class DashboardFragment extends ListFragment {
@@ -48,12 +47,10 @@ public class DashboardFragment extends ListFragment {
     public interface Callback {
         /**
          * Called when an module is clicked.
-         * 
-         * @param f
-         *            caller of this method
-         * @param moduleType
-         *            one of the {@code *_MODULE} constants defined in
-         *            {@link ServiceConstants}
+         *
+         * @param f          caller of this method
+         * @param moduleType one of the {@code *_MODULE} constants defined in
+         *                   {@link ServiceConstants}
          */
         void onModuleClicked(DashboardFragment f, int moduleType);
     }

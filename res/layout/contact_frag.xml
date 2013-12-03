@@ -85,7 +85,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:autoLink="all"
-            android:text="@string/address"/>
+            android:text="@string/address" />
 
         <TextView
             android:id="@+id/lbl_address"
@@ -94,44 +94,40 @@
             android:layout_height="wrap_content"
             android:autoLink="all"
             android:hint="@string/address"
-            android:linksClickable="false"/>
+            android:linksClickable="false" />
 
         <TextView
             android:id="@+id/lbl_phones"
             style="?android:attr/listSeparatorTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/phones"
-            />
+            android:text="@string/phones" />
 
         <LinearLayout
             android:id="@+id/phones_frame"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            />
+            android:orientation="vertical" />
 
         <TextView
             android:id="@+id/lbl_emails"
             style="?android:attr/listSeparatorTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/email"
-            />
+            android:text="@string/email" />
 
         <LinearLayout
             android:id="@+id/emails_frame"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            />
+            android:orientation="vertical" />
 
         <TextView
             android:id="@+id/lbl_web_address_frame"
             style="?android:attr/listSeparatorTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/web_address"/>
+            android:text="@string/web_address" />
 
         <TextView
             android:id="@+id/lbl_web_address"
@@ -148,7 +144,7 @@
             style="?android:attr/listSeparatorTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/tags"/>
+            android:text="@string/tags" />
 
         <TextView
             android:id="@+id/lbl_tags"
@@ -156,14 +152,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:autoLink="all"
-            android:hint="@string/tags"/>
+            android:hint="@string/tags" />
 
         <TextView
             android:id="@+id/lbl_note_frame"
             style="?android:attr/listSeparatorTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/note"/>
+            android:text="@string/note" />
 
         <TextView
             android:id="@+id/lbl_note"
@@ -171,6 +167,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:autoLink="all"
-            android:hint="@string/note"/>
+            android:hint="@string/note" />
     </LinearLayout>
 </ScrollView>

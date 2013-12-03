@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:padding="@dimen/ed__padding_small"
-              android:orientation="horizontal"
-              android:baselineAligned="false">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/ed__padding_small"
+    android:orientation="horizontal"
+    android:baselineAligned="false">
 
     <LinearLayout
         android:id="@+id/content"
@@ -21,7 +21,7 @@
             style="?android:attr/listSeparatorTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/photos"/>
+            android:text="@string/photos" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -36,8 +36,7 @@
                 android:layout_height="match_parent"
                 android:text="@string/add_more"
                 android:gravity="center_vertical"
-                style="@style/selectableTextView"
-                />
+                style="@style/selectableTextView" />
 
             <TextView
                 android:id="@+id/lbl_num_photos"
@@ -46,8 +45,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="@string/add_more"
-                android:gravity="center_vertical|right"
-                />
+                android:gravity="center_vertical|right" />
         </LinearLayout>
     </LinearLayout>
 
@@ -55,5 +53,5 @@
         layout="@layout/include_grid_view"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1"/>
+        android:layout_weight="1" />
 </LinearLayout>

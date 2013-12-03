@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-
 import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.edmondapps.utils.android.view.ViewUtils;
 import com.nexuspad.R;
@@ -18,7 +17,6 @@ import com.nexuspad.ui.fragment.EntryFragment;
 
 /**
  * @author Edmond
- * 
  */
 @FragmentName(JournalFragment.TAG)
 public class JournalFragment extends EntryFragment<Journal> {

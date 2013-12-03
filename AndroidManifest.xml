@@ -32,7 +32,7 @@
         android:theme="@style/AppTheme">
         <service
             android:name=".app.service.UploadService"
-            android:exported="false"/>
+            android:exported="false" />
 
         <activity
             android:name=".home.ui.activity.MainActivity"
@@ -77,8 +77,7 @@
         <activity
             android:name=".doc.ui.activity.DocsActivity"
             android:label="@string/docs" />
-        <activity
-            android:name=".doc.ui.activity.NewDocActivity" />
+        <activity android:name=".doc.ui.activity.NewDocActivity" />
         <activity
             android:name=".journal.ui.activity.JournalActivity"
             android:label="@string/journal" />
@@ -113,26 +112,22 @@
         <activity
             android:name=".photos.ui.activity.AlbumActivity"
             android:label="@string/photos" />
-        <activity
-            android:name=".photos.ui.activity.NewAlbumActivity" />
+        <activity android:name=".photos.ui.activity.NewAlbumActivity" />
         <activity
             android:name=".contacts.ui.activity.ContactsActivity"
             android:label="@string/contacts" />
         <activity
             android:name=".contacts.ui.activity.ContactActivity"
             android:label="@string/contacts" />
-        <activity
-            android:name=".contacts.ui.activity.NewContactActivity" />
-        <activity
-            android:name=".contacts.ui.activity.NewLocationActivity" />
+        <activity android:name=".contacts.ui.activity.NewContactActivity" />
+        <activity android:name=".contacts.ui.activity.NewLocationActivity" />
         <activity
             android:name=".calendar.ui.activity.EventActivity"
             android:label="@string/event" />
         <activity
             android:name=".calendar.ui.activity.EventsActivity"
             android:label="@string/events" />
-        <activity
-            android:name=".calendar.ui.activity.NewEventActivity" />
+        <activity android:name=".calendar.ui.activity.NewEventActivity" />
         <activity
             android:name=".ui.activity.NewFolderActivity"
             android:label="@string/new_folder" />

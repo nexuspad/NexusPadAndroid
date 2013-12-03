@@ -6,7 +6,6 @@ package com.nexuspad.doc.ui.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
-
 import com.edmondapps.utils.android.annotaion.ParentActivity;
 import com.nexuspad.annotation.ModuleId;
 import com.nexuspad.datamodel.Doc;

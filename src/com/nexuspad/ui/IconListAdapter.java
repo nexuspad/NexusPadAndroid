@@ -3,7 +3,6 @@
  */
 package com.nexuspad.ui;
 
-import static com.edmondapps.utils.android.view.ViewUtils.findView;
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -13,12 +12,12 @@ import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.nexuspad.R;
+
+import static com.edmondapps.utils.android.view.ViewUtils.findView;
 
 /**
  * @author Edmond
- * 
  */
 public class IconListAdapter extends BaseAdapter {
 
@@ -88,7 +87,7 @@ public class IconListAdapter extends BaseAdapter {
 
             convertView.setTag(holder);
         } else {
-            holder = (ViewHolder)convertView.getTag();
+            holder = (ViewHolder) convertView.getTag();
         }
 
         holder.icon.setImageResource(mDrawableIds[position]);

@@ -28,9 +28,8 @@ import static com.edmondapps.utils.android.view.ViewUtils.isAllTextNotEmpty;
 
 /**
  * A {@code Fragment} that handles both login and signup.
- * 
+ *
  * @author Edmond
- * 
  */
 @FragmentName(LoginFragment.TAG)
 public class LoginFragment extends Fragment {
@@ -53,13 +52,13 @@ public class LoginFragment extends Fragment {
     private final Lazy<EditText[]> mLoginFields = new Lazy<EditText[]>() {
         @Override
         protected EditText[] onCreate() {
-            return new EditText[] {mUserNameV, mPasswordV};
+            return new EditText[]{mUserNameV, mPasswordV};
         }
     };
     private final Lazy<EditText[]> mSignUpFields = new Lazy<EditText[]>() {
         @Override
         public EditText[] onCreate() {
-            return new EditText[] {mFirstNameV, mLastNameV, mConfirmPwV};
+            return new EditText[]{mFirstNameV, mLastNameV, mConfirmPwV};
         }
     };
     // order should correspond to the layout (error check should flow
@@ -67,7 +66,7 @@ public class LoginFragment extends Fragment {
     private final Lazy<EditText[]> mAllFields = new Lazy<EditText[]>() {
         @Override
         public EditText[] onCreate() {
-            return new EditText[] {mUserNameV, mPasswordV, mFirstNameV, mLastNameV, mConfirmPwV};
+            return new EditText[]{mUserNameV, mPasswordV, mFirstNameV, mLastNameV, mConfirmPwV};
         }
     };
 

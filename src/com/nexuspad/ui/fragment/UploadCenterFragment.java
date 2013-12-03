@@ -18,8 +18,8 @@ import com.edmondapps.utils.android.ui.CompoundAdapter;
 import com.nexuspad.R;
 import com.nexuspad.app.Request;
 import com.nexuspad.app.service.UploadService;
-import com.nexuspad.dataservice.FileUploadService;
 import com.nexuspad.datamodel.EntryTemplate;
+import com.nexuspad.dataservice.FileUploadService;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;

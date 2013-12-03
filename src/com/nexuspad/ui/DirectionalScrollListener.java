@@ -26,8 +26,9 @@ public abstract class DirectionalScrollListener implements OnScrollListener {
 
     /**
      * Creates a {@link DirectionalScrollListener} with the given offset.
+     *
      * @param offset the minimum number of items that has to scroll before a direction change is considered
-     * @param other the other listener (since {@link AbsListView#setOnScrollListener(OnScrollListener)} only accepts one listener)
+     * @param other  the other listener (since {@link AbsListView#setOnScrollListener(OnScrollListener)} only accepts one listener)
      */
     public DirectionalScrollListener(int offset, OnScrollListener other) {
         mOffset = offset;

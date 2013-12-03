@@ -24,7 +24,6 @@ import static com.edmondapps.utils.android.view.ViewUtils.findView;
 
 /**
  * @author Edmond
- * 
  */
 @FragmentName(BookmarkFragment.TAG)
 public class BookmarkFragment extends EntryFragment<Bookmark> {

@@ -8,9 +8,8 @@ import android.widget.AbsListView.OnScrollListener;
 
 /**
  * Credit: http://benjii.me/2010/08/endless-scrolling-listview-in-android/
- * 
+ *
  * @author Edmond
- * 
  */
 public abstract class OnListEndListener implements OnScrollListener {
     public static final int DEFAULT_VISIBLE_THRESHOLD = 5;
@@ -47,7 +46,7 @@ public abstract class OnListEndListener implements OnScrollListener {
             }
         }
 
-        if (!mLoading && ( (totalItemCount - visibleItemCount) <= (firstVisibleItem + mVisibleThreshold))) {
+        if (!mLoading && ((totalItemCount - visibleItemCount) <= (firstVisibleItem + mVisibleThreshold))) {
             onListEnd(mCurrentPage + 1);
             mLoading = true;
         }

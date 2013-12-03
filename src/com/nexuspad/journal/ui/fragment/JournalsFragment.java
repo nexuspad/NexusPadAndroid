@@ -29,7 +29,6 @@ import java.util.List;
 
 /**
  * @author Edmond
- * 
  */
 @ModuleId(moduleId = ServiceConstants.JOURNAL_MODULE, template = EntryTemplate.JOURNAL)
 public class JournalsFragment extends EntriesFragment {

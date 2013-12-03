@@ -31,7 +31,6 @@ import com.nexuspad.ui.fragment.EntriesFragment;
 
 /**
  * @author Edmond
- * 
  */
 @FragmentName(DocsFragment.TAG)
 @ModuleId(moduleId = ServiceConstants.DOC_MODULE, template = EntryTemplate.DOC)
@@ -136,7 +135,7 @@ public class DocsFragment extends EntriesFragment {
 
     @Override
     public FoldersDocsAdapter getListAdapter() {
-        return (FoldersDocsAdapter)super.getListAdapter();
+        return (FoldersDocsAdapter) super.getListAdapter();
     }
 
     private class OnDocMenuClickListener extends OnEntryMenuClickListener<Doc> {

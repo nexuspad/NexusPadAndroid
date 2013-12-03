@@ -14,7 +14,6 @@ import com.nexuspad.ui.fragment.EntryFragment;
 
 /**
  * @author Edmond
- * 
  */
 public abstract class EntryActivity<T extends NPEntry> extends SinglePaneActivity implements EntryFragment.Callback<T> {
     public static final String KEY_ENTRY = "com.nexuspad.ui.activity.EntryActivity.entry";
@@ -60,9 +59,8 @@ public abstract class EntryActivity<T extends NPEntry> extends SinglePaneActivit
     /**
      * Called when the entry has changed, usually a result of
      * {@link #onCreate(Bundle)} or {@link #onNewIntent(Intent)}.
-     * 
-     * @param entry
-     *            the new entry, same as {@link #getEntry()}
+     *
+     * @param entry the new entry, same as {@link #getEntry()}
      */
     protected void onNewEntry(T entry) {
         setTitle(entry.getTitle());

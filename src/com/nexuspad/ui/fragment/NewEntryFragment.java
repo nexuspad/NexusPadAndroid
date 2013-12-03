@@ -14,11 +14,7 @@ import com.nexuspad.account.AccountManager;
 import com.nexuspad.annotation.ModuleId;
 import com.nexuspad.datamodel.Folder;
 import com.nexuspad.datamodel.NPEntry;
-import com.nexuspad.dataservice.EntryService;
-import com.nexuspad.dataservice.ErrorCode;
-import com.nexuspad.dataservice.NPException;
-import com.nexuspad.dataservice.ServiceConstants;
-import com.nexuspad.dataservice.ServiceError;
+import com.nexuspad.dataservice.*;
 import com.nexuspad.ui.activity.FoldersActivity;
 import com.nexuspad.ui.activity.NewEntryActivity;
 
@@ -43,7 +39,6 @@ public abstract class NewEntryFragment<T extends NPEntry> extends EntryFragment<
      * entry.<p>
      * Do not modify the detail entry here, create a copy and use {@link #setDetailEntry(NPEntry)} instead.
      * Or else equality checks will fail, and no entries will be updated.<p>
-     *
      *
      * @return an edited entry that reflects the user's changes
      */
@@ -74,7 +69,7 @@ public abstract class NewEntryFragment<T extends NPEntry> extends EntryFragment<
     }
 
     public final void addEntry() {
-        if(!NewEntryActivity.Mode.NEW.equals(mMode)) {
+        if (!NewEntryActivity.Mode.NEW.equals(mMode)) {
             throw new IllegalStateException("not in Mode.NEW");
         }
         if (isEditedEntryValid()) {
@@ -107,7 +102,7 @@ public abstract class NewEntryFragment<T extends NPEntry> extends EntryFragment<
     }
 
     public final void updateEntry() {
-        if(!NewEntryActivity.Mode.EDIT.equals(mMode)) {
+        if (!NewEntryActivity.Mode.EDIT.equals(mMode)) {
             throw new IllegalStateException("not in Mode.EDIT");
         }
         if (isEditedEntryValid()) {

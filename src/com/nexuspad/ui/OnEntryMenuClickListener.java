@@ -16,7 +16,7 @@ public class OnEntryMenuClickListener<T extends NPEntry> implements OnClickListe
     public static final String TAG = "OnEntryMenuClickListener";
 
     private static PopupMenu getPopupMenu(View view) {
-        PopupMenu menu = (PopupMenu)view.getTag();
+        PopupMenu menu = (PopupMenu) view.getTag();
         if (menu == null) {
             menu = new PopupMenu(view.getContext(), view);
             menu.inflate(R.menu.entry);
@@ -37,7 +37,7 @@ public class OnEntryMenuClickListener<T extends NPEntry> implements OnClickListe
     @Override
     public void onClick(View v) {
         @SuppressWarnings("unchecked")
-        FolderEntriesAdapter<? extends EntriesAdapter<T>> compoundAdapter = ((FolderEntriesAdapter<? extends EntriesAdapter<T>>)mListView.getAdapter());
+        FolderEntriesAdapter<? extends EntriesAdapter<T>> compoundAdapter = ((FolderEntriesAdapter<? extends EntriesAdapter<T>>) mListView.getAdapter());
 
         int pos = mListView.getPositionForView(v);
         if (pos != ListView.INVALID_POSITION) {

@@ -16,15 +16,15 @@ import com.android.datetimepicker.time.TimePickerDialog;
 import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
+import com.nexuspad.calendar.ui.view.DateButton;
+import com.nexuspad.calendar.ui.view.TimeButton;
 import com.nexuspad.contacts.ui.activity.NewLocationActivity;
 import com.nexuspad.datamodel.EntryTemplate;
 import com.nexuspad.datamodel.Event;
 import com.nexuspad.datamodel.Folder;
 import com.nexuspad.datamodel.Location;
 import com.nexuspad.ui.fragment.NewEntryFragment;
-import com.nexuspad.calendar.ui.view.DateButton;
 import com.nexuspad.ui.view.LocationTextView;
-import com.nexuspad.calendar.ui.view.TimeButton;
 
 import java.util.Calendar;
 import java.util.Date;

@@ -9,11 +9,11 @@
                 <item
                     android:id="@+id/new_photos"
                     android:showAsAction="ifRoom"
-                    android:title="@string/new_photos"/>
+                    android:title="@string/new_photos" />
                 <item
                     android:id="@+id/new_albums"
                     android:showAsAction="ifRoom"
-                    android:title="@string/new_album"/>
+                    android:title="@string/new_album" />
             </group>
         </menu>
     </item>

@@ -8,9 +8,8 @@ import android.widget.LinearLayout;
 /**
  * http://stackoverflow.com/questions/2607698/click-in-a-listview-item-changes-
  * status-of-elements-inside-the-item
- * 
+ *
  * @author Edmond
- * 
  */
 public class DuplicateParentStateAwareLinearLayout extends LinearLayout {
 

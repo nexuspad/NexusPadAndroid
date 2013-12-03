@@ -33,6 +33,6 @@
             android:background="?android:attr/selectableItemBackground"
             android:textSize="?android:attr/textAppearanceMedium"
             android:textColor="@android:color/white"
-            android:text="@android:string/ok"/>
+            android:text="@android:string/ok" />
     </LinearLayout>
 </RelativeLayout>

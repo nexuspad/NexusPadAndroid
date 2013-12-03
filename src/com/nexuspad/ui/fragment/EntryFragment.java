@@ -10,18 +10,15 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 import com.edmondapps.utils.android.Logs;
 import com.edmondapps.utils.java.Lazy;
 import com.nexuspad.R;
-import com.nexuspad.account.AccountManager;
 import com.nexuspad.app.App;
 import com.nexuspad.core.Manifest;
 import com.nexuspad.datamodel.Folder;
 import com.nexuspad.datamodel.NPEntry;
 import com.nexuspad.dataservice.EntryService;
 import com.nexuspad.dataservice.EntryService.EntryReceiver;
-import com.nexuspad.dataservice.NPException;
 import com.nexuspad.dataservice.ServiceError;
 import com.nexuspad.ui.activity.FoldersActivity;
 
@@ -86,7 +83,7 @@ public abstract class EntryFragment<T extends NPEntry> extends DialogFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if(savedInstanceState==null) updateUI();
+        if (savedInstanceState == null) updateUI();
     }
 
     private void initWithBundle(Bundle b) {
@@ -159,7 +156,7 @@ public abstract class EntryFragment<T extends NPEntry> extends DialogFragment {
 
     /**
      * @return the original entry passed in by {@link #KEY_ENTRY} or
-     *         {@link #setEntry(T)}
+     * {@link #setEntry(T)}
      */
     public T getEntry() {
         return mEntry;
@@ -181,7 +178,7 @@ public abstract class EntryFragment<T extends NPEntry> extends DialogFragment {
     /**
      * Called when a folder is updated (usually from the result of selecting a
      * folder).
-     * <p>
+     * <p/>
      * Default implementation calls {@link #updateUI()}.
      *
      * @param folder the new {@link Folder}
@@ -193,7 +190,7 @@ public abstract class EntryFragment<T extends NPEntry> extends DialogFragment {
 
     /**
      * Called when the original entry is updated.
-     * <p>
+     * <p/>
      * Default implementation calls {@link #updateUI()}.
      *
      * @param entry the new entry

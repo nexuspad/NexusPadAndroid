@@ -22,7 +22,7 @@ public class OnFolderMenuClickListener implements OnClickListener {
     public static final String TAG = "OnFolderMenuClickListener";
 
     private static PopupMenu getPopupMenu(View view) {
-        PopupMenu menu = (PopupMenu)view.getTag();
+        PopupMenu menu = (PopupMenu) view.getTag();
         if (menu == null) {
             menu = new PopupMenu(view.getContext(), view);
             menu.inflate(R.menu.folder);
@@ -48,7 +48,7 @@ public class OnFolderMenuClickListener implements OnClickListener {
      */
     @Override
     public void onClick(View v) {
-        FolderEntriesAdapter<?> compoundAdapter = ((FolderEntriesAdapter<?>)mListView.getAdapter());
+        FolderEntriesAdapter<?> compoundAdapter = ((FolderEntriesAdapter<?>) mListView.getAdapter());
 
         int pos = mListView.getPositionForView(v);
         if (pos != ListView.INVALID_POSITION) {
