@@ -39,7 +39,7 @@ public class LoginFragment extends Fragment {
         void onLogin(NPUser user);
     }
 
-    private Callback mCallback;
+    private Callback mActivityCallback;
     private EditText mUserNameV;
     private EditText mPasswordV;
     private EditText mConfirmPwV;
@@ -73,7 +73,7 @@ public class LoginFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        mCallback = App.getCallback(activity, Callback.class);
+        mActivityCallback = App.getCallback(activity, Callback.class);
     }
 
     @Override
@@ -152,6 +152,21 @@ public class LoginFragment extends Fragment {
         });
 
         mLoginV.setOnClickListener(new OnClickListener() {
+
+            private AccountManager.Callback mLoginCallback = new AccountManager.Callback() {
+                @Override
+                public void onLoginFailed(String userName, String password) {
+                    mLoadingViews.doneLoading();
+                    Toast.makeText(getActivity(), R.string.err_login_failed, Toast.LENGTH_LONG).show();
+                }
+
+                @Override
+                public void onLogin(NPUser user) {
+                    mLoadingViews.doneLoading();
+                    mActivityCallback.onLogin(user);
+                }
+            };
+
             @Override
             public void onClick(View v) {
                 boolean isSignUp = isSignUp();
@@ -167,19 +182,7 @@ public class LoginFragment extends Fragment {
                     // login
                     String userName = mUserNameV.getText().toString();
                     String password = mPasswordV.getText().toString();
-                    AccountManager.autoSignInAsync(userName, password, getActivity(), new AccountManager.Callback() {
-                        @Override
-                        public void onLoginFailed(String userName, String password) {
-                            mLoadingViews.doneLoading();
-                            Toast.makeText(getActivity(), R.string.err_login_failed, Toast.LENGTH_LONG).show();
-                        }
-
-                        @Override
-                        public void onLogin(NPUser user) {
-                            mLoadingViews.doneLoading();
-                            mCallback.onLogin(user);
-                        }
-                    });
+                    AccountManager.autoSignInAsync(userName, password, getActivity(), mLoginCallback);
                 }
             }
         });
