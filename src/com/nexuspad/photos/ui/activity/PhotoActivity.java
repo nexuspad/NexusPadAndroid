@@ -40,7 +40,7 @@ public class PhotoActivity extends SinglePaneActivity implements EntriesFragment
         Intent intent = new Intent(c, PhotoActivity.class);
         intent.putExtra(KEY_FOLDER, f);
         intent.putExtra(KEY_PHOTO, photo);
-        intent.putExtra(KEY_PHOTOS, photos);
+        intent.putParcelableArrayListExtra(KEY_PHOTOS, photos);
         return intent;
     }
 
@@ -66,7 +66,7 @@ public class PhotoActivity extends SinglePaneActivity implements EntriesFragment
         mPhotos = intent.getParcelableArrayListExtra(KEY_PHOTOS);
 
         super.onCreate(savedState);
-        ActionBar actionBar = getActionBar();
+        final ActionBar actionBar = getActionBar();
         if (actionBar != null) {
             actionBar.hide();
             actionBar.setIcon(R.drawable.back_to_dashboard);

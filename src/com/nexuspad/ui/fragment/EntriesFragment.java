@@ -10,13 +10,11 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.BaseAdapter;
-import android.widget.ListAdapter;
-import android.widget.ListView;
-import android.widget.Toast;
+import android.widget.*;
 import com.edmondapps.utils.android.Logs;
 import com.edmondapps.utils.android.ui.CompoundAdapter;
 import com.edmondapps.utils.android.ui.SingleAdapter;
+import com.edmondapps.utils.android.view.ViewUtils;
 import com.edmondapps.utils.java.Lazy;
 import com.google.common.collect.Iterables;
 import com.nexuspad.Manifest;
@@ -32,14 +30,17 @@ import com.nexuspad.dataservice.*;
 import com.nexuspad.dataservice.EntryService.EntryReceiver;
 import com.nexuspad.dataservice.FolderService.FolderReceiver;
 import com.nexuspad.home.ui.activity.LoginActivity;
+import com.nexuspad.ui.DirectionalScrollListener;
 import com.nexuspad.ui.FoldersAdapter;
 import com.nexuspad.ui.OnFolderMenuClickListener;
 import com.nexuspad.ui.OnListEndListener;
+import com.nexuspad.ui.activity.FoldersActivity;
 import com.nexuspad.ui.activity.NewFolderActivity;
 
 import java.util.List;
 
 import static com.nexuspad.dataservice.EntryListService.EntryListReceiver;
+import static com.nexuspad.dataservice.ServiceConstants.PHOTO_MODULE;
 
 /**
  * Manages an EntryList.
@@ -177,6 +178,9 @@ public abstract class EntriesFragment extends ListFragment {
     private int mCurrentPage;
     private Folder mFolder;
     private ModuleId mModuleId;
+
+    private View mQuickReturnV;
+    private TextView mFolderSelectorV;
 
     /**
      * @return one of the {@code *_MODULE} constants in {@link ServiceConstants}
@@ -316,6 +320,9 @@ public abstract class EntriesFragment extends ListFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        mQuickReturnV = ViewUtils.findView(view, R.id.quick_return);
+        mFolderSelectorV = ViewUtils.findView(view, R.id.lbl_folder);
+
         ListView listView = getListView();
         if (listView != null) {
             listView.setItemsCanFocus(true);
@@ -451,6 +458,66 @@ public abstract class EntriesFragment extends ListFragment {
         OnFolderMenuClickListener listener = new OnFolderMenuClickListener(getListView(), mFolder, getFolderService());
         foldersAdapter.setOnMenuClickListener(listener);
         return foldersAdapter;
+    }
+
+    /**
+     * set up the quick return listener (hiding when scroll down, and vice versa)
+     * <p/>
+     * This will replace the OnScrollListener in the {@code AbsListView}, use {@code other} if you want to include
+     * another {@code OnScrollListener}.
+     *
+     * @param absListView the scrolling view (commonly ListView or GridView)
+     * @param other       the other scroll listener; optional
+     */
+    protected void setQuickReturnListener(AbsListView absListView, AbsListView.OnScrollListener other) {
+        absListView.setOnScrollListener(new DirectionalScrollListener(0, other) {
+            @Override
+            public void onScrollDirectionChanged(final boolean showing) {
+                final View quickReturnV = getQuickReturnView();
+                final int height = showing ? 0 : quickReturnV.getHeight();
+                quickReturnV.animate()
+                        .translationY(height)
+                        .setDuration(200L)
+                        .withEndAction(new Runnable() {
+                            @Override
+                            public void run() {
+                                final View folderSelectorV = getFolderSelectorView();
+                                folderSelectorV.setClickable(showing);
+                                folderSelectorV.setFocusable(showing);
+                            }
+                        });
+            }
+        });
+    }
+
+    protected void setOnFolderSelectedClickListener(final int reqCode) {
+        final TextView folderSelectorView = getFolderSelectorView();
+        final int module = getModule();
+
+        folderSelectorView.setText(getFolder().getFolderName());
+        folderSelectorView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final FragmentActivity activity = getActivity();
+                final Intent intent = FoldersActivity.ofParentFolder(activity, Folder.rootFolderOf(module, activity));
+                startActivityForResult(intent, reqCode);
+                activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+            }
+        });
+    }
+
+    protected View getQuickReturnView() {
+        if (mQuickReturnV == null) {
+            throw new IllegalStateException("that is no view with id R.id.quick_return");
+        }
+        return mQuickReturnV;
+    }
+
+    public TextView getFolderSelectorView() {
+        if (mFolderSelectorV == null) {
+            throw new IllegalStateException("that is no view with id R.id.lbl_folder");
+        }
+        return mFolderSelectorV;
     }
 
     /**

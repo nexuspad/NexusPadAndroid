@@ -76,7 +76,7 @@ public class AlbumsFragment extends EntriesFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mQuickReturnView = findView(view, R.id.sticky);
+        mQuickReturnView = findView(view, R.id.quick_return);
         mFolderView = findView(view, R.id.lbl_folder);
         mFolderView.setText(getFolder().getFolderName());
         mFolderView.setOnClickListener(new View.OnClickListener() {

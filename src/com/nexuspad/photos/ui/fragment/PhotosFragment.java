@@ -10,8 +10,11 @@ import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.BaseAdapter;
+import android.widget.GridView;
+import android.widget.ImageView;
 import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.edmondapps.utils.java.WrapperList;
 import com.nexuspad.R;
@@ -21,7 +24,6 @@ import com.nexuspad.dataservice.NPException;
 import com.nexuspad.dataservice.NPWebServiceUtil;
 import com.nexuspad.photos.ui.activity.PhotoActivity;
 import com.nexuspad.photos.ui.activity.PhotosActivity;
-import com.nexuspad.ui.DirectionalScrollListener;
 import com.nexuspad.ui.OnListEndListener;
 import com.nexuspad.ui.activity.FoldersActivity;
 import com.nexuspad.ui.fragment.EntriesFragment;
@@ -44,10 +46,8 @@ public class PhotosFragment extends EntriesFragment implements OnItemClickListen
 
     private GridView mGridView;
 
-    private View mQuickReturnView;
-    private TextView mFolderView;
     // Parcelable
-    private ArrayList<Photo> mPhotos;
+    private ArrayList<Photo> mPhotos = new ArrayList<Photo>();
 
     public static PhotosFragment of(Folder f) {
         Bundle bundle = new Bundle();
@@ -109,22 +109,19 @@ public class PhotosFragment extends EntriesFragment implements OnItemClickListen
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         mGridView = findView(view, R.id.grid_view);
-        mQuickReturnView = findView(view, R.id.sticky);
-        mFolderView = findView(view, R.id.lbl_folder);
 
-        mGridView.setOnItemClickListener(this);
-        mFolderView.setText(getFolder().getFolderName());
-        mFolderView.setOnClickListener(new View.OnClickListener() {
+        setQuickReturnListener(mGridView, new OnListEndListener() {
             @Override
-            public void onClick(View v) {
-                final FragmentActivity activity = getActivity();
-                final Intent intent = FoldersActivity.ofParentFolder(activity, Folder.rootFolderOf(PHOTO_MODULE, activity));
-                startActivityForResult(intent, REQ_FOLDER);
-                activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+            protected void onListEnd(int page) {
+                queryEntriesAync(getCurrentPage() + 1);
             }
         });
+        mGridView.setOnItemClickListener(this);
+        mGridView.setAdapter(new PhotosAdapter());
 
         super.onViewCreated(view, savedInstanceState);
+
+        setOnFolderSelectedClickListener(REQ_FOLDER);
     }
 
     private void stableNotifyAdapter(BaseAdapter adapter) {
@@ -137,35 +134,11 @@ public class PhotosFragment extends EntriesFragment implements OnItemClickListen
     protected void onListLoaded(EntryList list) {
         super.onListLoaded(list);
 
-        mPhotos = new ArrayList<Photo>(new WrapperList<Photo>(list.getEntries()));
+        mPhotos.clear();
+        mPhotos.addAll(new WrapperList<Photo>(list.getEntries()));
 
-        BaseAdapter adapter = (BaseAdapter) mGridView.getAdapter();
-        if (adapter != null) {
-            stableNotifyAdapter(adapter);
-        } else {
-            mGridView.setOnScrollListener(new DirectionalScrollListener(0, new OnListEndListener() {
-                @Override
-                protected void onListEnd(int page) {
-                    queryEntriesAync(getCurrentPage() + 1);
-                }
-            }) {
-                @Override
-                public void onScrollDirectionChanged(final boolean showing) {
-                    final int height = showing ? 0 : mQuickReturnView.getHeight();
-                    mQuickReturnView.animate()
-                            .translationY(height)
-                            .setDuration(200L)
-                            .withEndAction(new Runnable() {
-                                @Override
-                                public void run() {
-                                    mFolderView.setClickable(showing);
-                                    mFolderView.setFocusable(showing);
-                                }
-                            });
-                }
-            });
-            mGridView.setAdapter(new PhotosAdapter());
-        }
+        final BaseAdapter adapter = (BaseAdapter) mGridView.getAdapter();
+        stableNotifyAdapter(adapter);
     }
 
     @Override
@@ -210,7 +183,8 @@ public class PhotosFragment extends EntriesFragment implements OnItemClickListen
             try {
                 final String url = NPWebServiceUtil.fullUrlWithAuthenticationTokens(getItem(position).getTnUrl(), getActivity());
 
-                mPicasso.load(url)
+                final String realUrl = url.split("\\?")[0];  // strip off the url params
+                mPicasso.load(realUrl)
                         .placeholder(R.drawable.placeholder)
                         .error(R.drawable.ic_launcher)
                         .resizeDimen(R.dimen.photo_grid_width, R.dimen.photo_grid_height)

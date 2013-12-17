@@ -1,8 +1,10 @@
 package com.nexuspad.contacts.ui.fragment;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,13 +18,16 @@ import com.edmondapps.utils.java.WrapperList;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
 import com.nexuspad.contacts.ui.activity.ContactActivity;
+import com.nexuspad.contacts.ui.activity.ContactsActivity;
 import com.nexuspad.contacts.ui.activity.NewContactActivity;
 import com.nexuspad.datamodel.*;
 import com.nexuspad.dataservice.NPException;
 import com.nexuspad.dataservice.NPWebServiceUtil;
 import com.nexuspad.dataservice.ServiceConstants;
+import com.nexuspad.photos.ui.activity.PhotosActivity;
 import com.nexuspad.ui.EntriesAdapter;
 import com.nexuspad.ui.OnEntryMenuClickListener;
+import com.nexuspad.ui.activity.FoldersActivity;
 import com.nexuspad.ui.fragment.EntriesFragment;
 import com.squareup.picasso.Picasso;
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
@@ -45,6 +50,8 @@ public final class ContactsFragment extends EntriesFragment {
         return fragment;
     }
 
+    private static final int REQ_FOLDER = 1;
+
     private List<Contact> mContacts;
     private SortTask mSortTask;
 
@@ -61,13 +68,18 @@ public final class ContactsFragment extends EntriesFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.list_content_sticky, container, false);
+        return inflater.inflate(R.layout.contacts_frag, container, false);
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        getListView().setFastScrollEnabled(true);
+
+        final ListView listView = getListView();
+        listView.setFastScrollEnabled(true);
+
+        setQuickReturnListener(listView, null);
+        setOnFolderSelectedClickListener(REQ_FOLDER);
     }
 
     @Override
@@ -81,6 +93,24 @@ public final class ContactsFragment extends EntriesFragment {
             mSortTask.cancel(true);
         }
         mSortTask.execute((Void[]) null);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case REQ_FOLDER:
+                if (resultCode == Activity.RESULT_OK) {
+                    final FragmentActivity activity = getActivity();
+                    final Folder folder = data.getParcelableExtra(FoldersActivity.KEY_FOLDER);
+                    ContactsActivity.startWithFolder(folder, activity);
+                    activity.finish();
+                    activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                }
+                break;
+            default:
+                throw new AssertionError("unknown requestCode: " + requestCode);
+        }
     }
 
     @Override

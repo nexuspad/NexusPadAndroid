@@ -46,7 +46,7 @@ public class PhotoFragment extends EntriesFragment {
 
     private ViewPager mViewPager;
     private Picasso mPicasso;
-    private int mInitialPhotoIndex;
+    private int mInitialPhotoIndex = -1;
 
     public static PhotoFragment of(Folder f, Photo photo, List<? extends Photo> photos) {
         Bundle bundle = new Bundle();
@@ -76,7 +76,7 @@ public class PhotoFragment extends EntriesFragment {
 
         mPicasso = Picasso.with(getActivity());
         final Photo photo = arguments.getParcelable(KEY_PHOTO);
-        mInitialPhotoIndex = Iterables.indexOf(sPhotos, photo.filterById());
+        mInitialPhotoIndex = Iterables.indexOf(sPhotos, photo.filterByPhotoId());
     }
 
     @Override
@@ -140,10 +140,12 @@ public class PhotoFragment extends EntriesFragment {
                 imageView.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
                     @Override
                     public void onViewTap(View view, float x, float y) {
-                        if (actionBar.isShowing()) {
-                            actionBar.hide();
-                        } else {
-                            actionBar.show();
+                        if (actionBar != null) {
+                            if (actionBar.isShowing()) {
+                                actionBar.hide();
+                            } else {
+                                actionBar.show();
+                            }
                         }
                     }
                 });

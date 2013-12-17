@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <include layout="@layout/include_grid_view" />
+    <include layout="@layout/list_content_sticky" />
 
     <LinearLayout
         android:id="@+id/quick_return"
@@ -17,10 +17,5 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1" />
-
-        <com.nexuspad.ui.view.UploadBarView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="right" />
     </LinearLayout>
 </RelativeLayout>
