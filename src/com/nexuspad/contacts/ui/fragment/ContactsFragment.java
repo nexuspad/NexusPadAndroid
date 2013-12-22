@@ -24,7 +24,6 @@ import com.nexuspad.datamodel.*;
 import com.nexuspad.dataservice.NPException;
 import com.nexuspad.dataservice.NPWebServiceUtil;
 import com.nexuspad.dataservice.ServiceConstants;
-import com.nexuspad.photos.ui.activity.PhotosActivity;
 import com.nexuspad.ui.EntriesAdapter;
 import com.nexuspad.ui.OnEntryMenuClickListener;
 import com.nexuspad.ui.activity.FoldersActivity;
@@ -115,7 +114,10 @@ public final class ContactsFragment extends EntriesFragment {
 
     @Override
     public void onDestroy() {
-        mSortTask.cancel(true);
+
+        if (mSortTask != null) {
+            mSortTask.cancel(true);
+        }
         super.onDestroy();
     }
 

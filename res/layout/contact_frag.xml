@@ -18,15 +18,21 @@
             android:layout_marginBottom="@dimen/ed__padding_small"
             android:orientation="horizontal">
 
+            <!--
+
+            Postponed for release one
+
             <ImageView
-                android:id="@android:id/icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:scaleType="centerCrop"
-                android:maxWidth="@dimen/photo_grid_width"
-                android:maxHeight="@dimen/photo_grid_height"
-                android:src="@drawable/ic_launcher"
-                tools:ignore="ContentDescription" />
+                 android:id="@android:id/icon"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:scaleType="centerCrop"
+                 android:maxWidth="@dimen/photo_grid_width"
+                 android:maxHeight="@dimen/photo_grid_height"
+                 android:src="@drawable/ic_launcher"
+                 tools:ignore="ContentDescription" />
+
+            -->
 
             <TextView
                 android:id="@android:id/title"

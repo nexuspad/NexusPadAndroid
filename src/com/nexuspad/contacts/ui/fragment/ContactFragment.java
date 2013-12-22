@@ -221,12 +221,22 @@ public class ContactFragment extends EntryFragment<Contact> {
     }
 
     private void updateVisibility(Contact contact) {
+        final int firstNameFlag = TextUtils.isEmpty(contact.getFirstName()) ? View.GONE : View.VISIBLE;
+        final int middleNameFlag = TextUtils.isEmpty(contact.getMiddleName()) ? View.GONE : View.VISIBLE;
+        final int lastNameFlag = TextUtils.isEmpty(contact.getLastName()) ? View.GONE : View.VISIBLE;
+        final int businessNameFlag = TextUtils.isEmpty(contact.getBusinessName()) ? View.GONE : View.VISIBLE;
+
         final int phonesFlag = contact.getPhones().isEmpty() ? View.GONE : View.VISIBLE;
         final int emailsFlag = contact.getEmails().isEmpty() ? View.GONE : View.VISIBLE;
         final int webAddressFlag = TextUtils.isEmpty(contact.getWebAddress()) ? View.GONE : View.VISIBLE;
         final int tagsFlag = TextUtils.isEmpty(contact.getTags()) ? View.GONE : View.VISIBLE;
         final int noteFlag = TextUtils.isEmpty(contact.getNote()) ? View.GONE : View.VISIBLE;
         final int addressFlag = TextUtils.isEmpty(contact.getLocation().getFullAddress()) ? View.GONE : View.VISIBLE;
+
+        mFirstNameV.setVisibility(firstNameFlag);
+        mMiddleNameV.setVisibility(middleNameFlag);
+        mLastNameV.setVisibility(lastNameFlag);
+        mBussinessNameV.setVisibility(businessNameFlag);
 
         mPhoneHeaderV.setVisibility(phonesFlag);
         mEmailHeaderV.setVisibility(emailsFlag);
