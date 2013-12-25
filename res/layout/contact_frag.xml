@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     style="@style/scrollableFrame"
     android:paddingLeft="@dimen/ed__padding_medium"
     android:paddingRight="@dimen/ed__padding_medium"
@@ -12,39 +11,48 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <LinearLayout
+        <!--
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/ed__padding_small"
+        android:orientation="horizontal">
+
+        Postponed for release one
+
+        <ImageView
+             android:id="@android:id/icon"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:scaleType="centerCrop"
+             android:maxWidth="@dimen/photo_grid_width"
+             android:maxHeight="@dimen/photo_grid_height"
+             android:src="@drawable/ic_launcher"
+             tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@android:id/title"
+            android:layout_gravity="center_vertical"
+            android:padding="@dimen/ed__padding_small"
+            android:textSize="@dimen/ed__textsize_large"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginLeft="@dimen/ed__padding_small"
+            android:hint="@string/title" />
+    </LinearLayout>
+
+        -->
+
+        <TextView
+            android:id="@android:id/title"
+            android:layout_gravity="center_vertical"
+            android:paddingBottom="@dimen/ed__padding_small"
+            android:textSize="@dimen/ed__textsize_large"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/ed__padding_small"
-            android:orientation="horizontal">
-
-            <!--
-
-            Postponed for release one
-
-            <ImageView
-                 android:id="@android:id/icon"
-                 android:layout_width="wrap_content"
-                 android:layout_height="wrap_content"
-                 android:scaleType="centerCrop"
-                 android:maxWidth="@dimen/photo_grid_width"
-                 android:maxHeight="@dimen/photo_grid_height"
-                 android:src="@drawable/ic_launcher"
-                 tools:ignore="ContentDescription" />
-
-            -->
-
-            <TextView
-                android:id="@android:id/title"
-                android:layout_gravity="center_vertical"
-                android:padding="@dimen/ed__padding_small"
-                android:textSize="@dimen/ed__textsize_large"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginLeft="@dimen/ed__padding_small"
-                android:hint="@string/title" />
-        </LinearLayout>
+            android:hint="@string/title" />
 
         <LinearLayout
             android:layout_width="match_parent"

@@ -40,7 +40,6 @@ import com.nexuspad.ui.activity.NewFolderActivity;
 import java.util.List;
 
 import static com.nexuspad.dataservice.EntryListService.EntryListReceiver;
-import static com.nexuspad.dataservice.ServiceConstants.PHOTO_MODULE;
 
 /**
  * Manages an EntryList.
@@ -269,7 +268,6 @@ public abstract class EntriesFragment extends ListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        final FragmentActivity activity = getActivity();
         final Bundle arguments = getArguments();
 
         if (arguments != null) {
@@ -463,14 +461,31 @@ public abstract class EntriesFragment extends ListFragment {
     /**
      * set up the quick return listener (hiding when scroll down, and vice versa)
      * <p/>
+     * This will replace the OnScrollListener in the {@code AbsListView} inside {@code ListViewManager}, use {@code other} if you want to include
+     * another {@code OnScrollListener}.
+     *
+     * @param listViewManager the listview manager
+     * @param other           the other scroll listener; optional
+     */
+    protected void setQuickReturnListener(ListViewManager listViewManager, AbsListView.OnScrollListener other) {
+        listViewManager.setOnScrollListener(newDirectionalScrollListener(other));
+    }
+
+    /**
+     * set up the quick return listener (hiding when scroll down, and vice versa)
+     * <p/>
      * This will replace the OnScrollListener in the {@code AbsListView}, use {@code other} if you want to include
      * another {@code OnScrollListener}.
      *
-     * @param absListView the scrolling view (commonly ListView or GridView)
-     * @param other       the other scroll listener; optional
+     * @param gridView the scrolling view (commonly ListView or GridView)
+     * @param other    the other scroll listener; optional
      */
-    protected void setQuickReturnListener(AbsListView absListView, AbsListView.OnScrollListener other) {
-        absListView.setOnScrollListener(new DirectionalScrollListener(0, other) {
+    protected void setQuickReturnListener(GridView gridView, AbsListView.OnScrollListener other) {
+        gridView.setOnScrollListener(other);
+    }
+
+    private DirectionalScrollListener newDirectionalScrollListener(final AbsListView.OnScrollListener other) {
+        return new DirectionalScrollListener(0, other) {
             @Override
             public void onScrollDirectionChanged(final boolean showing) {
                 final View quickReturnV = getQuickReturnView();
@@ -487,7 +502,7 @@ public abstract class EntriesFragment extends ListFragment {
                             }
                         });
             }
-        });
+        };
     }
 
     protected void setOnFolderSelectedClickListener(final int reqCode) {

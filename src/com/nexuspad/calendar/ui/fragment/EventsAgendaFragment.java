@@ -109,7 +109,7 @@ public class EventsAgendaFragment extends EntriesFragment {
             for (int i = 0, eventsSize = events.size(); i < eventsSize; i++) {
                 final Event event = events.get(i);
                 if (event.getStartTime().getTime() >= mStartTime) {
-                    smoothScrollToPosition(i);
+                    getListViewManager().smoothScrollToPosition(i);
                     break;
                 }
             }

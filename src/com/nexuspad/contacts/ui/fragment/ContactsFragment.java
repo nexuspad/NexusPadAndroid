@@ -2,43 +2,44 @@ package com.nexuspad.contacts.ui.fragment;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.MenuItemCompat;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.BaseAdapter;
+import android.widget.Filter;
 import android.widget.ListView;
-import android.widget.SectionIndexer;
-import com.edmondapps.utils.android.Logs;
+import android.widget.SearchView;
 import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.edmondapps.utils.java.WrapperList;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
+import com.nexuspad.app.App;
 import com.nexuspad.contacts.ui.activity.ContactActivity;
 import com.nexuspad.contacts.ui.activity.ContactsActivity;
 import com.nexuspad.contacts.ui.activity.NewContactActivity;
 import com.nexuspad.datamodel.*;
-import com.nexuspad.dataservice.NPException;
-import com.nexuspad.dataservice.NPWebServiceUtil;
 import com.nexuspad.dataservice.ServiceConstants;
 import com.nexuspad.ui.EntriesAdapter;
 import com.nexuspad.ui.OnEntryMenuClickListener;
 import com.nexuspad.ui.activity.FoldersActivity;
 import com.nexuspad.ui.fragment.EntriesFragment;
-import com.squareup.picasso.Picasso;
+import com.nexuspad.ui.fragment.ListFragment;
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
 import java.lang.ref.WeakReference;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.regex.Pattern;
 
 @FragmentName(ContactsFragment.TAG)
 @ModuleId(moduleId = ServiceConstants.CONTACT_MODULE, template = EntryTemplate.CONTACT)
 public final class ContactsFragment extends EntriesFragment {
     public static final String TAG = "ContactsFragment";
-
     public static ContactsFragment of(Folder folder) {
         final Bundle bundle = new Bundle();
         bundle.putParcelable(KEY_FOLDER, folder);
@@ -53,6 +54,7 @@ public final class ContactsFragment extends EntriesFragment {
 
     private List<Contact> mContacts;
     private SortTask mSortTask;
+    private MenuItem mSearchItem;
 
     @Override
     protected int getEntriesCountPerPage() {
@@ -66,6 +68,52 @@ public final class ContactsFragment extends EntriesFragment {
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.contacts_frag, menu);
+
+        mSearchItem = menu.findItem(R.id.search);
+        final SearchView searchView = (SearchView) mSearchItem.getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                getListAdapter().filter(newText);
+                return true;
+            }
+        });
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                getListAdapter().showRawEntries();
+                return true;
+            }
+        });
+        MenuItemCompat.setOnActionExpandListener(mSearchItem, new MenuItemCompat.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                getListAdapter().showRawEntries();
+                return true;
+            }
+        });
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.contacts_frag, container, false);
     }
@@ -74,10 +122,10 @@ public final class ContactsFragment extends EntriesFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        final ListView listView = getListView();
-        listView.setFastScrollEnabled(true);
+        final ListFragment.ListViewManager manager = getListViewManager();
+        manager.setFastScrollEnabled(false);     // not ready for the first release
 
-        setQuickReturnListener(listView, null);
+        setQuickReturnListener(manager, null);
         setOnFolderSelectedClickListener(REQ_FOLDER);
     }
 
@@ -87,7 +135,7 @@ public final class ContactsFragment extends EntriesFragment {
 
         mContacts = new WrapperList<Contact>(list.getEntries());
         if (mSortTask == null) {
-            mSortTask = new SortTask(mContacts, this, getString(R.string.others));
+            mSortTask = new SortTask(mContacts, this);
         } else {
             mSortTask.cancel(true);
         }
@@ -114,7 +162,6 @@ public final class ContactsFragment extends EntriesFragment {
 
     @Override
     public void onDestroy() {
-
         if (mSortTask != null) {
             mSortTask.cancel(true);
         }
@@ -126,8 +173,8 @@ public final class ContactsFragment extends EntriesFragment {
         return (ContactsAdapter) super.getListAdapter();
     }
 
-    private ContactsAdapter newContactsAdapter(Map<String, Integer> map) {
-        final ContactsAdapter a = new ContactsAdapter(getActivity(), map);
+    private ContactsAdapter newContactsAdapter(List<Contact> contacts) {
+        final ContactsAdapter a = new ContactsAdapter(getActivity(), contacts);
         final ListView listView = getListView();
         a.setOnMenuClickListener(new OnEntryMenuClickListener<Contact>(listView, getEntryService()) {
             @Override
@@ -152,11 +199,6 @@ public final class ContactsFragment extends EntriesFragment {
         return a;
     }
 
-    private static String[] toArray(Collection<String> set) {
-        final String[] strings = new String[set.size()];
-        return set.toArray(strings);
-    }
-
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
@@ -164,16 +206,21 @@ public final class ContactsFragment extends EntriesFragment {
         ContactActivity.startWith(getActivity(), contact, getFolder());
     }
 
-    private class ContactsAdapter extends EntriesAdapter<Contact> implements StickyListHeadersAdapter, SectionIndexer {
-        private final Picasso mPicasso;
-        private final Map<String, Integer> mSectionMap;
-        private final String[] mSections;
+    private static class ContactsAdapter extends EntriesAdapter<Contact> implements StickyListHeadersAdapter {
+        private final List<Contact> mRawContacts;          // unfiltered, original list of contacts
+        private final List<Contact> mDisplayContacts;      // might be filtered list of contacts that is shown on screen
 
-        private ContactsAdapter(Activity a, Map<String, Integer> sectionMap) {
-            super(a, mContacts);
-            mSectionMap = sectionMap;
-            mSections = toArray(mSectionMap.keySet());
-            mPicasso = Picasso.with(a);
+        private final ContactsAdapterFilter mFilter;
+
+        private ContactsAdapter(Activity a, List<Contact> contacts) {
+            super(a, contacts);
+            mRawContacts = contacts;
+            mDisplayContacts = new ArrayList<Contact>(contacts);
+            mFilter = new ContactsAdapterFilter();
+        }
+
+        private void filter(CharSequence charSequence) {
+            mFilter.filter(charSequence);
         }
 
         private String getDisplayString(int position) {
@@ -187,20 +234,21 @@ public final class ContactsFragment extends EntriesFragment {
             }
             final ViewHolder holder = getHolder(convertView);
 
-            final String profileImageUrl = p.getProfileImageUrl();
-            if (!TextUtils.isEmpty(profileImageUrl)) {
-                try {
-                    final String url = NPWebServiceUtil.fullUrlWithAuthenticationTokens(profileImageUrl, getActivity());
-
-                    mPicasso.load(url)
-                            .placeholder(R.drawable.placeholder)
-                            .error(R.drawable.ic_launcher)
-                            .into(holder.icon);
-
-                } catch (NPException e) {
-                    throw new RuntimeException(e);
-                }
-            }
+//            postponed for the first release
+//            final String profileImageUrl = p.getProfileImageUrl();
+//            if (!TextUtils.isEmpty(profileImageUrl)) {
+//                try {
+//                    final String url = NPWebServiceUtil.fullUrlWithAuthenticationTokens(profileImageUrl, getActivity());
+//
+//                    mPicasso.load(url)
+//                            .placeholder(R.drawable.placeholder)
+//                            .error(R.drawable.ic_launcher)
+//                            .into(holder.icon);
+//
+//                } catch (NPException e) {
+//                    throw new RuntimeException(e);
+//                }
+//            }
 
             holder.text1.setText(getDisplayString(position));
             holder.menu.setOnClickListener(getOnMenuClickListener());
@@ -217,8 +265,9 @@ public final class ContactsFragment extends EntriesFragment {
         public View getHeaderView(int position, View convertView, ViewGroup parent) {
             if (convertView == null) {
                 convertView = getLayoutInflater().inflate(R.layout.list_header, parent, false);
+                convertView.setBackgroundColor(Color.argb(127, 255, 255, 255));
             }
-            ViewHolder holder = getHolder(convertView);
+            final ViewHolder holder = getHolder(convertView);
 
             final String string = getDisplayString(position);
             if (!TextUtils.isEmpty(string) && string.length() > 1) {
@@ -244,66 +293,43 @@ public final class ContactsFragment extends EntriesFragment {
             return 0;
         }
 
-        @Override
-        public Object[] getSections() {
-            return mSections;
-        }
-
-        @Override
-        public int getPositionForSection(int section) {
-            return mSectionMap.get(mSections[section >= mSections.length ? mSections.length - 1 : section]);
-        }
-
-        @Override
-        public int getSectionForPosition(int position) {
-            final Integer boxedPos = position;
-            Integer previous = 0;
-            for (Integer integer : mSectionMap.values()) {
-                if (previous.compareTo(boxedPos) > 0) {
-                    return previous;
+        private class ContactsAdapterFilter extends Filter {
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                mDisplayContacts.clear();
+                if (TextUtils.isEmpty(constraint)) {
+                    mDisplayContacts.addAll(mRawContacts);
+                    return null;
                 }
-                previous = integer;
+                final Pattern pattern = App.createSearchPattern(constraint.toString().trim());
+                for (Contact c : mRawContacts) {
+                    if (c.filterByPattern(pattern)) {
+                        mDisplayContacts.add(c);
+                    }
+                }
+                return null;
             }
-            Logs.w(TAG, "cannot find section for position: " + position);
-            return previous;
+
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+                setDisplayEntries(mDisplayContacts);
+            }
         }
     }
 
     private static class SortTask extends AsyncTask<Void, Void, Void> {
-        private final List<? extends NPEntry> mCollection;
-        private final String mPlaceHolder;
+        private final List<Contact> mContacts;
         private final WeakReference<ContactsFragment> mFragment;
-        private final Map<String, Integer> mMap = new LinkedHashMap<String, Integer>(26);
 
-        private SortTask(List<? extends NPEntry> collection, ContactsFragment fragment, String placeHolder) {
-            mCollection = collection;
+        private SortTask(List<Contact> contacts, ContactsFragment fragment) {
+            mContacts = contacts;
             mFragment = new WeakReference<ContactsFragment>(fragment);
-            mPlaceHolder = placeHolder;
         }
 
         @Override
         protected Void doInBackground(Void... params) {
-            Collections.sort(mCollection, NPEntry.ORDERING_BY_TITLE);
-
-            for (int i = 0, mCollectionSize = mCollection.size(); i < mCollectionSize; i++) {
-                NPEntry entry = mCollection.get(i);
-                final String title = entry.getTitle();
-                if (title != null && title.length() > 1) {
-                    final String firstChar = title.substring(0, 1).toUpperCase();
-                    putIfAbsent(mMap, firstChar, i);
-                } else {
-                    putIfAbsent(mMap, mPlaceHolder, i);
-                }
-                if (isCancelled()) return null;
-            }
-
+            Collections.sort(mContacts, NPEntry.ORDERING_BY_TITLE);
             return null;
-        }
-
-        private static <K, V> void putIfAbsent(Map<K, V> map, K key, V value) {
-            if (!map.containsKey(key)) {
-                map.put(key, value);
-            }
         }
 
         @Override
@@ -312,7 +338,9 @@ public final class ContactsFragment extends EntriesFragment {
             if (fragment != null && fragment.isAdded()) {
                 final BaseAdapter adapter = fragment.getListAdapter();
                 if (adapter == null) {
-                    fragment.setListAdapter(fragment.newContactsAdapter(mMap));
+                    fragment.setListAdapter(fragment.newContactsAdapter(mContacts));
+                    fragment.mSearchItem.setVisible(true);
+                    fragment.mSearchItem.setEnabled(true);
                 } else {
                     adapter.notifyDataSetChanged();
                 }

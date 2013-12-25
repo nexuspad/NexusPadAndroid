@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:icon="@android:drawable/ic_menu_add"
+        android:showAsAction="ifRoom"
+        android:visible="false"
+        android:title="@string/new_">
+        <menu>
+            <group>
+                <item
+                    android:id="@+id/new_folder"
+                    android:showAsAction="ifRoom"
+                    android:title="@string/new_folder" />
+                <item
+                    android:id="@+id/new_contact"
+                    android:showAsAction="ifRoom"
+                    android:title="@string/new_contact" />
+            </group>
+        </menu>
+    </item>
+    <item
+        android:id="@+id/search"
+        android:icon="@android:drawable/ic_menu_search"
+        android:showAsAction="always|collapseActionView"
+        android:title="@string/search"
+        android:visible="false"
+        android:enabled="false"
+        android:actionViewClass="android.widget.SearchView" />
+
+</menu>

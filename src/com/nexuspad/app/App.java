@@ -16,6 +16,8 @@ import com.nexuspad.BuildConfig;
 import com.nexuspad.R;
 import com.nexuspad.db.DatabaseManager;
 
+import java.util.regex.Pattern;
+
 /**
  * @author Edmond
  */
@@ -56,5 +58,18 @@ public class App extends Application {
 
     public static Typeface getRobotoLight() {
         return sRobotoLight;
+    }
+
+    /**
+     * A pattern that is used for searching.<br/>
+     * If query is {@code "hell"}, it will match {@code "hell"}, {@code "hello"}, {@code "freaking hell"}, etc…; it will
+     * <i>not</i> match {@code "ell"}, {@code "ohell"}, {@code "bell"}, etc….
+     *
+     * @param query the search keyword, you may consider trimming the query for better result matching
+     * @return a case insensitive {@code Pattern} that matches "(.*?\s|\s*)query.*" where "query" is the parameter query
+     */
+    public static Pattern createSearchPattern(String query) {
+        query = Pattern.quote(query);    // sanitize
+        return Pattern.compile("(.*?\\s|\\s*)" + query + ".*", Pattern.CASE_INSENSITIVE);
     }
 }

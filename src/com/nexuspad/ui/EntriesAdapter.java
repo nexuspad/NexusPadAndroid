@@ -25,14 +25,16 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter impl
     public static final int TYPE_ENTRY = 1;
     public static final int TYPE_EMPTY_ENTRY = 2;
 
-    private final List<? extends T> mEntries;
+    private final List<? extends T> mRawEntries;     // unfiltered, original entries
     private final LayoutInflater mInflater;
     private final int mEntryHeaderId;
 
+    private List<? extends T> mDisplayEntries; // may be filtered entries displayed ons screen
     private OnClickListener mOnMenuClickListener;
 
     public EntriesAdapter(Activity a, List<? extends T> entries) {
-        mEntries = entries;
+        mRawEntries = entries;
+        mDisplayEntries = entries;
         mInflater = a.getLayoutInflater();
         mEntryHeaderId = getEntryStringId();
     }
@@ -40,6 +42,24 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter impl
     protected abstract View getEntryView(T entry, int position, View convertView, ViewGroup parent);
 
     protected abstract View getEmptyEntryView(LayoutInflater inflater, View convertView, ViewGroup parent);
+
+    /**
+     * Swap out the current entries with the specified one. The original entries passed in the constructor will
+     * be preserved.
+     * @param displayEntries the new entries to be displayed
+     */
+    protected void setDisplayEntries(List<? extends T> displayEntries) {
+        mDisplayEntries = displayEntries;
+        notifyDataSetChanged();
+    }
+
+    /**
+     * Reset the adapter to display the original, unfiltered entries passed from the constructor.
+     */
+    public void showRawEntries() {
+        mDisplayEntries = mRawEntries;
+        notifyDataSetChanged();
+    }
 
     /**
      * @return the string id; or 0 if no headers should be used
@@ -83,7 +103,7 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter impl
     }
 
     protected boolean isEntriesEmpty() {
-        return mEntries.isEmpty();
+        return mDisplayEntries.isEmpty();
     }
 
     @Override
@@ -94,9 +114,9 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter impl
     @Override
     public int getCount() {
         if (isHeaderEnabled()) {
-            return mEntries.size() + 1;// header
+            return mDisplayEntries.size() + 1;// header
         } else {
-            return mEntries.size();
+            return mDisplayEntries.size();
         }
     }
 
@@ -134,7 +154,7 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter impl
 
     @Override
     public T getItem(int position) {
-        return mEntries.get(isHeaderEnabled() ? position - 1 : position);
+        return mDisplayEntries.get(isHeaderEnabled() ? position - 1 : position);
     }
 
     @Override

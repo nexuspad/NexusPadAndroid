@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListAdapter;
@@ -39,6 +40,7 @@ public abstract class ListFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // ListViewManager.of(…) overloads will determine which manager to return
         final View listView = view.findViewById(android.R.id.list);
         if (listView != null) {
             mListViewManager = ListViewManager.of(listView);
@@ -110,11 +112,15 @@ public abstract class ListFragment extends Fragment {
         return true;
     }
 
+    protected ListViewManager getListViewManager() {
+        return mListViewManager;
+    }
+
     /**
      * It can return null if your layout does not contain
      * {@link android.R.id#list}
      */
-    public ListView getListView() {
+    protected ListView getListView() {
         if (mListViewManager != null) {
             return mListViewManager.getListView();
         }
@@ -128,16 +134,10 @@ public abstract class ListFragment extends Fragment {
         return null;
     }
 
-    public void smoothScrollToPosition(int position) {
-        if (mListViewManager != null) {
-            mListViewManager.smoothScrollToPosition(position);
-        }
-    }
-
     /**
      * Delegate calls to a {@link ListView} or a {@link StickyListHeadersListView}.
      */
-    private static abstract class ListViewManager {
+    protected static abstract class ListViewManager {
         /**
          * Automatically returns the correct {@code ListViewManager}.
          *
@@ -172,13 +172,17 @@ public abstract class ListFragment extends Fragment {
          */
         public abstract void setOnItemClickListener(OnItemClickListener listener);
 
+        public abstract void setFastScrollEnabled(boolean enabled);
+
+        public abstract void smoothScrollToPosition(int position);
+
         protected abstract void setListAdapter(ListAdapter adapter);
 
         protected abstract ListAdapter getListAdapter();
 
         protected abstract ListView getListView();
 
-        protected abstract void smoothScrollToPosition(int position);
+        protected abstract void setOnScrollListener(AbsListView.OnScrollListener listener);
     }
 
     private static class NativeListViewManager extends ListViewManager {
@@ -192,6 +196,16 @@ public abstract class ListFragment extends Fragment {
         @Override
         public void setOnItemClickListener(OnItemClickListener listener) {
             mListView.setOnItemClickListener(listener);
+        }
+
+        @Override
+        public void setFastScrollEnabled(boolean enabled) {
+            mListView.setFastScrollEnabled(enabled);
+        }
+
+        @Override
+        public void smoothScrollToPosition(int position) {
+            mListView.smoothScrollToPosition(position);
         }
 
         @Override
@@ -210,8 +224,8 @@ public abstract class ListFragment extends Fragment {
         }
 
         @Override
-        public void smoothScrollToPosition(int position) {
-            mListView.smoothScrollToPosition(position);
+        protected void setOnScrollListener(AbsListView.OnScrollListener listener) {
+            mListView.setOnScrollListener(listener);
         }
     }
 
@@ -226,6 +240,16 @@ public abstract class ListFragment extends Fragment {
         @Override
         public void setOnItemClickListener(OnItemClickListener listener) {
             mListView.setOnItemClickListener(listener);
+        }
+
+        @Override
+        public void setFastScrollEnabled(boolean enabled) {
+            mListView.setFastScrollEnabled(enabled);
+        }
+
+        @Override
+        public void smoothScrollToPosition(int position) {
+            mListView.smoothScrollToPosition(position + mListView.getHeaderViewsCount());
         }
 
         @Override
@@ -248,8 +272,8 @@ public abstract class ListFragment extends Fragment {
         }
 
         @Override
-        protected void smoothScrollToPosition(int position) {
-            mListView.smoothScrollToPosition(position + mListView.getHeaderViewsCount());
+        protected void setOnScrollListener(AbsListView.OnScrollListener listener) {
+            mListView.setOnScrollListener(listener);
         }
     }
 }
