@@ -107,8 +107,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:autoLink="all"
+            android:linksClickable="false"
             android:hint="@string/address"
-            android:linksClickable="false" />
+            android:drawableRight="@drawable/ic_menu_mapmode" />
 
         <TextView
             android:id="@+id/lbl_phones"
