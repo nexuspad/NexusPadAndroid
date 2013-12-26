@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import com.android.datetimepicker.date.DatePickerDialog;
 import com.android.datetimepicker.time.TimePickerDialog;
 import com.edmondapps.utils.android.annotaion.FragmentName;
@@ -62,7 +63,7 @@ public class NewEventFragment extends NewEntryFragment<Event> {
     private TimeButton mToTimeV;
 
     private CheckBox mAllDayV;
-    private Spinner mRepeatV;
+    private TextView mRepeatV;
     private EditText mTagsV;
     private EditText mNoteV;
 
