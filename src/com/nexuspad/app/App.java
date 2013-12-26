@@ -72,4 +72,17 @@ public class App extends Application {
         query = Pattern.quote(query);    // sanitize
         return Pattern.compile("(.*?\\s|\\s*)" + query + ".*", Pattern.CASE_INSENSITIVE);
     }
+
+    /**
+     * add {@code "http://"} in front of an url if a schema is not already in place.
+     * </br>
+     * It uses the {@code Pattern ".+://.*"} to check if the schema is in place.
+     *
+     * @param url the url ({@code "http://"} is optional)
+     * @return the new {@code String} that contains {@code "http://"} in front, or the original {@code String} if no
+     * changes were made.
+     */
+    public static String addSchemaIfRequired(String url) {
+        return Pattern.compile(".+://.*").matcher(url).matches() ? url : "http://" + url;
+    }
 }

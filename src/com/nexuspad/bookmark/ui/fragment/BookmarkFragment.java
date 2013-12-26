@@ -133,7 +133,8 @@ public class BookmarkFragment extends EntryFragment<Bookmark> {
     }
 
     private void launchBrowser() {
-        Uri uri = Uri.parse(getEntry().getWebAddress());
+        final String uriString = App.addSchemaIfRequired(getEntry().getWebAddress());
+        Uri uri = Uri.parse(uriString);
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(uri);
         try {
