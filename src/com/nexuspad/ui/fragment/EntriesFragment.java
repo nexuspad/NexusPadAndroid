@@ -16,6 +16,7 @@ import com.edmondapps.utils.android.ui.CompoundAdapter;
 import com.edmondapps.utils.android.ui.SingleAdapter;
 import com.edmondapps.utils.android.view.ViewUtils;
 import com.edmondapps.utils.java.Lazy;
+import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.nexuspad.Manifest;
 import com.nexuspad.R;
@@ -37,6 +38,7 @@ import com.nexuspad.ui.OnListEndListener;
 import com.nexuspad.ui.activity.FoldersActivity;
 import com.nexuspad.ui.activity.NewFolderActivity;
 
+import java.util.Iterator;
 import java.util.List;
 
 import static com.nexuspad.dataservice.EntryListService.EntryListReceiver;
@@ -242,18 +244,30 @@ public abstract class EntriesFragment extends ListFragment {
         }
     }
 
-    protected void onUpdateEntry(NPEntry entry) {
+    protected void onUpdateEntry(NPEntry updatedEntry) {
         final EntryList entryList = getEntryList();
         if (entryList != null) {
             final List<NPEntry> entries = entryList.getEntries();
-            final int index = Iterables.indexOf(entries, entry.filterById());
-            if (index >= 0) {
-                entries.remove(index);
-                entries.add(index, entry);
-                onEntryListUpdated();
-            } else {
-                Logs.w(TAG, "cannot find the updated entry in the list; entry: " + entry);
+            final Iterator<NPEntry> iterator = entries.iterator();
+            final Predicate<NPEntry> predicate = updatedEntry.filterById();
+
+            for (int index = 0; iterator.hasNext(); ++index) {
+                final NPEntry current = iterator.next();
+                if (predicate.apply(current)) {
+                    entries.remove(index);
+
+                    final Folder folder = current.getFolder();
+                    final Folder updatedEntryF = updatedEntry.getFolder();
+
+                    if (folder.filterById().apply(updatedEntryF)) { // same folder, put it back in
+                        entries.add(index, updatedEntry);
+                    }
+
+                    onEntryListUpdated();
+                    return;
+                }
             }
+            Logs.w(TAG, "cannot find the updated entry in the list; entry: " + updatedEntry);
         }
     }
 

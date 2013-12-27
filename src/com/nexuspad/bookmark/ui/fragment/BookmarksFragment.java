@@ -72,44 +72,7 @@ public class BookmarksFragment extends EntriesFragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.bookmarks_frag, menu);
-//        mSearchItem = menu.findItem(R.id.search);
-//        mSearchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
-//            @Override
-//            public boolean onMenuItemActionExpand(MenuItem item) {
-//                mPreSearchAdapter = getListAdapter();
-//                return true;
-//            }
-//
-//            @Override
-//            public boolean onMenuItemActionCollapse(MenuItem item) {
-//                return true;
-//            }
-//        });
-//        mSearchView = (SearchView) mSearchItem.getActionView();
-//        mSearchView.setOnCloseListener(new SearchView.OnCloseListener() {
-//            @Override
-//            public boolean onClose() {
-//                setListAdapter(mPreSearchAdapter);
-//                return false;
-//            }
-//        });
-//        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//            @Override
-//            public boolean onQueryTextSubmit(String query) {
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean onQueryTextChange(String newText) {
-//                try {
-//                    searchEntriesInFolder(newText, 1);
-//                } catch (NPException e) {
-//                    throw new RuntimeException(e);
-//                }
-//                return false;
-//            }
-//        });
-
+        mSearchItem = menu.findItem(R.id.search);
     }
 
     @Override
@@ -117,8 +80,6 @@ public class BookmarksFragment extends EntriesFragment {
         switch (item.getItemId()) {
             case R.id.new_bookmark:
                 NewBookmarkActivity.startWithFolder(getFolder(), getActivity());
-                return true;
-            case R.id.search:
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
