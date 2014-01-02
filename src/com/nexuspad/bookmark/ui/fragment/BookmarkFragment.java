@@ -97,7 +97,13 @@ public class BookmarkFragment extends EntryFragment<Bookmark> {
         mNameV.setTypeface(App.getRobotoLight());
 
         super.onViewCreated(view, savedInstanceState);
-        installListeners();
+
+        mWebAddressV.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                launchBrowser();
+            }
+        });
     }
 
     @Override
@@ -121,15 +127,6 @@ public class BookmarkFragment extends EntryFragment<Bookmark> {
         int tagsFlag = !TextUtils.isEmpty(bookmark.getTags()) ? View.VISIBLE : View.GONE;
         mTagsV.setVisibility(tagsFlag);
         mTagsFrameV.setVisibility(tagsFlag);
-    }
-
-    private void installListeners() {
-        mWebAddressV.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                launchBrowser();
-            }
-        });
     }
 
     private void launchBrowser() {

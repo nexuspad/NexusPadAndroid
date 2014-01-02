@@ -20,8 +20,6 @@ import com.edmondapps.utils.java.WrapperList;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
 import com.nexuspad.datamodel.*;
-import com.nexuspad.dataservice.NPException;
-import com.nexuspad.dataservice.NPWebServiceUtil;
 import com.nexuspad.photos.ui.activity.PhotoActivity;
 import com.nexuspad.photos.ui.activity.PhotosActivity;
 import com.nexuspad.ui.OnListEndListener;
@@ -180,20 +178,12 @@ public class PhotosFragment extends EntriesFragment implements OnItemClickListen
                 view = (ImageView) convertView;
             }
 
-            try {
-                final String url = NPWebServiceUtil.fullUrlWithAuthenticationTokens(getItem(position).getTnUrl(), getActivity());
-
-                final String realUrl = url.split("\\?")[0];  // strip off the url params
-                mPicasso.load(realUrl)
-                        .placeholder(R.drawable.placeholder)
-                        .error(R.drawable.ic_launcher)
-                        .resizeDimen(R.dimen.photo_grid_width, R.dimen.photo_grid_height)
-                        .centerCrop()
-                        .into(view);
-
-            } catch (NPException e) {
-                throw new RuntimeException(e);
-            }
+            mPicasso.load(getItem(position).getTnUrl())
+                    .placeholder(R.drawable.placeholder)
+                    .error(R.drawable.ic_launcher)
+                    .resizeDimen(R.dimen.photo_grid_width, R.dimen.photo_grid_height)
+                    .centerCrop()
+                    .into(view);
 
             return view;
         }

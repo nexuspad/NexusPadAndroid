@@ -14,8 +14,6 @@ import com.nexuspad.datamodel.Album;
 import com.nexuspad.datamodel.Folder;
 import com.nexuspad.datamodel.NPUpload;
 import com.nexuspad.datamodel.Photo;
-import com.nexuspad.dataservice.NPException;
-import com.nexuspad.dataservice.NPWebServiceUtil;
 import com.nexuspad.photos.ui.activity.NewAlbumActivity;
 import com.nexuspad.photos.ui.activity.PhotoActivity;
 import com.nexuspad.ui.fragment.EntryFragment;
@@ -147,19 +145,14 @@ public class AlbumFragment extends EntryFragment<Album> implements AdapterView.O
                 view = (ImageView) convertView;
             }
 
-            try {
-                final String tnUrl = NPWebServiceUtil.fullUrlWithAuthenticationTokens(getItem(position).getTnUrl(), activity);
-                Picasso.with(activity)
-                        .load(tnUrl)
-                        .resizeDimen(R.dimen.photo_grid_width, R.dimen.photo_grid_height)
-                        .centerCrop()
-                        .placeholder(R.drawable.placeholder)
-                        .error(R.drawable.ic_launcher)
-                        .into(view);
-
-            } catch (NPException e) {
-                // TODO - handle the error (not able to get valid session Id)
-            }
+            final String tnUrl = getItem(position).getTnUrl();
+            Picasso.with(activity)
+                    .load(tnUrl)
+                    .resizeDimen(R.dimen.photo_grid_width, R.dimen.photo_grid_height)
+                    .centerCrop()
+                    .placeholder(R.drawable.placeholder)
+                    .error(R.drawable.ic_launcher)
+                    .into(view);
 
             return view;
         }

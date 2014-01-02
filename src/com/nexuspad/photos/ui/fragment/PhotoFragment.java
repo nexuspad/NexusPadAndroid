@@ -4,6 +4,7 @@
 package com.nexuspad.photos.ui.fragment;
 
 import android.app.ActionBar;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.PagerAdapter;
@@ -49,13 +50,13 @@ public class PhotoFragment extends EntriesFragment {
     private int mInitialPhotoIndex = -1;
 
     public static PhotoFragment of(Folder f, Photo photo, List<? extends Photo> photos) {
-        Bundle bundle = new Bundle();
+        final Bundle bundle = new Bundle();
         bundle.putParcelable(KEY_FOLDER, f);
         bundle.putParcelable(KEY_PHOTO, photo);
 
         sPhotos = new ArrayList<Photo>(photos); // parceling is too slow
 
-        PhotoFragment fragment = new PhotoFragment();
+        final PhotoFragment fragment = new PhotoFragment();
         fragment.setArguments(bundle);
 
         return fragment;
@@ -76,7 +77,7 @@ public class PhotoFragment extends EntriesFragment {
 
         mPicasso = Picasso.with(getActivity());
         final Photo photo = arguments.getParcelable(KEY_PHOTO);
-        mInitialPhotoIndex = Iterables.indexOf(sPhotos, photo.filterByPhotoId());
+        mInitialPhotoIndex = Iterables.indexOf(sPhotos, photo.filterById());
     }
 
     @Override
@@ -110,12 +111,12 @@ public class PhotoFragment extends EntriesFragment {
 
         mViewPager = findView(view, R.id.view_pager);
 
-        initViews();
-    }
-
-    private void initViews() {
         mViewPager.setAdapter(newPagerAdapter());
         mViewPager.setCurrentItem(mInitialPhotoIndex, false);
+
+        final Resources resources = getResources();
+        mViewPager.setBackgroundColor(resources.getColor(android.R.color.background_dark));
+        mViewPager.setPageMargin(resources.getDimensionPixelSize(R.dimen.ed__padding_medium));
     }
 
     private void stableNotifyAdapter() {

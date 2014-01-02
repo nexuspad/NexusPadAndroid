@@ -58,9 +58,6 @@ public class AlbumsFragment extends EntriesFragment {
 
     private List<Album> mAlbums;
 
-    private View mQuickReturnView;
-    private TextView mFolderView;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.albums_frag, container, false);
@@ -76,35 +73,10 @@ public class AlbumsFragment extends EntriesFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mQuickReturnView = findView(view, R.id.quick_return);
-        mFolderView = findView(view, R.id.lbl_folder);
-        mFolderView.setText(getFolder().getFolderName());
-        mFolderView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final FragmentActivity activity = getActivity();
-                final Folder folder = Folder.rootFolderOf(ServiceConstants.PHOTO_MODULE, activity);
-                startActivityForResult(FoldersActivity.ofParentFolder(activity, folder), REQ_FOLDER);
-                activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-            }
-        });
 
-        getListView().setOnScrollListener(new DirectionalScrollListener(0) {
-            @Override
-            public void onScrollDirectionChanged(final boolean showing) {
-                final int height = showing ? 0 : mQuickReturnView.getHeight();
-                mQuickReturnView.animate()
-                        .translationY(height)
-                        .setDuration(200L)
-                        .withEndAction(new Runnable() {
-                            @Override
-                            public void run() {
-                                mFolderView.setClickable(showing);
-                                mFolderView.setFocusable(showing);
-                            }
-                        });
-            }
-        });
+        setQuickReturnListener(getListViewManager(), null);
+        setOnFolderSelectedClickListener(REQ_FOLDER);
+
         updateUI();
     }
 
@@ -190,7 +162,7 @@ public class AlbumsFragment extends EntriesFragment {
                     final String url = NPWebServiceUtil.fullUrlWithAuthenticationTokens(tnUrl, getActivity());
 
                     Picasso.with(getActivity())
-                            .load(url)
+                            .load(tnUrl)
                             .resizeDimen(R.dimen.photo_grid_width, R.dimen.photo_grid_height)
                             .centerCrop()
                             .placeholder(R.drawable.placeholder)
