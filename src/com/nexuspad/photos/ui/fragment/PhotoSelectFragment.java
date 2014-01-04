@@ -39,7 +39,7 @@ public class PhotoSelectFragment extends Fragment implements
     public interface Callback {
         void onCancel(PhotoSelectFragment f);
 
-        void onOk(PhotoSelectFragment f, ArrayList<String> paths);
+        void onOK(PhotoSelectFragment f, ArrayList<String> paths);
     }
 
     private static final int LOADER_ID = 1;
@@ -104,7 +104,7 @@ public class PhotoSelectFragment extends Fragment implements
                 list.add(filePath);
             }
         }
-        mCallback.onOk(PhotoSelectFragment.this, list);
+        mCallback.onOK(PhotoSelectFragment.this, list);
     }
 
     @Override

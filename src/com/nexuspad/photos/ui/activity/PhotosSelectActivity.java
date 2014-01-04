@@ -44,7 +44,7 @@ public class PhotosSelectActivity extends SinglePaneActivity implements PhotoSel
     }
 
     @Override
-    public void onOk(PhotoSelectFragment f, ArrayList<String> paths) {
+    public void onOK(PhotoSelectFragment f, ArrayList<String> paths) {
         Logs.d(TAG, paths.toString());
 
         final Intent data = new Intent().putParcelableArrayListExtra(Intent.EXTRA_STREAM, fromString(paths));
