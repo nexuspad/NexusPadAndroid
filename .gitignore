@@ -19,7 +19,3 @@ local.properties
 
 screenshots/
 .classpath
-
-.idea/
-*.eml
-*.iml

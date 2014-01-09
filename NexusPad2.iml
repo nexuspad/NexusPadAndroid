@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module org.jetbrains.idea.maven.project.MavenProjectsManager.isMavenModule="true" type="JAVA_MODULE" version="4">
+  <component name="FacetManager">
+    <facet type="android" name="Android">
+      <configuration>
+        <option name="UPDATE_PROPERTY_FILES" value="true" />
+      </configuration>
+    </facet>
+  </component>
+  <component name="NewModuleRootManager" inherit-compiler-output="false">
+    <output url="file://$MODULE_DIR$/target/classes" />
+    <output-test url="file://$MODULE_DIR$/target/test-classes" />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/gen" isTestSource="false" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/test" isTestSource="true" />
+      <excludeFolder url="file://$MODULE_DIR$/target" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="SitkceyListHeaders" />
+    <orderEntry type="module" module-name="datetimepicker" />
+    <orderEntry type="module" module-name="RichTextEditor" />
+    <orderEntry type="module" module-name="aFileChooser" />
+    <orderEntry type="module" module-name="NexusPadCore" />
+    <orderEntry type="module" module-name="EdmondAppsAndroidUtils" />
+    <orderEntry type="library" name="Maven: com.android.support:support-v4:19.0.0" level="project" />
+    <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.2.4" level="project" />
+    <orderEntry type="library" name="Maven: com.google.guava:guava:15.0" level="project" />
+    <orderEntry type="library" name="Maven: com.google:volley:1.0.0-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: com.github.chrisbanes.photoview:library:1.2.2" level="project" />
+    <orderEntry type="library" name="Maven: com.squareup.picasso:picasso:2.1.1" level="project" />
+  </component>
+</module>
+

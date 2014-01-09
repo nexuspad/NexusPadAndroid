@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/../lib/EdmondAppsAndroidUtils/EdmondAppsAndroidUtils.iml" filepath="$PROJECT_DIR$/../lib/EdmondAppsAndroidUtils/EdmondAppsAndroidUtils.iml" />
+      <module fileurl="file://$PROJECT_DIR$/NexusPad2.iml" filepath="$PROJECT_DIR$/NexusPad2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../np-android-core/NexusPadCore.iml" filepath="$PROJECT_DIR$/../np-android-core/NexusPadCore.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../lib/cwac-richedit/RichTextEditor.iml" filepath="$PROJECT_DIR$/../lib/cwac-richedit/RichTextEditor.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../lib/StickyListHeaders/library/SitkceyListHeaders.iml" filepath="$PROJECT_DIR$/../lib/StickyListHeaders/library/SitkceyListHeaders.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../lib/aFileChooser/aFileChooser/aFileChooser.iml" filepath="$PROJECT_DIR$/../lib/aFileChooser/aFileChooser/aFileChooser.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../lib/JakeWharton-ActionBarSherlock-5a15d92/actionbarsherlock/actionbarsherlock.iml" filepath="$PROJECT_DIR$/../lib/JakeWharton-ActionBarSherlock-5a15d92/actionbarsherlock/actionbarsherlock.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../lib/datetimepicker/datetimepicker.iml" filepath="$PROJECT_DIR$/../lib/datetimepicker/datetimepicker.iml" />
+    </modules>
+  </component>
+</project>
+
