@@ -14,6 +14,7 @@ import com.nexuspad.calendar.ui.activity.EventsActivity;
 import com.nexuspad.contacts.ui.activity.ContactsActivity;
 import com.nexuspad.doc.ui.activity.DocsActivity;
 import com.nexuspad.home.ui.fragment.DashboardFragment;
+import com.nexuspad.journal.ui.activity.JournalActivity;
 import com.nexuspad.photos.ui.activity.PhotosActivity;
 
 import static com.nexuspad.dataservice.ServiceConstants.*;
@@ -61,6 +62,8 @@ public class DashboardActivity extends SinglePaneActivity implements DashboardFr
                 return PhotosActivity.class;
             case CONTACT_MODULE:
                 return ContactsActivity.class;
+            case JOURNAL_MODULE:
+                return JournalActivity.class;
             default:
                 Logs.v(TAG, "moduleType: " + moduleType);
                 return null;

@@ -3,6 +3,7 @@
  */
 package com.nexuspad.ui.activity;
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -55,18 +56,14 @@ public abstract class EntriesActivity extends SinglePaneActivity implements Entr
 
         super.onCreate(savedState);
 
-        getActionBar().setIcon(R.drawable.back_to_dashboard);
+        final ActionBar actionBar = getActionBar();
+        actionBar.setIcon(R.drawable.back_to_dashboard);
+        actionBar.setTitle(mFolder.getFolderName());
     }
 
     @Override
     public void onListLoaded(EntriesFragment f, EntryList list) {
-        Folder folder = list.getFolder();
-        if (folder.getFolderId() != Folder.ROOT_FOLDER) {
-            String folderName = folder.getFolderName();
-            if (!TextUtils.isEmpty(folderName)) {
-                setTitle(folderName);
-            }
-        }
+        // do nothing
     }
 
     public Folder getFolder() {

@@ -40,8 +40,7 @@ public class FolderEntriesAdapter<T extends EntriesAdapter<?>> extends CompoundA
 
     @Override
     public boolean isEmpty() {
-        // who cares about other adapters?
-        return mFolderAdapter.isEmpty() && mEntriesAdapter.isEmpty();
+        return false;
     }
 
     public final boolean isPositionFolder(int position) {

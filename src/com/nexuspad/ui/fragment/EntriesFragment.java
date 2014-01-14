@@ -415,11 +415,6 @@ public abstract class EntriesFragment extends ListFragment {
         service.getEntriesInFolder(mFolder, getTemplate(), page, getEntriesCountPerPage());
     }
 
-    // not ready
-    protected void searchEntriesInFolder(String keyword, int page) throws NPException {
-        getEntryListService().searchEntriesInFolder(keyword, getFolder(), getTemplate(), page, getEntriesCountPerPage());
-    }
-
     protected int getEntriesCountPerPage() {
         return PAGE_COUNT;
     }

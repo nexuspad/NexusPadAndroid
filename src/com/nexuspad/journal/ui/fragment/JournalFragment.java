@@ -51,7 +51,7 @@ public class JournalFragment extends EntryFragment<Journal> {
 
     @Override
     protected void updateUI() {
-        Journal entry = getEntry();
+        final Journal entry = getEntry();
         if (entry != null) {
             mNoteV.setText(entry.getNote());
         }

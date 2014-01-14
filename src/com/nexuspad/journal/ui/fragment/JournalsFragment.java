@@ -33,6 +33,15 @@ import java.util.List;
 @ModuleId(moduleId = ServiceConstants.JOURNAL_MODULE, template = EntryTemplate.JOURNAL)
 public class JournalsFragment extends EntriesFragment {
 
+    public static JournalsFragment of(Folder folder) {
+        final Bundle bundle = new Bundle();
+        bundle.putParcelable(KEY_FOLDER, folder);
+
+        final JournalsFragment fragment = new JournalsFragment();
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
     private ViewPager mViewPager;
 
     @Override

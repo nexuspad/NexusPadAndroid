@@ -8,6 +8,7 @@ import android.widget.Toast;
 import com.edmondapps.utils.android.annotaion.ParentActivity;
 import com.nexuspad.annotation.ModuleId;
 import com.nexuspad.datamodel.EntryTemplate;
+import com.nexuspad.datamodel.Folder;
 import com.nexuspad.datamodel.Journal;
 import com.nexuspad.dataservice.ServiceConstants;
 import com.nexuspad.home.ui.activity.DashboardActivity;
@@ -25,7 +26,7 @@ public class JournalActivity extends EntriesActivity implements JournalFragment.
 
     @Override
     protected Fragment onCreateFragment() {
-        return new JournalsFragment();
+        return JournalsFragment.of(Folder.rootFolderOf(ServiceConstants.JOURNAL_MODULE));
     }
 
     @Override
