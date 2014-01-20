@@ -196,6 +196,7 @@ public class EventsAgendaFragment extends EntriesFragment {
 
         @Override
         public View getHeaderView(int position, View convertView, ViewGroup parent) {
+            if(isEmpty()) return new View(getLayoutInflater().getContext()); // empty view (no header)
             if (convertView == null) {
                 convertView = getLayoutInflater().inflate(R.layout.list_header, parent, false);
             }

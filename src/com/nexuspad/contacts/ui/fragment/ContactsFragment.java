@@ -9,10 +9,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.MenuItemCompat;
 import android.text.TextUtils;
 import android.view.*;
-import android.widget.BaseAdapter;
-import android.widget.Filter;
-import android.widget.ListView;
-import android.widget.SearchView;
+import android.widget.*;
 import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.edmondapps.utils.java.WrapperList;
 import com.nexuspad.R;
@@ -40,6 +37,7 @@ import java.util.regex.Pattern;
 @ModuleId(moduleId = ServiceConstants.CONTACT_MODULE, template = EntryTemplate.CONTACT)
 public final class ContactsFragment extends EntriesFragment {
     public static final String TAG = "ContactsFragment";
+
     public static ContactsFragment of(Folder folder) {
         final Bundle bundle = new Bundle();
         bundle.putParcelable(KEY_FOLDER, folder);
@@ -263,6 +261,7 @@ public final class ContactsFragment extends EntriesFragment {
 
         @Override
         public View getHeaderView(int position, View convertView, ViewGroup parent) {
+            if (isEmpty()) return new View(getLayoutInflater().getContext()); // empty view (no header)
             if (convertView == null) {
                 convertView = getLayoutInflater().inflate(R.layout.list_header, parent, false);
                 convertView.setBackgroundColor(Color.argb(127, 255, 255, 255));
@@ -281,6 +280,7 @@ public final class ContactsFragment extends EntriesFragment {
 
         @Override
         public long getHeaderId(int position) {
+            if (isEmpty()) return -1;
             final String string = getDisplayString(position);
             if (!TextUtils.isEmpty(string) && string.length() > 1) {
                 return string.substring(0, 1).toUpperCase().charAt(0);

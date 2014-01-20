@@ -109,13 +109,9 @@ public class FoldersAdapter extends BaseAdapter implements OnItemLongClickListen
         return c;
     }
 
-    protected boolean isSubfoldersEmpty() {
-        return mSubFolders.isEmpty();
-    }
-
     @Override
     public boolean isEmpty() {
-        return isSubfoldersEmpty();
+        return mSubFolders.isEmpty();
     }
 
     @Override
@@ -134,15 +130,18 @@ public class FoldersAdapter extends BaseAdapter implements OnItemLongClickListen
 
     @Override
     public int getItemViewType(int position) {
-        if ((position == 0)) {
+        if (mSubFolders.isEmpty()) {
+            return TYPE_EMPTY_FOLDER;
+        }
+        if (position == 0) {
             return TYPE_HEADER;
         }
-        return isSubfoldersEmpty() ? TYPE_EMPTY_FOLDER : TYPE_FOLDER;
+        return TYPE_FOLDER;
     }
 
     @Override
     public int getViewTypeCount() {
-        return 3;
+        return mSubFolders.isEmpty() ? 1 : 3;
     }
 
     @Override

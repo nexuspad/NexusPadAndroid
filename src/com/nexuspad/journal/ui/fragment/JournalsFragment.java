@@ -23,6 +23,7 @@ import com.nexuspad.dataservice.EntryListService;
 import com.nexuspad.dataservice.NPException;
 import com.nexuspad.dataservice.ServiceConstants;
 import com.nexuspad.ui.fragment.EntriesFragment;
+import com.nexuspad.util.DateUtil;
 
 import java.util.Date;
 import java.util.List;
@@ -58,10 +59,8 @@ public class JournalsFragment extends EntriesFragment {
 
     @Override
     protected void getEntriesInFolder(EntryListService service, Folder folder, int page) throws NPException {
-        @SuppressWarnings("deprecation")
-        long start = new Date(2013 - 1900, 0, 1).getTime();
-        long end = System.currentTimeMillis();
-
+//        Date startDate = DateUtil.getFirstDateOfTheMonth("20140113");    // method not exist?
+//        Date endDate = DateUtil.getEndDateOfTheMonth("20140113");
         /*
         FROM REN:
         The start date is the first date of the month, the end date is the end date of the month.

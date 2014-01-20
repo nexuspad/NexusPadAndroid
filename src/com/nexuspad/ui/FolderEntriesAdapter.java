@@ -4,6 +4,7 @@
 package com.nexuspad.ui;
 
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.BaseAdapter;
@@ -41,6 +42,57 @@ public class FolderEntriesAdapter<T extends EntriesAdapter<?>> extends CompoundA
     @Override
     public boolean isEmpty() {
         return false;
+    }
+
+    @Override
+    public int getCount() {
+        if (mEntriesAdapter.isEmpty()) {
+            return 1;
+        }
+        final int localCount = mFolderAdapter.getCount() + mEntriesAdapter.getCount();
+        final int superCount = super.getCount();
+        // superCount will be 0 for empty adapters, use local in such case
+        return localCount > superCount ? localCount : superCount;
+    }
+
+    @Override
+    public int getViewTypeCount() {
+        if (mEntriesAdapter.isEmpty()) {
+            return mEntriesAdapter.getViewTypeCount(); // should be 1
+        }
+        return super.getViewTypeCount();
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (mEntriesAdapter.isEmpty()) {
+            return mEntriesAdapter.getItemViewType(position);
+        }
+        return super.getItemViewType(position);
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        if (mEntriesAdapter.isEmpty()) {
+            return mEntriesAdapter.getView(position, convertView, parent);
+        }
+        return super.getView(position, convertView, parent);
+    }
+
+    @Override
+    public boolean areAllItemsEnabled() {
+        if (mEntriesAdapter.isEmpty()) {
+            return false;
+        }
+        return super.areAllItemsEnabled();
+    }
+
+    @Override
+    public boolean isEnabled(int position) {
+        if (mEntriesAdapter.isEmpty()) {
+            return false;
+        }
+        return super.isEnabled(position);
     }
 
     public final boolean isPositionFolder(int position) {

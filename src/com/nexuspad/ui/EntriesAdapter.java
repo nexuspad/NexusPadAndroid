@@ -46,6 +46,7 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter impl
     /**
      * Swap out the current entries with the specified one. The original entries passed in the constructor will
      * be preserved.
+     *
      * @param displayEntries the new entries to be displayed
      */
     protected void setDisplayEntries(List<? extends T> displayEntries) {
@@ -102,36 +103,42 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter impl
         return true;
     }
 
-    protected boolean isEntriesEmpty() {
+    @Override
+    public boolean isEmpty() {
         return mDisplayEntries.isEmpty();
     }
 
     @Override
-    public boolean isEmpty() {
-        return isEntriesEmpty();
-    }
-
-    @Override
     public int getCount() {
-        if (isHeaderEnabled()) {
-            return mDisplayEntries.size() + 1;// header
-        } else {
-            return mDisplayEntries.size();
+        if (mDisplayEntries.isEmpty()) {
+            return 1; // empty view
         }
+        if (isHeaderEnabled()) {
+            return mDisplayEntries.size() + 1; // header and entries
+        }
+        return mDisplayEntries.size(); // entries
     }
 
     @Override
     public int getItemViewType(int position) {
+        if (mDisplayEntries.isEmpty()) {
+            return TYPE_EMPTY_ENTRY;
+        }
         if (position == 0 && isHeaderEnabled()) {
             return TYPE_HEADER;
-        } else {
-            return isEntriesEmpty() ? TYPE_EMPTY_ENTRY : TYPE_ENTRY;
         }
+        return TYPE_ENTRY;
     }
 
     @Override
     public int getViewTypeCount() {
-        return isHeaderEnabled() ? 3 : 2;
+        if (mDisplayEntries.isEmpty()) {
+            return 1; // empty view
+        }
+        if (isHeaderEnabled()) {
+            return 2; // header and the entries
+        }
+        return 1; // entries
     }
 
     @Override
