@@ -125,7 +125,7 @@ public class FoldersAdapter extends BaseAdapter implements OnItemLongClickListen
 
     @Override
     public int getCount() {
-        return mSubFolders.size() + 1;
+        return isEmpty() ? 0 : mSubFolders.size() + 1;
     }
 
     @Override
