@@ -7,6 +7,7 @@ import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import com.edmondapps.utils.android.annotaion.FragmentName;
@@ -89,7 +90,6 @@ public class EventsAgendaFragment extends EntriesFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setListAdapter(new EventsAgendaAdapter(mEvents));
     }
 
     @Override
@@ -98,7 +98,13 @@ public class EventsAgendaFragment extends EntriesFragment {
         mEvents.clear();
         mEvents.addAll(events);
 
-        getListAdapter().notifyDataSetChanged();
+        final BaseAdapter adapter = getListAdapter();
+        if (adapter == null) {
+            setListAdapter(new EventsAgendaAdapter(mEvents));
+        } else {
+            adapter.notifyDataSetChanged();
+        }
+
         scrollToStartTime(events);
 
         super.onListLoaded(list);
@@ -128,7 +134,7 @@ public class EventsAgendaFragment extends EntriesFragment {
         scrollToStartTime(mEvents);
     }
 
-    private static class ViewHolder {
+    private static class EventViewHolder {
         private ViewGroup mDateFrame;
         private TextView mDayOfWeekV;
         private TextView mDateV;
@@ -154,11 +160,11 @@ public class EventsAgendaFragment extends EntriesFragment {
 
         @Override
         protected View getEntryView(Event event, int position, View convertView, ViewGroup parent) {
-            final EventsAgendaFragment.ViewHolder viewHolder;
+            final EventViewHolder viewHolder;
             if (convertView == null) {
                 convertView = getLayoutInflater().inflate(R.layout.list_item_event, parent, false);
 
-                viewHolder = new EventsAgendaFragment.ViewHolder();
+                viewHolder = new EventViewHolder();
                 viewHolder.mDayOfWeekV = findView(convertView, R.id.lbl_day_of_week);
                 viewHolder.mDateV = findView(convertView, R.id.lbl_date);
                 viewHolder.mTitleV = findView(convertView, R.id.lbl_title);
@@ -167,7 +173,7 @@ public class EventsAgendaFragment extends EntriesFragment {
 
                 convertView.setTag(viewHolder);
             } else {
-                viewHolder = (EventsAgendaFragment.ViewHolder) convertView.getTag();
+                viewHolder = (EventViewHolder) convertView.getTag();
             }
 
             final Date startTime = event.getStartTime();
@@ -196,7 +202,7 @@ public class EventsAgendaFragment extends EntriesFragment {
 
         @Override
         public View getHeaderView(int position, View convertView, ViewGroup parent) {
-            if(isEmpty()) return new View(getLayoutInflater().getContext()); // empty view (no header)
+            if (isEmpty()) return new View(getLayoutInflater().getContext()); // empty view (no header)
             if (convertView == null) {
                 convertView = getLayoutInflater().inflate(R.layout.list_header, parent, false);
             }

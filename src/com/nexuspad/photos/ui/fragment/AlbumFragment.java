@@ -69,7 +69,7 @@ public class AlbumFragment extends EntryFragment<Album> implements AdapterView.O
     }
 
     private void onEdit() {
-        final Intent intent = NewAlbumActivity.of(getEntry(), getFolder(), getActivity());
+        final Intent intent = NewAlbumActivity.of(getActivity(), getFolder(), getEntry());
         startActivity(intent);
     }
 

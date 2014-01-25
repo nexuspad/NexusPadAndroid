@@ -60,7 +60,7 @@ public class EventFragment extends EntryFragment<Event> {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.edit:
-                NewEventActivity.startWith(getActivity(), getEntry(), getFolder());
+                NewEventActivity.startWithEvent(getActivity(), getFolder(), getEntry());
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

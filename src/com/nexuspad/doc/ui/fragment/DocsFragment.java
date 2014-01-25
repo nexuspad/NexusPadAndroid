@@ -72,7 +72,7 @@ public class DocsFragment extends EntriesFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.new_doc:
-                NewDocActivity.startWithFolder(getFolder(), getActivity());
+                NewDocActivity.startWithFolder(getActivity(), getFolder());
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -147,7 +147,7 @@ public class DocsFragment extends EntriesFragment {
         protected boolean onEntryMenuClick(Doc entry, int menuId) {
             switch (menuId) {
                 case R.id.edit:
-                    NewDocActivity.startWithDoc(entry, getFolder(), getActivity());
+                    NewDocActivity.startWithDoc(getActivity(), getFolder(), entry);
                     return true;
                 default:
                     return super.onEntryMenuClick(entry, menuId);

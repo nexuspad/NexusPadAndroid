@@ -53,6 +53,7 @@ public final class ContactsFragment extends EntriesFragment {
     private List<Contact> mContacts;
     private SortTask mSortTask;
     private MenuItem mSearchItem;
+    private MenuItem mAddItem;
 
     @Override
     protected int getEntriesCountPerPage() {
@@ -75,6 +76,8 @@ public final class ContactsFragment extends EntriesFragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.contacts_frag, menu);
+
+        mAddItem = menu.findItem(R.id.menu_new);
 
         mSearchItem = menu.findItem(R.id.search);
         final SearchView searchView = (SearchView) mSearchItem.getActionView();
@@ -112,6 +115,17 @@ public final class ContactsFragment extends EntriesFragment {
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.new_contact:
+                NewContactActivity.startWithFolder(getActivity(), getFolder());
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.contacts_frag, container, false);
     }
@@ -138,6 +152,8 @@ public final class ContactsFragment extends EntriesFragment {
             mSortTask.cancel(true);
         }
         mSortTask.execute((Void[]) null);
+
+
     }
 
     @Override
@@ -186,7 +202,7 @@ public final class ContactsFragment extends EntriesFragment {
             protected boolean onEntryMenuClick(Contact contact, int menuId) {
                 switch (menuId) {
                     case R.id.edit:
-                        NewContactActivity.startWith(getActivity(), contact, getFolder());
+                        NewContactActivity.startWithContact(getActivity(), getFolder(), contact);
                         return true;
                     default:
                         return super.onEntryMenuClick(contact, menuId);
@@ -341,6 +357,8 @@ public final class ContactsFragment extends EntriesFragment {
                     fragment.setListAdapter(fragment.newContactsAdapter(mContacts));
                     fragment.mSearchItem.setVisible(true);
                     fragment.mSearchItem.setEnabled(true);
+                    fragment.mAddItem.setVisible(true);
+                    fragment.mAddItem.setEnabled(true);
                 } else {
                     adapter.notifyDataSetChanged();
                 }

@@ -23,11 +23,11 @@ import com.nexuspad.ui.activity.NewEntryActivity;
 @ModuleId(moduleId = ServiceConstants.BOOKMARK_MODULE, template = EntryTemplate.BOOKMARK)
 public class NewBookmarkActivity extends NewEntryActivity<Bookmark> {
 
-    public static void startWithFolder(Folder f, Context c) {
-        NewBookmarkActivity.startWithBookmark(null, f, c);
+    public static void startWithFolder(Context c, Folder f) {
+        NewBookmarkActivity.startWithBookmark(c, f, null);
     }
 
-    public static void startWithBookmark(Bookmark b, Folder f, Context c) {
+    public static void startWithBookmark(Context c, Folder f, Bookmark b) {
         Intent intent = new Intent(c, NewBookmarkActivity.class);
         intent.putExtra(KEY_ENTRY, b);
         intent.putExtra(KEY_FOLDER, f);

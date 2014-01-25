@@ -86,7 +86,7 @@ public class ContactFragment extends EntryFragment<Contact> {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.edit:
-                NewContactActivity.startWith(getActivity(), getEntry(), getFolder());
+                NewContactActivity.startWithContact(getActivity(), getFolder(), getEntry());
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

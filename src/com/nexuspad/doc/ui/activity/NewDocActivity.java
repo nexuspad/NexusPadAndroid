@@ -22,11 +22,11 @@ import com.nexuspad.ui.activity.NewEntryActivity;
 @ModuleId(moduleId = ServiceConstants.DOC_MODULE, template = EntryTemplate.DOC)
 public class NewDocActivity extends NewEntryActivity<Doc> {
 
-    public static void startWithFolder(Folder f, Context c) {
-        NewDocActivity.startWithDoc(null, f, c);
+    public static void startWithFolder(Context c, Folder f) {
+        NewDocActivity.startWithDoc(c, f, null);
     }
 
-    public static void startWithDoc(Doc doc, Folder f, Context c) {
+    public static void startWithDoc(Context c, Folder f, Doc doc) {
         Intent intent = new Intent(c, NewDocActivity.class);
         intent.putExtra(KEY_ENTRY, doc);
         intent.putExtra(KEY_FOLDER, f);

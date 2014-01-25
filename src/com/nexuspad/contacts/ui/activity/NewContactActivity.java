@@ -19,7 +19,11 @@ import com.nexuspad.ui.activity.NewEntryActivity;
 @ModuleId(moduleId = ServiceConstants.CONTACT_MODULE, template = EntryTemplate.CONTACT)
 public class NewContactActivity extends NewEntryActivity<Contact> {
 
-    public static void startWith(Context context, Contact contact, Folder folder) {
+    public static void startWithFolder(Context context, Folder folder) {
+        context.startActivity(NewContactActivity.of(context, null, folder));
+    }
+
+    public static void startWithContact(Context context, Folder folder, Contact contact) {
         context.startActivity(NewContactActivity.of(context, contact, folder));
     }
 

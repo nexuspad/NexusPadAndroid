@@ -43,7 +43,7 @@ public class NewFolderActivity extends DoneDiscardActivity {
         c.startActivity(intent);
     }
 
-    private final FolderService mFolderService = FolderService.getInstance(this);
+    private FolderService mFolderService;
 
     private Folder mParentFolder;
     private Folder mOriginalFolder;
@@ -55,7 +55,9 @@ public class NewFolderActivity extends DoneDiscardActivity {
 
     @Override
     protected void onCreate(Bundle savedState) {
-        Intent intent = getIntent();
+        mFolderService = FolderService.getInstance(this);
+
+        final Intent intent = getIntent();
         mParentFolder = intent.getParcelableExtra(KEY_FOLDER);
         mOriginalFolder = intent.getParcelableExtra(KEY_ORIGINAL_FOLDER);
 

@@ -32,7 +32,7 @@ public class BookmarkActivity extends EntryActivity<Bookmark> implements Bookmar
 
     @Override
     public void onEdit(BookmarkFragment f, Bookmark b) {
-        NewBookmarkActivity.startWithBookmark(b, getFolder(), this);
+        NewBookmarkActivity.startWithBookmark(this, getFolder(), b);
     }
 
     @Override

@@ -17,11 +17,11 @@ import com.nexuspad.ui.fragment.NewEntryFragment;
 @ParentActivity(PhotosActivity.class)
 public class NewAlbumActivity extends NewEntryActivity<Album> {
 
-    public static Intent of(Folder folder, Context context) {
-        return NewAlbumActivity.of(null, folder, context);
+    public static Intent of(Context context, Folder folder) {
+        return NewAlbumActivity.of(context, folder, null);
     }
 
-    public static Intent of(Album album, Folder folder, Context context) {
+    public static Intent of(Context context, Folder folder, Album album) {
         final Intent intent = new Intent(context, NewAlbumActivity.class);
         intent.putExtra(KEY_ENTRY, album);
         intent.putExtra(KEY_FOLDER, folder);
