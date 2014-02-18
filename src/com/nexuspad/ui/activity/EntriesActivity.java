@@ -6,7 +6,6 @@ package com.nexuspad.ui.activity;
 import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import com.edmondapps.utils.android.activity.SinglePaneActivity;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
@@ -57,7 +56,7 @@ public abstract class EntriesActivity extends SinglePaneActivity implements Entr
         super.onCreate(savedState);
 
         final ActionBar actionBar = getActionBar();
-        actionBar.setIcon(R.drawable.back_to_dashboard);
+        actionBar.setIcon(R.drawable.ic_ab);
         actionBar.setTitle(mFolder.getFolderName());
     }
 

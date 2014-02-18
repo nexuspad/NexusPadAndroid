@@ -30,7 +30,6 @@ public class AboutActivity extends SinglePaneActivity {
 
         final ActionBar actionBar = getActionBar();
         actionBar.hide();
-        actionBar.setIcon(R.drawable.back_to_dashboard);
     }
 
     @Override

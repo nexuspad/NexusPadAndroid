@@ -38,7 +38,7 @@ import java.util.List;
  * @author Edmond
  */
 @FragmentName(FoldersFragment.TAG)
-public class FoldersFragment extends ListFragment {
+public class FoldersFragment extends FadeListFragment {
     public static final String TAG = "FoldersFragment";
     public static final String KEY_PARENT_FOLDER = "com.nexuspad.ui.fragment.FoldersFragment.parent_folder";
 

@@ -33,7 +33,7 @@ import static com.edmondapps.utils.android.view.ViewUtils.findView;
  * Author: edmond
  */
 @FragmentName(UploadCenterFragment.TAG)
-public class UploadCenterFragment extends ListFragment {
+public class UploadCenterFragment extends FadeListFragment {
     public static final String TAG = "UploadCenterFragment";
 
     private final UploadService.OnNewRequestListener mOnNewRequestListener = new UploadService.OnNewRequestListener() {

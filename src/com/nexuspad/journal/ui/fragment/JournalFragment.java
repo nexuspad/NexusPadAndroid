@@ -3,17 +3,17 @@
  */
 package com.nexuspad.journal.ui.fragment;
 
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.EditText;
-import com.edmondapps.utils.android.annotaion.FragmentName;
-import com.edmondapps.utils.android.view.ViewUtils;
-import com.nexuspad.R;
-import com.nexuspad.datamodel.Folder;
-import com.nexuspad.datamodel.Journal;
-import com.nexuspad.ui.fragment.EntryFragment;
+import android.app.Activity;
+import android.os.*;
+import android.view.*;
+import android.widget.*;
+import com.edmondapps.utils.android.annotaion.*;
+import com.edmondapps.utils.android.view.*;
+import com.nexuspad.*;
+import com.nexuspad.app.App;
+import com.nexuspad.datamodel.*;
+import com.nexuspad.journal.ui.activity.NewJournalActivity;
+import com.nexuspad.ui.fragment.*;
 
 /**
  * @author Edmond
@@ -35,7 +35,30 @@ public class JournalFragment extends EntryFragment<Journal> {
     public interface Callback extends EntryFragment.Callback<Journal> {
     }
 
-    private EditText mNoteV;
+    private TextView mNoteV;
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.journal_frag, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.edit:
+                NewJournalActivity.startWith(getActivity(), getEntry(), getFolder());
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -44,7 +67,7 @@ public class JournalFragment extends EntryFragment<Journal> {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        mNoteV = ViewUtils.findView(view, R.id.txt_note);
+        mNoteV = ViewUtils.findView(view, R.id.lbl_note);
 
         super.onViewCreated(view, savedInstanceState);
     }

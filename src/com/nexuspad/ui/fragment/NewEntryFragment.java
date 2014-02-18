@@ -98,6 +98,7 @@ public abstract class NewEntryFragment<T extends NPEntry> extends EntryFragment<
         try {
             getEntryService().addEntry(entry);
         } catch (NPException e) {
+            throw new RuntimeException(e);
         }
     }
 

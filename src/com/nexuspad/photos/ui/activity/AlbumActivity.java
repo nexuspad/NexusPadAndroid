@@ -45,8 +45,6 @@ public class AlbumActivity extends SinglePaneActivity implements EntryFragment.C
         mAlbum = intent.getParcelableExtra(KEY_ALBUM);
 
         super.onCreate(savedState);
-
-        getActionBar().setIcon(R.drawable.back_to_dashboard);
     }
 
     @Override

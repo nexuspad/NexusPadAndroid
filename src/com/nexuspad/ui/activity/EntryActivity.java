@@ -34,7 +34,7 @@ public abstract class EntryActivity<T extends NPEntry> extends SinglePaneActivit
         handleIntent(getIntent());
         super.onCreate(savedState);
 
-        getActionBar().setIcon(R.drawable.back_to_dashboard);
+        getActionBar().setIcon(R.drawable.ic_ab);
     }
 
     @Override

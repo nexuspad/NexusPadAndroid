@@ -24,7 +24,7 @@ import com.nexuspad.ui.EntriesAdapter;
 import com.nexuspad.ui.OnEntryMenuClickListener;
 import com.nexuspad.ui.activity.FoldersActivity;
 import com.nexuspad.ui.fragment.EntriesFragment;
-import com.nexuspad.ui.fragment.ListFragment;
+import com.nexuspad.ui.fragment.FadeListFragment;
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
 import java.lang.ref.WeakReference;
@@ -134,7 +134,7 @@ public final class ContactsFragment extends EntriesFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        final ListFragment.ListViewManager manager = getListViewManager();
+        final FadeListFragment.ListViewManager manager = getListViewManager();
         manager.setFastScrollEnabled(false);     // not ready for the first release
 
         setQuickReturnListener(manager, null);

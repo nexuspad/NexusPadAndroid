@@ -22,7 +22,7 @@ import com.nexuspad.ui.fragment.EntryFragment;
  */
 @ParentActivity(DashboardActivity.class)
 @ModuleId(moduleId = ServiceConstants.JOURNAL_MODULE, template = EntryTemplate.JOURNAL)
-public class JournalActivity extends EntriesActivity implements JournalFragment.Callback {
+public class JournalsActivity extends EntriesActivity implements JournalFragment.Callback {
 
     @Override
     protected Fragment onCreateFragment() {
@@ -31,6 +31,11 @@ public class JournalActivity extends EntriesActivity implements JournalFragment.
 
     @Override
     public void onDeleting(EntryFragment<Journal> f, Journal entry) {
-        Toast.makeText(this, entry.toString(), Toast.LENGTH_LONG).show();
+        // do nothing, the JournalFragment will receive update for the EntryList update
+    }
+
+    @Override
+    protected JournalsFragment getFragment() {
+        return (JournalsFragment)super.getFragment();
     }
 }

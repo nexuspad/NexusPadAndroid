@@ -48,7 +48,7 @@ public class FoldersActivity extends SinglePaneActivity implements FoldersFragme
         super.onCreate(savedState);
 
         final ActionBar actionBar = getActionBar();
-        actionBar.setIcon(R.drawable.back_to_dashboard);
+        actionBar.setIcon(R.drawable.ic_ab);
         actionBar.setDisplayHomeAsUpEnabled(true);
         setTitle(mParentFolder.getFolderName());
     }

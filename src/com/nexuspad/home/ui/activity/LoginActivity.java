@@ -16,15 +16,6 @@ import com.nexuspad.home.ui.fragment.LoginFragment;
  * @author Edmond
  */
 public class LoginActivity extends SinglePaneActivity implements LoginFragment.Callback {
-    @Override
-    protected void onCreate(Bundle savedState) {
-        super.onCreate(savedState);
-
-        final ActionBar actionBar = getActionBar();
-        if (actionBar != null) {
-            actionBar.setIcon(R.drawable.back_to_dashboard);
-        }
-    }
 
     @Override
     protected Fragment onCreateFragment() {

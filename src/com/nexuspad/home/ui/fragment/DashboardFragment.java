@@ -17,7 +17,7 @@ import com.nexuspad.app.App;
 import com.nexuspad.dataservice.ServiceConstants;
 import com.nexuspad.home.ui.activity.LoginActivity;
 import com.nexuspad.ui.IconListAdapter;
-import com.nexuspad.ui.fragment.ListFragment;
+import com.nexuspad.ui.fragment.FadeListFragment;
 
 import static com.nexuspad.dataservice.ServiceConstants.*;
 
@@ -25,7 +25,7 @@ import static com.nexuspad.dataservice.ServiceConstants.*;
  * @author Edmond
  */
 @FragmentName(DashboardFragment.TAG)
-public class DashboardFragment extends ListFragment {
+public class DashboardFragment extends FadeListFragment {
     public static final String TAG = "DashboardFragment";
 
     /*

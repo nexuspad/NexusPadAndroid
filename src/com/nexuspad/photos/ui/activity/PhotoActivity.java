@@ -69,7 +69,6 @@ public class PhotoActivity extends SinglePaneActivity implements EntriesFragment
         final ActionBar actionBar = getActionBar();
         if (actionBar != null) {
             actionBar.hide();
-            actionBar.setIcon(R.drawable.back_to_dashboard);
         }
     }
 

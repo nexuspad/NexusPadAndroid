@@ -51,7 +51,7 @@ import static com.nexuspad.dataservice.EntryListService.EntryListReceiver;
  *
  * @author Edmond
  */
-public abstract class EntriesFragment extends ListFragment {
+public abstract class EntriesFragment extends FadeListFragment {
     public static final String KEY_FOLDER = "key_folder";
 
     private static final int PAGE_COUNT = 20;

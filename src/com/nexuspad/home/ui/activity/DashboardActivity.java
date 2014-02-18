@@ -14,7 +14,7 @@ import com.nexuspad.calendar.ui.activity.EventsActivity;
 import com.nexuspad.contacts.ui.activity.ContactsActivity;
 import com.nexuspad.doc.ui.activity.DocsActivity;
 import com.nexuspad.home.ui.fragment.DashboardFragment;
-import com.nexuspad.journal.ui.activity.JournalActivity;
+import com.nexuspad.journal.ui.activity.JournalsActivity;
 import com.nexuspad.photos.ui.activity.PhotosActivity;
 
 import static com.nexuspad.dataservice.ServiceConstants.*;
@@ -24,13 +24,6 @@ import static com.nexuspad.dataservice.ServiceConstants.*;
  */
 public class DashboardActivity extends SinglePaneActivity implements DashboardFragment.Callback {
     public static final String TAG = "MainPhoneActivity";
-
-    @Override
-    protected void onCreate(Bundle savedState) {
-        super.onCreate(savedState);
-
-        getActionBar().setIcon(R.drawable.back_to_dashboard);
-    }
 
     @Override
     protected int onCreateLayoutId() {
@@ -63,7 +56,7 @@ public class DashboardActivity extends SinglePaneActivity implements DashboardFr
             case CONTACT_MODULE:
                 return ContactsActivity.class;
             case JOURNAL_MODULE:
-                return JournalActivity.class;
+                return JournalsActivity.class;
             default:
                 Logs.v(TAG, "moduleType: " + moduleType);
                 return null;

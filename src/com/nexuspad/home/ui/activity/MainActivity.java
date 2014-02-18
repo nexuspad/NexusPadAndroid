@@ -16,12 +16,6 @@ import com.nexuspad.home.ui.fragment.MainFragment;
  * @author Edmond
  */
 public class MainActivity extends SinglePaneActivity implements MainFragment.Callback {
-    @Override
-    protected void onCreate(Bundle savedState) {
-        super.onCreate(savedState);
-
-        getActionBar().setIcon(R.drawable.back_to_dashboard);
-    }
 
     @Override
     protected Fragment onCreateFragment() {

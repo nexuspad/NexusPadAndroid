@@ -26,8 +26,8 @@ import static android.view.animation.AnimationUtils.loadAnimation;
  *
  * @author Edmond
  */
-public abstract class ListFragment extends Fragment {
-    public static final String TAG = "ListFragment";
+public abstract class FadeListFragment extends Fragment {
+    public static final String TAG = "FadeListFragment";
 
     private ListViewManager mListViewManager;
 
@@ -55,7 +55,7 @@ public abstract class ListFragment extends Fragment {
 
     /**
      * If animation is enabled, the view must contain
-     * {@link com.nexuspad.R.id#frame_progress} and {@link com.nexuspad.R.id#frame_list} for the animation
+     * {@link R.id#frame_progress} and {@link R.id#frame_list} for the animation
      * to function.
      * <p/>
      * It has no effect if your layout does not contain
@@ -66,21 +66,34 @@ public abstract class ListFragment extends Fragment {
      */
     public void setListAdapter(ListAdapter adapter) {
         if ((getListAdapter() == null) && isFadeInEnabled()) {
-            FragmentActivity activity = getActivity();
-            View view = getView();
-
-            View progressFrame = view.findViewById(R.id.frame_progress);
-            View listFrame = view.findViewById(R.id.frame_list);
-
-            progressFrame.startAnimation(loadAnimation(activity, android.R.anim.fade_out));
-            listFrame.startAnimation(loadAnimation(activity, android.R.anim.fade_in));
-
-            progressFrame.setVisibility(View.GONE);
-            listFrame.setVisibility(View.VISIBLE);
+            fadeInListFrame();
         }
         if (mListViewManager != null) {
             mListViewManager.setListAdapter(adapter);
         }
+    }
+
+    /**
+     * fade in the list frame if the layout (returned by {@link #getView()}) contains {@link R.id#frame_progress}
+     * and {@link R.id#frame_list}.<br/>
+     * The progress view will be fade out and the list will be fade in.
+     */
+    protected void fadeInListFrame() {
+        final FragmentActivity activity = getActivity();
+        final View view = getView();
+
+        final View progressFrame = view.findViewById(R.id.frame_progress);
+        final View listFrame = view.findViewById(R.id.frame_list);
+
+        if (progressFrame == null || listFrame == null) {
+            return;
+        }
+
+        progressFrame.startAnimation(loadAnimation(activity, android.R.anim.fade_out));
+        listFrame.startAnimation(loadAnimation(activity, android.R.anim.fade_in));
+
+        progressFrame.setVisibility(View.GONE);
+        listFrame.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -93,7 +106,7 @@ public abstract class ListFragment extends Fragment {
      * @param v        The view that was clicked within the ListView
      * @param position The position of the view in the list
      * @param id       The row id of the item that was clicked
-     * @see ListFragment#onListItemClick(ListView, View, int, long)
+     * @see FadeListFragment#onListItemClick(ListView, View, int, long)
      */
     public void onListItemClick(ListView l, View v, int position, long id) {
     }
@@ -102,8 +115,8 @@ public abstract class ListFragment extends Fragment {
      * Controls whether fade-in animation should used when the
      * {@link ListAdapter} is created.
      * <p/>
-     * The view must contain {@link com.nexuspad.R.id#frame_progress} and
-     * {@link com.nexuspad.R.id#frame_list} for the animation to function.
+     * The view must contain {@link R.id#frame_progress} and
+     * {@link R.id#frame_list} for the animation to function.
      *
      * @return false if no animation should be used
      * @see #setListAdapter(ListAdapter)

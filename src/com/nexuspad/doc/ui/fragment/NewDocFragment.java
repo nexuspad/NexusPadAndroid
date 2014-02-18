@@ -83,12 +83,12 @@ public class NewDocFragment extends NewEntryFragment<Doc> {
     protected void updateUI() {
         updateFolderView();
 
-        Doc doc = getEntry();
+        final Doc doc = getEntry();
         if (doc != null) {
             mTitleV.setText(doc.getTitle());
             mTagsV.setText(doc.getTags());
 
-            String note = doc.getNote();
+            final String note = doc.getNote();
             if (note != null) {
                 mNoteV.setText(Html.fromHtml(note));
             }
