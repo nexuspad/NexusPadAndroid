@@ -3,6 +3,7 @@
  */
 package com.nexuspad.journal.ui.fragment;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -15,13 +16,16 @@ import com.edmondapps.utils.android.view.ViewUtils;
 import com.edmondapps.utils.java.WrapperList;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
-import com.nexuspad.datamodel.*;
+import com.nexuspad.app.App;
+import com.nexuspad.datamodel.EntryList;
+import com.nexuspad.datamodel.EntryTemplate;
+import com.nexuspad.datamodel.Folder;
+import com.nexuspad.datamodel.Journal;
 import com.nexuspad.dataservice.EntryListService;
 import com.nexuspad.dataservice.NPException;
 import com.nexuspad.dataservice.ServiceConstants;
 import com.nexuspad.ui.fragment.EntriesFragment;
 import com.nexuspad.util.DateUtil;
-import com.nexuspad.util.Logs;
 
 import java.util.Date;
 import java.util.List;
@@ -43,9 +47,17 @@ public class JournalsFragment extends EntriesFragment {
     }
 
     public interface Callback extends EntriesFragment.Callback {
+        void onJournalSelected(JournalsFragment f, Journal journal);
     }
 
     private ViewPager mViewPager;
+    private Callback mCallback;
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mCallback = App.getCallback(activity, Callback.class);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -81,12 +93,28 @@ public class JournalsFragment extends EntriesFragment {
     }
 
     private void handleNewList(EntryList list) {
-        final JournalsAdapter adapter = (JournalsAdapter) mViewPager.getAdapter();
+        JournalsAdapter adapter = (JournalsAdapter) mViewPager.getAdapter();
         if (adapter != null) {
             adapter.notifyDataSetChanged();
         } else {
-            mViewPager.setAdapter(newJournalsAdapter(list));
+            adapter = newJournalsAdapter(list);
+            mViewPager.setAdapter(adapter);
+            mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+                @Override
+                public void onPageSelected(int position) {
+                    super.onPageSelected(position);
+                    final JournalsAdapter adapter = (JournalsAdapter) mViewPager.getAdapter();
+                    onJournalSelected(adapter.getJournal(position));
+                }
+            });
+            if (adapter.getCount() > 0) {
+                onJournalSelected(adapter.getJournal(0));
+            }
         }
+    }
+
+    private void onJournalSelected(Journal journal) {
+        mCallback.onJournalSelected(JournalsFragment.this, journal);
     }
 
     private JournalsAdapter newJournalsAdapter(EntryList list) {
@@ -110,7 +138,7 @@ public class JournalsFragment extends EntriesFragment {
 
         @Override
         public Fragment getItem(int pos) {
-            return JournalFragment.of(getJournal(pos), mFolder);
+            return NewJournalFragment.of(getJournal(pos), mFolder);
         }
 
         @Override

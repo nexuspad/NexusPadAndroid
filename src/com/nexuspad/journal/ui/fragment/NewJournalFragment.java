@@ -1,5 +1,6 @@
 package com.nexuspad.journal.ui.fragment;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.widget.TextView;
 import com.edmondapps.utils.android.view.ViewUtils;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
+import com.nexuspad.app.App;
 import com.nexuspad.datamodel.EntryTemplate;
 import com.nexuspad.datamodel.Folder;
 import com.nexuspad.datamodel.Journal;
@@ -38,9 +40,7 @@ public class NewJournalFragment extends NewEntryFragment<Journal> {
     public interface Callback extends NewEntryFragment.Callback<Journal> {
     }
 
-    private TextView mDateView;
     private TextView mNoteView;
-    private DateFormat mDateFormat;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -49,9 +49,7 @@ public class NewJournalFragment extends NewEntryFragment<Journal> {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        mDateView = findView(view, R.id.lbl_date);
         mNoteView = findView(view, R.id.txt_note);
-        mDateFormat = android.text.format.DateFormat.getDateFormat(getActivity());
         super.onViewCreated(view, savedInstanceState);
     }
 
@@ -61,7 +59,6 @@ public class NewJournalFragment extends NewEntryFragment<Journal> {
 
         final Journal entry = getEntry();
         if (entry != null) {
-            mDateView.setText(mDateFormat.format(entry.getCreateTime()));
             mNoteView.setText(entry.getNote());
         }
     }

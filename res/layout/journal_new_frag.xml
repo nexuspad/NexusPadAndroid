@@ -8,13 +8,6 @@
     tools:context=".journal.ui.activity.NewJournalActivity"
     >
 
-    <TextView
-        android:id="@+id/lbl_date"
-        style="@style/listTitleTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
-
     <com.nexuspad.journal.ui.view.LinedEditText
         android:id="@+id/txt_note"
         style="@style/listItemTextView"

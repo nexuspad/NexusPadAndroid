@@ -108,7 +108,6 @@
             android:label="@string/journal"
             android:icon="@drawable/ic_ab"
             />
-        <activity android:name=".journal.ui.activity.NewJournalActivity" />
         <activity
             android:name=".photos.ui.activity.PhotosActivity"
             android:label="@string/photos"
