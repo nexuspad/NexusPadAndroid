@@ -1,32 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     style="@style/scrollableFrame"
     android:paddingLeft="@dimen/ed__padding_medium"
     android:paddingRight="@dimen/ed__padding_medium"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        >
+        <!-- postponed for the first release
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/ed__padding_small"
+        android:orientation="horizontal">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+
+        <ImageView
+            android:id="@android:id/icon"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/ed__padding_small"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:id="@android:id/icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:scaleType="centerCrop"
-                android:maxWidth="@dimen/photo_grid_width"
-                android:maxHeight="@dimen/photo_grid_height"
-                android:src="@drawable/ic_launcher"
-                tools:ignore="ContentDescription" />
+            android:scaleType="centerCrop"
+            android:maxWidth="@dimen/photo_grid_width"
+            android:maxHeight="@dimen/photo_grid_height"
+            android:src="@drawable/ic_launcher"
+            tools:ignore="ContentDescription" />
 
             <EditText
                 android:id="@android:id/title"
@@ -39,12 +41,24 @@
                 android:layout_marginLeft="@dimen/ed__padding_small"
                 android:hint="@string/title" />
         </LinearLayout>
+    -->
+        <EditText
+            android:id="@android:id/title"
+            android:layout_gravity="center_vertical"
+            android:padding="@dimen/ed__padding_small"
+            android:textSize="@dimen/ed__textsize_medium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/title"
+            />
+
 
         <LinearLayout
             style="@style/formMargin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            >
 
             <EditText
                 android:id="@+id/txt_first_name"
@@ -52,7 +66,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:hint="@string/first_name"
-                android:textSize="@dimen/ed__textsize_medium" />
+                android:textSize="@dimen/ed__textsize_medium"
+                />
 
             <EditText
                 android:id="@+id/txt_middle_name"
@@ -60,7 +75,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:hint="@string/middle_name"
-                android:textSize="@dimen/ed__textsize_medium" />
+                android:textSize="@dimen/ed__textsize_medium"
+                />
         </LinearLayout>
 
         <EditText
@@ -69,7 +85,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/last_name"
-            android:textSize="@dimen/ed__textsize_medium" />
+            android:textSize="@dimen/ed__textsize_medium"
+            />
 
         <EditText
             android:id="@+id/txt_bussiness_name"
@@ -78,13 +95,15 @@
             android:layout_height="wrap_content"
             android:hint="@string/business_name"
             android:layout_marginBottom="@dimen/ed__padding_small"
-            android:textSize="@dimen/ed__textsize_medium" />
+            android:textSize="@dimen/ed__textsize_medium"
+            />
 
         <TextView
             style="?android:attr/listSeparatorTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/address" />
+            android:text="@string/address"
+            />
 
         <TextView
             android:id="@+id/txt_address"
@@ -92,33 +111,38 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/address"
-            android:drawableRight="@android:drawable/ic_menu_edit" />
+            android:drawableRight="@android:drawable/ic_menu_edit"
+            />
 
         <TextView
             android:id="@+id/txt_phones"
             style="?android:attr/listSeparatorTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/phones" />
+            android:text="@string/phones"
+            />
 
         <LinearLayout
             android:id="@+id/phones_frame"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" />
+            android:orientation="vertical"
+            />
 
         <TextView
             android:id="@+id/txt_emails"
             style="?android:attr/listSeparatorTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/email" />
+            android:text="@string/email"
+            />
 
         <LinearLayout
             android:id="@+id/emails_frame"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" />
+            android:orientation="vertical"
+            />
 
         <EditText
             android:id="@+id/txt_web_address"
@@ -126,20 +150,23 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/web_address"
-            android:linksClickable="false" />
+            android:linksClickable="false"
+            />
 
         <EditText
             android:id="@+id/txt_tags"
             style="@style/formMargin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/tags" />
+            android:hint="@string/tags"
+            />
 
         <EditText
             android:id="@+id/txt_note"
             style="@style/formMargin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/note" />
+            android:hint="@string/note"
+            />
     </LinearLayout>
 </ScrollView>
