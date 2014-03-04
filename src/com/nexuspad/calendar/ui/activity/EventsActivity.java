@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.CalendarView;
 import com.edmondapps.utils.android.annotaion.ParentActivity;
@@ -13,10 +15,12 @@ import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
 import com.nexuspad.calendar.ui.fragment.EventsAgendaFragment;
 import com.nexuspad.calendar.ui.fragment.EventsMonthFragment;
+import com.nexuspad.datamodel.EntryList;
 import com.nexuspad.datamodel.EntryTemplate;
 import com.nexuspad.datamodel.Folder;
 import com.nexuspad.home.ui.activity.DashboardActivity;
 import com.nexuspad.ui.activity.EntriesActivity;
+import com.nexuspad.ui.fragment.EntriesFragment;
 
 import java.util.List;
 
@@ -37,6 +41,8 @@ public class EventsActivity extends EntriesActivity implements EventsMonthFragme
     private EventsAgendaFragment mEventsAgendaFragment;
     private EventsMonthFragment mEventsMonthFragment;
     private long mStartTime = -1;
+    private MenuItem mNewEventItem;
+    private MenuItem mSearchItem;
 
     @Override
     protected void onCreate(Bundle savedState) {
@@ -64,6 +70,32 @@ public class EventsActivity extends EntriesActivity implements EventsMonthFragme
     @Override
     protected Fragment onCreateFragment() {
         return null;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.events_frag, menu);
+        mNewEventItem = menu.findItem(R.id.new_event);
+        mSearchItem = menu.findItem(R.id.search);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.new_event:
+                NewEventActivity.startWithFolder(this, getFolder());
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onListLoaded(EntriesFragment f, EntryList list) {
+        super.onListLoaded(f, list);
+        mNewEventItem.setVisible(true);
+        mSearchItem.setVisible(true);
     }
 
     @Override

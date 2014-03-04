@@ -41,6 +41,7 @@
     <string name="search">Search</string>
     <string name="new_photos">New Photos</string>
     <string name="new_album">New Album</string>
+    <string name="new_event">New Event</string>
     <string name="new_folder">New Folder</string>
     <string name="new_bookmark">New Bookmark</string>
     <string name="new_contact">New Contact</string>

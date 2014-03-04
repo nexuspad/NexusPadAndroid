@@ -19,6 +19,11 @@ import static com.nexuspad.dataservice.ServiceConstants.CALENDAR_MODULE;
 @ParentActivity(EventsActivity.class)
 @ModuleId(moduleId = CALENDAR_MODULE, template = EntryTemplate.EVENT)
 public class NewEventActivity extends NewEntryActivity<Event> {
+
+    public static void startWithFolder(Context context, Folder folder) {
+        context.startActivity(NewEventActivity.of(context, folder, null));
+    }
+
     public static void startWithEvent(Context context, Folder folder, Event event) {
         context.startActivity(NewEventActivity.of(context, folder, event));
     }
