@@ -27,6 +27,7 @@ import com.nexuspad.doc.ui.activity.NewDocActivity;
 import com.nexuspad.ui.FolderEntriesAdapter;
 import com.nexuspad.ui.FoldersAdapter;
 import com.nexuspad.ui.OnEntryMenuClickListener;
+import com.nexuspad.ui.UndoBarController;
 import com.nexuspad.ui.fragment.EntriesFragment;
 
 /**
@@ -140,17 +141,17 @@ public class DocsFragment extends EntriesFragment {
 
     private class OnDocMenuClickListener extends OnEntryMenuClickListener<Doc> {
         public OnDocMenuClickListener(ListView listView, EntryService entryService) {
-            super(listView, entryService);
+            super(listView, entryService, getUndoBarController());
         }
 
         @Override
-        protected boolean onEntryMenuClick(Doc entry, int menuId) {
+        protected boolean onEntryMenuClick(Doc entry, int pos, int menuId) {
             switch (menuId) {
                 case R.id.edit:
                     NewDocActivity.startWithDoc(getActivity(), getFolder(), entry);
                     return true;
                 default:
-                    return super.onEntryMenuClick(entry, menuId);
+                    return super.onEntryMenuClick(entry, pos, menuId);
             }
         }
     }

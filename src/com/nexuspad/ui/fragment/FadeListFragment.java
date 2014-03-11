@@ -3,7 +3,9 @@
  */
 package com.nexuspad.ui.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
@@ -14,7 +16,9 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import com.edmondapps.utils.android.Logs;
 import com.nexuspad.R;
+import com.nexuspad.ui.UndoBarController;
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
@@ -26,10 +30,18 @@ import static android.view.animation.AnimationUtils.loadAnimation;
  *
  * @author Edmond
  */
-public abstract class FadeListFragment extends Fragment {
+public abstract class FadeListFragment extends Fragment implements UndoBarController.UndoBarListener {
     public static final String TAG = "FadeListFragment";
 
     private ListViewManager mListViewManager;
+    private UndoBarController mUndoBarController;
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        mUndoBarController.onSaveInstanceState(outState);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -39,6 +51,9 @@ public abstract class FadeListFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        mUndoBarController = new UndoBarController(view.findViewById(R.id.undobar), this);
+        mUndoBarController.onRestoreInstanceState(savedInstanceState);
 
         // ListViewManager.of(…) overloads will determine which manager to return
         final View listView = view.findViewById(android.R.id.list);
@@ -51,6 +66,14 @@ public abstract class FadeListFragment extends Fragment {
                 }
             });
         }
+    }
+
+    protected void hideUndoBar(boolean immediate) {
+        mUndoBarController.hideUndoBar(immediate);
+    }
+
+    protected void showUndoBar(boolean immediate, CharSequence message, Intent undoToken) {
+        mUndoBarController.showUndoBar(immediate, message, undoToken);
     }
 
     /**
@@ -127,6 +150,10 @@ public abstract class FadeListFragment extends Fragment {
 
     protected ListViewManager getListViewManager() {
         return mListViewManager;
+    }
+
+    public UndoBarController getUndoBarController() {
+        return mUndoBarController;
     }
 
     /**

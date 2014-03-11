@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.*;
 import android.view.View.OnClickListener;
 import android.widget.*;
@@ -20,12 +21,16 @@ import com.nexuspad.Manifest;
 import com.nexuspad.R;
 import com.nexuspad.account.AccountManager;
 import com.nexuspad.app.App;
+import com.nexuspad.datamodel.EntryList;
 import com.nexuspad.datamodel.Folder;
+import com.nexuspad.datamodel.NPEntry;
+import com.nexuspad.dataservice.EntryService;
 import com.nexuspad.dataservice.FolderService;
 import com.nexuspad.dataservice.FolderService.FolderReceiver;
 import com.nexuspad.dataservice.NPException;
 import com.nexuspad.dataservice.ServiceError;
 import com.nexuspad.ui.FoldersAdapter;
+import com.nexuspad.ui.OnEntryMenuClickListener;
 import com.nexuspad.ui.OnFolderMenuClickListener;
 import com.nexuspad.ui.activity.NewFolderActivity;
 
@@ -41,6 +46,7 @@ import java.util.List;
 public class FoldersFragment extends FadeListFragment {
     public static final String TAG = "FoldersFragment";
     public static final String KEY_PARENT_FOLDER = "com.nexuspad.ui.fragment.FoldersFragment.parent_folder";
+    private static final String KEY_LIST_POS = "key_list_pos";
 
     /**
      * @param folder the parent folder of the folders list
@@ -53,6 +59,61 @@ public class FoldersFragment extends FadeListFragment {
         fragment.setArguments(bundle);
 
         return fragment;
+    }
+
+    @Override
+    public void onUndoButtonClicked(Intent token) {
+        if (token != null) {
+            final String action = token.getAction();
+            final Folder folder = token.getParcelableExtra(FolderService.KEY_FOLDER);
+            final int position = token.getIntExtra(KEY_LIST_POS, 0);
+
+            if (FolderService.ACTION_DELETE.equals(action)) {
+                mSubFolders.add(position, folder);
+                notifyDataSetChanged();
+            }
+        }
+    }
+
+    @Override
+    public void onUndoBarShown(Intent token) {
+        if (token != null) {
+            final String action = token.getAction();
+            final Folder folder = token.getParcelableExtra(FolderService.KEY_FOLDER);
+
+            if (FolderService.ACTION_DELETE.equals(action)) {
+                final int i = Iterables.indexOf(mSubFolders, folder.filterById());
+                if (i >= 0) {
+                    mSubFolders.remove(i);
+                    token.putExtra(KEY_LIST_POS, i);
+                    notifyDataSetChanged();
+                } else {
+                    Logs.w(TAG, "deleting folder, but no matching ID found in the list. " + folder);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onUndoBarHidden(Intent token) {
+        if (token != null) {
+            final String action = token.getAction();
+            final Folder folder = token.getParcelableExtra(FolderService.KEY_FOLDER);
+
+            final FolderService service = getFolderService();
+            try {
+                folder.setOwner(AccountManager.currentAccount());
+            } catch (NPException e) {
+                Logs.e(TAG, e);
+                Context context = getListView().getContext();
+                String msg = context.getString(R.string.formatted_err_delete_failed, folder.getDisplayName());
+                Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
+            }
+
+            if (FolderService.ACTION_DELETE.equals(action)) {
+                service.deleteFolder(folder);
+            }
+        }
     }
 
     public interface Callback {
@@ -77,11 +138,6 @@ public class FoldersFragment extends FadeListFragment {
 
         @Override
         protected void onDelete(Context c, Intent i, Folder folder) {
-            if (Iterables.removeIf(mSubFolders, folder.filterById())) {
-                notifyDataSetChanged();
-            } else {
-                Logs.w(TAG, "folder deleted from the server, but no matching ID found in the list. " + folder);
-            }
         }
 
         @Override
@@ -111,10 +167,6 @@ public class FoldersFragment extends FadeListFragment {
         protected void onError(Context context, Intent intent, ServiceError error) {
             super.onError(context, intent, error);
             Logs.e(TAG, error.toString());
-        }
-
-        private void notifyDataSetChanged() {
-            getListAdapter().notifyDataSetChanged();
         }
     };
 
@@ -218,7 +270,7 @@ public class FoldersFragment extends FadeListFragment {
     protected FoldersAdapter onCreateFoldersAdapter(List<Folder> folders) {
         final FoldersAdapter adapter = new NamedFoldersAdapter(getActivity(), folders, mParentFolder);
         ListView listView = getListView();
-        adapter.setOnMenuClickListener(new OnFolderMenuClickListener(listView, mParentFolder, mFolderService) {
+        adapter.setOnMenuClickListener(new OnFolderMenuClickListener(listView, mParentFolder, mFolderService, getUndoBarController()) {
             @Override
             public void onClick(View v) {
                 final int pos = getListView().getPositionForView(v);
@@ -251,6 +303,10 @@ public class FoldersFragment extends FadeListFragment {
             final int realPos = getListAdapter().getPositionForAdapter(position);
             mCallback.onFolderClicked(this, getFoldersAdapter().getItem(realPos));
         }
+    }
+
+    private void notifyDataSetChanged() {
+        getListAdapter().notifyDataSetChanged();
     }
 
     /**

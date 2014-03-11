@@ -152,8 +152,6 @@ public final class ContactsFragment extends EntriesFragment {
             mSortTask.cancel(true);
         }
         mSortTask.execute((Void[]) null);
-
-
     }
 
     @Override
@@ -190,7 +188,7 @@ public final class ContactsFragment extends EntriesFragment {
     private ContactsAdapter newContactsAdapter(List<Contact> contacts) {
         final ContactsAdapter a = new ContactsAdapter(getActivity(), contacts);
         final ListView listView = getListView();
-        a.setOnMenuClickListener(new OnEntryMenuClickListener<Contact>(listView, getEntryService()) {
+        a.setOnMenuClickListener(new OnEntryMenuClickListener<Contact>(listView, getEntryService(), getUndoBarController()) {
             @Override
             public void onClick(View v) {
                 final int i = listView.getPositionForView(v);
@@ -199,13 +197,13 @@ public final class ContactsFragment extends EntriesFragment {
             }
 
             @Override
-            protected boolean onEntryMenuClick(Contact contact, int menuId) {
+            protected boolean onEntryMenuClick(Contact contact, int pos, int menuId) {
                 switch (menuId) {
                     case R.id.edit:
                         NewContactActivity.startWithContact(getActivity(), getFolder(), contact);
                         return true;
                     default:
-                        return super.onEntryMenuClick(contact, menuId);
+                        return super.onEntryMenuClick(contact, pos, menuId);
                 }
             }
         });

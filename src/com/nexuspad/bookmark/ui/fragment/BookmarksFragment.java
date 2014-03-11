@@ -145,17 +145,17 @@ public class BookmarksFragment extends EntriesFragment {
 
     private class BookmarkMenuClickListener extends OnEntryMenuClickListener<Bookmark> {
         public BookmarkMenuClickListener(ListView listView, EntryService entryService) {
-            super(listView, entryService);
+            super(listView, entryService, getUndoBarController());
         }
 
         @Override
-        protected boolean onEntryMenuClick(Bookmark entry, int menuId) {
+        protected boolean onEntryMenuClick(Bookmark entry, int pos, int menuId) {
             switch (menuId) {
                 case R.id.edit:
                     mCallback.onEditBookmark(BookmarksFragment.this, entry);
                     return true;
                 default:
-                    return super.onEntryMenuClick(entry, menuId);
+                    return super.onEntryMenuClick(entry, pos, menuId);
             }
         }
     }

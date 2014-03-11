@@ -143,6 +143,21 @@ public class UploadCenterFragment extends FadeListFragment {
         }
     }
 
+    @Override
+    public void onUndoBarShown(Intent token) {
+        // do nothing
+    }
+
+    @Override
+    public void onUndoBarHidden(Intent token) {
+        // do nothing
+    }
+
+    @Override
+    public void onUndoButtonClicked(Intent token) {
+        // do nothing
+    }
+
     private static class ViewHolder {
         private ImageView icon;
         private TextView title;

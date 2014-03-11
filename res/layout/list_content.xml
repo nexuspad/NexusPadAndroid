@@ -33,4 +33,6 @@
             android:scrollbarStyle="outsideOverlay" />
     </FrameLayout>
 
+    <include layout="@layout/include_undo_bar" />
+
 </FrameLayout>

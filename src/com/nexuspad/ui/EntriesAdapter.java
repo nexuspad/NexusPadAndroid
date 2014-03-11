@@ -29,8 +29,9 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter impl
     private final LayoutInflater mInflater;
     private final int mEntryHeaderId;
 
-    private List<? extends T> mDisplayEntries; // may be filtered entries displayed ons screen
+    private List<? extends T> mDisplayEntries;  // may be filtered entries displayed ons screen
     private OnClickListener mOnMenuClickListener;
+    private boolean mResetConvertView;
 
     public EntriesAdapter(Activity a, List<? extends T> entries) {
         mRawEntries = entries;
@@ -51,6 +52,7 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter impl
      */
     protected void setDisplayEntries(List<? extends T> displayEntries) {
         mDisplayEntries = displayEntries;
+        mResetConvertView = true;
         notifyDataSetChanged();
     }
 
@@ -59,6 +61,7 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter impl
      */
     public void showRawEntries() {
         mDisplayEntries = mRawEntries;
+        mResetConvertView = true;
         notifyDataSetChanged();
     }
 
@@ -132,13 +135,7 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter impl
 
     @Override
     public int getViewTypeCount() {
-        if (mDisplayEntries.isEmpty()) {
-            return 1; // empty view
-        }
-        if (isHeaderEnabled()) {
-            return 2; // header and the entries
-        }
-        return 1; // entries
+       return 3; // header, entries, and empty view
     }
 
     @Override
@@ -171,6 +168,10 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter impl
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        if (mResetConvertView) {
+            convertView = null;
+            mResetConvertView = false;
+        }
         switch (getItemViewType(position)) {
             case TYPE_HEADER:
                 return getHeaderView(position, convertView, parent);

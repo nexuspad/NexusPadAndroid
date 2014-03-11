@@ -2,5 +2,6 @@
 <resources>
 
     <integer name="notes_min_lines">8</integer>
+    <integer name="undobar_hide_delay">5000</integer>
 
 </resources>

@@ -14,7 +14,6 @@ import android.widget.*;
 import com.edmondapps.utils.android.Logs;
 import com.edmondapps.utils.android.ui.CompoundAdapter;
 import com.edmondapps.utils.android.ui.SingleAdapter;
-import com.edmondapps.utils.android.view.ViewUtils;
 import com.edmondapps.utils.java.Lazy;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
@@ -31,16 +30,15 @@ import com.nexuspad.dataservice.*;
 import com.nexuspad.dataservice.EntryService.EntryReceiver;
 import com.nexuspad.dataservice.FolderService.FolderReceiver;
 import com.nexuspad.home.ui.activity.LoginActivity;
-import com.nexuspad.ui.DirectionalScrollListener;
-import com.nexuspad.ui.FoldersAdapter;
-import com.nexuspad.ui.OnFolderMenuClickListener;
-import com.nexuspad.ui.OnListEndListener;
+import com.nexuspad.ui.*;
 import com.nexuspad.ui.activity.FoldersActivity;
 import com.nexuspad.ui.activity.NewFolderActivity;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import static com.edmondapps.utils.android.view.ViewUtils.findView;
 import static com.nexuspad.dataservice.EntryListService.EntryListReceiver;
 
 /**
@@ -56,6 +54,7 @@ public abstract class EntriesFragment extends FadeListFragment {
 
     private static final int PAGE_COUNT = 20;
     private static final String TAG = "EntriesFragment";
+    private static final String KEY_LIST_POS = "key_list_pos";
 
     public interface Callback {
         void onListLoaded(EntriesFragment f, EntryList list);
@@ -117,13 +116,6 @@ public abstract class EntriesFragment extends FadeListFragment {
 
         @Override
         protected void onDelete(Context c, Intent i, Folder folder) {
-            if (mFolder.getFolderId() == folder.getParentId()) {
-                if (Iterables.removeIf(getSubFolders(), folder.filterById())) {
-                    onEntryListUpdated();
-                } else {
-                    Logs.w(TAG, "folder deleted from the server, but no matching ID found in the list. " + folder);
-                }
-            }
         }
 
         @Override
@@ -216,14 +208,6 @@ public abstract class EntriesFragment extends FadeListFragment {
     }
 
     protected void onDeleteEntry(NPEntry entry) {
-        EntryList entryList = getEntryList();
-        if (entryList != null) {
-            if (Iterables.removeIf(entryList.getEntries(), entry.filterById())) {
-                onEntryListUpdated();
-            } else {
-                Logs.w(TAG, "entry deleted on the server, but no matching ID exists in the list. " + entry.getEntryId());
-            }
-        }
     }
 
     protected void onNewEntry(NPEntry entry) {
@@ -332,8 +316,8 @@ public abstract class EntriesFragment extends FadeListFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mQuickReturnV = ViewUtils.findView(view, R.id.quick_return);
-        mFolderSelectorV = ViewUtils.findView(view, R.id.lbl_folder);
+        mQuickReturnV = findView(view, R.id.quick_return);
+        mFolderSelectorV = findView(view, R.id.lbl_folder);
 
         ListView listView = getListView();
         if (listView != null) {
@@ -351,6 +335,87 @@ public abstract class EntriesFragment extends FadeListFragment {
 
         if (isLoadListEnabled()) {
             queryEntriesAync();
+        }
+    }
+
+    @Override
+    public void onUndoButtonClicked(Intent token) {
+        if (token != null) {
+            final String action = token.getAction();
+            final NPEntry entry = token.getParcelableExtra(EntryService.KEY_ENTRY);
+            final Folder folder = token.getParcelableExtra(FolderService.KEY_FOLDER);
+            final int position = token.getIntExtra(KEY_LIST_POS, 0);
+
+            if (EntryService.ACTION_DELETE.equals(action)) {
+                final List<NPEntry> entries = getEntryList().getEntries();
+                entries.add(position, entry);
+                onEntryListUpdated();
+
+            } else if (FolderService.ACTION_DELETE.equals(action)) {
+                final List<Folder> subFolders = getSubFolders();
+                subFolders.add(position, folder);
+                onEntryListUpdated();
+            }
+        }
+    }
+
+    @Override
+    public void onUndoBarShown(Intent token) {
+        if (token != null) {
+            final String action = token.getAction();
+            final NPEntry entry = token.getParcelableExtra(EntryService.KEY_ENTRY);
+            final Folder folder = token.getParcelableExtra(FolderService.KEY_FOLDER);
+
+            if (EntryService.ACTION_DELETE.equals(action)) {
+                final EntryList entryList = getEntryList();
+                if (entryList != null) {
+                    final List<NPEntry> entries = entryList.getEntries();
+                    final int i = Iterables.indexOf(entries, entry.filterById());
+                    if (i >= 0) {
+                        entries.remove(i);
+                        token.putExtra(KEY_LIST_POS, i);
+                        onEntryListUpdated();
+                    } else {
+                        Logs.w(TAG, "deleting entry, but no matching ID exists in the list. " + entry.getEntryId());
+                    }
+                }
+            } else if (FolderService.ACTION_DELETE.equals(action)) {
+                if (mFolder.getFolderId() == folder.getParentId()) {
+                    final List<Folder> subFolders = getSubFolders();
+                    final int i = Iterables.indexOf(subFolders, folder.filterById());
+                    if (i >= 0) {
+                        subFolders.remove(i);
+                        token.putExtra(KEY_LIST_POS, i);
+                        onEntryListUpdated();
+                    } else {
+                        Logs.w(TAG, "deleting folder, but no matching ID found in the list. " + folder);
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onUndoBarHidden(Intent token) {
+        if (token != null) {
+            final String action = token.getAction();
+            final NPEntry entry = token.getParcelableExtra(EntryService.KEY_ENTRY);
+            final Folder folder = token.getParcelableExtra(FolderService.KEY_FOLDER);
+            final FolderService service = getFolderService();
+
+            if (EntryService.ACTION_DELETE.equals(action)) {
+                getEntryService().safeDeleteEntry(getActivity(), entry);
+            } else if (FolderService.ACTION_DELETE.equals(action)) {
+                try {
+                    folder.setOwner(AccountManager.currentAccount());
+                    service.deleteFolder(folder);
+                } catch (NPException e) {
+                    Logs.e(TAG, e);
+                    final Context context = getListView().getContext();
+                    final String msg = context.getString(R.string.formatted_err_delete_failed, folder.getDisplayName());
+                    Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
+                }
+            }
         }
     }
 
@@ -462,7 +527,7 @@ public abstract class EntriesFragment extends FadeListFragment {
 
     protected FoldersAdapter newFoldersAdapter() {
         FoldersAdapter foldersAdapter = new FoldersAdapter(getActivity(), getSubFolders());
-        OnFolderMenuClickListener listener = new OnFolderMenuClickListener(getListView(), mFolder, getFolderService());
+        OnFolderMenuClickListener listener = new OnFolderMenuClickListener(getListView(), mFolder, getFolderService(), getUndoBarController());
         foldersAdapter.setOnMenuClickListener(listener);
         return foldersAdapter;
     }

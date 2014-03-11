@@ -3,13 +3,21 @@
 
     <string name="ok">OK</string>
     <string name="app_name">NexusPad</string>
+    <string name="entry">Entry</string>
     <string name="contacts">Contacts</string>
+    <string name="contact">Contact</string>
     <string name="events">Events</string>
+    <string name="event">Event</string>
     <string name="journal">Journal</string>
     <string name="docs">Docs</string>
+    <string name="doc">Doc</string>
     <string name="photos">Photos</string>
+    <string name="photo">Photo</string>
+    <string name="task">Task</string>
+    <string name="file">File</string>
     <string name="photos_upload">Photos Upload</string>
     <string name="albums">Albums</string>
+    <string name="album">Album</string>
     <string name="bookmark">Bookmark</string>
     <string name="bookmarks">Bookmarks</string>
     <string name="logout">Logout</string>
@@ -25,7 +33,7 @@
     <string name="sign_up">Sign Up</string>
     <string name="lbl_sign_up">First time here? Click here to sign up.</string>
     <string name="lbl_login">Have an account? Click here to login.</string>
-    <string name="err_empty_field">This field must not be be empty.</string>
+    <string name="err_empty_field">This field must not be empty.</string>
     <string name="err_login_failed">Login failed. Please try again later.</string>
     <string name="err_invalid_bookmark">Please check the web address of the bookmark.</string>
     <string name="err_no_email_app">No email app installed.</string>
@@ -61,7 +69,6 @@
     <string name="web_address">Web Address</string>
     <string name="address">Address</string>
     <string name="note">Note</string>
-    <string name="doc">Doc</string>
     <string name="tags">Tags</string>
     <string name="root">ROOT</string>
     <string name="account_email">Email</string>
@@ -101,6 +108,12 @@
     <string name="event">Event</string>
     <string name="month">Month</string>
     <string name="agenda">Agenda</string>
+    <string name="undo">Undo</string>
+
+    <!-- example: Deleted Bookmark: "Google" -->
+    <string name="format_deleted_entry">Deleted %1$s: \"%2$s\"</string>
+    <!-- example: Deleted Folder: "Just for fun" -->
+    <string name="format_deleted_folder">Deleted Folder: \"%1$s\"</string>
 
     <plurals name="numberOfPhotos">
         <item quantity="one">1 photo</item>

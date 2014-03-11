@@ -44,6 +44,21 @@ public class DashboardFragment extends FadeListFragment {
             R.string.docs, R.string.photos, R.string.bookmarks
     };
 
+    @Override
+    public void onUndoBarShown(Intent token) {
+        // do nothing
+    }
+
+    @Override
+    public void onUndoBarHidden(Intent token) {
+        // do nothing
+    }
+
+    @Override
+    public void onUndoButtonClicked(Intent token) {
+        // do nothing
+    }
+
     public interface Callback {
         /**
          * Called when an module is clicked.
