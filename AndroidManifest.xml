@@ -42,10 +42,12 @@
             android:exported="false"
             />
 
+        <!-- android:icon is for the launcher; android:logo is for the actionBar -->
         <activity
             android:name=".home.ui.activity.MainActivity"
             android:label="@string/app_name"
-            android:icon="@drawable/ic_ab"
+            android:icon="@drawable/ic_launcher"
+            android:logo="@drawable/ic_ab"
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

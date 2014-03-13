@@ -5,7 +5,6 @@ package com.nexuspad.ui.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
@@ -16,7 +15,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import com.edmondapps.utils.android.Logs;
 import com.nexuspad.R;
 import com.nexuspad.ui.UndoBarController;
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
@@ -40,7 +38,9 @@ public abstract class FadeListFragment extends Fragment implements UndoBarContro
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        mUndoBarController.onSaveInstanceState(outState);
+        if (mUndoBarController != null) {
+            mUndoBarController.onSaveInstanceState(outState);
+        }
     }
 
     @Override
@@ -52,8 +52,11 @@ public abstract class FadeListFragment extends Fragment implements UndoBarContro
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mUndoBarController = new UndoBarController(view.findViewById(R.id.undobar), this);
-        mUndoBarController.onRestoreInstanceState(savedInstanceState);
+        final View undoBarV = view.findViewById(R.id.undobar);
+        if (undoBarV != null) {
+            mUndoBarController = new UndoBarController(undoBarV, this);
+            mUndoBarController.onRestoreInstanceState(savedInstanceState);
+        }
 
         // ListViewManager.of(…) overloads will determine which manager to return
         final View listView = view.findViewById(android.R.id.list);
@@ -69,11 +72,11 @@ public abstract class FadeListFragment extends Fragment implements UndoBarContro
     }
 
     protected void hideUndoBar(boolean immediate) {
-        mUndoBarController.hideUndoBar(immediate);
+        getUndoBarController().hideUndoBar(immediate);
     }
 
     protected void showUndoBar(boolean immediate, CharSequence message, Intent undoToken) {
-        mUndoBarController.showUndoBar(immediate, message, undoToken);
+        getUndoBarController().showUndoBar(immediate, message, undoToken);
     }
 
     /**
@@ -152,7 +155,10 @@ public abstract class FadeListFragment extends Fragment implements UndoBarContro
         return mListViewManager;
     }
 
-    public UndoBarController getUndoBarController() {
+    protected UndoBarController getUndoBarController() {
+        if (mUndoBarController == null) {
+            throw new IllegalStateException("the layout does not contain R.id.undobar");
+        }
         return mUndoBarController;
     }
 
