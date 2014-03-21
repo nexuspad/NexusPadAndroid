@@ -489,11 +489,23 @@ public abstract class EntriesFragment extends FadeListFragment {
 
     private void handleServiceError(ServiceError error) {
         final ErrorCode errorCode = error.getErrorCode();
-        if (errorCode.shouldKickToLogin()) {
+        if (shouldKickToLogin(errorCode)) {
             kickToLoginScreen();
         } else {
             fadeInRetryFrame();
         }
+    }
+
+    private boolean shouldKickToLogin(ErrorCode errorCode) {
+        return errorCode == ErrorCode.INVALID_USER_TOKEN
+                || errorCode == ErrorCode.INVALID_LOGIN
+                || errorCode == ErrorCode.NOT_LOGGED_IN
+                || errorCode == ErrorCode.FAILED_REGISTRATION
+                || errorCode == ErrorCode.FAILED_REGISTRATION_ACCT_EXISTS
+                || errorCode == ErrorCode.FAILED_DELETE_ACCOUNT
+                || errorCode == ErrorCode.LOGIN_NO_USER
+                || errorCode == ErrorCode.LOGIN_ACCT_PROBLEM
+                || errorCode == ErrorCode.LOGIN_FAILED;
     }
 
     private void kickToLoginScreen() {
