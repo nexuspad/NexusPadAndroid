@@ -3,13 +3,14 @@
  */
 package com.nexuspad.ui.fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -33,6 +34,7 @@ public abstract class FadeListFragment extends Fragment implements UndoBarContro
 
     private ListViewManager mListViewManager;
     private UndoBarController mUndoBarController;
+    private LoadingUiManager mLoadingUiManager;
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -69,6 +71,23 @@ public abstract class FadeListFragment extends Fragment implements UndoBarContro
                 }
             });
         }
+
+        final View listFrame = view.findViewById(R.id.frame_list);
+        final View progressFrame = view.findViewById(R.id.frame_progress);
+        final View retryFrame = view.findViewById(R.id.frame_retry);
+
+        if (listFrame != null && progressFrame != null && retryFrame != null) {
+            mLoadingUiManager = new LoadingUiManager(listFrame, retryFrame, progressFrame, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mLoadingUiManager.fadeInProgressFrame();
+                    onRetryClicked(v);
+                }
+            });
+        }
+    }
+
+    protected void onRetryClicked(View button) {
     }
 
     protected void hideUndoBar(boolean immediate) {
@@ -99,27 +118,16 @@ public abstract class FadeListFragment extends Fragment implements UndoBarContro
         }
     }
 
-    /**
-     * fade in the list frame if the layout (returned by {@link #getView()}) contains {@link R.id#frame_progress}
-     * and {@link R.id#frame_list}.<br/>
-     * The progress view will be fade out and the list will be fade in.
-     */
     protected void fadeInListFrame() {
-        final FragmentActivity activity = getActivity();
-        final View view = getView();
+        mLoadingUiManager.fadeInListFrame();
+    }
 
-        final View progressFrame = view.findViewById(R.id.frame_progress);
-        final View listFrame = view.findViewById(R.id.frame_list);
+    protected void fadeInProgressFrame() {
+        mLoadingUiManager.fadeInProgressFrame();
+    }
 
-        if (progressFrame == null || listFrame == null) {
-            return;
-        }
-
-        progressFrame.startAnimation(loadAnimation(activity, android.R.anim.fade_out));
-        listFrame.startAnimation(loadAnimation(activity, android.R.anim.fade_in));
-
-        progressFrame.setVisibility(View.GONE);
-        listFrame.setVisibility(View.VISIBLE);
+    protected void fadeInRetryFrame() {
+        mLoadingUiManager.fadeInRetryFrame();
     }
 
     /**
@@ -178,6 +186,82 @@ public abstract class FadeListFragment extends Fragment implements UndoBarContro
             return mListViewManager.getListAdapter();
         }
         return null;
+    }
+
+    protected static final class LoadingUiManager {
+        private final View mListV;
+        private final View mRetryV;
+        private final View mProgressV;
+        private final Animation mFadeOutA;
+        private final Animation mFadeInA;
+
+        protected LoadingUiManager(View listV, View retryV, View progressV, View.OnClickListener onRetryListener) {
+            mListV = listV;
+            mRetryV = retryV;
+            mProgressV = progressV;
+
+            mProgressV.setVisibility(View.VISIBLE);
+            mRetryV.setVisibility(View.GONE);
+            mListV.setVisibility(View.GONE);
+
+            final Context context = listV.getContext();
+            mFadeOutA = loadAnimation(context, android.R.anim.fade_out);
+            mFadeInA = loadAnimation(context, android.R.anim.fade_in);
+
+            mRetryV.findViewById(R.id.btn_retry).setOnClickListener(onRetryListener);
+        }
+
+        protected void fadeInListFrame() {
+            boolean isRetryVisible = mRetryV.getVisibility() == View.VISIBLE;
+            boolean isProgressVisible = mProgressV.getVisibility() == View.VISIBLE;
+
+            if (isRetryVisible) {
+                fadeOut(mRetryV);
+            }
+            if (isProgressVisible) {
+                fadeOut(mProgressV);
+            }
+
+            fadeIn(mListV);
+        }
+
+        protected void fadeInRetryFrame() {
+            boolean isListVisible = mListV.getVisibility() == View.VISIBLE;
+            boolean isProgressVisible = mProgressV.getVisibility() == View.VISIBLE;
+
+            if (isListVisible) {
+                fadeOut(mListV);
+            }
+            if (isProgressVisible) {
+                fadeOut(mProgressV);
+            }
+
+            fadeIn(mRetryV);
+        }
+
+        protected void fadeInProgressFrame() {
+            boolean isListVisible = mListV.getVisibility() == View.VISIBLE;
+            boolean isRetryVisible = mRetryV.getVisibility() == View.VISIBLE;
+
+            if (isListVisible) {
+                fadeOut(mListV);
+            }
+            if (isRetryVisible) {
+                fadeOut(mRetryV);
+            }
+
+            fadeIn(mProgressV);
+        }
+
+        private void fadeOut(View view) {
+            view.startAnimation(mFadeOutA);
+            view.setVisibility(View.GONE);
+        }
+
+        private void fadeIn(View view) {
+            view.setVisibility(View.VISIBLE);
+            view.startAnimation(mFadeInA);
+        }
     }
 
     /**

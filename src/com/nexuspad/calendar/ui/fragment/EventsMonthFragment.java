@@ -67,9 +67,4 @@ public class EventsMonthFragment extends EntriesFragment {
     protected void getEntriesInFolder(EntryListService service, Folder folder, int page) throws NPException {
         service.getEntriesBetweenDates(folder, getTemplate(), DateUtil.now(), DateUtil.addDaysTo(DateUtil.now(), 30), page, getEntriesCountPerPage());
     }
-
-    @Override
-    protected void onListLoaded(EntryList list) {
-        super.onListLoaded(list);
-    }
 }

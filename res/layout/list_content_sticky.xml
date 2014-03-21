@@ -1,25 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    >
 
-    <FrameLayout
-        android:id="@+id/frame_progress"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    <include layout="@layout/include_frame_progress" />
 
-        <ProgressBar
-            style="?android:attr/progressBarStyleLarge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center" />
-    </FrameLayout>
+    <include layout="@layout/include_frame_retry" />
 
     <FrameLayout
         android:id="@+id/frame_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone">
+        android:visibility="gone"
+        >
 
         <view
             class="se.emilsjolander.stickylistheaders.StickyListHeadersListView"
@@ -30,7 +24,8 @@
             android:paddingBottom="@dimen/ed__padding_small"
             android:paddingLeft="@dimen/ed__padding_small"
             android:paddingRight="@dimen/ed__padding_small"
-            android:scrollbarStyle="outsideOverlay" />
+            android:scrollbarStyle="outsideOverlay"
+            />
     </FrameLayout>
 
     <include layout="@layout/include_undo_bar" />

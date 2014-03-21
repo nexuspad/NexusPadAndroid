@@ -137,6 +137,8 @@ public class PhotosFragment extends EntriesFragment implements OnItemClickListen
 
         final BaseAdapter adapter = (BaseAdapter) mGridView.getAdapter();
         stableNotifyAdapter(adapter);
+
+        fadeInListFrame();
     }
 
     @Override

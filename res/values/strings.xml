@@ -114,6 +114,8 @@
     <string name="format_deleted_entry">Deleted %1$s: \"%2$s\"</string>
     <!-- example: Deleted Folder: "Just for fun" -->
     <string name="format_deleted_folder">Deleted Folder: \"%1$s\"</string>
+    <string name="no_connection">No connection</string>
+    <string name="retry">Retry</string>
 
     <plurals name="numberOfPhotos">
         <item quantity="one">1 photo</item>

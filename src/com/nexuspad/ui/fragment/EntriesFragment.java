@@ -30,11 +30,13 @@ import com.nexuspad.dataservice.*;
 import com.nexuspad.dataservice.EntryService.EntryReceiver;
 import com.nexuspad.dataservice.FolderService.FolderReceiver;
 import com.nexuspad.home.ui.activity.LoginActivity;
-import com.nexuspad.ui.*;
+import com.nexuspad.ui.DirectionalScrollListener;
+import com.nexuspad.ui.FoldersAdapter;
+import com.nexuspad.ui.OnFolderMenuClickListener;
+import com.nexuspad.ui.OnListEndListener;
 import com.nexuspad.ui.activity.FoldersActivity;
 import com.nexuspad.ui.activity.NewFolderActivity;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -91,7 +93,8 @@ public abstract class EntriesFragment extends FadeListFragment {
 
         @Override
         protected void onError(Context context, Intent intent, ServiceError error) {
-            Toast.makeText(getActivity(), R.string.err_internal, Toast.LENGTH_LONG).show();
+            Logs.e(TAG, error.toString());
+            handleServiceError(error);
         }
     };
 
@@ -137,6 +140,7 @@ public abstract class EntriesFragment extends FadeListFragment {
         protected void onError(Context context, Intent intent, ServiceError error) {
             super.onError(context, intent, error);
             Logs.e(TAG, error.toString());
+            handleServiceError(error);
         }
     };
 
@@ -154,6 +158,13 @@ public abstract class EntriesFragment extends FadeListFragment {
         @Override
         public void onUpdate(Context context, Intent intent, NPEntry entry) {
             onUpdateEntry(entry);
+        }
+
+        @Override
+        protected void onError(Context context, Intent intent, ServiceError error) {
+            super.onError(context, intent, error);
+            Logs.e(TAG, error.toString());
+            handleServiceError(error);
         }
     };
 
@@ -339,6 +350,14 @@ public abstract class EntriesFragment extends FadeListFragment {
     }
 
     @Override
+    protected void onRetryClicked(View button) {
+        super.onRetryClicked(button);
+        if (isRetryEnabled()) {
+            queryEntriesAync();
+        }
+    }
+
+    @Override
     public void onUndoButtonClicked(Intent token) {
         if (token != null) {
             final String action = token.getAction();
@@ -411,9 +430,6 @@ public abstract class EntriesFragment extends FadeListFragment {
                     service.deleteFolder(folder);
                 } catch (NPException e) {
                     Logs.e(TAG, e);
-                    final Context context = getListView().getContext();
-                    final String msg = context.getString(R.string.formatted_err_delete_failed, folder.getDisplayName());
-                    Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
                 }
             }
         }
@@ -424,6 +440,14 @@ public abstract class EntriesFragment extends FadeListFragment {
      * automatically after view is created; false to disable it
      */
     protected boolean isLoadListEnabled() {
+        return true;
+    }
+
+    /**
+     * @return true if this Fragment should call {@link #queryEntriesAync()}
+     * automatically after the retry button is clicked; false to disable it
+     */
+    protected boolean isRetryEnabled() {
         return true;
     }
 
@@ -459,13 +483,23 @@ public abstract class EntriesFragment extends FadeListFragment {
 
         } catch (NPException e) {
             Logs.e(TAG, e);
-            if (e.getServiceError().getErrorCode() == ErrorCode.INVALID_USER_TOKEN) {
-                startActivity(new Intent(activity, LoginActivity.class));
-                activity.finish();
-            } else {
-                Toast.makeText(activity, R.string.err_internal, Toast.LENGTH_SHORT).show();
-            }
+            handleServiceError(e.getServiceError());
         }
+    }
+
+    private void handleServiceError(ServiceError error) {
+        final ErrorCode errorCode = error.getErrorCode();
+        if (errorCode.shouldKickToLogin()) {
+            kickToLoginScreen();
+        } else {
+            fadeInRetryFrame();
+        }
+    }
+
+    private void kickToLoginScreen() {
+        final FragmentActivity activity = getActivity();
+        startActivity(new Intent(activity, LoginActivity.class));
+        activity.finish();
     }
 
     /**
@@ -555,7 +589,7 @@ public abstract class EntriesFragment extends FadeListFragment {
      * @param other    the other scroll listener; optional
      */
     protected void setQuickReturnListener(GridView gridView, AbsListView.OnScrollListener other) {
-        gridView.setOnScrollListener(other);
+        gridView.setOnScrollListener(newDirectionalScrollListener(other));
     }
 
     private DirectionalScrollListener newDirectionalScrollListener(final AbsListView.OnScrollListener other) {
