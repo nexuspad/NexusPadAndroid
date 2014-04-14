@@ -18,12 +18,14 @@ import com.edmondapps.utils.android.view.ViewUtils;
 import com.ipaulpro.afilechooser.utils.FileUtils;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
+import com.nexuspad.app.App;
 import com.nexuspad.datamodel.Doc;
 import com.nexuspad.datamodel.EntryTemplate;
 import com.nexuspad.datamodel.Folder;
 import com.nexuspad.datamodel.NPUpload;
 import com.nexuspad.dataservice.ServiceConstants;
 import com.nexuspad.ui.activity.UploadCenterActivity;
+import com.nexuspad.ui.fragment.EntryFragment;
 import com.nexuspad.ui.fragment.NewEntryFragment;
 
 import java.io.File;
@@ -42,6 +44,10 @@ public class NewDocFragment extends NewEntryFragment<Doc> {
     public static final String TAG = "NewDocFragment";
 
     protected static final int REQ_PICK_FILE = 2;
+
+    public static interface Callback extends NewEntryFragment.Callback<Doc> {
+        void onUpdateEntry(Doc entry);
+    }
 
     public static NewDocFragment of(Folder folder) {
         return of(null, folder);
@@ -63,6 +69,14 @@ public class NewDocFragment extends NewEntryFragment<Doc> {
     private EditText mTagsV;
     private RichEditText mNoteV;
     private LinearLayout mAttachmentsFrameV;
+
+    private Callback mCallback;
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mCallback = App.getCallbackOrThrow(activity, Callback.class);
+    }
 
     @Override
     protected boolean shouldGetDetailEntry() {
@@ -219,15 +233,6 @@ public class NewDocFragment extends NewEntryFragment<Doc> {
     @Override
     protected void onUpdateEntry(Doc entry) {
         super.onUpdateEntry(entry);
-
-        final List<NPUpload> attachments = entry.getAttachments();
-        final ArrayList<Uri> uris = new ArrayList<Uri>(attachments.size());  // for parcelling
-        for (NPUpload attachment : attachments) {
-            if (attachment.isJustCreated()) {
-                uris.add(Uri.parse(attachment.getDownloadLink()));
-            }
-        }
-
-        UploadCenterActivity.startWith(uris, entry, getActivity());
+        mCallback.onUpdateEntry(entry);
     }
 }
