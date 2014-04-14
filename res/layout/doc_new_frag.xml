@@ -2,19 +2,22 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/scrollableFrame"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    >
 
     <LinearLayout
         android:id="@+id/content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        >
 
         <TextView
             style="?android:attr/listSeparatorTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/folder" />
+            android:text="@string/folder"
+            />
 
         <include layout="@layout/include_folder_selector" />
 
@@ -23,7 +26,8 @@
             style="@style/formMargin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/title" />
+            android:hint="@string/title"
+            />
 
         <com.commonsware.cwac.richedit.RichEditText
             android:id="@+id/txt_note"
@@ -34,14 +38,33 @@
             android:imeOptions="flagNoExtractUi"
             android:inputType="textMultiLine"
             android:gravity="top"
-            android:minLines="@integer/notes_min_lines" />
+            android:minLines="@integer/notes_min_lines"
+            />
 
         <EditText
             android:id="@+id/txt_tags"
             style="@style/formMargin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/tags" />
+            android:hint="@string/tags"
+            />
+
+        <LinearLayout
+            android:id="@+id/frame_attachment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            />
+
+        <TextView
+            style="@style/selectableTextView"
+            android:id="@+id/add_attachment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/add_attachment"
+            android:drawablePadding="@dimen/ed__padding_medium"
+            android:drawableLeft="@android:drawable/ic_menu_add"
+            />
     </LinearLayout>
 
 </ScrollView>

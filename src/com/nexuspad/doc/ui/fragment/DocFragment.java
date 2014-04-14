@@ -4,17 +4,21 @@
 package com.nexuspad.doc.ui.fragment;
 
 import android.app.Activity;
+import android.app.DownloadManager;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.*;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.edmondapps.utils.android.view.ViewUtils;
+import com.edmondapps.utils.java.Lazy;
 import com.nexuspad.R;
 import com.nexuspad.app.App;
 import com.nexuspad.datamodel.Doc;
@@ -46,12 +50,21 @@ public class DocFragment extends EntryFragment<Doc> {
         return fragment;
     }
 
+    private Lazy<DownloadManager> mDownloadManager = new Lazy<DownloadManager>() {
+        @Override
+        protected DownloadManager onCreate() {
+            return (DownloadManager) getActivity().getSystemService(Context.DOWNLOAD_SERVICE);
+        }
+    };
+
     private TextView mTitleV;
-    private TextView mTagsV;
     private TextView mNoteV;
 
+    private TextView mAttachmentsTitleV;
     private LinearLayout mAttachmentsFrameV;
+
     private TextView mTagsFrameV;
+    private TextView mTagsV;
 
     @Override
     public void onAttach(Activity activity) {
@@ -85,15 +98,22 @@ public class DocFragment extends EntryFragment<Doc> {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         mTitleV = findView(view, R.id.lbl_title);
-        mTagsV = findView(view, R.id.lbl_tags);
         mNoteV = findView(view, R.id.lbl_note);
 
-        mTagsFrameV = findView(view, R.id.lbl_tags_frame);
-        mAttachmentsFrameV = findView(view, R.id.attachments_frame);
+        mAttachmentsTitleV = findView(view, R.id.lbl_attachment);
+        mAttachmentsFrameV = findView(view, R.id.frame_attachment);
+
+        mTagsFrameV = findView(view, R.id.lbl_tags_title);
+        mTagsV = findView(view, R.id.lbl_tags);
 
         mTitleV.setTypeface(App.getRobotoLight());
 
         super.onViewCreated(view, savedInstanceState);
+    }
+
+    @Override
+    protected boolean shouldGetDetailEntry() {
+        return true;
     }
 
     @Override
@@ -133,14 +153,14 @@ public class DocFragment extends EntryFragment<Doc> {
                 mAttachmentsFrameV.addView(frame);
             }
 
-
             updateVisibilities(doc);
         }
     }
 
     private void downloadAttachment(NPUpload attachment) {
-        final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(attachment.getDownloadLink()));
-        startActivity(intent);
+        final DownloadManager.Request request = new DownloadManager.Request(Uri.parse(attachment.getDownloadLink()));
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+        mDownloadManager.get().enqueue(request);
     }
 
     private void updateVisibilities(Doc doc) {
@@ -152,6 +172,7 @@ public class DocFragment extends EntryFragment<Doc> {
         mNoteV.setVisibility(noteFlag);
 
         final int attachmentsFlag = !doc.getAttachments().isEmpty() ? View.VISIBLE : View.GONE;
+        mAttachmentsTitleV.setVisibility(attachmentsFlag);
         mAttachmentsFrameV.setVisibility(attachmentsFlag);
     }
 }

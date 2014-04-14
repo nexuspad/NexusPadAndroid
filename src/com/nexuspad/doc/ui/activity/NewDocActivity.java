@@ -14,6 +14,7 @@ import com.nexuspad.datamodel.Folder;
 import com.nexuspad.dataservice.ServiceConstants;
 import com.nexuspad.doc.ui.fragment.NewDocFragment;
 import com.nexuspad.ui.activity.NewEntryActivity;
+import com.nexuspad.ui.fragment.NewEntryFragment;
 
 /**
  * @author Edmond
@@ -31,6 +32,14 @@ public class NewDocActivity extends NewEntryActivity<Doc> {
         intent.putExtra(KEY_ENTRY, doc);
         intent.putExtra(KEY_FOLDER, f);
         c.startActivity(intent);
+    }
+
+    @Override
+    protected void onDoneEditing() {
+        NewDocFragment fragment = getFragment();
+        if (fragment.isEditedEntryValid()) {
+            fragment.updateEntry();
+        }
     }
 
     @Override

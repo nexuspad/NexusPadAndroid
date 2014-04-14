@@ -26,7 +26,7 @@
             android:linksClickable="false" />
 
         <TextView
-            android:id="@+id/lbl_tags_frame"
+            android:id="@+id/lbl_tags_title"
             style="?android:attr/listSeparatorTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

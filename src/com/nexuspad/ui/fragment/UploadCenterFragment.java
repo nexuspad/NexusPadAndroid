@@ -18,7 +18,6 @@ import com.edmondapps.utils.android.ui.CompoundAdapter;
 import com.nexuspad.R;
 import com.nexuspad.app.Request;
 import com.nexuspad.app.service.UploadService;
-import com.nexuspad.datamodel.EntryTemplate;
 import com.nexuspad.dataservice.FileUploadService;
 import com.squareup.picasso.Picasso;
 
@@ -62,7 +61,8 @@ public class UploadCenterFragment extends FadeListFragment {
             mBinder = null;
         }
     };
-    private final List<Request> mAlbumRequests = new ArrayList<Request>();
+
+    private final List<Request> mEntryRequests = new ArrayList<Request>();
     private final List<Request> mPhotoRequests = new ArrayList<Request>();
     private final Set<Request> mPendingRequests = new HashSet<Request>();
     private UploadAdapter mAdapter;
@@ -81,9 +81,7 @@ public class UploadCenterFragment extends FadeListFragment {
                 mPhotoRequests.add(request);
                 break;
             case ENTRY:
-                if (EntryTemplate.ALBUM.equals(request.getNPEntry().getTemplate())) {
-                    mAlbumRequests.add(request);
-                }
+                mEntryRequests.add(request);
                 break;
             default:
                 throw new AssertionError("unexpected request target: " + request.getTarget());
@@ -93,7 +91,7 @@ public class UploadCenterFragment extends FadeListFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mAdapter = new UploadAdapter(getActivity(), mAlbumRequests, mPhotoRequests);
+        mAdapter = new UploadAdapter(getActivity(), mEntryRequests, mPhotoRequests);
     }
 
     @Override

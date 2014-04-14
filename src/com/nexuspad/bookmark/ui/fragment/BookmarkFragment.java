@@ -57,7 +57,7 @@ public class BookmarkFragment extends EntryFragment<Bookmark> {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        mCallback = App.getCallback(activity, Callback.class);
+        mCallback = App.getCallbackOrThrow(activity, Callback.class);
         setHasOptionsMenu(true);
     }
 
@@ -91,7 +91,7 @@ public class BookmarkFragment extends EntryFragment<Bookmark> {
         mTagsV = findView(view, R.id.lbl_tags);
         mNoteV = findView(view, R.id.lbl_note);
 
-        mTagsFrameV = findView(view, R.id.lbl_tags_frame);
+        mTagsFrameV = findView(view, R.id.lbl_tags_title);
         mNoteFrameV = findView(view, R.id.lbl_note_frame);
 
         mNameV.setTypeface(App.getRobotoLight());

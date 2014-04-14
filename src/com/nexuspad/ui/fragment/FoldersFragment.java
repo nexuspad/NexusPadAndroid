@@ -7,7 +7,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.view.*;
 import android.view.View.OnClickListener;
 import android.widget.*;
@@ -21,16 +20,12 @@ import com.nexuspad.Manifest;
 import com.nexuspad.R;
 import com.nexuspad.account.AccountManager;
 import com.nexuspad.app.App;
-import com.nexuspad.datamodel.EntryList;
 import com.nexuspad.datamodel.Folder;
-import com.nexuspad.datamodel.NPEntry;
-import com.nexuspad.dataservice.EntryService;
 import com.nexuspad.dataservice.FolderService;
 import com.nexuspad.dataservice.FolderService.FolderReceiver;
 import com.nexuspad.dataservice.NPException;
 import com.nexuspad.dataservice.ServiceError;
 import com.nexuspad.ui.FoldersAdapter;
-import com.nexuspad.ui.OnEntryMenuClickListener;
 import com.nexuspad.ui.OnFolderMenuClickListener;
 import com.nexuspad.ui.activity.NewFolderActivity;
 
@@ -178,7 +173,7 @@ public class FoldersFragment extends FadeListFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        mCallback = App.getCallback(activity, Callback.class);
+        mCallback = App.getCallbackOrThrow(activity, Callback.class);
         setHasOptionsMenu(true);
     }
 

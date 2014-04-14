@@ -34,7 +34,7 @@ public class MainFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        mCallback = App.getCallback(activity, Callback.class);
+        mCallback = App.getCallbackOrThrow(activity, Callback.class);
     }
 
     @Override

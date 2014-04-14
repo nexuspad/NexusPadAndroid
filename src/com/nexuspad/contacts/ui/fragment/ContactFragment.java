@@ -113,7 +113,7 @@ public class ContactFragment extends EntryFragment<Contact> {
         mPhoneHeaderV = findView(view, R.id.lbl_phones);
         mEmailHeaderV = findView(view, R.id.lbl_emails);
         mWebAddressHeaderV = findView(view, R.id.lbl_web_address_frame);
-        mTagsHeaderV = findView(view, R.id.lbl_tags_frame);
+        mTagsHeaderV = findView(view, R.id.lbl_tags_title);
         mNoteHeaderV = findView(view, R.id.lbl_note_frame);
         mAddressHeaderV = findView(view, R.id.lbl_address_frame);
 

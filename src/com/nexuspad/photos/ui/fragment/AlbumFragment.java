@@ -68,6 +68,11 @@ public class AlbumFragment extends EntryFragment<Album> implements AdapterView.O
         }
     }
 
+    @Override
+    protected boolean shouldGetDetailEntry() {
+        return true;
+    }
+
     private void onEdit() {
         final Intent intent = NewAlbumActivity.of(getActivity(), getFolder(), getEntry());
         startActivity(intent);

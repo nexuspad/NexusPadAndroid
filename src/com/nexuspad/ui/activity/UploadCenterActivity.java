@@ -13,6 +13,7 @@ import com.nexuspad.R;
 import com.nexuspad.app.Request;
 import com.nexuspad.datamodel.Folder;
 import com.nexuspad.datamodel.NPEntry;
+import com.nexuspad.dataservice.ServiceConstants;
 import com.nexuspad.ui.fragment.UploadCenterFragment;
 
 import java.util.ArrayList;
@@ -86,12 +87,16 @@ public class UploadCenterActivity extends SinglePaneActivity {
     @Override
     protected Fragment onCreateFragment() {
         final UploadCenterFragment fragment = new UploadCenterFragment();
-        if (mUris.isEmpty()) return fragment;
-        final NPEntry entry = getIntent().getParcelableExtra(KEY_ENTRY);
+        if (mUris.isEmpty()) {
+            return fragment;
+        }
+
+        final Intent intent = getIntent();
+        final NPEntry entry = intent.getParcelableExtra(KEY_ENTRY);
         if (entry == null) {
-            final Folder folder = getIntent().getParcelableExtra(KEY_FOLDER);
+            Folder folder = intent.getParcelableExtra(KEY_FOLDER);
             if (folder == null) {
-                throw new AssertionError("both entry and folder is null");
+                folder = Folder.rootFolderOf(ServiceConstants.PHOTO_MODULE, this);
             }
             for (Uri uri : mUris) {
                 fragment.addRequest(Request.forFolder(uri, folder, null));

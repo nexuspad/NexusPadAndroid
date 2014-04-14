@@ -81,7 +81,7 @@ public class EventFragment extends EntryFragment<Event> {
         mNoteV = findView(view, R.id.lbl_note);
 
         mLocationFrameV = findView(view, R.id.lbl_location_frame);
-        mTagsFrameV = findView(view, R.id.lbl_tags_frame);
+        mTagsFrameV = findView(view, R.id.lbl_tags_title);
         mNoteFrameV = findView(view, R.id.lbl_note_frame);
 
         mTitleV.setTypeface(App.getRobotoLight());

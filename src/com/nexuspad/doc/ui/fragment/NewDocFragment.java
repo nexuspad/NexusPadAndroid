@@ -3,22 +3,32 @@
  */
 package com.nexuspad.doc.ui.fragment;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.*;
 import com.commonsware.cwac.richedit.RichEditText;
 import com.edmondapps.utils.android.annotaion.FragmentName;
+import com.edmondapps.utils.android.view.ViewUtils;
+import com.ipaulpro.afilechooser.utils.FileUtils;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
 import com.nexuspad.datamodel.Doc;
 import com.nexuspad.datamodel.EntryTemplate;
 import com.nexuspad.datamodel.Folder;
+import com.nexuspad.datamodel.NPUpload;
 import com.nexuspad.dataservice.ServiceConstants;
+import com.nexuspad.ui.activity.UploadCenterActivity;
 import com.nexuspad.ui.fragment.NewEntryFragment;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.edmondapps.utils.android.view.ViewUtils.findView;
 import static com.edmondapps.utils.android.view.ViewUtils.isAllTextNotEmpty;
@@ -30,6 +40,8 @@ import static com.edmondapps.utils.android.view.ViewUtils.isAllTextNotEmpty;
 @ModuleId(moduleId = ServiceConstants.DOC_MODULE, template = EntryTemplate.DOC)
 public class NewDocFragment extends NewEntryFragment<Doc> {
     public static final String TAG = "NewDocFragment";
+
+    protected static final int REQ_PICK_FILE = 2;
 
     public static NewDocFragment of(Folder folder) {
         return of(null, folder);
@@ -50,6 +62,12 @@ public class NewDocFragment extends NewEntryFragment<Doc> {
     private EditText mTitleV;
     private EditText mTagsV;
     private RichEditText mNoteV;
+    private LinearLayout mAttachmentsFrameV;
+
+    @Override
+    protected boolean shouldGetDetailEntry() {
+        return true;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -62,11 +80,68 @@ public class NewDocFragment extends NewEntryFragment<Doc> {
         mNoteV = findView(view, R.id.txt_note);
         mTitleV = findView(view, R.id.txt_title);
         mTagsV = findView(view, R.id.txt_tags);
+        mAttachmentsFrameV = findView(view, R.id.frame_attachment);
 
         mNoteV.enableActionModes(false);
+        findView(view, R.id.add_attachment).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Intent intent = FileUtils.createGetContentIntent();
+                startActivityForResult(intent, REQ_PICK_FILE);
+            }
+        });
 
         installFolderSelectorListener(mFolderV);
         super.onViewCreated(view, savedInstanceState);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case REQ_PICK_FILE:
+                if (resultCode == Activity.RESULT_OK) {
+                    final Doc doc = createEditedEntry();
+
+                    Uri uri = data.getData();
+                    if (uri != null) {
+                        addUriIfNeeded(uri, doc);
+                    }
+
+                    uri = data.getParcelableExtra(Intent.EXTRA_STREAM);
+                    if (uri != null) {
+                        addUriIfNeeded(uri, doc);
+                    }
+
+                    final List<Uri> list = data.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
+                    if (list != null) {
+                        for (Uri theUri : list) {
+                            addUriIfNeeded(theUri, doc);
+                        }
+                    }
+
+                    updateUI();
+                }
+                break;
+            default:
+                super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    private void addUriIfNeeded(Uri uri, Doc doc) {
+        for (NPUpload npUpload : doc.getAttachments()) {
+            if (npUpload.getDownloadLink().equals(uri.getPath())) {
+                return;
+            }
+        }
+
+        final File file = FileUtils.getFile(getActivity(), uri);
+        if (file != null) {
+            final NPUpload npUpload = new NPUpload(getFolder());
+            npUpload.setFileName(file.getName());
+            npUpload.setDownloadLink(file.getPath());
+            npUpload.setJustCreated(true);
+            doc.addAttachment(npUpload);
+        }
     }
 
     @Override
@@ -92,6 +167,31 @@ public class NewDocFragment extends NewEntryFragment<Doc> {
             if (note != null) {
                 mNoteV.setText(Html.fromHtml(note));
             }
+
+            mAttachmentsFrameV.removeAllViews();
+            final List<NPUpload> attachments = doc.getAttachments();
+            final LayoutInflater inflater = LayoutInflater.from(getActivity());
+            for (final NPUpload attachment : attachments) {
+                final View view = inflater.inflate(R.layout.list_item_icon, mAttachmentsFrameV, false);
+
+                final TextView title = ViewUtils.findView(view, android.R.id.text1);
+                final ImageView icon = ViewUtils.findView(view, android.R.id.icon);
+                final ImageButton menu = ViewUtils.findView(view, R.id.menu);
+
+                title.setText(attachment.getFileName());
+                icon.setImageResource(R.drawable.ic_file);
+
+                menu.setImageResource(android.R.drawable.ic_delete);
+                menu.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+                menu.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mAttachmentsFrameV.removeView(view);
+                    }
+                });
+
+                mAttachmentsFrameV.addView(view);
+            }
         }
     }
 
@@ -102,13 +202,32 @@ public class NewDocFragment extends NewEntryFragment<Doc> {
 
     @Override
     public Doc getEditedEntry() {
+        Doc doc = createEditedEntry();
+        setEntry(doc);
+        return doc;
+    }
+
+    private Doc createEditedEntry() {
         final Doc entry = getEntry();
         Doc doc = entry == null ? new Doc(getFolder()) : new Doc(entry);
         doc.setTitle(mTitleV.getText().toString());
         doc.setNote(Html.toHtml(mNoteV.getText()));
         doc.setTags(mTagsV.getText().toString());
-
-        setEntry(doc);
         return doc;
+    }
+
+    @Override
+    protected void onUpdateEntry(Doc entry) {
+        super.onUpdateEntry(entry);
+
+        final List<NPUpload> attachments = entry.getAttachments();
+        final ArrayList<Uri> uris = new ArrayList<Uri>(attachments.size());  // for parcelling
+        for (NPUpload attachment : attachments) {
+            if (attachment.isJustCreated()) {
+                uris.add(Uri.parse(attachment.getDownloadLink()));
+            }
+        }
+
+        UploadCenterActivity.startWith(uris, entry, getActivity());
     }
 }

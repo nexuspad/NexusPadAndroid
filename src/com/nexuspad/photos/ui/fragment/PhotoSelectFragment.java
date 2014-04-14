@@ -56,7 +56,7 @@ public class PhotoSelectFragment extends Fragment implements
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
-        mCallback = App.getCallback(activity, Callback.class);
+        mCallback = App.getCallbackOrThrow(activity, Callback.class);
     }
 
     @Override

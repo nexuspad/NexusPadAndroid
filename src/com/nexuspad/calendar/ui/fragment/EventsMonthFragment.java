@@ -10,7 +10,6 @@ import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
 import com.nexuspad.app.App;
-import com.nexuspad.datamodel.EntryList;
 import com.nexuspad.datamodel.EntryTemplate;
 import com.nexuspad.datamodel.Folder;
 import com.nexuspad.dataservice.EntryListService;
@@ -47,7 +46,7 @@ public class EventsMonthFragment extends EntriesFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        mCallback = App.getCallback(activity, Callback.class);
+        mCallback = App.getCallbackOrThrow(activity, Callback.class);
     }
 
     @Override

@@ -35,7 +35,7 @@ public class App extends Application {
         sRobotoLight = Typeface.createFromAsset(getAssets(), "Roboto-Light.ttf");
     }
 
-    public static <C> C getCallback(Activity activity, Class<? extends C> callbackClass) {
+    public static <C> C getCallbackOrThrow(Activity activity, Class<? extends C> callbackClass) {
         if (callbackClass.isInstance(activity)) {
             return callbackClass.cast(activity);
         } else {

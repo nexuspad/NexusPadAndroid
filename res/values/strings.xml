@@ -22,6 +22,7 @@
     <string name="bookmarks">Bookmarks</string>
     <string name="logout">Logout</string>
     <string name="folder">Folder</string>
+    <string name="attachments">Attachments</string>
     <string name="username_or_email">Username or Email</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
@@ -116,6 +117,7 @@
     <string name="format_deleted_folder">Deleted Folder: \"%1$s\"</string>
     <string name="no_connection">No connection</string>
     <string name="retry">Retry</string>
+    <string name="add_attachment">Add attachment…</string>
 
     <plurals name="numberOfPhotos">
         <item quantity="one">1 photo</item>

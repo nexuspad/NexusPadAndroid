@@ -44,6 +44,8 @@ public class AlbumActivity extends SinglePaneActivity implements EntryFragment.C
         mFolder = intent.getParcelableExtra(KEY_FOLDER);
         mAlbum = intent.getParcelableExtra(KEY_ALBUM);
 
+        setTitle(mAlbum.getTitle());
+
         super.onCreate(savedState);
     }
 

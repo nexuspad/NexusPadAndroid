@@ -19,8 +19,6 @@ import com.nexuspad.R;
 import com.nexuspad.account.AccountManager;
 import com.nexuspad.app.App;
 import com.nexuspad.datamodel.NPUser;
-import com.nexuspad.ui.DirectionalScrollListener;
-import com.nexuspad.ui.OnListEndListener;
 
 import static com.edmondapps.utils.android.view.ViewUtils.findView;
 import static com.edmondapps.utils.android.view.ViewUtils.isAllTextNotEmpty;
@@ -72,7 +70,7 @@ public class LoginFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        mActivityCallback = App.getCallback(activity, Callback.class);
+        mActivityCallback = App.getCallbackOrThrow(activity, Callback.class);
     }
 
     @Override

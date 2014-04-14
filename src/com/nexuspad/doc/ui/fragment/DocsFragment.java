@@ -27,7 +27,6 @@ import com.nexuspad.doc.ui.activity.NewDocActivity;
 import com.nexuspad.ui.FolderEntriesAdapter;
 import com.nexuspad.ui.FoldersAdapter;
 import com.nexuspad.ui.OnEntryMenuClickListener;
-import com.nexuspad.ui.UndoBarController;
 import com.nexuspad.ui.fragment.EntriesFragment;
 
 /**
@@ -59,7 +58,7 @@ public class DocsFragment extends EntriesFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        mCallback = App.getCallback(activity, Callback.class);
+        mCallback = App.getCallbackOrThrow(activity, Callback.class);
         setHasOptionsMenu(true);
     }
 

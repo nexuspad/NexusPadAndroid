@@ -19,6 +19,7 @@ import com.nexuspad.datamodel.Folder;
 import com.nexuspad.datamodel.NPEntry;
 import com.nexuspad.dataservice.EntryService;
 import com.nexuspad.dataservice.EntryService.EntryReceiver;
+import com.nexuspad.dataservice.NPException;
 import com.nexuspad.dataservice.ServiceError;
 import com.nexuspad.ui.activity.FoldersActivity;
 
@@ -55,6 +56,13 @@ public abstract class EntryFragment<T extends NPEntry> extends DialogFragment {
             super.onError(context, intent, error);
             Logs.e(TAG, error.toString());
         }
+
+        @Override
+        @SuppressWarnings("unchecked")
+        protected void onGot(Context context, Intent intent, NPEntry entry) {
+            super.onGot(context, intent, entry);
+            setEntry((T)entry);
+        }
     };
 
     private T mEntry;
@@ -65,7 +73,7 @@ public abstract class EntryFragment<T extends NPEntry> extends DialogFragment {
     @SuppressWarnings("unchecked")
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        mCallback = App.getCallback(activity, Callback.class);
+        mCallback = App.getCallbackOrThrow(activity, Callback.class);
     }
 
     @Override
@@ -73,7 +81,10 @@ public abstract class EntryFragment<T extends NPEntry> extends DialogFragment {
         super.onCreate(savedInstanceState);
 
         final Bundle bundle = savedInstanceState == null ? getArguments() : savedInstanceState;
-        initWithBundle(bundle);
+        if (bundle != null) {
+            mEntry = bundle.getParcelable(KEY_ENTRY);
+            mFolder = bundle.getParcelable(KEY_FOLDER);
+        }
 
         if (mFolder == null) {
             throw new IllegalArgumentException("you must pass in a Folder with KEY_FOLDER");
@@ -83,13 +94,16 @@ public abstract class EntryFragment<T extends NPEntry> extends DialogFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if (savedInstanceState == null) updateUI();
-    }
+        if (savedInstanceState == null) {
+            updateUI();
+        }
+        if (shouldGetDetailEntry()) {
 
-    private void initWithBundle(Bundle b) {
-        if (b != null) {
-            mEntry = b.getParcelable(KEY_ENTRY);
-            mFolder = b.getParcelable(KEY_FOLDER);
+            try {
+                getEntryService().getEntry(getEntry());
+            } catch (NPException e) {
+                Logs.e(TAG, e);
+            }
         }
     }
 
@@ -168,6 +182,10 @@ public abstract class EntryFragment<T extends NPEntry> extends DialogFragment {
 
     public EntryService getEntryService() {
         return mEntryService.get();
+    }
+
+    protected boolean shouldGetDetailEntry() {
+        return false;
     }
 
     protected void deleteEntry() {
