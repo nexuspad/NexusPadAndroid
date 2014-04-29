@@ -250,7 +250,11 @@ public class NewContactFragment extends NewEntryFragment<Contact> {
         final Contact entry = getEntry();
         final Contact contact = entry == null ? new Contact(getFolder()) : new Contact(entry);
 
-        contact.setLocation((Location) mAddressV.getTag());
+        Location location = (Location) mAddressV.getTag();
+        if (location == null) {
+            location = new Location();
+        }
+        contact.setLocation(location);
         contact.setTitle(mTitleV.getText().toString());
         contact.setFirstName(mFirstNameV.getText().toString());
         contact.setMiddleName(mMiddleNameV.getText().toString());

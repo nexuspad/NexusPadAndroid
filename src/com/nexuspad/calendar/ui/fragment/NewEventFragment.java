@@ -261,6 +261,7 @@ public class NewEventFragment extends NewEntryFragment<Event> {
         return event;
     }
 
+    @SuppressWarnings("deprecation")
     private Date combineDateTime(Date date, Date time) {
         final Date out = new Date();
         out.setMonth(date.getMonth());

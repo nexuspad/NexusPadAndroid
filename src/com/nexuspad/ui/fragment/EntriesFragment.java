@@ -510,7 +510,9 @@ public abstract class EntriesFragment extends FadeListFragment {
 
     private void kickToLoginScreen() {
         final FragmentActivity activity = getActivity();
-        startActivity(new Intent(activity, LoginActivity.class));
+        final Intent intent = new Intent(activity, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
         activity.finish();
     }
 

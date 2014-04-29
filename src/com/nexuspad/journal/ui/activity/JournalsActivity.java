@@ -3,6 +3,7 @@
  */
 package com.nexuspad.journal.ui.activity;
 
+import android.app.ActionBar;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.widget.TextView;
@@ -36,7 +37,10 @@ public class JournalsActivity extends EntriesActivity implements JournalsFragmen
 
         mDateFormat = android.text.format.DateFormat.getDateFormat(this);
 
-        getActionBar().setTitle(R.string.journal);
+        final ActionBar actionBar = getActionBar();
+        if (actionBar != null) {
+            actionBar.setTitle(R.string.journal);
+        }
     }
 
     @Override
@@ -57,6 +61,10 @@ public class JournalsActivity extends EntriesActivity implements JournalsFragmen
     @Override
     public void onJournalSelected(JournalsFragment f, Journal journal) {
         final String dateString = mDateFormat.format(journal.getCreateTime());
-        getActionBar().setSubtitle(dateString);
+
+        final ActionBar actionBar = getActionBar();
+        if (actionBar != null) {
+            actionBar.setSubtitle(dateString);
+        }
     }
 }
