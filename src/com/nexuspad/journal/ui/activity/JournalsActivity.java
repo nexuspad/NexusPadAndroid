@@ -4,9 +4,11 @@
 package com.nexuspad.journal.ui.activity;
 
 import android.app.ActionBar;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.widget.TextView;
+import android.view.Menu;
+import android.view.MenuItem;
 import com.edmondapps.utils.android.annotaion.ParentActivity;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
@@ -30,6 +32,25 @@ import java.text.DateFormat;
 public class JournalsActivity extends EntriesActivity implements JournalsFragment.Callback, NewJournalFragment.Callback {
 
     private DateFormat mDateFormat;
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.journals_activity, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_month:
+                final Intent intent = new Intent(this, JournalsMonthActivity.class);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedState) {

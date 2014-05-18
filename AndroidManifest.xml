@@ -128,6 +128,11 @@
             android:icon="@drawable/ic_ab"
             />
         <activity
+            android:name=".journal.ui.activity.JournalsMonthActivity"
+            android:label="@string/journal"
+            android:icon="@drawable/ic_ab"
+            />
+        <activity
             android:name=".photos.ui.activity.PhotosActivity"
             android:label="@string/photos"
             android:icon="@drawable/ic_ab"

@@ -77,9 +77,17 @@ public class EventsAgendaFragment extends EntriesFragment {
     @Override
     protected void getEntriesInFolder(EntryListService service, Folder folder, int page) throws NPException {
         final Date midPoint = mStartTime > 0 ? new Date(mStartTime) : new Date();
-        final Date startDate = DateUtil.addDaysTo(midPoint, -60);
-        final Date endDate = DateUtil.addDaysTo(midPoint, 60);
+        final Date startDate = getStartDate(midPoint);
+        final Date endDate = getEndDate(midPoint);
         service.getEntriesBetweenDates(folder, getTemplate(), startDate, endDate, page, getEntriesCountPerPage());
+    }
+
+    private static Date getEndDate(Date midPoint) {
+        return DateUtil.addDaysTo(midPoint, 60);
+    }
+
+    private static Date getStartDate(Date midPoint) {
+        return DateUtil.addDaysTo(midPoint, -60);
     }
 
     @Override
@@ -130,8 +138,19 @@ public class EventsAgendaFragment extends EntriesFragment {
     }
 
     public void setStartTime(long startTime) {
+        final Date newStartTime = new Date(startTime);
+        final Date oldStartTime = new Date(mStartTime);
+
+        final Date startDate = getStartDate(oldStartTime);
+        final Date endDate = getEndDate(oldStartTime);
+
         mStartTime = startTime;
-        scrollToStartTime(mEvents);
+
+        if (newStartTime.after(startDate) && newStartTime.before(endDate)) {
+            scrollToStartTime(mEvents);
+        } else {
+            queryEntriesAsync();
+        }
     }
 
     private static class EventViewHolder {

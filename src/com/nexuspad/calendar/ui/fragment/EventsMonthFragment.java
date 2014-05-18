@@ -2,6 +2,7 @@ package com.nexuspad.calendar.ui.fragment;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,20 +25,10 @@ import static com.nexuspad.dataservice.ServiceConstants.CALENDAR_MODULE;
  * Author: edmond
  */
 @FragmentName(EventsMonthFragment.TAG)
-@ModuleId(moduleId = CALENDAR_MODULE, template = EntryTemplate.EVENT)
-public class EventsMonthFragment extends EntriesFragment {
+public class EventsMonthFragment extends Fragment {
     public static final String TAG = "EventsMonthFragment";
 
-    public static EventsMonthFragment of(Folder folder) {
-        final Bundle bundle = new Bundle();
-        bundle.putParcelable(KEY_FOLDER, folder);
-
-        final EventsMonthFragment fragment = new EventsMonthFragment();
-        fragment.setArguments(bundle);
-        return fragment;
-    }
-
-    public interface Callback extends EntriesFragment.Callback, CalendarView.OnDateChangeListener {
+    public interface Callback extends CalendarView.OnDateChangeListener {
     }
 
     private CalendarView mCalendarView;
@@ -60,10 +51,5 @@ public class EventsMonthFragment extends EntriesFragment {
 
         mCalendarView = findView(view, R.id.calendar_picker);
         mCalendarView.setOnDateChangeListener(mCallback);
-    }
-
-    @Override
-    protected void getEntriesInFolder(EntryListService service, Folder folder, int page) throws NPException {
-        service.getEntriesBetweenDates(folder, getTemplate(), DateUtil.now(), DateUtil.addDaysTo(DateUtil.now(), 30), page, getEntriesCountPerPage());
     }
 }

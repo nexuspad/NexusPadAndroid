@@ -12,12 +12,10 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.format.DateUtils;
 import android.util.SparseArray;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
+import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.edmondapps.utils.android.view.ViewUtils;
 import com.edmondapps.utils.java.WrapperList;
-import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.nexuspad.R;
@@ -44,6 +42,7 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 /**
  * @author Edmond
  */
+@FragmentName(JournalsFragment.TAG)
 @ModuleId(moduleId = ServiceConstants.JOURNAL_MODULE, template = EntryTemplate.JOURNAL)
 public class JournalsFragment extends EntriesFragment {
     public static final String TAG = "com.nexuspad.journal.ui.fragment.JournalsFragment";

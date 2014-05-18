@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.edmondapps.utils.android.view.ViewUtils;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
@@ -24,8 +25,10 @@ import static com.nexuspad.dataservice.ServiceConstants.JOURNAL_MODULE;
 /**
  * User: edmond
  */
+@FragmentName(NewJournalFragment.TAG)
 @ModuleId(moduleId = JOURNAL_MODULE, template = EntryTemplate.JOURNAL)
 public class NewJournalFragment extends NewEntryFragment<Journal> {
+    public static final String TAG = "NewJournalFragment";
 
     public static NewJournalFragment of(Journal journal, Folder folder) {
         final Bundle argument = new Bundle();

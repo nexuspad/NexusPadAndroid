@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
@@ -21,7 +23,9 @@ import com.nexuspad.datamodel.Folder;
 import com.nexuspad.home.ui.activity.DashboardActivity;
 import com.nexuspad.ui.activity.EntriesActivity;
 import com.nexuspad.ui.fragment.EntriesFragment;
+import com.nexuspad.util.DateUtil;
 
+import java.util.Date;
 import java.util.List;
 
 import static com.nexuspad.dataservice.ServiceConstants.CALENDAR_MODULE;
@@ -50,8 +54,7 @@ public class EventsActivity extends EntriesActivity implements EventsMonthFragme
 
         final Folder folder = Folder.rootFolderOf(getModule(), this);
 
-
-        mEventsMonthFragment = EventsMonthFragment.of(folder);
+        mEventsMonthFragment = new EventsMonthFragment();
         mEventsAgendaFragment = EventsAgendaFragment.of(folder);
 
         final ActionBar actionBar = getActionBar();
@@ -100,8 +103,12 @@ public class EventsActivity extends EntriesActivity implements EventsMonthFragme
 
     @Override
     public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
-        mStartTime = view.getDate();
-        getActionBar().setSelectedNavigationItem(CALENDAR_DEFAULT_VIEW_AGENDA);
+        final Date oldDate = new Date(mStartTime);
+        final Date newDate = new Date(view.getDate());
+        if (!DateUtil.isSameDay(oldDate, newDate)) {
+            mStartTime = newDate.getTime();
+            getActionBar().setSelectedNavigationItem(CALENDAR_DEFAULT_VIEW_AGENDA);
+        }
     }
 
     private int readDefaultView() {
@@ -127,16 +134,25 @@ public class EventsActivity extends EntriesActivity implements EventsMonthFragme
     }
 
     private void switchView(int view) {
+        final Fragment oldFragment;
         final Fragment newFragment;
+
+        final String oldFragmentTag;
         final String newFragmentTag;
 
         switch (view) {
             case CALENDAR_DEFAULT_VIEW_AGENDA:
+                oldFragment = mEventsMonthFragment;
+                oldFragmentTag = EventsMonthFragment.TAG;
+
                 mEventsAgendaFragment.setStartTime(mStartTime);
                 newFragment = mEventsAgendaFragment;
                 newFragmentTag = EventsAgendaFragment.TAG;
                 break;
             case CALENDAR_DEFAULT_VIEW_MONTH:
+                oldFragment = mEventsAgendaFragment;
+                oldFragmentTag = EventsAgendaFragment.TAG;
+
                 newFragment = mEventsMonthFragment;
                 newFragmentTag = EventsMonthFragment.TAG;
                 break;
@@ -144,10 +160,20 @@ public class EventsActivity extends EntriesActivity implements EventsMonthFragme
                 throw new AssertionError("unexpected view: " + view);
         }
 
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(getFragmentId(), newFragment, newFragmentTag)
-                .commit();
+        final FragmentManager manager = getSupportFragmentManager();
+        final FragmentTransaction transaction = manager.beginTransaction();
+
+        if (manager.findFragmentByTag(newFragmentTag) != null) {
+            transaction.show(newFragment);
+        } else {
+            transaction.add(getFragmentId(), newFragment, newFragmentTag);
+        }
+
+        if (manager.findFragmentByTag(oldFragmentTag) != null) {
+            transaction.hide(oldFragment);
+        }
+
+        transaction.commit();
 
         writeDefaultView(view);
     }

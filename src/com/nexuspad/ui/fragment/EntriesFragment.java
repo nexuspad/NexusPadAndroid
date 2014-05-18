@@ -338,14 +338,14 @@ public abstract class EntriesFragment extends FadeListFragment {
                 listView.setOnScrollListener(new OnListEndListener() {
                     @Override
                     protected void onListEnd(int _) {
-                        queryEntriesAync(getCurrentPage() + 1);
+                        queryEntriesAsync(getCurrentPage() + 1);
                     }
                 });
             }
         }
 
         if (isLoadListEnabled()) {
-            queryEntriesAync();
+            queryEntriesAsync();
         }
     }
 
@@ -353,7 +353,7 @@ public abstract class EntriesFragment extends FadeListFragment {
     protected void onRetryClicked(View button) {
         super.onRetryClicked(button);
         if (isRetryEnabled()) {
-            queryEntriesAync();
+            queryEntriesAsync();
         }
     }
 
@@ -436,7 +436,7 @@ public abstract class EntriesFragment extends FadeListFragment {
     }
 
     /**
-     * @return true if this Fragment should call {@link #queryEntriesAync()}
+     * @return true if this Fragment should call {@link #queryEntriesAsync()}
      * automatically after view is created; false to disable it
      */
     protected boolean isLoadListEnabled() {
@@ -444,7 +444,7 @@ public abstract class EntriesFragment extends FadeListFragment {
     }
 
     /**
-     * @return true if this Fragment should call {@link #queryEntriesAync()}
+     * @return true if this Fragment should call {@link #queryEntriesAsync()}
      * automatically after the retry button is clicked; false to disable it
      */
     protected boolean isRetryEnabled() {
@@ -469,11 +469,11 @@ public abstract class EntriesFragment extends FadeListFragment {
         }
     }
 
-    public void queryEntriesAync() {
-        queryEntriesAync(1);
+    public void queryEntriesAsync() {
+        queryEntriesAsync(1);
     }
 
-    public void queryEntriesAync(int page) {
+    public void queryEntriesAsync(int page) {
         mCurrentPage = page;
 
         FragmentActivity activity = getActivity();
@@ -517,7 +517,7 @@ public abstract class EntriesFragment extends FadeListFragment {
     }
 
     /**
-     * Called when {@link #queryEntriesAync(int)} is invoked. The default
+     * Called when {@link #queryEntriesAsync(int)} is invoked. The default
      * implementation calls
      * {@link EntryListService#getEntriesInFolder(Folder, EntryTemplate, int, int)}
      * .
