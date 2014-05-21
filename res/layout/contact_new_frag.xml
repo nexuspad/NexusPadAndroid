@@ -49,6 +49,7 @@
             android:textSize="@dimen/ed__textsize_medium"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:inputType="textPersonName|textCapWords"
             android:hint="@string/title"
             />
 
@@ -65,6 +66,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:inputType="textPersonName|textCapWords"
                 android:hint="@string/first_name"
                 android:textSize="@dimen/ed__textsize_medium"
                 />
@@ -74,6 +76,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:inputType="textPersonName|textCapWords"
                 android:hint="@string/middle_name"
                 android:textSize="@dimen/ed__textsize_medium"
                 />
@@ -84,6 +87,7 @@
             style="@style/formMargin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:inputType="textPersonName|textCapWords"
             android:hint="@string/last_name"
             android:textSize="@dimen/ed__textsize_medium"
             />
@@ -93,6 +97,7 @@
             style="@style/formMargin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:inputType="textPersonName|textCapWords"
             android:hint="@string/business_name"
             android:layout_marginBottom="@dimen/ed__padding_small"
             android:textSize="@dimen/ed__textsize_medium"

@@ -2,19 +2,23 @@
 
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    >
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        >
 
         <EditText
             android:id="@+id/txt_street_address"
             style="@style/formMargin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/address" />
+            android:inputType="textCapWords"
+            android:hint="@string/address"
+            />
 
         <EditText
             android:id="@+id/txt_city"
@@ -22,12 +26,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textCapWords"
-            android:hint="@string/city" />
+            android:hint="@string/city"
+            />
 
         <LinearLayout
             style="@style/formMargin"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            >
 
             <EditText
                 android:id="@+id/txt_state"
@@ -35,14 +41,17 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:inputType="textCapWords"
-                android:hint="@string/state" />
+                android:hint="@string/state"
+                />
 
             <EditText
                 android:id="@+id/txt_zip_code"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="@string/zip_code" />
+                android:inputType="textCapCharacters"
+                android:hint="@string/zip_code"
+                />
         </LinearLayout>
 
         <EditText
@@ -51,6 +60,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textCapWords"
-            android:hint="@string/country" />
+            android:hint="@string/country"
+            />
     </LinearLayout>
 </ScrollView>
