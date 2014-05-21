@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 import com.edmondapps.utils.android.annotaion.FragmentName;
-import com.edmondapps.utils.android.view.ViewUtils;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
 import com.nexuspad.contacts.ui.activity.NewLocationActivity;
@@ -101,6 +100,14 @@ public class NewContactFragment extends NewEntryFragment<Contact> {
         mPhoneFrameV = findView(view, R.id.phones_frame);
         mEmailFrameV = findView(view, R.id.emails_frame);
 
+        mAddressV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Intent intent = NewLocationActivity.of(getActivity(), (Location) mAddressV.getTag());
+                startActivityForResult(intent, REQ_LOCATION);
+            }
+        });
+
         super.onViewCreated(view, savedInstanceState);
     }
 
@@ -116,15 +123,8 @@ public class NewContactFragment extends NewEntryFragment<Contact> {
             mWebAddressV.setText(contact.getWebAddress());
             mTagsV.setText(contact.getTags());
             mNoteV.setText(contact.getNote());
-            updateAddressView(contact.getLocation());
-            mAddressV.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    final Intent intent = NewLocationActivity.of(getActivity(), (Location) mAddressV.getTag());
-                    startActivityForResult(intent, REQ_LOCATION);
-                }
-            });
 
+            updateAddressView(contact.getLocation());
             updatePhones(contact);
             updateEmails(contact);
         }
@@ -242,7 +242,7 @@ public class NewContactFragment extends NewEntryFragment<Contact> {
 
     @Override
     public boolean isEditedEntryValid() {
-        return ViewUtils.isAllTextNotEmpty(R.string.err_empty_field, mTitleV);
+        return true;
     }
 
     @Override
