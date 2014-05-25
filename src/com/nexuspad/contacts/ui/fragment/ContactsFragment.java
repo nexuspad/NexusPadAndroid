@@ -9,7 +9,10 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.MenuItemCompat;
 import android.text.TextUtils;
 import android.view.*;
-import android.widget.*;
+import android.widget.BaseAdapter;
+import android.widget.Filter;
+import android.widget.ListView;
+import android.widget.SearchView;
 import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.edmondapps.utils.java.WrapperList;
 import com.nexuspad.R;
@@ -146,11 +149,10 @@ public final class ContactsFragment extends EntriesFragment {
         super.onListLoaded(list);
 
         mContacts = new WrapperList<Contact>(list.getEntries());
-        if (mSortTask == null) {
-            mSortTask = new SortTask(mContacts, this);
-        } else {
+        if (mSortTask != null) {
             mSortTask.cancel(true);
         }
+        mSortTask = new SortTask(mContacts, this);
         mSortTask.execute((Void[]) null);
     }
 
@@ -163,7 +165,6 @@ public final class ContactsFragment extends EntriesFragment {
                     final FragmentActivity activity = getActivity();
                     final Folder folder = data.getParcelableExtra(FoldersActivity.KEY_FOLDER);
                     ContactsActivity.startWithFolder(folder, activity);
-                    activity.finish();
                     activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 }
                 break;

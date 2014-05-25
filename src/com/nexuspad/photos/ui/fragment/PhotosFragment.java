@@ -90,7 +90,6 @@ public class PhotosFragment extends EntriesFragment implements OnItemClickListen
                     final FragmentActivity activity = getActivity();
                     final Folder folder = data.getParcelableExtra(FoldersActivity.KEY_FOLDER);
                     PhotosActivity.startWithFolder(folder, activity);
-                    activity.finish();
                     activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 }
                 break;

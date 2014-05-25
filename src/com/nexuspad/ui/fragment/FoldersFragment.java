@@ -6,6 +6,7 @@ package com.nexuspad.ui.fragment;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.*;
 import android.view.View.OnClickListener;
@@ -345,14 +346,18 @@ public class FoldersFragment extends FadeListFragment {
             final View view = LayoutInflater.from(context).inflate(R.layout.list_item_icon_2, null);
 
             final TextView title = ViewUtils.findView(view, android.R.id.text1);
-            final ImageView icon = ViewUtils.findView(view, android.R.id.icon);
+            final View icon = ViewUtils.findView(view, android.R.id.icon);
             final View icon2 = ViewUtils.findView(view, android.R.id.icon2);
             final View menu = ViewUtils.findView(view, R.id.menu);
 
             title.setText(isRoot ? folder.getFolderName() : context.getText(R.string.up));
-            icon.setImageResource(R.drawable.ic_np_folder);
+            title.setTypeface(title.getTypeface(), Typeface.BOLD);  // bold (issue #69 on BitBucket)
+
+            icon.setVisibility(View.GONE);  // no need for the icon
+
             menu.setVisibility(View.GONE);
             menu.setFocusable(false);
+
             icon2.setVisibility(View.INVISIBLE);
             icon2.setFocusable(false);
 
