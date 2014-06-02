@@ -30,8 +30,12 @@ import java.text.DateFormat;
 @ParentActivity(DashboardActivity.class)
 @ModuleId(moduleId = ServiceConstants.JOURNAL_MODULE, template = EntryTemplate.JOURNAL)
 public class JournalsActivity extends EntriesActivity implements JournalsFragment.Callback, NewJournalFragment.Callback {
+    public static final String TAG = "JournalsActivity";
+
+    private static final int REQ_CODE_MONTH = 1;
 
     private DateFormat mDateFormat;
+    private long mPendingDisplayDate = -1;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -45,10 +49,27 @@ public class JournalsActivity extends EntriesActivity implements JournalsFragmen
         switch (item.getItemId()) {
             case R.id.menu_month:
                 final Intent intent = new Intent(this, JournalsMonthActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, REQ_CODE_MONTH);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode != RESULT_OK) {
+            return;
+        }
+
+        switch (requestCode) {
+            case REQ_CODE_MONTH:
+                mPendingDisplayDate = data.getLongExtra(JournalsMonthActivity.KEY_DATE, -1);
+                // cannot set display date right now, onResume() is not called yet
+                break;
+            default:
+                break;
         }
     }
 
@@ -65,6 +86,14 @@ public class JournalsActivity extends EntriesActivity implements JournalsFragmen
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        if (mPendingDisplayDate >= 0) {
+            getFragment().setDisplayDate(mPendingDisplayDate);
+        }
+    }
+
+    @Override
     protected Fragment onCreateFragment() {
         return JournalsFragment.of(Folder.rootFolderOf(ServiceConstants.JOURNAL_MODULE));
     }
@@ -76,7 +105,7 @@ public class JournalsActivity extends EntriesActivity implements JournalsFragmen
 
     @Override
     protected JournalsFragment getFragment() {
-        return (JournalsFragment)super.getFragment();
+        return (JournalsFragment) super.getFragment();
     }
 
     @Override

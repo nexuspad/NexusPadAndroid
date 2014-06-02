@@ -12,7 +12,9 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.format.DateUtils;
 import android.util.SparseArray;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.edmondapps.utils.android.view.ViewUtils;
 import com.edmondapps.utils.java.WrapperList;
@@ -95,6 +97,16 @@ public class JournalsFragment extends EntriesFragment {
         for (Journal journal : mJournals) {
             if (!isNullOrEmpty(journal.getNote())) {
                 entryService.safePutEntry(activity, journal);
+            }
+        }
+    }
+
+    public void setDisplayDate(long date) {
+        final Date target = new Date(date);
+        if (mStartDate.compareTo(target) <= 0 && target.compareTo(mEndDate) <= 0) {
+            final int daysDiff = DateUtil.daysBetween(mStartDate, target);
+            if (mViewPager != null) {
+                mViewPager.setCurrentItem(daysDiff, false);  // mStartDate is at 0, daysDiff is the index
             }
         }
     }
