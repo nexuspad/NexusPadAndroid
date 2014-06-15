@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.MenuItemCompat;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.*;
@@ -16,6 +17,7 @@ import com.edmondapps.utils.android.ui.CompoundAdapter;
 import com.edmondapps.utils.android.ui.SingleAdapter;
 import com.edmondapps.utils.java.Lazy;
 import com.google.common.base.Predicate;
+import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
 import com.nexuspad.Manifest;
 import com.nexuspad.R;
@@ -41,6 +43,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import static com.edmondapps.utils.android.view.ViewUtils.findView;
+import static com.google.common.base.Strings.nullToEmpty;
 import static com.nexuspad.dataservice.EntryListService.EntryListReceiver;
 
 /**
@@ -60,6 +63,15 @@ public abstract class EntriesFragment extends FadeListFragment {
 
     public interface Callback {
         void onListLoaded(EntriesFragment f, EntryList list);
+    }
+
+    public interface FilterableAdapter<T> {
+
+        void showRawEntries();
+
+        void filter(String newText);
+
+        void setDisplayEntries(EntryList entries);
     }
 
     private final Lazy<FolderService> mFolderService = new Lazy<FolderService>() {
@@ -88,6 +100,17 @@ public abstract class EntriesFragment extends FadeListFragment {
         protected void onGotAll(Context c, Intent i, EntryTemplate entryTemplate, String key) {
             if (mModuleId.template().equals(entryTemplate)) {
                 onListLoadedInternal(mEntryListService.get().getEntryListFromKey(key));
+            }
+        }
+
+        @Override
+        protected void onGotSearch(Context c, Intent i, EntryTemplate entryTemplate, String key) {
+            if (mModuleId.template().equals(entryTemplate)) {
+                final EntryList entryList = mEntryListService.get().getEntryListFromKey(key);
+                final String searchKeyword = nullToEmpty(entryList.getKeyword());
+                if (searchKeyword.equals(mCurrentSearchKeyword)) {
+                    onSearchLoadedInternal(entryList);
+                }
             }
         }
 
@@ -185,6 +208,74 @@ public abstract class EntriesFragment extends FadeListFragment {
 
     private View mQuickReturnV;
     private TextView mFolderSelectorV;
+
+    private String mCurrentSearchKeyword;
+
+    /**
+     * For subclass to implement. return the entries adapter to use the filtering features
+     *
+     * @return the underlying entries adapter; return a non-null adapter to use the default behaviours in methods like {@link #onSearchLoaded(EntryList)}
+     */
+    protected FilterableAdapter getFilterableAdapter() {
+        throw new IllegalStateException("you must implement this method to use any goodies from EntriesFragment");
+    }
+
+    /**
+     * set up {@code OnQueryTextListener}, {@code OnCloseListener}, and {@code OnActionExpandListener}.
+     * <p></p>
+     * it will not be expanded if {@link #getListAdapter()} is null; must implement {@link #getFilterableAdapter()}
+     *
+     * @param searchItem
+     */
+    protected void setUpSearchView(MenuItem searchItem) {
+        final SearchView searchView = (SearchView) searchItem.getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (Strings.isNullOrEmpty(newText)) {
+                    showRawEntries();
+                } else {
+                    filter(newText);
+                }
+                return true;  // i got this
+            }
+        });
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                showRawEntries();
+                return true;
+            }
+        });
+        MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                return getListAdapter() != null;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                showRawEntries();
+                return true;
+            }
+        });
+    }
+
+    private void filter(String newText) {
+        fadeInProgressFrame();
+        mCurrentSearchKeyword = newText;
+        getFilterableAdapter().filter(newText);
+    }
+
+    private void showRawEntries() {
+        fadeInListFrame();
+        getFilterableAdapter().showRawEntries();
+    }
 
     /**
      * @return one of the {@code *_MODULE} constants in {@link ServiceConstants}
@@ -337,7 +428,7 @@ public abstract class EntriesFragment extends FadeListFragment {
             if (isAutoLoadMoreEnabled()) {
                 listView.setOnScrollListener(new OnListEndListener() {
                     @Override
-                    protected void onListEnd(int _) {
+                    protected void onListEnd(int page) {
                         queryEntriesAsync(getCurrentPage() + 1);
                     }
                 });
@@ -476,7 +567,6 @@ public abstract class EntriesFragment extends FadeListFragment {
     public void queryEntriesAsync(int page) {
         mCurrentPage = page;
 
-        FragmentActivity activity = getActivity();
         try {
             mFolder.setOwner(AccountManager.currentAccount());
             getEntriesInFolder(mEntryListService.get(), mFolder, page);
@@ -543,6 +633,20 @@ public abstract class EntriesFragment extends FadeListFragment {
         }
         onListLoaded(mEntryList);
         mCallback.onListLoaded(this, mEntryList);
+    }
+
+    /**
+     * The search result is here. Use {@link EntryList#getKeyword()} to see the original search string.
+     *
+     * @param list the filtered entries
+     */
+    protected void onSearchLoaded(EntryList list) {
+        getFilterableAdapter().setDisplayEntries(list);
+    }
+
+    private void onSearchLoadedInternal(EntryList list) {
+        onSearchLoaded(list);
+        fadeInListFrame();
     }
 
     /**
@@ -708,4 +812,5 @@ public abstract class EntriesFragment extends FadeListFragment {
     public final EntryListService getEntryListService() {
         return mEntryListService.get();
     }
+
 }

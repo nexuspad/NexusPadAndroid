@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -91,6 +92,11 @@ public class EventsAgendaFragment extends EntriesFragment {
     }
 
     @Override
+    public void setUpSearchView(MenuItem searchItem) { // public for the activity to install it
+        super.setUpSearchView(searchItem);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.list_content_sticky, container, false);
     }
@@ -133,8 +139,18 @@ public class EventsAgendaFragment extends EntriesFragment {
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-        final EventsAgendaAdapter adapter = (EventsAgendaAdapter) getListAdapter();
+        final EventsAgendaAdapter adapter = getListAdapter();
         EventActivity.startWith(getActivity(), adapter.getItem(position), getFolder());
+    }
+
+    @Override
+    public EventsAgendaAdapter getListAdapter() {
+        return (EventsAgendaAdapter) super.getListAdapter();
+    }
+
+    @Override
+    protected EntriesAdapter<?> getFilterableAdapter() {
+        return getListAdapter();
     }
 
     public void setStartTime(long startTime) {
@@ -167,12 +183,12 @@ public class EventsAgendaFragment extends EntriesFragment {
         private final DateFormat mDateFormat;
         private final DateFormat mTimeFormat;
 
-        private EventsAgendaAdapter(List<? extends Event> list) {
+        private EventsAgendaAdapter(List<Event> list) {
             this(getActivity(), list);
         }
 
-        private EventsAgendaAdapter(Activity activity, List<? extends Event> list) {
-            super(activity, list);
+        private EventsAgendaAdapter(Activity activity, List<Event> list) {
+            super(activity, list, getFolder(), getEntryListService(), getTemplate());
             mDateFormat = android.text.format.DateFormat.getMediumDateFormat(activity);
             mTimeFormat = android.text.format.DateFormat.getTimeFormat(activity);
         }

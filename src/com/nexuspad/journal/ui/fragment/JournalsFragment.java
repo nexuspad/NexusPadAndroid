@@ -213,7 +213,7 @@ public class JournalsFragment extends EntriesFragment {
         return emptyJournal;
     }
 
-    private class JournalsAdapter extends FragmentPagerAdapter {
+    private class JournalsAdapter extends FragmentPagerAdapter implements FilterableAdapter {
         private SparseArray<NewJournalFragment> mAliveFragments = new SparseArray<NewJournalFragment>();
 
         private JournalsAdapter() {
@@ -261,6 +261,25 @@ public class JournalsFragment extends EntriesFragment {
 
         public SparseArray<NewJournalFragment> getAliveFragments() {
             return mAliveFragments;
+        }
+
+        @Override
+        public void showRawEntries() {
+            // TODO
+        }
+
+        @Override
+        public void filter(String newText) {
+            try {
+                getEntryListService().searchEntriesInFolder(newText, getFolder(), getTemplate(), 1, 99);
+            } catch (NPException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        @Override
+        public void setDisplayEntries(EntryList entries) {
+            // TODO
         }
     }
 }

@@ -5,19 +5,14 @@ package com.nexuspad.bookmark.ui.fragment;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
+import android.view.*;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
-import android.widget.SearchView;
 import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.edmondapps.utils.java.WrapperList;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
 import com.nexuspad.app.App;
-import com.nexuspad.bookmark.ui.BookmarksAdapter;
 import com.nexuspad.bookmark.ui.activity.NewBookmarkActivity;
 import com.nexuspad.datamodel.Bookmark;
 import com.nexuspad.datamodel.EntryList;
@@ -25,10 +20,13 @@ import com.nexuspad.datamodel.EntryTemplate;
 import com.nexuspad.datamodel.Folder;
 import com.nexuspad.dataservice.EntryService;
 import com.nexuspad.dataservice.ServiceConstants;
+import com.nexuspad.ui.EntriesAdapter;
 import com.nexuspad.ui.FolderEntriesAdapter;
 import com.nexuspad.ui.FoldersAdapter;
 import com.nexuspad.ui.OnEntryMenuClickListener;
 import com.nexuspad.ui.fragment.EntriesFragment;
+
+import java.util.List;
 
 /**
  * @author Edmond
@@ -37,7 +35,6 @@ import com.nexuspad.ui.fragment.EntriesFragment;
 @ModuleId(moduleId = ServiceConstants.BOOKMARK_MODULE, template = EntryTemplate.BOOKMARK)
 public class BookmarksFragment extends EntriesFragment {
     public static final String TAG = "BookmarksFragment";
-    private MenuItem mSearchItem;
 
     public static BookmarksFragment of(Folder f) {
         Bundle bundle = new Bundle();
@@ -58,8 +55,7 @@ public class BookmarksFragment extends EntriesFragment {
     }
 
     private Callback mCallback;
-    private SearchView mSearchView;
-    private FolderBookmarksAdapter mPreSearchAdapter;
+    private MenuItem mSearchItem;
 
     @Override
     public void onAttach(Activity activity) {
@@ -72,7 +68,10 @@ public class BookmarksFragment extends EntriesFragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.bookmarks_frag, menu);
+
         mSearchItem = menu.findItem(R.id.search);
+        mSearchItem.setVisible(true);
+        setUpSearchView(mSearchItem);
     }
 
     @Override
@@ -89,6 +88,7 @@ public class BookmarksFragment extends EntriesFragment {
     @Override
     protected void onListLoaded(EntryList list) {
         super.onListLoaded(list);
+        mSearchItem.setVisible(true);
 
         FolderBookmarksAdapter a = getListAdapter();
         if (a != null) {
@@ -120,6 +120,11 @@ public class BookmarksFragment extends EntriesFragment {
         BookmarksAdapter bookmarksAdapter = new BookmarksAdapter(getActivity(), new WrapperList<Bookmark>(list.getEntries()));
         bookmarksAdapter.setOnMenuClickListener(new BookmarkMenuClickListener(getListView(), getEntryService()));
         return bookmarksAdapter;
+    }
+
+    @Override
+    protected EntriesAdapter<?> getFilterableAdapter() {
+        return getListAdapter().getEntriesAdapter();
     }
 
     @Override
@@ -167,6 +172,36 @@ public class BookmarksFragment extends EntriesFragment {
 
         public FolderBookmarksAdapter(FoldersAdapter folderAdapter, BookmarksAdapter entriesAdapter, BaseAdapter... others) {
             super(folderAdapter, entriesAdapter, others);
+        }
+    }
+
+    public class BookmarksAdapter extends EntriesAdapter<Bookmark> {
+        public BookmarksAdapter(Activity a, List<Bookmark> entries) {
+            super(a, entries, getFolder(), getEntryListService(), getTemplate());
+        }
+
+        @Override
+        protected View getEntryView(Bookmark entry, int position, View convertView, ViewGroup parent) {
+            if (convertView == null) {
+                convertView = getLayoutInflater().inflate(R.layout.list_item_icon, parent, false);
+            }
+            ViewHolder holder = getHolder(convertView);
+
+            holder.icon.setImageResource(R.drawable.ic_bookmark);
+            holder.text1.setText(entry.getTitle());
+            holder.menu.setOnClickListener(getOnMenuClickListener());
+
+            return convertView;
+        }
+
+        @Override
+        protected int getEntryStringId() {
+            return R.string.bookmarks;
+        }
+
+        @Override
+        protected View getEmptyEntryView(LayoutInflater i, View c, ViewGroup p) {
+            return getCaptionView(i, c, p, R.string.empty_bookmarks, R.drawable.empty_folder);
         }
     }
 }

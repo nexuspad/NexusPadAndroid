@@ -12,11 +12,11 @@
                 <item
                     android:id="@+id/new_folder"
                     android:showAsAction="ifRoom"
-                    android:title="@string/new_folder" />
+                    android:title="@string/new_folder"/>
                 <item
                     android:id="@+id/new_contact"
                     android:showAsAction="ifRoom"
-                    android:title="@string/new_contact" />
+                    android:title="@string/new_contact"/>
             </group>
         </menu>
     </item>
@@ -25,8 +25,6 @@
         android:icon="@android:drawable/ic_menu_search"
         android:showAsAction="always|collapseActionView"
         android:title="@string/search"
-        android:visible="false"
-        android:enabled="false"
-        android:actionViewClass="android.widget.SearchView" />
+        android:actionViewClass="android.widget.SearchView"/>
 
 </menu>

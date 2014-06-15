@@ -5,10 +5,7 @@ package com.nexuspad.doc.ui.fragment;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
+import android.view.*;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import com.edmondapps.utils.android.annotaion.FragmentName;
@@ -20,14 +17,17 @@ import com.nexuspad.datamodel.Doc;
 import com.nexuspad.datamodel.EntryList;
 import com.nexuspad.datamodel.EntryTemplate;
 import com.nexuspad.datamodel.Folder;
+import com.nexuspad.dataservice.EntryListService;
 import com.nexuspad.dataservice.EntryService;
 import com.nexuspad.dataservice.ServiceConstants;
-import com.nexuspad.doc.ui.DocsAdapter;
 import com.nexuspad.doc.ui.activity.NewDocActivity;
+import com.nexuspad.ui.EntriesAdapter;
 import com.nexuspad.ui.FolderEntriesAdapter;
 import com.nexuspad.ui.FoldersAdapter;
 import com.nexuspad.ui.OnEntryMenuClickListener;
 import com.nexuspad.ui.fragment.EntriesFragment;
+
+import java.util.List;
 
 /**
  * @author Edmond
@@ -66,6 +66,8 @@ public class DocsFragment extends EntriesFragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.docs_frag, menu);
+
+        setUpSearchView(menu.findItem(R.id.search));
     }
 
     @Override
@@ -111,9 +113,19 @@ public class DocsFragment extends EntriesFragment {
     }
 
     private DocsAdapter newDocsAdapter(EntryList list) {
-        DocsAdapter adapter = new DocsAdapter(getActivity(), new WrapperList<Doc>(list.getEntries()));
+        final DocsAdapter adapter = new DocsAdapter(
+                getActivity(),
+                new WrapperList<Doc>(list.getEntries()),
+                getFolder(),
+                getEntryListService(),
+                getTemplate());
         adapter.setOnMenuClickListener(new OnDocMenuClickListener(getListView(), getEntryService()));
         return adapter;
+    }
+
+    @Override
+    protected FilterableAdapter getFilterableAdapter() {
+        return getListAdapter().getEntriesAdapter();
     }
 
     @Override
@@ -162,6 +174,37 @@ public class DocsFragment extends EntriesFragment {
 
         public FoldersDocsAdapter(FoldersAdapter folderAdapter, DocsAdapter entriesAdapter, BaseAdapter a) {
             super(folderAdapter, entriesAdapter, a);
+        }
+    }
+
+    public static class DocsAdapter extends EntriesAdapter<Doc> {
+
+        public DocsAdapter(Activity a, List<Doc> entries, Folder folder, EntryListService service, EntryTemplate template) {
+            super(a, entries, folder, service, template);
+        }
+
+        @Override
+        protected View getEntryView(Doc entry, int position, View convertView, ViewGroup parent) {
+            if (convertView == null) {
+                convertView = getLayoutInflater().inflate(R.layout.list_item_icon, parent, false);
+            }
+            ViewHolder holder = getHolder(convertView);
+
+            holder.icon.setImageResource(R.drawable.ic_doc);
+            holder.text1.setText(entry.getTitle());
+            holder.menu.setOnClickListener(getOnMenuClickListener());
+
+            return convertView;
+        }
+
+        @Override
+        protected View getEmptyEntryView(LayoutInflater i, View c, ViewGroup p) {
+            return getCaptionView(i, c, p, R.string.empty_docs, R.drawable.empty_folder);
+        }
+
+        @Override
+        protected int getEntryStringId() {
+            return R.string.docs;
         }
     }
 }

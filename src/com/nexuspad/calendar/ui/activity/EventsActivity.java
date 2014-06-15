@@ -46,7 +46,6 @@ public class EventsActivity extends EntriesActivity implements EventsMonthFragme
     private EventsMonthFragment mEventsMonthFragment;
     private long mStartTime = -1;
     private MenuItem mNewEventItem;
-    private MenuItem mSearchItem;
 
     @Override
     protected void onCreate(Bundle savedState) {
@@ -79,7 +78,8 @@ public class EventsActivity extends EntriesActivity implements EventsMonthFragme
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.events_frag, menu);
         mNewEventItem = menu.findItem(R.id.new_event);
-        mSearchItem = menu.findItem(R.id.search);
+
+        mEventsAgendaFragment.setUpSearchView(menu.findItem(R.id.search));
         return true;
     }
 
@@ -98,7 +98,6 @@ public class EventsActivity extends EntriesActivity implements EventsMonthFragme
     public void onListLoaded(EntriesFragment f, EntryList list) {
         super.onListLoaded(f, list);
         mNewEventItem.setVisible(true);
-        mSearchItem.setVisible(true);
     }
 
     @Override

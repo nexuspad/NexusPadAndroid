@@ -4,37 +4,60 @@
 package com.nexuspad.ui;
 
 import android.app.Activity;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.*;
 import android.widget.AdapterView.OnItemLongClickListener;
+import com.edmondapps.utils.java.WrapperList;
+import com.google.common.collect.ImmutableList;
 import com.nexuspad.R;
+import com.nexuspad.app.App;
+import com.nexuspad.datamodel.EntryList;
+import com.nexuspad.datamodel.EntryTemplate;
+import com.nexuspad.datamodel.Folder;
 import com.nexuspad.datamodel.NPEntry;
+import com.nexuspad.dataservice.EntryListService;
+import com.nexuspad.dataservice.NPException;
+import com.nexuspad.ui.fragment.EntriesFragment;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import static com.edmondapps.utils.android.view.ViewUtils.findView;
 
 /**
  * @author Edmond
  */
-public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter implements OnItemLongClickListener {
+public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter implements OnItemLongClickListener, EntriesFragment.FilterableAdapter {
     public static final int TYPE_HEADER = 0;
     public static final int TYPE_ENTRY = 1;
     public static final int TYPE_EMPTY_ENTRY = 2;
 
-    private final List<? extends T> mRawEntries;     // unfiltered, original entries
+    private final ImmutableList<T> mRawEntries;     // unfiltered, original entries
     private final LayoutInflater mInflater;
     private final int mEntryHeaderId;
 
-    private List<? extends T> mDisplayEntries;  // may be filtered entries displayed ons screen
+    private final Folder mFolder;
+    private final EntryListService mService;
+    private final EntryTemplate mTemplate;
+
+
+    private List<T> mDisplayEntries;  // may be filtered entries displayed ons screen
     private OnClickListener mOnMenuClickListener;
     private boolean mResetConvertView;
 
-    public EntriesAdapter(Activity a, List<? extends T> entries) {
-        mRawEntries = entries;
+    /**
+     * use this constructor if you want filtering abilities
+     */
+    public EntriesAdapter(Activity a, List<T> entries, Folder folder, EntryListService service, EntryTemplate template) {
+        mFolder = folder;
+        mService = service;
+        mTemplate = template;
+        mRawEntries = ImmutableList.copyOf(entries);
         mDisplayEntries = entries;
         mInflater = a.getLayoutInflater();
         mEntryHeaderId = getEntryStringId();
@@ -50,15 +73,21 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter impl
      *
      * @param displayEntries the new entries to be displayed
      */
-    protected void setDisplayEntries(List<? extends T> displayEntries) {
+    public void setDisplayEntries(List<T> displayEntries) {
         mDisplayEntries = displayEntries;
         mResetConvertView = true;
         notifyDataSetChanged();
     }
 
+    @Override
+    public void setDisplayEntries(EntryList entries) {
+        setDisplayEntries(new WrapperList<T>(entries.getEntries()));
+    }
+
     /**
      * Reset the adapter to display the original, unfiltered entries passed from the constructor.
      */
+    @Override
     public void showRawEntries() {
         mDisplayEntries = mRawEntries;
         mResetConvertView = true;
@@ -135,7 +164,7 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter impl
 
     @Override
     public int getViewTypeCount() {
-       return 3; // header, entries, and empty view
+        return 3; // header, entries, and empty view
     }
 
     @Override
@@ -222,5 +251,52 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter impl
 
     protected final LayoutInflater getLayoutInflater() {
         return mInflater;
+    }
+
+    public ImmutableList<T> getRawEntries() {
+        return mRawEntries;
+    }
+
+    /**
+     * default implementation calls {@link #filterWithWeb(String)}
+     *
+     * @param string
+     */
+    @Override
+    public void filter(String string) {
+        filterWithWeb(string);
+    }
+
+    public void filterWithWeb(String string) {
+        try {
+            mService.searchEntriesInFolder(string, mFolder, mTemplate, 0, 99);
+        } catch (NPException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public class EntriesAdapterLocalFilter extends Filter {
+        private List<T> mPendingDisplayEntries = new ArrayList<T>();
+
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            mPendingDisplayEntries.clear();
+            if (TextUtils.isEmpty(constraint)) {
+                mPendingDisplayEntries.addAll(getRawEntries());
+                return null;
+            }
+            final Pattern pattern = App.createSearchPattern(constraint.toString().trim());
+            for (T entry : getRawEntries()) {
+                if (entry.filterByPattern(pattern)) {
+                    mPendingDisplayEntries.add(entry);
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            setDisplayEntries(mPendingDisplayEntries);
+        }
     }
 }

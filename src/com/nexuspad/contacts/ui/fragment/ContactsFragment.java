@@ -6,22 +6,19 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.view.MenuItemCompat;
 import android.text.TextUtils;
 import android.view.*;
 import android.widget.BaseAdapter;
-import android.widget.Filter;
 import android.widget.ListView;
-import android.widget.SearchView;
 import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.edmondapps.utils.java.WrapperList;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
-import com.nexuspad.app.App;
 import com.nexuspad.contacts.ui.activity.ContactActivity;
 import com.nexuspad.contacts.ui.activity.ContactsActivity;
 import com.nexuspad.contacts.ui.activity.NewContactActivity;
 import com.nexuspad.datamodel.*;
+import com.nexuspad.dataservice.EntryListService;
 import com.nexuspad.dataservice.ServiceConstants;
 import com.nexuspad.ui.EntriesAdapter;
 import com.nexuspad.ui.OnEntryMenuClickListener;
@@ -34,7 +31,6 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.regex.Pattern;
 
 @FragmentName(ContactsFragment.TAG)
 @ModuleId(moduleId = ServiceConstants.CONTACT_MODULE, template = EntryTemplate.CONTACT)
@@ -55,7 +51,6 @@ public final class ContactsFragment extends EntriesFragment {
 
     private List<Contact> mContacts;
     private SortTask mSortTask;
-    private MenuItem mSearchItem;
     private MenuItem mAddItem;
 
     @Override
@@ -82,39 +77,7 @@ public final class ContactsFragment extends EntriesFragment {
 
         mAddItem = menu.findItem(R.id.menu_new);
 
-        mSearchItem = menu.findItem(R.id.search);
-        final SearchView searchView = (SearchView) mSearchItem.getActionView();
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                getListAdapter().filter(newText);
-                return true;
-            }
-        });
-        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
-            @Override
-            public boolean onClose() {
-                getListAdapter().showRawEntries();
-                return true;
-            }
-        });
-        MenuItemCompat.setOnActionExpandListener(mSearchItem, new MenuItemCompat.OnActionExpandListener() {
-            @Override
-            public boolean onMenuItemActionExpand(MenuItem item) {
-                return true;
-            }
-
-            @Override
-            public boolean onMenuItemActionCollapse(MenuItem item) {
-                getListAdapter().showRawEntries();
-                return true;
-            }
-        });
+        setUpSearchView(menu.findItem(R.id.search));
     }
 
     @Override
@@ -187,7 +150,7 @@ public final class ContactsFragment extends EntriesFragment {
     }
 
     private ContactsAdapter newContactsAdapter(List<Contact> contacts) {
-        final ContactsAdapter a = new ContactsAdapter(getActivity(), contacts);
+        final ContactsAdapter a = new ContactsAdapter(getActivity(), contacts, getFolder(), getEntryListService(), getTemplate());
         final ListView listView = getListView();
         a.setOnMenuClickListener(new OnEntryMenuClickListener<Contact>(listView, getEntryService(), getUndoBarController()) {
             @Override
@@ -219,21 +182,20 @@ public final class ContactsFragment extends EntriesFragment {
         ContactActivity.startWith(getActivity(), contact, getFolder());
     }
 
+    @Override
+    protected EntriesAdapter<?> getFilterableAdapter() {
+        return getListAdapter();
+    }
+
     private static class ContactsAdapter extends EntriesAdapter<Contact> implements StickyListHeadersAdapter {
-        private final List<Contact> mRawContacts;          // unfiltered, original list of contacts
         private final List<Contact> mDisplayContacts;      // might be filtered list of contacts that is shown on screen
 
-        private final ContactsAdapterFilter mFilter;
+        private final EntriesAdapterLocalFilter mFilter;
 
-        private ContactsAdapter(Activity a, List<Contact> contacts) {
-            super(a, contacts);
-            mRawContacts = contacts;
+        private ContactsAdapter(Activity a, List<Contact> contacts, Folder folder, EntryListService service, EntryTemplate template) {
+            super(a, contacts, folder, service, template);
             mDisplayContacts = new ArrayList<Contact>(contacts);
-            mFilter = new ContactsAdapterFilter();
-        }
-
-        private void filter(CharSequence charSequence) {
-            mFilter.filter(charSequence);
+            mFilter = new EntriesAdapterLocalFilter();
         }
 
         private String getDisplayString(int position) {
@@ -308,27 +270,9 @@ public final class ContactsFragment extends EntriesFragment {
             return 0;
         }
 
-        private class ContactsAdapterFilter extends Filter {
-            @Override
-            protected FilterResults performFiltering(CharSequence constraint) {
-                mDisplayContacts.clear();
-                if (TextUtils.isEmpty(constraint)) {
-                    mDisplayContacts.addAll(mRawContacts);
-                    return null;
-                }
-                final Pattern pattern = App.createSearchPattern(constraint.toString().trim());
-                for (Contact c : mRawContacts) {
-                    if (c.filterByPattern(pattern)) {
-                        mDisplayContacts.add(c);
-                    }
-                }
-                return null;
-            }
-
-            @Override
-            protected void publishResults(CharSequence constraint, FilterResults results) {
-                setDisplayEntries(mDisplayContacts);
-            }
+        @Override
+        public void filter(String string) {
+            mFilter.filter(string);
         }
     }
 
@@ -354,8 +298,6 @@ public final class ContactsFragment extends EntriesFragment {
                 final BaseAdapter adapter = fragment.getListAdapter();
                 if (adapter == null) {
                     fragment.setListAdapter(fragment.newContactsAdapter(mContacts));
-                    fragment.mSearchItem.setVisible(true);
-                    fragment.mSearchItem.setEnabled(true);
                     fragment.mAddItem.setVisible(true);
                     fragment.mAddItem.setEnabled(true);
                 } else {
