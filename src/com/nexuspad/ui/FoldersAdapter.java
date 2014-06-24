@@ -31,6 +31,7 @@ public class FoldersAdapter extends BaseAdapter implements OnItemLongClickListen
 
     private OnClickListener mOnMenuClickListener;
     private OnClickListener mOnSubFolderClickListener;
+    private boolean mShouldHide;
 
     public FoldersAdapter(Activity a, List<? extends Folder> folders) {
         this(a, folders, false);
@@ -40,6 +41,15 @@ public class FoldersAdapter extends BaseAdapter implements OnItemLongClickListen
         mUseSubFolderButtons = useSubFolderButtons;
         mInflater = a.getLayoutInflater();
         mSubFolders = folders;
+    }
+
+    public void setShouldHide(boolean shouldHide) {
+        mShouldHide = shouldHide;
+        notifyDataSetChanged();
+    }
+
+    public boolean getShouldHide() {
+        return mShouldHide;
     }
 
     private static class ViewHolder {
@@ -111,7 +121,7 @@ public class FoldersAdapter extends BaseAdapter implements OnItemLongClickListen
 
     @Override
     public boolean isEmpty() {
-        return mSubFolders.isEmpty();
+        return getShouldHide() || mSubFolders.isEmpty();
     }
 
     @Override
@@ -125,7 +135,7 @@ public class FoldersAdapter extends BaseAdapter implements OnItemLongClickListen
 
     @Override
     public int getCount() {
-        return isEmpty() ? 0 : mSubFolders.size() + 1;
+        return (isEmpty() || getShouldHide()) ? 0 : mSubFolders.size() + 1;
     }
 
     @Override

@@ -112,6 +112,12 @@ public class DocsFragment extends EntriesFragment {
         listView.setOnItemLongClickListener(foldersDocsAdapter);
     }
 
+    @Override
+    protected void onSearchLoaded(EntryList list) {
+        getListAdapter().setShouldHideFolders(true);
+        super.onSearchLoaded(list);
+    }
+
     private DocsAdapter newDocsAdapter(EntryList list) {
         final DocsAdapter adapter = new DocsAdapter(
                 getActivity(),
@@ -177,7 +183,7 @@ public class DocsFragment extends EntriesFragment {
         }
     }
 
-    public static class DocsAdapter extends EntriesAdapter<Doc> {
+    public class DocsAdapter extends EntriesAdapter<Doc> {
 
         public DocsAdapter(Activity a, List<Doc> entries, Folder folder, EntryListService service, EntryTemplate template) {
             super(a, entries, folder, service, template);
@@ -205,6 +211,12 @@ public class DocsFragment extends EntriesFragment {
         @Override
         protected int getEntryStringId() {
             return R.string.docs;
+        }
+
+        @Override
+        public void showRawEntries() {
+            getListAdapter().setShouldHideFolders(false);
+            super.showRawEntries();
         }
     }
 }

@@ -23,6 +23,7 @@ import com.nexuspad.dataservice.EntryListService;
 import com.nexuspad.dataservice.NPException;
 import com.nexuspad.ui.fragment.EntriesFragment;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -36,6 +37,8 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter impl
     public static final int TYPE_HEADER = 0;
     public static final int TYPE_ENTRY = 1;
     public static final int TYPE_EMPTY_ENTRY = 2;
+
+    public static final int MIN_FILTER_LENGTH = 2;
 
     private final ImmutableList<T> mRawEntries;     // unfiltered, original entries
     private final LayoutInflater mInflater;
@@ -258,6 +261,13 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter impl
     }
 
     /**
+     * @return default: {@value #MIN_FILTER_LENGTH}
+     */
+    public int getMinFilterStringLength() {
+        return MIN_FILTER_LENGTH;
+    }
+
+    /**
      * default implementation calls {@link #filterWithWeb(String)}
      *
      * @param string
@@ -267,36 +277,75 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter impl
         filterWithWeb(string);
     }
 
+    /**
+     * web search is only invoked if {@code string.length() >= getMinFilterStringLength()}
+     *
+     * @param string
+     */
     public void filterWithWeb(String string) {
-        try {
-            mService.searchEntriesInFolder(string, mFolder, mTemplate, 0, 99);
-        } catch (NPException e) {
-            throw new RuntimeException(e);
+        if (string.length() >= getMinFilterStringLength()) {
+            try {
+                mService.searchEntriesInFolder(string, mFolder, mTemplate, 0, 99);
+            } catch (NPException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
+    public interface OnFilterDoneListener<E extends NPEntry> {
+        void onFilterDone(List<E> displayEntries);
+    }
+
     public class EntriesAdapterLocalFilter extends Filter {
-        private List<T> mPendingDisplayEntries = new ArrayList<T>();
+
+        final WeakReference<OnFilterDoneListener<T>> mOnFilterDoneListener;
+
+        public EntriesAdapterLocalFilter() {
+            mOnFilterDoneListener = null;
+        }
+
+        /**
+         * @param onFilterDoneListener weak-referenced, do not use anonymous inner class
+         */
+        public EntriesAdapterLocalFilter(OnFilterDoneListener<T> onFilterDoneListener) {
+            mOnFilterDoneListener = new WeakReference<OnFilterDoneListener<T>>(onFilterDoneListener);
+        }
 
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
-            mPendingDisplayEntries.clear();
+            final List<T> willDisplayEntries = new ArrayList<T>();
+
+            willDisplayEntries.clear();
             if (TextUtils.isEmpty(constraint)) {
-                mPendingDisplayEntries.addAll(getRawEntries());
+                willDisplayEntries.addAll(getRawEntries());
                 return null;
             }
             final Pattern pattern = App.createSearchPattern(constraint.toString().trim());
             for (T entry : getRawEntries()) {
                 if (entry.filterByPattern(pattern)) {
-                    mPendingDisplayEntries.add(entry);
+                    willDisplayEntries.add(entry);
                 }
             }
-            return null;
+
+            final FilterResults results = new FilterResults();
+            results.count = willDisplayEntries.size();
+            results.values = willDisplayEntries;
+
+            return results;
         }
 
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
-            setDisplayEntries(mPendingDisplayEntries);
+            @SuppressWarnings("unchecked")
+            final List<T> list = (List<T>) results.values;
+            setDisplayEntries(list);
+
+            if (mOnFilterDoneListener != null) {
+                final OnFilterDoneListener<T> listener = mOnFilterDoneListener.get();
+                if (listener != null) {
+                    listener.onFilterDone(list);
+                }
+            }
         }
     }
 }

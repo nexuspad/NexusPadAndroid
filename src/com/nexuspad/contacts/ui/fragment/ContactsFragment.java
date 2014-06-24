@@ -28,7 +28,6 @@ import com.nexuspad.ui.fragment.FadeListFragment;
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -52,6 +51,13 @@ public final class ContactsFragment extends EntriesFragment {
     private List<Contact> mContacts;
     private SortTask mSortTask;
     private MenuItem mAddItem;
+
+    private final EntriesAdapter.OnFilterDoneListener<Contact> mFilterDoneListener = new EntriesAdapter.OnFilterDoneListener<Contact>() {
+        @Override
+        public void onFilterDone(List<Contact> displayEntries) {
+            fadeInListFrame();
+        }
+    };
 
     @Override
     protected int getEntriesCountPerPage() {
@@ -150,7 +156,7 @@ public final class ContactsFragment extends EntriesFragment {
     }
 
     private ContactsAdapter newContactsAdapter(List<Contact> contacts) {
-        final ContactsAdapter a = new ContactsAdapter(getActivity(), contacts, getFolder(), getEntryListService(), getTemplate());
+        final ContactsAdapter a = new ContactsAdapter(getActivity(), contacts, getFolder(), getEntryListService(), getTemplate(), mFilterDoneListener);
         final ListView listView = getListView();
         a.setOnMenuClickListener(new OnEntryMenuClickListener<Contact>(listView, getEntryService(), getUndoBarController()) {
             @Override
@@ -188,14 +194,11 @@ public final class ContactsFragment extends EntriesFragment {
     }
 
     private static class ContactsAdapter extends EntriesAdapter<Contact> implements StickyListHeadersAdapter {
-        private final List<Contact> mDisplayContacts;      // might be filtered list of contacts that is shown on screen
-
         private final EntriesAdapterLocalFilter mFilter;
 
-        private ContactsAdapter(Activity a, List<Contact> contacts, Folder folder, EntryListService service, EntryTemplate template) {
+        private ContactsAdapter(Activity a, List<Contact> contacts, Folder folder, EntryListService service, EntryTemplate template, OnFilterDoneListener<Contact> onFilterDoneListener) {
             super(a, contacts, folder, service, template);
-            mDisplayContacts = new ArrayList<Contact>(contacts);
-            mFilter = new EntriesAdapterLocalFilter();
+            mFilter = new EntriesAdapterLocalFilter(onFilterDoneListener);
         }
 
         private String getDisplayString(int position) {

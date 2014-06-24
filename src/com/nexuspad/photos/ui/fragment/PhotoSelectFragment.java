@@ -75,13 +75,13 @@ public class PhotoSelectFragment extends Fragment implements
 
         mOkButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View _) {
+            public void onClick(View view) {
                 onOkClicked();
             }
         });
         mCancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View _) {
+            public void onClick(View view) {
                 mCallback.onCancel(PhotoSelectFragment.this);
             }
         });

@@ -65,8 +65,7 @@ public abstract class EntriesFragment extends FadeListFragment {
         void onListLoaded(EntriesFragment f, EntryList list);
     }
 
-    public interface FilterableAdapter<T> {
-
+    public interface FilterableAdapter {
         void showRawEntries();
 
         void filter(String newText);

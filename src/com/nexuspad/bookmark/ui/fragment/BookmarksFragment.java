@@ -123,6 +123,12 @@ public class BookmarksFragment extends EntriesFragment {
     }
 
     @Override
+    protected void onSearchLoaded(EntryList list) {
+        getListAdapter().setShouldHideFolders(true);
+        super.onSearchLoaded(list);
+    }
+
+    @Override
     protected EntriesAdapter<?> getFilterableAdapter() {
         return getListAdapter().getEntriesAdapter();
     }
@@ -202,6 +208,12 @@ public class BookmarksFragment extends EntriesFragment {
         @Override
         protected View getEmptyEntryView(LayoutInflater i, View c, ViewGroup p) {
             return getCaptionView(i, c, p, R.string.empty_bookmarks, R.drawable.empty_folder);
+        }
+
+        @Override
+        public void showRawEntries() {
+            getListAdapter().setShouldHideFolders(false);
+            super.showRawEntries();
         }
     }
 }

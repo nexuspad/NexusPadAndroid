@@ -49,10 +49,22 @@ public class FolderEntriesAdapter<T extends EntriesAdapter<?>> extends CompoundA
         if (mEntriesAdapter.isEmpty()) {
             return 1;
         }
-        final int localCount = mFolderAdapter.getCount() + mEntriesAdapter.getCount();
+
+        final int folderCount = mFolderAdapter.isEmpty() ? 0 : mFolderAdapter.getCount();
+        final int entriesCount = mEntriesAdapter.getCount();  // always non-empty (returned 1 above if it is empty)
+        final int localCount = folderCount + entriesCount;
         final int superCount = super.getCount();
         // superCount will be 0 for empty adapters, use local in such case
         return localCount > superCount ? localCount : superCount;
+    }
+
+    public void setShouldHideFolders(boolean shouldHideFolders) {
+        mFolderAdapter.setShouldHide(shouldHideFolders);
+        notifyDataSetChanged();
+    }
+
+    public boolean getShouldHideFolders() {
+        return mFolderAdapter.getShouldHide();
     }
 
     @Override
@@ -81,6 +93,7 @@ public class FolderEntriesAdapter<T extends EntriesAdapter<?>> extends CompoundA
 
     @Override
     public boolean areAllItemsEnabled() {
+        //noinspection SimplifiableIfStatement
         if (mEntriesAdapter.isEmpty()) {
             return false;
         }
@@ -89,6 +102,7 @@ public class FolderEntriesAdapter<T extends EntriesAdapter<?>> extends CompoundA
 
     @Override
     public boolean isEnabled(int position) {
+        //noinspection SimplifiableIfStatement
         if (mEntriesAdapter.isEmpty()) {
             return false;
         }
