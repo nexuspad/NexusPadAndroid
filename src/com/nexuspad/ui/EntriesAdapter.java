@@ -31,6 +31,8 @@ import java.util.regex.Pattern;
 import static com.edmondapps.utils.android.view.ViewUtils.findView;
 
 /**
+ * Common Adapter to be used in entries list view.
+ *
  * @author Edmond
  */
 public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter implements OnItemLongClickListener, EntriesFragment.FilterableAdapter {

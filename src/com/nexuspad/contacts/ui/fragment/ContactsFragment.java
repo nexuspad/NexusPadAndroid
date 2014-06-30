@@ -193,6 +193,10 @@ public final class ContactsFragment extends EntriesFragment {
         return getListAdapter();
     }
 
+
+    /**
+     * Override common EntriesAdapter for Contact list.
+     */
     private static class ContactsAdapter extends EntriesAdapter<Contact> implements StickyListHeadersAdapter {
         private final EntriesAdapterLocalFilter mFilter;
 

@@ -7,15 +7,15 @@
         style="@style/autoMargin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical" android:weightSum="1">
 
         <ImageView
-            android:layout_width="match_parent"
+            android:layout_width="60dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
+            android:layout_gravity="center_horizontal|left"
             android:layout_marginBottom="@dimen/ed__padding_medium"
             android:contentDescription="@string/app_name"
-            android:src="@drawable/np_banner" />
+            android:src="@drawable/ic_ab" android:layout_weight="0.50"/>
 
         <EditText
             android:id="@+id/txt_user_name"

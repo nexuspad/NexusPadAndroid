@@ -47,6 +47,8 @@ import static com.google.common.base.Strings.nullToEmpty;
 import static com.nexuspad.dataservice.EntryListService.EntryListReceiver;
 
 /**
+ * The base class for EntryList Fragments.
+ *
  * Manages an EntryList.
  * <p/>
  * You may use {@link ModuleId} annotation on the {@code Fragment} class, if you
