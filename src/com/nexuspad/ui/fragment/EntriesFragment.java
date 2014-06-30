@@ -231,17 +231,17 @@ public abstract class EntriesFragment extends FadeListFragment {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                return false;
+                if (Strings.isNullOrEmpty(query)) {
+                    showRawEntries();
+                } else {
+                    filter(query);
+                }
+                return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                if (Strings.isNullOrEmpty(newText)) {
-                    showRawEntries();
-                } else {
-                    filter(newText);
-                }
-                return true;  // i got this
+                return false;
             }
         });
         searchView.setOnCloseListener(new SearchView.OnCloseListener() {
@@ -254,7 +254,7 @@ public abstract class EntriesFragment extends FadeListFragment {
         MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
-                return getListAdapter() != null;
+                return shouldExpandSearchView();
             }
 
             @Override
@@ -265,6 +265,10 @@ public abstract class EntriesFragment extends FadeListFragment {
         });
     }
 
+    private boolean shouldExpandSearchView() {
+        return getListAdapter() != null;
+    }
+
     private void filter(String newText) {
         fadeInProgressFrame();
         mCurrentSearchKeyword = newText;
@@ -273,6 +277,7 @@ public abstract class EntriesFragment extends FadeListFragment {
 
     private void showRawEntries() {
         fadeInListFrame();
+        mCurrentSearchKeyword = null;
         getFilterableAdapter().showRawEntries();
     }
 

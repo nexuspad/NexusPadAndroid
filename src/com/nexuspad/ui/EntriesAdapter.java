@@ -38,8 +38,6 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter impl
     public static final int TYPE_ENTRY = 1;
     public static final int TYPE_EMPTY_ENTRY = 2;
 
-    public static final int MIN_FILTER_LENGTH = 2;
-
     private final ImmutableList<T> mRawEntries;     // unfiltered, original entries
     private final LayoutInflater mInflater;
     private final int mEntryHeaderId;
@@ -261,13 +259,6 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter impl
     }
 
     /**
-     * @return default: {@value #MIN_FILTER_LENGTH}
-     */
-    public int getMinFilterStringLength() {
-        return MIN_FILTER_LENGTH;
-    }
-
-    /**
      * default implementation calls {@link #filterWithWeb(String)}
      *
      * @param string
@@ -277,18 +268,11 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter impl
         filterWithWeb(string);
     }
 
-    /**
-     * web search is only invoked if {@code string.length() >= getMinFilterStringLength()}
-     *
-     * @param string
-     */
     public void filterWithWeb(String string) {
-        if (string.length() >= getMinFilterStringLength()) {
-            try {
-                mService.searchEntriesInFolder(string, mFolder, mTemplate, 0, 99);
-            } catch (NPException e) {
-                throw new RuntimeException(e);
-            }
+        try {
+            mService.searchEntriesInFolder(string, mFolder, mTemplate, 0, 99);
+        } catch (NPException e) {
+            throw new RuntimeException(e);
         }
     }
 
