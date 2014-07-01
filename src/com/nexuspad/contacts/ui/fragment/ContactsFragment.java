@@ -109,7 +109,10 @@ public final class ContactsFragment extends EntriesFragment {
         final FadeListFragment.ListViewManager manager = getListViewManager();
         manager.setFastScrollEnabled(false);     // not ready for the first release
 
+        // set the folder selector view bar
         setQuickReturnListener(manager, null);
+
+        // set the listener for folder selector
         setOnFolderSelectedClickListener(REQ_FOLDER);
     }
 

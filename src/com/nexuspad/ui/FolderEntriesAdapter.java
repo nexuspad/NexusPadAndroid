@@ -11,6 +11,8 @@ import android.widget.BaseAdapter;
 import com.edmondapps.utils.android.ui.CompoundAdapter;
 
 /**
+ * Handles the list that contains both folders and entries.
+ *
  * @author Edmond
  */
 public class FolderEntriesAdapter<T extends EntriesAdapter<?>> extends CompoundAdapter implements OnItemLongClickListener {

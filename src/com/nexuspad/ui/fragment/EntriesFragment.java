@@ -96,6 +96,10 @@ public abstract class EntriesFragment extends FadeListFragment {
         }
     };
 
+
+    /**
+     * Override BroadcastReceiver to display entries on screen.
+     */
     private final EntryListReceiver mEntryListReceiver = new EntryListReceiver() {
         @Override
         protected void onGotAll(Context c, Intent i, EntryTemplate entryTemplate, String key) {
@@ -676,7 +680,7 @@ public abstract class EntriesFragment extends FadeListFragment {
 
     protected boolean hasNextPage() {
         final EntryList list = mEntryList;
-        return list != null && list.getEntries().size() == (list.getCountPerPage() * list.getPageId());
+        return list != null && list.getTotalCount() > (list.getCountPerPage() * list.getPageId());
     }
 
     public void deleteEntry(NPEntry entry) {
@@ -716,6 +720,12 @@ public abstract class EntriesFragment extends FadeListFragment {
         gridView.setOnScrollListener(newDirectionalScrollListener(other));
     }
 
+    /**
+     * Decide to show the folder selector bar when list is scrolled to the bottom.
+     *
+     * @param other
+     * @return
+     */
     private DirectionalScrollListener newDirectionalScrollListener(final AbsListView.OnScrollListener other) {
         return new DirectionalScrollListener(0, other) {
             @Override
