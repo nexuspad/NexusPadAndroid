@@ -3,11 +3,14 @@
  */
 package com.nexuspad.about.fragment;
 
+import android.accounts.Account;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -16,12 +19,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.edmondapps.utils.android.annotaion.FragmentName;
+import com.edmondapps.utils.java.Lazy;
+import com.nexuspad.Manifest;
 import com.nexuspad.R;
 import com.nexuspad.account.AccountManager;
 import com.nexuspad.app.App;
 import com.nexuspad.datamodel.NPUser;
 import com.nexuspad.datamodel.UserSetting;
-import com.nexuspad.dataservice.NPException;
+import com.nexuspad.dataservice.*;
+import com.nexuspad.dataservice.AccountService;
+import com.nexuspad.dataservice.AccountService.AccountInfoReceiver;
+import com.nexuspad.home.ui.activity.LoginActivity;
+import com.nexuspad.util.Logs;
 import com.squareup.picasso.Picasso;
 
 import static com.edmondapps.utils.android.view.ViewUtils.findView;
@@ -43,7 +52,40 @@ public class AboutFragment extends Fragment {
     private TextView mNameV;
     private NPUser mUser;
 
-    @Override
+	private final Lazy<AccountService> mAccountService = new Lazy<AccountService>() {
+		@Override
+		protected AccountService onCreate() {
+			return AccountService.getInstance(getActivity());
+		}
+	};
+
+	private final AccountInfoReceiver mAccountInfoReceiver = new AccountService.AccountInfoReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			super.onReceive(context, intent);
+		}
+
+		@Override
+		protected void onGot(Context context, Intent intent, UserSetting settings) {
+			try {
+				mUser = AccountManager.currentAccount();
+			} catch (NPException e) {
+			}
+			updateUI();
+		}
+
+		@Override
+		protected void onUpdate(Context context, Intent intent, UserSetting entry) {
+			updateUI();
+		}
+
+		@Override
+		protected void onError(Context context, Intent intent, ServiceError error) {
+			handleServiceError(error);
+		}
+	};
+
+	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
@@ -63,14 +105,36 @@ public class AboutFragment extends Fragment {
         mNameV = findView(view, R.id.lbl_ac_name);
         mUsernameV = findView(view, R.id.lbl_ac_username);
 
-        loadUser();
         installListeners(view);
-        updateUI();
     }
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		final FragmentActivity activity = getActivity();
+
+		activity.registerReceiver(mAccountInfoReceiver,
+				AccountService.AccountInfoReceiver.getIntentFilter(),
+				Manifest.permission.RECEIVE_ACCOUNT_INFO,
+				null);
+
+		loadUser();
+		updateUI();
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		final FragmentActivity activity = getActivity();
+
+		activity.unregisterReceiver(mAccountInfoReceiver);
+	}
 
     private void loadUser() {
         try {
             mUser = AccountManager.currentAccount();
+	        mAccountService.get().getSettingsAndUsage();
+
         } catch (NPException e) {
             // I thought I am logged in
             throw new AssertionError(e);
@@ -146,11 +210,39 @@ public class AboutFragment extends Fragment {
     private void updateUsage(NPUser user) {
         UserSetting setting = user.getSetting();
         if (setting != null) {
-            long usage = setting.getSpaceUsage();
-            long allocation = setting.getSpaceAllocation();
-            mAccountUsageV.setText(getString(R.string.format_ac_usage, usage, allocation));
+            mAccountUsageV.setText(getString(R.string.format_ac_usage, setting.getSpaceUsageFormatted(), setting.getSpaceAllocationFormatted()));
         } else {
             mAccountUsageV.setText(R.string.usage_unavailable);
         }
     }
+
+	private void handleServiceError(ServiceError error) {
+		final ErrorCode errorCode = error.getErrorCode();
+		if (shouldKickToLogin(errorCode)) {
+			kickToLoginScreen();
+		} else {
+			//fadeInRetryFrame();
+		}
+	}
+
+	// TODO - the logic needs to be consolidated with that in EntriesFragment
+	private boolean shouldKickToLogin(ErrorCode errorCode) {
+		return errorCode == ErrorCode.INVALID_USER_TOKEN
+				|| errorCode == ErrorCode.INVALID_LOGIN
+				|| errorCode == ErrorCode.NOT_LOGGED_IN
+				|| errorCode == ErrorCode.FAILED_REGISTRATION
+				|| errorCode == ErrorCode.FAILED_REGISTRATION_ACCT_EXISTS
+				|| errorCode == ErrorCode.FAILED_DELETE_ACCOUNT
+				|| errorCode == ErrorCode.LOGIN_NO_USER
+				|| errorCode == ErrorCode.LOGIN_ACCT_PROBLEM
+				|| errorCode == ErrorCode.LOGIN_FAILED;
+	}
+
+	private void kickToLoginScreen() {
+		final FragmentActivity activity = getActivity();
+		final Intent intent = new Intent(activity, LoginActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+		startActivity(intent);
+		activity.finish();
+	}
 }

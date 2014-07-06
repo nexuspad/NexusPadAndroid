@@ -78,7 +78,7 @@
     <string name="account_info">Account Info</string>
     <string name="support">Support</string>
     <string name="terms_of_use">Terms of Use</string>
-    <string name="format_ac_usage">%1$dMB / %2$dMB</string>
+    <string name="format_ac_usage">%1$s / %2$s</string>
     <!-- first name, last name -->
     <string name="format_ac_name">%1$s %2$s</string>
     <string name="about">About</string>

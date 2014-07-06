@@ -678,6 +678,11 @@ public abstract class EntriesFragment extends FadeListFragment {
         mEntryList.setPageId(o.getPageId());
     }
 
+    /**
+     * Decide whether there is more to be displayed on the page.
+     *
+     * @return
+     */
     protected boolean hasNextPage() {
         final EntryList list = mEntryList;
         return list != null && list.getTotalCount() > (list.getCountPerPage() * list.getPageId());
