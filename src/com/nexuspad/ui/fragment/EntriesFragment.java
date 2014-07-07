@@ -320,6 +320,15 @@ public abstract class EntriesFragment extends FadeListFragment {
     }
 
     protected void onDeleteEntry(NPEntry entry) {
+        EntryList entryList = getEntryList();
+        if (entryList != null) {
+            final List<NPEntry> entries = entryList.getEntries();
+            if (Iterables.removeIf(entries, entry.filterById())) {
+                onEntryListUpdated();
+            } else {
+                Logs.w(TAG, "entry deleted on the server, but ID does not exists in the list");
+            }
+        }
     }
 
     protected void onNewEntry(NPEntry entry) {
