@@ -33,6 +33,7 @@ public class JournalsActivity extends EntriesActivity implements JournalsFragmen
     public static final String TAG = "JournalsActivity";
 
     private static final int REQ_CODE_MONTH = 1;
+    private static final String KEY_PENDING_DISPLAY_DATE = "key_pending_display_date";
 
     private DateFormat mDateFormat;
     private long mPendingDisplayDate = -1;
@@ -91,6 +92,18 @@ public class JournalsActivity extends EntriesActivity implements JournalsFragmen
         if (mPendingDisplayDate >= 0) {
             getFragment().setDisplayDate(mPendingDisplayDate);
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putLong(KEY_PENDING_DISPLAY_DATE, mPendingDisplayDate);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mPendingDisplayDate = savedInstanceState.getLong(KEY_PENDING_DISPLAY_DATE, -1);
     }
 
     @Override

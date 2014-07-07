@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/scrollableFrame"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+            style="@style/scrollableFrame"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
     >
 
     <LinearLayout
@@ -19,7 +19,7 @@
             android:text="@string/folder"
             />
 
-        <include layout="@layout/include_folder_selector" />
+        <include layout="@layout/include_folder_selector"/>
 
         <EditText
             android:id="@+id/txt_title"
@@ -63,7 +63,7 @@
             android:layout_height="wrap_content"
             android:text="@string/add_attachment"
             android:drawablePadding="@dimen/ed__padding_medium"
-            android:drawableLeft="@android:drawable/ic_menu_add"
+            android:drawableLeft="@drawable/ic_action_new"
             />
     </LinearLayout>
 

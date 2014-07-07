@@ -24,12 +24,9 @@ import com.nexuspad.datamodel.EntryTemplate;
 import com.nexuspad.datamodel.Folder;
 import com.nexuspad.datamodel.NPUpload;
 import com.nexuspad.dataservice.ServiceConstants;
-import com.nexuspad.ui.activity.UploadCenterActivity;
-import com.nexuspad.ui.fragment.EntryFragment;
 import com.nexuspad.ui.fragment.NewEntryFragment;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.edmondapps.utils.android.view.ViewUtils.findView;
@@ -43,7 +40,7 @@ import static com.edmondapps.utils.android.view.ViewUtils.isAllTextNotEmpty;
 public class NewDocFragment extends NewEntryFragment<Doc> {
     public static final String TAG = "NewDocFragment";
 
-    protected static final int REQ_PICK_FILE = 2;
+    protected static final int REQ_PICK_FILE = REQ_SUBCLASSES + 1;
 
     public static interface Callback extends NewEntryFragment.Callback<Doc> {
         void onUpdateEntry(Doc entry);

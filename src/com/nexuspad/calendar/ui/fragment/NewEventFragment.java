@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.TextView;
 import com.android.datetimepicker.date.DatePickerDialog;
 import com.android.datetimepicker.time.TimePickerDialog;
@@ -42,7 +41,7 @@ import static com.nexuspad.dataservice.ServiceConstants.CALENDAR_MODULE;
 public class NewEventFragment extends NewEntryFragment<Event> {
     public static final String TAG = "NewEventFragment";
 
-    private static final int REQ_LOCATION = 2;
+    private static final int REQ_LOCATION = REQ_SUBCLASSES + 1;
 
     public static NewEventFragment of(Event event, Folder folder) {
         final Bundle bundle = new Bundle();
@@ -76,9 +75,10 @@ public class NewEventFragment extends NewEntryFragment<Event> {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case REQ_LOCATION:
-                if (resultCode != Activity.RESULT_OK) return;
-                final Location location = data.getParcelableExtra(NewLocationActivity.KEY_LOCATION);
-                mLocationV.setLocation(location);
+                if (resultCode == Activity.RESULT_OK) {
+                    final Location location = data.getParcelableExtra(NewLocationActivity.KEY_LOCATION);
+                    mLocationV.setLocation(location);
+                }
                 break;
             default:
                 super.onActivityResult(requestCode, resultCode, data);

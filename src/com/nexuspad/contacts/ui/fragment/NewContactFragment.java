@@ -41,11 +41,11 @@ public class NewContactFragment extends NewEntryFragment<Contact> {
         return fragment;
     }
 
-    // 1 is used by REQ_FOLDER (NewEntryFragment)
-    private static final int REQ_LOCATION = 2;
+    private static final int REQ_LOCATION = REQ_SUBCLASSES + 1;
 
     private LayoutInflater mInflater;
 
+    private TextView mFolderV;
     private EditText mTitleV;
     private TextView mFirstNameV;
     private TextView mMiddleNameV;
@@ -68,15 +68,15 @@ public class NewContactFragment extends NewEntryFragment<Contact> {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case REQ_LOCATION:
-                if (resultCode != Activity.RESULT_OK) break;
-                final Location location = data.getParcelableExtra(NewLocationActivity.KEY_LOCATION);
-                updateAddressView(location);
+                if (resultCode == Activity.RESULT_OK) {
+                    final Location location = data.getParcelableExtra(NewLocationActivity.KEY_LOCATION);
+                    updateAddressView(location);
+                }
                 break;
             default:
-                throw new AssertionError("unexpected requestCode: " + requestCode);
+                super.onActivityResult(requestCode, resultCode, data);
         }
     }
 
@@ -87,6 +87,7 @@ public class NewContactFragment extends NewEntryFragment<Contact> {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        mFolderV = findView(view, R.id.lbl_folder);
         mTitleV = findView(view, android.R.id.title);
         mFirstNameV = findView(view, R.id.txt_first_name);
         mMiddleNameV = findView(view, R.id.txt_middle_name);
@@ -108,11 +109,24 @@ public class NewContactFragment extends NewEntryFragment<Contact> {
             }
         });
 
+        installFolderSelectorListener(mFolderV);
         super.onViewCreated(view, savedInstanceState);
     }
 
     @Override
+    protected void onFolderUpdated(Folder folder) {
+        super.onFolderUpdated(folder);
+        updateFolderView();
+    }
+
+    private void updateFolderView() {
+        mFolderV.setText(getFolder().getFolderName());
+    }
+
+    @Override
     protected void updateUI() {
+        updateFolderView();
+
         final Contact contact = getEntry();
         if (contact != null) {
             mTitleV.setText(contact.getTitle());
@@ -129,9 +143,8 @@ public class NewContactFragment extends NewEntryFragment<Contact> {
             updateEmails(contact);
         }
 
-        // a new field for input
-        addPhoneView(null);
-        addEmailView(null);
+        addNPItemViewIfNeeded(null, NPItem.ItemType.PHONE);
+        addNPItemViewIfNeeded(null, NPItem.ItemType.EMAIL);
     }
 
     private void updateAddressView(Location location) {
@@ -169,14 +182,17 @@ public class NewContactFragment extends NewEntryFragment<Contact> {
         addNPItemView(phone, NPItem.ItemType.PHONE);
     }
 
-    private void addNPItemViewIfNeeded(NPItem NPItem, final NPItem.ItemType type) {
+    private void addNPItemViewIfNeeded(NPItem item, final NPItem.ItemType type) {
         final ViewGroup frame = getParentFor(type);
         final int childCount = frame.getChildCount();
-        if (childCount <= 0) return;
-        final View parent = frame.getChildAt(childCount - 1);
-        final EditText editText = findView(parent, android.R.id.edit);
-        if (!TextUtils.isEmpty(editText.getText().toString())) {
-            addNPItemView(NPItem, type);
+        if (childCount <= 0) {
+            addNPItemView(item, type);
+        } else {
+            final View parent = frame.getChildAt(childCount - 1);
+            final EditText editText = findView(parent, android.R.id.edit);
+            if (!TextUtils.isEmpty(editText.getText().toString())) {
+                addNPItemView(item, type);
+            }
         }
     }
 

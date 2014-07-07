@@ -57,8 +57,7 @@ public class NewAlbumFragment extends NewEntryFragment<Album> {
         return fragment;
     }
 
-    // 1 is used by REQ_FOLDER (NewEntryFragment)
-    private static final int REQ_PICK_IMAGES = 2;
+    private static final int REQ_PICK_IMAGES = REQ_SUBCLASSES + 1;
 
     private final Lazy<EntryUploadService> mUploadService = new Lazy<EntryUploadService>() {
         @Override
@@ -147,8 +146,6 @@ public class NewAlbumFragment extends NewEntryFragment<Album> {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
         switch (requestCode) {
             case REQ_PICK_IMAGES:
                 if (resultCode == Activity.RESULT_OK) {
@@ -161,7 +158,7 @@ public class NewAlbumFragment extends NewEntryFragment<Album> {
                 }
                 break;
             default:
-                throw new AssertionError("unknown requestCode: " + requestCode);
+                super.onActivityResult(requestCode, resultCode, data);
         }
     }
 

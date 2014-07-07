@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
     style="@style/scrollableFrame"
-    android:paddingLeft="@dimen/ed__padding_medium"
-    android:paddingRight="@dimen/ed__padding_medium"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingLeft="@dimen/ed__padding_medium"
+    android:paddingRight="@dimen/ed__padding_medium"
     >
 
     <LinearLayout
@@ -42,15 +43,24 @@
                 android:hint="@string/title" />
         </LinearLayout>
     -->
-        <EditText
-            android:id="@android:id/title"
-            android:layout_gravity="center_vertical"
-            android:padding="@dimen/ed__padding_small"
-            android:textSize="@dimen/ed__textsize_medium"
+
+        <TextView
+            style="?android:attr/listSeparatorTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textPersonName|textCapWords"
+            android:text="@string/folder"/>
+
+        <include layout="@layout/include_folder_selector"/>
+
+        <EditText
+            android:id="@android:id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:hint="@string/title"
+            android:inputType="textPersonName|textCapWords"
+            android:padding="@dimen/ed__padding_small"
+            android:textSize="@dimen/ed__textsize_medium"
             />
 
 
@@ -66,8 +76,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:inputType="textPersonName|textCapWords"
                 android:hint="@string/first_name"
+                android:inputType="textPersonName|textCapWords"
                 android:textSize="@dimen/ed__textsize_medium"
                 />
 
@@ -76,8 +86,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:inputType="textPersonName|textCapWords"
                 android:hint="@string/middle_name"
+                android:inputType="textPersonName|textCapWords"
                 android:textSize="@dimen/ed__textsize_medium"
                 />
         </LinearLayout>
@@ -87,8 +97,8 @@
             style="@style/formMargin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textPersonName|textCapWords"
             android:hint="@string/last_name"
+            android:inputType="textPersonName|textCapWords"
             android:textSize="@dimen/ed__textsize_medium"
             />
 
@@ -97,9 +107,9 @@
             style="@style/formMargin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textPersonName|textCapWords"
-            android:hint="@string/business_name"
             android:layout_marginBottom="@dimen/ed__padding_small"
+            android:hint="@string/business_name"
+            android:inputType="textPersonName|textCapWords"
             android:textSize="@dimen/ed__textsize_medium"
             />
 
@@ -115,8 +125,8 @@
             style="@style/selectableTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/address"
             android:drawableRight="@android:drawable/ic_menu_edit"
+            android:hint="@string/address"
             />
 
         <TextView

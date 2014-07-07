@@ -27,6 +27,11 @@ public abstract class NewEntryFragment<T extends NPEntry> extends EntryFragment<
     public static final String TAG = "NewEntryFragment";
 
     protected static final int REQ_FOLDER = 1;
+    /**
+     * the starting int request code for subclasses, you must use an int higher than this constant to prevent collision
+     * with the super class
+     */
+    protected static final int REQ_SUBCLASSES = 2;
 
     /**
      * @return if calling {@link #getEditedEntry()} would return a valid entry
@@ -37,7 +42,7 @@ public abstract class NewEntryFragment<T extends NPEntry> extends EntryFragment<
      * Callers of this method should first check with
      * {@link #isEditedEntryValid()} to guarantee the validity of the edited
      * entry.<p>
-     * Do not modify the detail entry here, create a copy and use {@link #setDetailEntry(NPEntry)} instead.
+     * Do not modify the detail entry here, create a copy and use {@link #setEntry(NPEntry)} instead.
      * Or else equality checks will fail, and no entries will be updated.<p>
      *
      * @return an edited entry that reflects the user's changes
