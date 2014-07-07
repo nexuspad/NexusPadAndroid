@@ -128,6 +128,10 @@ public class NewContactFragment extends NewEntryFragment<Contact> {
             updatePhones(contact);
             updateEmails(contact);
         }
+
+        // a new field for input
+        addPhoneView(null);
+        addEmailView(null);
     }
 
     private void updateAddressView(Location location) {
@@ -139,14 +143,12 @@ public class NewContactFragment extends NewEntryFragment<Contact> {
         for (Phone phone : contact.getPhones()) {
             addPhoneView(phone);
         }
-        addPhoneView(null);
     }
 
     private void updateEmails(Contact contact) {
         for (Email email : contact.getEmails()) {
             addEmailView(email);
         }
-        addEmailView(null);
     }
 
     /**
@@ -178,7 +180,7 @@ public class NewContactFragment extends NewEntryFragment<Contact> {
         }
     }
 
-    private void addNPItemView(final NPItem NPItem, final NPItem.ItemType type) {
+    private void addNPItemView(final NPItem item, final NPItem.ItemType type) {
         final ViewGroup parent = getParentFor(type);
         final int hintId = getHintIdFor(type);
         final View view = mInflater.inflate(R.layout.list_item_edittext_btn, parent, false);
@@ -192,15 +194,15 @@ public class NewContactFragment extends NewEntryFragment<Contact> {
                 parent.removeView(view);
             }
         });
-        if (NPItem != null) {
-            editText.setText(NPItem.getValue());
+        if (item != null) {
+            editText.setText(item.getValue());
         }
         editText.setHint(hintId);
         editText.setInputType(getInputTypeFor(type));
         editText.addTextChangedListener(new EmptyTextWatcher() {
             @Override
             protected void onTextNotEmpty(CharSequence sequence) {
-                addNPItemViewIfNeeded(NPItem, type);
+                addNPItemViewIfNeeded(item, type);
             }
         });
 
