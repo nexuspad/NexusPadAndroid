@@ -9,13 +9,22 @@
         android:layout_height="wrap_content"
         android:orientation="vertical" android:weightSum="1">
 
-        <ImageView
-            android:layout_width="60dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal|left"
-            android:layout_marginBottom="@dimen/ed__padding_medium"
-            android:contentDescription="@string/app_name"
-            android:src="@drawable/ic_ab" android:layout_weight="0.50"/>
+            android:orientation="horizontal">
+            <ImageView
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:layout_marginBottom="@dimen/ed__padding_medium"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/ic_ab" />
+            <TextView
+                style="@style/logoTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/app_name" />
+        </LinearLayout>
 
         <EditText
             android:id="@+id/txt_user_name"

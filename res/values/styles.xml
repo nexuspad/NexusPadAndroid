@@ -19,6 +19,12 @@
         <item name="android:layout_marginTop">@dimen/ed__padding_small</item>
     </style>
 
+    <style name="logoTextView" parent="android:Widget.Holo.Light.TextView">
+        <item name="android:textSize">30sp</item>
+        <item name="android:gravity">bottom</item>
+        <item name="android:layout_marginLeft">8dp</item>
+    </style>
+
     <style name="listItemTextView">
         <item name="android:gravity">center_vertical</item>
         <item name="android:minHeight">48dp</item>
