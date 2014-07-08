@@ -34,6 +34,13 @@
         <item name="android:background">#DFDFDF</item>
     </style>
 
+    <style name="BlockTextTextView">
+        <item name="android:gravity">top</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:padding">@dimen/ed__padding_small</item>
+        <item name="android:textSize">@dimen/ed__textsize_medium</item>
+    </style>
+
     <style name="selectableTextView" parent="@style/listItemTextView">
         <item name="android:background">?android:attr/selectableItemBackground</item>
         <item name="android:clickable">true</item>

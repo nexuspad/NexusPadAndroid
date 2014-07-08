@@ -45,44 +45,21 @@
 
         -->
 
-        <TextView
-            android:id="@android:id/title"
-            android:layout_gravity="center_vertical"
-            android:paddingBottom="@dimen/ed__padding_small"
-            android:textSize="@dimen/ed__textsize_large"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/title" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/ed__padding_small"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/lbl_first_name"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="@string/first_name"
-                android:textSize="@dimen/ed__textsize_medium" />
-
-            <TextView
-                android:id="@+id/lbl_middle_name"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="@string/middle_name"
-                android:textSize="@dimen/ed__textsize_medium" />
-        </LinearLayout>
+        <!--<TextView-->
+            <!--android:id="@android:id/title"-->
+            <!--android:layout_gravity="center_vertical"-->
+            <!--android:paddingBottom="@dimen/ed__padding_small"-->
+            <!--android:textSize="@dimen/ed__textsize_large"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:hint="@string/title" />-->
 
         <TextView
-            android:id="@+id/lbl_last_name"
+            android:id="@+id/lbl_full_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/last_name"
-            android:layout_marginBottom="@dimen/ed__padding_small"
+            android:layout_weight="1"
+            android:hint="@string/first_name"
             android:textSize="@dimen/ed__textsize_medium" />
 
         <TextView

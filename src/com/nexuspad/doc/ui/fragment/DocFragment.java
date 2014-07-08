@@ -97,7 +97,7 @@ public class DocFragment extends EntryFragment<Doc> {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        mTitleV = findView(view, R.id.lbl_title);
+//        mTitleV = findView(view, R.id.lbl_title);
         mNoteV = findView(view, R.id.lbl_note);
 
         mAttachmentsTitleV = findView(view, R.id.lbl_attachment);
@@ -106,7 +106,7 @@ public class DocFragment extends EntryFragment<Doc> {
         mTagsFrameV = findView(view, R.id.lbl_tags_title);
         mTagsV = findView(view, R.id.lbl_tags);
 
-        mTitleV.setTypeface(App.getRobotoLight());
+//        mTitleV.setTypeface(App.getRobotoLight());
 
         super.onViewCreated(view, savedInstanceState);
     }
@@ -120,7 +120,7 @@ public class DocFragment extends EntryFragment<Doc> {
     protected void updateUI() {
         Doc doc = getEntry();
         if (doc != null) {
-            mTitleV.setText(doc.getTitle());
+//            mTitleV.setText(doc.getTitle());
             mTagsV.setText(doc.getTags());
 
             final String note = doc.getNote();

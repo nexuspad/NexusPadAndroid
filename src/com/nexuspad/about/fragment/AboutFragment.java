@@ -142,12 +142,6 @@ public class AboutFragment extends Fragment {
     }
 
     private void installListeners(View parent) {
-        findView(parent, R.id.frame_ac_email).setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sendEmailTo(mUser.getEmail());
-            }
-        });
         findView(parent, R.id.lbl_email_support).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {

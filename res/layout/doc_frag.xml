@@ -11,17 +11,17 @@
         android:orientation="vertical"
         >
 
-        <TextView
-            android:id="@+id/lbl_title"
-            style="@style/listTitleTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/title"
-            />
+        <!--<TextView-->
+            <!--android:id="@+id/lbl_title"-->
+            <!--style="@style/listTitleTextView"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:hint="@string/title"-->
+            <!--/>-->
 
         <TextView
             android:id="@+id/lbl_note"
-            style="@style/listItemTextView"
+            style="@style/BlockTextTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/doc"

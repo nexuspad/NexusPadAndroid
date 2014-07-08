@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.util.Linkify;
+import android.util.Log;
 import android.view.*;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,9 +46,7 @@ public class ContactFragment extends EntryFragment<Contact> {
     private LayoutInflater mInflater;
 
     private TextView mTitleV;
-    private TextView mFirstNameV;
-    private TextView mMiddleNameV;
-    private TextView mLastNameV;
+	private TextView mFullnameV;
     private TextView mBussinessNameV;
     private TextView mWebAddressV;
     private TextView mTagsV;
@@ -100,10 +99,8 @@ public class ContactFragment extends EntryFragment<Contact> {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        mTitleV = findView(view, android.R.id.title);
-        mFirstNameV = findView(view, R.id.lbl_first_name);
-        mMiddleNameV = findView(view, R.id.lbl_middle_name);
-        mLastNameV = findView(view, R.id.lbl_last_name);
+//        mTitleV = findView(view, android.R.id.title);
+        mFullnameV = findView(view, R.id.lbl_full_name);
         mBussinessNameV = findView(view, R.id.lbl_bussiness_name);
         mWebAddressV = findView(view, R.id.lbl_web_address);
         mTagsV = findView(view, R.id.lbl_tags);
@@ -127,10 +124,8 @@ public class ContactFragment extends EntryFragment<Contact> {
     protected void updateUI() {
         final Contact contact = getEntry();
         if (contact != null) {
-            mTitleV.setText(contact.getTitle());
-            mFirstNameV.setText(contact.getFirstName());
-            mMiddleNameV.setText(contact.getMiddleName());
-            mLastNameV.setText(contact.getLastName());
+//            mTitleV.setText(contact.getTitle());
+	        mFullnameV.setText(contact.getFullName());
             mBussinessNameV.setText(contact.getBusinessName());
             mWebAddressV.setText(contact.getWebAddress());
             mTagsV.setText(contact.getTags());
@@ -186,7 +181,7 @@ public class ContactFragment extends EntryFragment<Contact> {
 
         text.setLinksClickable(false);
         text.setAutoLinkMask(Linkify.ALL);
-        text.setText(item.getValue());
+        text.setText(item.getFormattedValue());
         view.removeView(icon);
         view.removeView(menu);
 
@@ -221,9 +216,11 @@ public class ContactFragment extends EntryFragment<Contact> {
     }
 
     private void updateVisibility(Contact contact) {
-        final int firstNameFlag = TextUtils.isEmpty(contact.getFirstName()) ? View.GONE : View.VISIBLE;
-        final int middleNameFlag = TextUtils.isEmpty(contact.getMiddleName()) ? View.GONE : View.VISIBLE;
-        final int lastNameFlag = TextUtils.isEmpty(contact.getLastName()) ? View.GONE : View.VISIBLE;
+	    String fullName = contact.getFullName();
+	    if (fullName == null || fullName.length() == 0 || contact.getTitle().equals(fullName)) {
+		    mFullnameV.setVisibility(View.GONE);
+	    }
+
         final int businessNameFlag = TextUtils.isEmpty(contact.getBusinessName()) ? View.GONE : View.VISIBLE;
 
         final int phonesFlag = contact.getPhones().isEmpty() ? View.GONE : View.VISIBLE;
@@ -233,9 +230,6 @@ public class ContactFragment extends EntryFragment<Contact> {
         final int noteFlag = TextUtils.isEmpty(contact.getNote()) ? View.GONE : View.VISIBLE;
         final int addressFlag = TextUtils.isEmpty(contact.getLocation().getFullAddress()) ? View.GONE : View.VISIBLE;
 
-        mFirstNameV.setVisibility(firstNameFlag);
-        mMiddleNameV.setVisibility(middleNameFlag);
-        mLastNameV.setVisibility(lastNameFlag);
         mBussinessNameV.setVisibility(businessNameFlag);
 
         mPhoneHeaderV.setVisibility(phonesFlag);

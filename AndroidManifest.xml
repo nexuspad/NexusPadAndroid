@@ -209,6 +209,9 @@
             android:name=".ui.activity.FoldersActivity"
             android:label="@string/folders"
             />
+
+        <meta-data android:name="env" android:value="prod"/>
+
     </application>
 
 </manifest>
