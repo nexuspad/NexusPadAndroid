@@ -186,11 +186,15 @@ public class FoldersAdapter extends BaseAdapter implements OnItemLongClickListen
     public View getView(int position, View convertView, ViewGroup parent) {
         switch (getItemViewType(position)) {
             case TYPE_HEADER:
-                return getHeaderView(position, convertView, parent);
+                View headerView = getHeaderView(position, convertView, parent);
+	            return headerView;
+
             case TYPE_FOLDER:
                 return getFolderView(getItem(position), position, convertView, parent);
+
             case TYPE_EMPTY_FOLDER:
                 return getEmptyFolderView(mInflater, convertView, parent);
+
             default:
                 throw new AssertionError("unknown view type: " + getItemViewType(position) + " at position: " + position);
         }
