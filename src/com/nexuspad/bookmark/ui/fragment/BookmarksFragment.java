@@ -201,7 +201,7 @@ public class BookmarksFragment extends EntriesFragment {
         }
 
         @Override
-        protected int getEntryStringId() {
+        protected int getEntryStringIdForHeader() {
             return R.string.bookmarks;
         }
 

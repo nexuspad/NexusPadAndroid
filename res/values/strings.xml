@@ -62,6 +62,7 @@
     <string name="rename">Rename</string>
     <string name="empty_folder">The folder is empty</string>
     <string name="empty_bookmarks">No Bookmarks</string>
+    <string name="empty_photos">No Photos</string>
     <string name="empty_contacts">No Contacts</string>
     <string name="empty_docs">No Docs</string>
     <string name="empty_events">No Events</string>

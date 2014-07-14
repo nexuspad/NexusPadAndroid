@@ -255,7 +255,7 @@ public class EventsAgendaFragment extends EntriesFragment {
         }
 
         @Override
-        protected int getEntryStringId() {
+        protected int getEntryStringIdForHeader() {
             return 0;
         }
 

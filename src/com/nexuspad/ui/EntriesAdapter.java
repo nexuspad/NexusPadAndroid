@@ -63,7 +63,7 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter impl
         mRawEntries = ImmutableList.copyOf(entries);
         mDisplayEntries = entries;
         mInflater = a.getLayoutInflater();
-        mEntryHeaderId = getEntryStringId();
+        mEntryHeaderId = getEntryStringIdForHeader();
     }
 
     protected abstract View getEntryView(T entry, int position, View convertView, ViewGroup parent);
@@ -100,7 +100,7 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter impl
     /**
      * @return the string id; or 0 if no headers should be used
      */
-    protected abstract int getEntryStringId();
+    protected abstract int getEntryStringIdForHeader();
 
     private boolean isHeaderEnabled() {
         return mEntryHeaderId > 0;
@@ -222,7 +222,7 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter impl
         }
         ViewHolder holder = getHolder(convertView);
 
-        holder.text1.setText(getEntryStringId());
+        holder.text1.setText(getEntryStringIdForHeader());
 
         return convertView;
     }
