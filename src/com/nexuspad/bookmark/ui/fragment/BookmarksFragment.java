@@ -5,6 +5,7 @@ package com.nexuspad.bookmark.ui.fragment;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.*;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
@@ -18,6 +19,7 @@ import com.nexuspad.datamodel.Bookmark;
 import com.nexuspad.datamodel.EntryList;
 import com.nexuspad.datamodel.EntryTemplate;
 import com.nexuspad.datamodel.Folder;
+import com.nexuspad.dataservice.EntryListService;
 import com.nexuspad.dataservice.EntryService;
 import com.nexuspad.dataservice.ServiceConstants;
 import com.nexuspad.ui.EntriesAdapter;
@@ -46,6 +48,9 @@ public class BookmarksFragment extends EntriesFragment {
         return fragment;
     }
 
+	/**
+	 * Callback methods that the Activity must implement.
+	 */
     public interface Callback extends EntriesFragment.Callback {
         void onBookmarkClick(BookmarksFragment f, Bookmark bookmark);
 
@@ -55,7 +60,6 @@ public class BookmarksFragment extends EntriesFragment {
     }
 
     private Callback mCallback;
-    private MenuItem mSearchItem;
 
     @Override
     public void onAttach(Activity activity) {
@@ -69,9 +73,7 @@ public class BookmarksFragment extends EntriesFragment {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.bookmarks_frag, menu);
 
-        mSearchItem = menu.findItem(R.id.search);
-        mSearchItem.setVisible(true);
-        setUpSearchView(mSearchItem);
+	    setUpSearchView(menu.findItem(R.id.search));
     }
 
     @Override
@@ -88,7 +90,6 @@ public class BookmarksFragment extends EntriesFragment {
     @Override
     protected void onListLoaded(EntryList list) {
         super.onListLoaded(list);
-        mSearchItem.setVisible(true);
 
         FolderBookmarksAdapter a = getListAdapter();
         if (a != null) {
@@ -101,25 +102,24 @@ public class BookmarksFragment extends EntriesFragment {
 
         ListView listView = getListView();
 
-        BookmarksAdapter bookmarksAdapter = newBookmarksAdapter(list);
-        FoldersAdapter foldersAdapter = newFoldersAdapter();
+	    final BookmarksAdapter bookmarksAdapter = new BookmarksAdapter(
+			    getActivity(),
+			    new WrapperList<Bookmark>(list.getEntries()));
+
+	    bookmarksAdapter.setOnMenuClickListener(new BookmarkMenuClickListener(getListView(), getEntryService()));
+
+	    FoldersAdapter foldersAdapter = newFoldersAdapter();
 
         FolderBookmarksAdapter adapter;
 
         if (hasNextPage()) {
-            adapter = new FolderBookmarksAdapter(foldersAdapter, bookmarksAdapter, getLoadMoreAdapter());
+	        adapter = new FolderBookmarksAdapter(foldersAdapter, bookmarksAdapter, getLoadMoreAdapter());
         } else {
             adapter = new FolderBookmarksAdapter(foldersAdapter, bookmarksAdapter);
         }
 
         setListAdapter(adapter);
         listView.setOnItemLongClickListener(adapter);
-    }
-
-    private BookmarksAdapter newBookmarksAdapter(EntryList list) {
-        BookmarksAdapter bookmarksAdapter = new BookmarksAdapter(getActivity(), new WrapperList<Bookmark>(list.getEntries()));
-        bookmarksAdapter.setOnMenuClickListener(new BookmarkMenuClickListener(getListView(), getEntryService()));
-        return bookmarksAdapter;
     }
 
     @Override
@@ -183,10 +183,10 @@ public class BookmarksFragment extends EntriesFragment {
 
     public class BookmarksAdapter extends EntriesAdapter<Bookmark> {
         public BookmarksAdapter(Activity a, List<Bookmark> entries) {
-            super(a, entries, getFolder(), getEntryListService(), getTemplate());
+            super(a, entries, getFolder(), getEntryListService(), EntryTemplate.BOOKMARK);
         }
 
-        @Override
+	    @Override
         protected View getEntryView(Bookmark entry, int position, View convertView, ViewGroup parent) {
             if (convertView == null) {
                 convertView = getLayoutInflater().inflate(R.layout.list_item_icon, parent, false);
@@ -201,8 +201,8 @@ public class BookmarksFragment extends EntriesFragment {
         }
 
         @Override
-        protected int getEntryStringId() {
-            return R.string.bookmarks;
+        protected String getEntriesHeaderText() {
+            return getString(R.string.bookmarks);
         }
 
         @Override

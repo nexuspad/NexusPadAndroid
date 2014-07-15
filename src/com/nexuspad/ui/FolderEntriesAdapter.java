@@ -3,6 +3,7 @@
  */
 package com.nexuspad.ui;
 
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -56,8 +57,13 @@ public class FolderEntriesAdapter<T extends EntriesAdapter<?>> extends CompoundA
         final int entriesCount = mEntriesAdapter.getCount();  // always non-empty (returned 1 above if it is empty)
         final int localCount = folderCount + entriesCount;
         final int superCount = super.getCount();
+
+	    //Log.i("CHECK COUNT: ", "folder cnt:" + String.valueOf(folderCount) + " entry cnt:" + String.valueOf(entriesCount) + " " + String.valueOf(localCount) + " " + String.valueOf(superCount));
+
+	    return localCount;
+
         // superCount will be 0 for empty adapters, use local in such case
-        return localCount > superCount ? localCount : superCount;
+        //return localCount > superCount ? localCount : superCount;
     }
 
     public void setShouldHideFolders(boolean shouldHideFolders) {
@@ -87,7 +93,7 @@ public class FolderEntriesAdapter<T extends EntriesAdapter<?>> extends CompoundA
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        if (mEntriesAdapter.isEmpty()) {
+	    if (mEntriesAdapter.isEmpty()) {
             return mEntriesAdapter.getView(position, convertView, parent);
         }
         return super.getView(position, convertView, parent);

@@ -97,9 +97,14 @@ public class DocsFragment extends EntriesFragment {
         ListView listView = getListView();
 
         FoldersAdapter foldersAdapter = newFoldersAdapter();
-        DocsAdapter docsAdapter = newDocsAdapter(list);
 
-        FoldersDocsAdapter foldersDocsAdapter;
+	    final DocsAdapter docsAdapter = new DocsAdapter(
+			    getActivity(),
+			    new WrapperList<Doc>(list.getEntries()));
+
+	    docsAdapter.setOnMenuClickListener(new OnDocMenuClickListener(getListView(), getEntryService()));
+
+	    FoldersDocsAdapter foldersDocsAdapter;
 
         if (hasNextPage()) {
             foldersDocsAdapter = new FoldersDocsAdapter(foldersAdapter, docsAdapter, getLoadMoreAdapter());
@@ -108,7 +113,6 @@ public class DocsFragment extends EntriesFragment {
         }
 
         setListAdapter(foldersDocsAdapter);
-
         listView.setOnItemLongClickListener(foldersDocsAdapter);
     }
 
@@ -116,17 +120,6 @@ public class DocsFragment extends EntriesFragment {
     protected void onSearchLoaded(EntryList list) {
         getListAdapter().setShouldHideFolders(true);
         super.onSearchLoaded(list);
-    }
-
-    private DocsAdapter newDocsAdapter(EntryList list) {
-        final DocsAdapter adapter = new DocsAdapter(
-                getActivity(),
-                new WrapperList<Doc>(list.getEntries()),
-                getFolder(),
-                getEntryListService(),
-                getTemplate());
-        adapter.setOnMenuClickListener(new OnDocMenuClickListener(getListView(), getEntryService()));
-        return adapter;
     }
 
     @Override
@@ -184,9 +177,8 @@ public class DocsFragment extends EntriesFragment {
     }
 
     public class DocsAdapter extends EntriesAdapter<Doc> {
-
-        public DocsAdapter(Activity a, List<Doc> entries, Folder folder, EntryListService service, EntryTemplate template) {
-            super(a, entries, folder, service, template);
+        public DocsAdapter(Activity a, List<Doc> entries) {
+            super(a, entries, getFolder(), getEntryListService(), EntryTemplate.DOC);
         }
 
         @Override
@@ -203,14 +195,14 @@ public class DocsFragment extends EntriesFragment {
             return convertView;
         }
 
+	    @Override
+	    protected String getEntriesHeaderText() {
+		    return getString(R.string.docs);
+	    }
+
         @Override
         protected View getEmptyEntryView(LayoutInflater i, View c, ViewGroup p) {
             return getCaptionView(i, c, p, R.string.empty_docs, R.drawable.empty_folder);
-        }
-
-        @Override
-        protected int getEntryStringId() {
-            return R.string.docs;
         }
 
         @Override

@@ -15,8 +15,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:gravity="top"
-        android:hint="@string/journal"
         android:scrollbars="vertical"
         android:background="@null"
-        />
+    />
 </LinearLayout>

@@ -5,6 +5,7 @@ package com.nexuspad.ui;
 
 import android.app.Activity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.*;
 import android.widget.AdapterView.OnItemLongClickListener;
 import com.edmondapps.utils.java.WrapperList;
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.nexuspad.R;
 import com.nexuspad.app.App;
@@ -42,7 +44,7 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter impl
 
     private final ImmutableList<T> mRawEntries;     // unfiltered, original entries
     private final LayoutInflater mInflater;
-    private final int mEntryHeaderId;
+    private final String mEntryHeaderText;
 
     private final Folder mFolder;
     private final EntryListService mService;
@@ -63,7 +65,7 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter impl
         mRawEntries = ImmutableList.copyOf(entries);
         mDisplayEntries = entries;
         mInflater = a.getLayoutInflater();
-        mEntryHeaderId = getEntryStringId();
+        mEntryHeaderText = getEntriesHeaderText();
     }
 
     protected abstract View getEntryView(T entry, int position, View convertView, ViewGroup parent);
@@ -92,7 +94,8 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter impl
      */
     @Override
     public void showRawEntries() {
-        mDisplayEntries = mRawEntries;
+	    mDisplayEntries.clear();
+        mDisplayEntries.addAll(mRawEntries);
         mResetConvertView = true;
         notifyDataSetChanged();
     }
@@ -100,10 +103,10 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter impl
     /**
      * @return the string id; or 0 if no headers should be used
      */
-    protected abstract int getEntryStringId();
+    protected abstract String getEntriesHeaderText();
 
     private boolean isHeaderEnabled() {
-        return mEntryHeaderId > 0;
+        return !Strings.isNullOrEmpty(mEntryHeaderText);
     }
 
     protected static class ViewHolder {
@@ -190,7 +193,7 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter impl
 
     @Override
     public T getItem(int position) {
-        return mDisplayEntries.get(isHeaderEnabled() ? position - 1 : position);
+	    return mDisplayEntries.get(isHeaderEnabled() ? position - 1 : position);
     }
 
     @Override
@@ -222,7 +225,7 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter impl
         }
         ViewHolder holder = getHolder(convertView);
 
-        holder.text1.setText(getEntryStringId());
+        holder.text1.setText(getEntriesHeaderText());
 
         return convertView;
     }

@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.MenuItemCompat;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.*;
@@ -103,7 +104,7 @@ public abstract class EntriesFragment extends FadeListFragment {
     private final EntryListReceiver mEntryListReceiver = new EntryListReceiver() {
         @Override
         protected void onGotAll(Context c, Intent i, EntryTemplate entryTemplate, String key) {
-            if (mModuleId.template().equals(entryTemplate)) {
+	        if (mModuleId.template().equals(entryTemplate)) {
                 onListLoadedInternal(mEntryListService.get().getEntryListFromKey(key));
             }
         }
@@ -204,6 +205,13 @@ public abstract class EntriesFragment extends FadeListFragment {
         }
     };
 
+	private OnListEndListener mLoadMoreScrollListener = new OnListEndListener() {
+		@Override
+		protected void onListEnd(int page) {
+			queryEntriesAsync(getCurrentPage() + 1);
+		}
+	};
+
     private EntryList mEntryList;
 
     private Callback mCallback;
@@ -238,41 +246,46 @@ public abstract class EntriesFragment extends FadeListFragment {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 if (Strings.isNullOrEmpty(query)) {
-                    showRawEntries();
+                    reDisplayListEntries();
                 } else {
                     filter(query);
                 }
                 return true;
             }
 
+	        /**
+	         * Placeholder method for searching while typing.
+	         */
             @Override
             public boolean onQueryTextChange(String newText) {
                 return false;
             }
         });
+
         searchView.setOnCloseListener(new SearchView.OnCloseListener() {
             @Override
             public boolean onClose() {
-                showRawEntries();
+	            reDisplayListEntries();
                 return true;
             }
         });
+
         MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
-                return shouldExpandSearchView();
+	            if (getListAdapter() != null) {
+	                return true;
+                }
+
+	            return false;
             }
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                showRawEntries();
+                reDisplayListEntries();
                 return true;
             }
         });
-    }
-
-    private boolean shouldExpandSearchView() {
-        return getListAdapter() != null;
     }
 
     private void filter(String newText) {
@@ -281,10 +294,18 @@ public abstract class EntriesFragment extends FadeListFragment {
         getFilterableAdapter().filter(newText);
     }
 
-    private void showRawEntries() {
+    private void reDisplayListEntries() {
         fadeInListFrame();
         mCurrentSearchKeyword = null;
         getFilterableAdapter().showRawEntries();
+
+	    /*
+	     * notifyDataSetChanged has to be called here and the views are refreshed.
+	     */
+	    final BaseAdapter adapter = getListAdapter();
+	    if (adapter != null) {
+		    adapter.notifyDataSetChanged();
+	    }
     }
 
     /**
@@ -445,12 +466,7 @@ public abstract class EntriesFragment extends FadeListFragment {
             listView.setItemsCanFocus(true);
             listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
             if (isAutoLoadMoreEnabled()) {
-                listView.setOnScrollListener(new OnListEndListener() {
-                    @Override
-                    protected void onListEnd(int page) {
-                        queryEntriesAsync(getCurrentPage() + 1);
-                    }
-                });
+                listView.setOnScrollListener(mLoadMoreScrollListener);
             }
         }
 
@@ -680,7 +696,10 @@ public abstract class EntriesFragment extends FadeListFragment {
 
         for (NPEntry newEntry : newEntries) {
             if (!Iterables.tryFind(oldEntries, newEntry.filterById()).isPresent()) {
+	            Log.i("ENTRIES FRAG: ", "add new entry........" + newEntry.getTitle());
                 oldEntries.add(newEntry);
+            } else {
+	            Log.i("ENTRIES FRAG: ", "entry is already in the list........");
             }
         }
 

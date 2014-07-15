@@ -276,8 +276,8 @@ public final class ContactsFragment extends EntriesFragment {
         }
 
         @Override
-        protected int getEntryStringId() {
-            return 0;
+        protected String getEntriesHeaderText() {
+            return null;
         }
 
         @Override

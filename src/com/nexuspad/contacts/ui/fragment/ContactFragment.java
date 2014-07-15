@@ -12,6 +12,7 @@ import android.view.*;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.edmondapps.utils.android.annotaion.FragmentName;
+import com.google.common.base.Strings;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
 import com.nexuspad.app.App;
@@ -181,7 +182,13 @@ public class ContactFragment extends EntryFragment<Contact> {
 
         text.setLinksClickable(false);
         text.setAutoLinkMask(Linkify.ALL);
-        text.setText(item.getFormattedValue());
+
+	    if (!Strings.isNullOrEmpty(item.getLabel()) && "phone".equalsIgnoreCase(item.getLabel()) && !"email".equalsIgnoreCase(item.getLabel())) {
+		    text.setText(item.getFormattedValue() + " (" + item.getLabel() + ")");
+	    } else {
+		    text.setText(item.getFormattedValue());
+	    }
+
         view.removeView(icon);
         view.removeView(menu);
 
