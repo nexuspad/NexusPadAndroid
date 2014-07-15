@@ -14,18 +14,17 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
-import android.widget.ImageView;
 import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.edmondapps.utils.java.WrapperList;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
 import com.nexuspad.datamodel.*;
+import com.nexuspad.photos.ui.PhotosAdapter;
 import com.nexuspad.photos.ui.activity.PhotoActivity;
 import com.nexuspad.photos.ui.activity.PhotosActivity;
 import com.nexuspad.ui.OnListEndListener;
 import com.nexuspad.ui.activity.FoldersActivity;
 import com.nexuspad.ui.fragment.EntriesFragment;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -114,11 +113,15 @@ public class PhotosFragment extends EntriesFragment implements OnItemClickListen
             }
         });
         mGridView.setOnItemClickListener(this);
-        mGridView.setAdapter(new PhotosAdapter());
+        mGridView.setAdapter(newPhotosAdapter());
 
         super.onViewCreated(view, savedInstanceState);
 
         setOnFolderSelectedClickListener(REQ_FOLDER);
+    }
+
+    private PhotosAdapter newPhotosAdapter() {
+        return new PhotosAdapter(getActivity(), mPhotos, getFolder(), getEntryListService(), getTemplate());
     }
 
     private void stableNotifyAdapter(BaseAdapter adapter) {
@@ -148,45 +151,5 @@ public class PhotosFragment extends EntriesFragment implements OnItemClickListen
         PhotoActivity.startWithFolder(getFolder(), photo, mPhotos, getActivity());
     }
 
-    private class PhotosAdapter extends BaseAdapter {
 
-        private Picasso mPicasso = Picasso.with(getActivity());
-
-        @Override
-        public int getCount() {
-            return mPhotos.size();
-        }
-
-        @Override
-        public Photo getItem(int position) {
-            return mPhotos.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            final Activity activity = getActivity();
-            final ImageView view;
-
-            if (convertView == null) {
-                LayoutInflater inflater = activity.getLayoutInflater();
-                view = (ImageView) inflater.inflate(R.layout.layout_photo_grid, parent, false);
-            } else {
-                view = (ImageView) convertView;
-            }
-
-            mPicasso.load(getItem(position).getTnUrl())
-                    .placeholder(R.drawable.placeholder)
-                    .error(R.drawable.ic_launcher)
-                    .resizeDimen(R.dimen.photo_grid_width, R.dimen.photo_grid_height)
-                    .centerCrop()
-                    .into(view);
-
-            return view;
-        }
-    }
 }

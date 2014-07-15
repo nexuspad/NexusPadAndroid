@@ -23,12 +23,10 @@ import com.nexuspad.datamodel.Album;
 import com.nexuspad.datamodel.EntryList;
 import com.nexuspad.datamodel.EntryTemplate;
 import com.nexuspad.datamodel.Folder;
-import com.nexuspad.dataservice.NPException;
-import com.nexuspad.dataservice.NPWebServiceUtil;
 import com.nexuspad.dataservice.ServiceConstants;
 import com.nexuspad.photos.ui.activity.AlbumActivity;
 import com.nexuspad.photos.ui.activity.PhotosActivity;
-import com.nexuspad.ui.DirectionalScrollListener;
+import com.nexuspad.ui.EntriesAdapter;
 import com.nexuspad.ui.activity.FoldersActivity;
 import com.nexuspad.ui.fragment.EntriesFragment;
 import com.squareup.picasso.Picasso;
@@ -122,35 +120,25 @@ public class AlbumsFragment extends EntriesFragment {
         TextView title;
     }
 
-    private class AlbumsAdapter extends BaseAdapter {
-        @Override
-        public int getCount() {
-            return mAlbums.size();
+    private class AlbumsAdapter extends EntriesAdapter<Album> {
+
+        public AlbumsAdapter() {
+            super(getActivity(), mAlbums, getFolder(), getEntryListService(), getTemplate());
         }
 
         @Override
-        public Album getItem(int position) {
-            return mAlbums.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            final ViewHolder holder;
+        protected View getEntryView(Album entry, int position, View convertView, ViewGroup parent) {
+            final AlbumsFragment.ViewHolder holder;
             if (convertView == null) {
                 convertView = getActivity().getLayoutInflater().inflate(R.layout.list_item_album, parent, false);
 
-                holder = new ViewHolder();
+                holder = new AlbumsFragment.ViewHolder();
                 holder.thumbnail = findView(convertView, android.R.id.icon);
                 holder.title = findView(convertView, android.R.id.text1);
 
                 convertView.setTag(holder);
             } else {
-                holder = (ViewHolder) convertView.getTag();
+                holder = (AlbumsFragment.ViewHolder) convertView.getTag();
             }
 
             final Album album = getItem(position);
@@ -158,27 +146,28 @@ public class AlbumsFragment extends EntriesFragment {
             final String tnUrl = album.getTnUrl();
             if (!TextUtils.isEmpty(tnUrl)) {
 
-                try {
-                    final String url = NPWebServiceUtil.fullUrlWithAuthenticationTokens(tnUrl, getActivity());
-
-                    Picasso.with(getActivity())
-                            .load(tnUrl)
-                            .resizeDimen(R.dimen.photo_grid_width, R.dimen.photo_grid_height)
-                            .centerCrop()
-                            .placeholder(R.drawable.placeholder)
-                            .error(R.drawable.ic_launcher)
-                            .into(holder.thumbnail);
-
-                } catch (NPException e) {
-                    // TODO handle error
-                }
-
+                Picasso.with(getActivity())
+                        .load(tnUrl)
+                        .resizeDimen(R.dimen.photo_grid_width, R.dimen.photo_grid_height)
+                        .centerCrop()
+                        .placeholder(R.drawable.placeholder)
+                        .error(R.drawable.ic_launcher)
+                        .into(holder.thumbnail);
             } else {
                 holder.thumbnail.setImageResource(R.drawable.placeholder);
             }
 
             return convertView;
         }
-    }
 
+        @Override
+        protected View getEmptyEntryView(LayoutInflater i, View c, ViewGroup p) {
+            return getCaptionView(i, c, p, R.string.empty_photos, R.drawable.empty_folder);
+        }
+
+        @Override
+        protected String getEntriesHeaderText() {
+            return null;
+        }
+    }
 }

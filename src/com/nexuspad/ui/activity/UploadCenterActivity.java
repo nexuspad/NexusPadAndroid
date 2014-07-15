@@ -26,10 +26,25 @@ public class UploadCenterActivity extends SinglePaneActivity {
     public static final String KEY_FOLDER = "key_folder";
     public static final String KEY_ENTRY = "key_entry";
 
+	/**
+	 * Upload files to a folder.
+	 *
+	 * @param uris
+	 * @param folder
+	 * @param c
+	 */
     public static void startWith(ArrayList<Uri> uris, Folder folder, Context c) {
         c.startActivity(UploadCenterActivity.of(uris, folder, c));
     }
 
+	/**
+	 * Create Intent for uploading to folder.
+	 *
+	 * @param uris
+	 * @param folder
+	 * @param c
+	 * @return
+	 */
     public static Intent of(ArrayList<Uri> uris, Folder folder, Context c) {
         Intent intent = new Intent(c, UploadCenterActivity.class);
         intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
@@ -37,10 +52,26 @@ public class UploadCenterActivity extends SinglePaneActivity {
         return intent;
     }
 
+
+	/**
+	 * Attach files to entry.
+	 *
+	 * @param uris
+	 * @param entry
+	 * @param c
+	 */
     public static void startWith(ArrayList<Uri> uris, NPEntry entry, Context c) {
         c.startActivity(UploadCenterActivity.of(uris, entry, c));
     }
 
+	/**
+	 * Create Intent for attaching files to entry.
+	 *
+ 	 * @param uris
+	 * @param entry
+	 * @param c
+	 * @return
+	 */
     public static Intent of(ArrayList<Uri> uris, NPEntry entry, Context c) {
         Intent intent = new Intent(c, UploadCenterActivity.class);
         intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);

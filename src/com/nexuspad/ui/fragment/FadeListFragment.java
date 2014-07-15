@@ -118,6 +118,9 @@ public abstract class FadeListFragment extends Fragment implements UndoBarContro
         }
     }
 
+	/**
+	 * Fade out the progress or retrying screen element.
+	 */
     protected void fadeInListFrame() {
         mLoadingUiManager.fadeInListFrame();
     }
