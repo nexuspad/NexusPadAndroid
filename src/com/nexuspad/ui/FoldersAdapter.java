@@ -21,220 +21,229 @@ import static com.edmondapps.utils.android.view.ViewUtils.findView;
  * @author Edmond
  */
 public class FoldersAdapter extends BaseAdapter implements OnItemLongClickListener {
-    public static final int TYPE_HEADER = 0;
-    public static final int TYPE_FOLDER = 1;
-    public static final int TYPE_EMPTY_FOLDER = 2;
+	public static final int TYPE_HEADER = 0;
+	public static final int TYPE_FOLDER = 1;
+	public static final int TYPE_EMPTY_FOLDER = 2;
 
-    private final LayoutInflater mInflater;
-    private final List<? extends Folder> mSubFolders;
-    private final boolean mUseSubFolderButtons;
+	protected final LayoutInflater mInflater;
 
-    private OnClickListener mOnMenuClickListener;
-    private OnClickListener mOnSubFolderClickListener;
-    private boolean mShouldHide;
+	private final List<? extends Folder> mSubFolders;
+	private final boolean mUseSubFolderButtons;
 
-    public FoldersAdapter(Activity a, List<? extends Folder> folders) {
-        this(a, folders, false);
-    }
+	private OnClickListener mOnMenuClickListener;
+	private OnClickListener mOnSubFolderClickListener;
+	private boolean mShouldHide;
 
-    public FoldersAdapter(Activity a, List<? extends Folder> folders, boolean useSubFolderButtons) {
-        mUseSubFolderButtons = useSubFolderButtons;
-        mInflater = a.getLayoutInflater();
-        mSubFolders = folders;
-    }
+	public FoldersAdapter(Activity a, List<? extends Folder> folders) {
+		this(a, folders, false);
+	}
 
-    public void setShouldHide(boolean shouldHide) {
-        mShouldHide = shouldHide;
-        notifyDataSetChanged();
-    }
+	public FoldersAdapter(Activity a, List<? extends Folder> folders, boolean useSubFolderButtons) {
+		mUseSubFolderButtons = useSubFolderButtons;
+		mInflater = a.getLayoutInflater();
+		mSubFolders = folders;
+	}
 
-    public boolean getShouldHide() {
-        return mShouldHide;
-    }
+	public void setShouldHide(boolean shouldHide) {
+		mShouldHide = shouldHide;
+		notifyDataSetChanged();
+	}
 
-    private static class ViewHolder {
-        ImageView icon;
-        ImageButton icon2;
-        TextView text1;
-        ImageButton menu;
-    }
+	public boolean getShouldHide() {
+		return mShouldHide;
+	}
 
-    private static ViewHolder getHolder(View convertView) {
-        ViewHolder holder = (ViewHolder) convertView.getTag();
-        if (holder == null) {
-            holder = new ViewHolder();
-            holder.icon = findView(convertView, android.R.id.icon);
-            holder.icon2 = findView(convertView, android.R.id.icon2);
-            holder.text1 = findView(convertView, android.R.id.text1);
-            holder.menu = findView(convertView, R.id.menu);
+	public static class FolderViewHolder {
+		ImageView icon;
+		ImageButton icon2;
+		TextView text1;
+		ImageButton menu;
 
-            holder.menu.setFocusable(false);
-            if (holder.icon2 != null) {
-                holder.icon2.setFocusable(false);
-            }
+		public TextView getText1() {
+			return text1;
+		}
 
-            convertView.setTag(holder);
-        }
-        return holder;
-    }
+		public void setText1(TextView textView) {
+			text1 = textView;
+		}
+	}
 
-    protected View getFolderView(Folder folder, int position, View c, ViewGroup p) {
-        if (c == null) {
-            int layout = mUseSubFolderButtons ? R.layout.list_item_icon_2 : R.layout.list_item_icon;
-            c = getLayoutInflater().inflate(layout, p, false);
-        }
-        ViewHolder holder = getHolder(c);
+	private static FolderViewHolder getHolder(View convertView) {
+		FolderViewHolder holder = (FolderViewHolder) convertView.getTag();
+		if (holder == null) {
+			holder = new FolderViewHolder();
+			holder.icon = findView(convertView, android.R.id.icon);
+			holder.icon2 = findView(convertView, android.R.id.icon2);
+			holder.text1 = findView(convertView, android.R.id.text1);
+			holder.menu = findView(convertView, R.id.menu);
 
-        holder.icon.setImageResource(R.drawable.ic_np_folder);
-        holder.text1.setText(folder.getFolderName());
-        holder.menu.setOnClickListener(getOnMenuClickListener());
+			holder.menu.setFocusable(false);
+			if (holder.icon2 != null) {
+				holder.icon2.setFocusable(false);
+			}
 
-        if (mUseSubFolderButtons) {
-            if (!folder.getSubFolders().isEmpty()) {
-                holder.icon2.setVisibility(View.VISIBLE);
-                holder.icon2.setImageResource(R.drawable.subfolder);
-                holder.icon2.setOnClickListener(mOnSubFolderClickListener);
-            } else {
-                holder.icon2.setVisibility(View.INVISIBLE);
-            }
-        }
+			convertView.setTag(holder);
+		}
+		return holder;
+	}
 
-        return c;
-    }
+	protected View getFolderView(Folder folder, int position, View c, ViewGroup p) {
+		if (c == null) {
+			int layout = mUseSubFolderButtons ? R.layout.list_item_icon_2 : R.layout.list_item_icon;
+			c = getLayoutInflater().inflate(layout, p, false);
+		}
+		FolderViewHolder holder = getHolder(c);
 
-    protected View getEmptyFolderView(LayoutInflater i, View c, ViewGroup p) {
-        ViewHolder holder;
-        if (c == null) {
-            c = i.inflate(R.layout.layout_img_caption, p, false);
+		holder.icon.setImageResource(R.drawable.ic_np_folder);
+		holder.text1.setText(folder.getFolderName());
+		holder.menu.setOnClickListener(getOnMenuClickListener());
 
-            holder = new ViewHolder();
-            holder.text1 = findView(c, android.R.id.text1);
+		if (mUseSubFolderButtons) {
+			if (!folder.getSubFolders().isEmpty()) {
+				holder.icon2.setVisibility(View.VISIBLE);
+				holder.icon2.setImageResource(R.drawable.subfolder);
+				holder.icon2.setOnClickListener(mOnSubFolderClickListener);
+			} else {
+				holder.icon2.setVisibility(View.INVISIBLE);
+			}
+		}
 
-            c.setTag(holder);
-        } else {
-            holder = (ViewHolder) c.getTag();
-        }
-        holder.text1.setText(R.string.empty_folder);
-        holder.text1.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.empty_subfolders, 0, 0);
-        return c;
-    }
+		return c;
+	}
 
-    @Override
-    public boolean isEmpty() {
-        return getShouldHide() || mSubFolders.isEmpty();
-    }
+	protected View getEmptyFolderView(LayoutInflater i, View c, ViewGroup p) {
+		FolderViewHolder holder;
+		if (c == null) {
+			c = i.inflate(R.layout.layout_img_caption, p, false);
 
-    @Override
-    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-        ViewHolder holder = getHolder(view);
-        if (mOnMenuClickListener != null) {
-            mOnMenuClickListener.onClick(holder.menu);
-        }
-        return true;
-    }
+			holder = new FolderViewHolder();
+			holder.text1 = findView(c, android.R.id.text1);
 
-    @Override
-    public int getCount() {
-        return (isEmpty() || getShouldHide()) ? 0 : mSubFolders.size() + 1;
-    }
+			c.setTag(holder);
+		} else {
+			holder = (FolderViewHolder) c.getTag();
+		}
+		holder.text1.setText(R.string.empty_folder);
+		holder.text1.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.empty_subfolders, 0, 0);
+		return c;
+	}
 
-    @Override
-    public int getItemViewType(int position) {
-        if (mSubFolders.isEmpty()) {
-            return TYPE_EMPTY_FOLDER;
-        }
-        if (position == 0) {
-            return TYPE_HEADER;
-        }
-        return TYPE_FOLDER;
-    }
+	@Override
+	public boolean isEmpty() {
+		return getShouldHide() || mSubFolders.isEmpty();
+	}
 
-    @Override
-    public int getViewTypeCount() {
-        return mSubFolders.isEmpty() ? 1 : 3;
-    }
+	@Override
+	public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+		FolderViewHolder holder = getHolder(view);
+		if (mOnMenuClickListener != null) {
+			mOnMenuClickListener.onClick(holder.menu);
+		}
+		return true;
+	}
 
-    @Override
-    public boolean areAllItemsEnabled() {
-        return false;
-    }
+	@Override
+	public int getCount() {
+		return (isEmpty() || getShouldHide()) ? 0 : mSubFolders.size() + 1;
+	}
 
-    @Override
-    public boolean isEnabled(int position) {
-        switch (getItemViewType(position)) {
-            case TYPE_FOLDER:
-                return true;
-            case TYPE_HEADER:
-            case TYPE_EMPTY_FOLDER:
-                return false;
-            default:
-                throw new AssertionError("unknown view type: " + getItemViewType(position) + " at position: " + position);
-        }
-    }
+	@Override
+	public int getItemViewType(int position) {
+		if (mSubFolders.isEmpty()) {
+			return TYPE_EMPTY_FOLDER;
+		}
+		if (position == 0) {
+			return TYPE_HEADER;
+		}
+		return TYPE_FOLDER;
+	}
 
-    @Override
-    public Folder getItem(int position) {
-        return mSubFolders.get(position - 1);
-    }
+	@Override
+	public int getViewTypeCount() {
+		return mSubFolders.isEmpty() ? 1 : 3;
+	}
 
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
+	@Override
+	public boolean areAllItemsEnabled() {
+		return false;
+	}
 
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        switch (getItemViewType(position)) {
-            case TYPE_HEADER:
-                View headerView = getHeaderView(position, convertView, parent);
-	            return headerView;
+	@Override
+	public boolean isEnabled(int position) {
+		switch (getItemViewType(position)) {
+			case TYPE_FOLDER:
+				return true;
+			case TYPE_HEADER:
+			case TYPE_EMPTY_FOLDER:
+				return false;
+			default:
+				throw new AssertionError("unknown view type: " + getItemViewType(position) + " at position: " + position);
+		}
+	}
 
-            case TYPE_FOLDER:
-                return getFolderView(getItem(position), position, convertView, parent);
+	@Override
+	public Folder getItem(int position) {
+		return mSubFolders.get(position - 1);
+	}
 
-            case TYPE_EMPTY_FOLDER:
-                return getEmptyFolderView(mInflater, convertView, parent);
+	@Override
+	public long getItemId(int position) {
+		return position;
+	}
 
-            default:
-                throw new AssertionError("unknown view type: " + getItemViewType(position) + " at position: " + position);
-        }
-    }
+	@Override
+	public View getView(int position, View convertView, ViewGroup parent) {
+		switch (getItemViewType(position)) {
+			case TYPE_HEADER:
+				View headerView = getHeaderView(position, convertView, parent);
+				return headerView;
 
-    public View getHeaderView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder;
-        if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.list_header, parent, false);
+			case TYPE_FOLDER:
+				return getFolderView(getItem(position), position, convertView, parent);
 
-            holder = new ViewHolder();
-            holder.text1 = findView(convertView, android.R.id.text1);
+			case TYPE_EMPTY_FOLDER:
+				return getEmptyFolderView(mInflater, convertView, parent);
 
-            convertView.setTag(holder);
-        } else {
-            holder = (ViewHolder) convertView.getTag();
-        }
+			default:
+				throw new AssertionError("unknown view type: " + getItemViewType(position) + " at position: " + position);
+		}
+	}
 
-        holder.text1.setText(getHeaderText(position, convertView, parent));
+	public View getHeaderView(int position, View convertView, ViewGroup parent) {
+		FolderViewHolder holder;
+		if (convertView == null) {
+			convertView = mInflater.inflate(R.layout.list_header, parent, false);
 
-        return convertView;
-    }
+			holder = new FolderViewHolder();
+			holder.text1 = findView(convertView, android.R.id.text1);
 
-    protected CharSequence getHeaderText(int position, View convertView, ViewGroup parent) {
-        return parent.getResources().getText(R.string.folders);
-    }
+			convertView.setTag(holder);
+		} else {
+			holder = (FolderViewHolder) convertView.getTag();
+		}
 
-    public final void setOnSubFolderClickListener(OnClickListener onSubFolderClickListener) {
-        mOnSubFolderClickListener = onSubFolderClickListener;
-    }
+		holder.text1.setText(getHeaderText(position, convertView, parent));
 
-    public final void setOnMenuClickListener(OnClickListener onMenuClickListener) {
-        mOnMenuClickListener = onMenuClickListener;
-    }
+		return convertView;
+	}
 
-    public final OnClickListener getOnMenuClickListener() {
-        return mOnMenuClickListener;
-    }
+	protected CharSequence getHeaderText(int position, View convertView, ViewGroup parent) {
+		return parent.getResources().getText(R.string.folders);
+	}
 
-    protected final LayoutInflater getLayoutInflater() {
-        return mInflater;
-    }
+	public final void setOnSubFolderClickListener(OnClickListener onSubFolderClickListener) {
+		mOnSubFolderClickListener = onSubFolderClickListener;
+	}
+
+	public final void setOnMenuClickListener(OnClickListener onMenuClickListener) {
+		mOnMenuClickListener = onMenuClickListener;
+	}
+
+	public final OnClickListener getOnMenuClickListener() {
+		return mOnMenuClickListener;
+	}
+
+	protected final LayoutInflater getLayoutInflater() {
+		return mInflater;
+	}
 }

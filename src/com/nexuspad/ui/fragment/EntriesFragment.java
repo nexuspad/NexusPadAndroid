@@ -256,6 +256,7 @@ public abstract class EntriesFragment extends FadeListFragment {
 				 */
 				@Override
 				public boolean onQueryTextChange(String newText) {
+					// For Contact module, enable the instant search feedback since the search is done locally.
 					if (mFolder.getModuleId() == NPModule.CONTACT_MODULE) {
 						if (Strings.isNullOrEmpty(newText)) {
 							reDisplayListEntries();

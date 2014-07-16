@@ -59,19 +59,19 @@ public class FoldersActivity extends SinglePaneActivity implements FoldersFragme
     }
 
     @Override
-    public void onFolderClicked(FoldersFragment f, Folder folder) {
+    public void onFolderClicked(Folder folder) {
         setResult(RESULT_OK, new Intent().putExtra(KEY_FOLDER, folder));
         finish();
     }
 
     @Override
-    public void onSubFolderClicked(FoldersFragment f, Folder folder) {
+    public void onSubFolderClicked(Folder folder) {
         final Intent intent = FoldersActivity.ofParentFolder(this, folder);
         startActivityForResult(intent, REQ_FOLDER);
     }
 
     @Override
-    public void onUpFolderClicked(FoldersFragment f) {
+    public void onUpFolderClicked() {
         onUpPressed();
     }
 
