@@ -11,6 +11,7 @@ import android.support.v4.app.Fragment;
 import com.edmondapps.utils.android.activity.SinglePaneActivity;
 import com.nexuspad.R;
 import com.nexuspad.datamodel.Folder;
+import com.nexuspad.dataservice.FolderService;
 import com.nexuspad.ui.fragment.FoldersFragment;
 
 /**
@@ -77,7 +78,23 @@ public class FoldersActivity extends SinglePaneActivity implements FoldersFragme
 
     @Override
     protected boolean onUpPressed() {
+        final int moduleId = mParentFolder.getModuleId();
+        final int folderId = mParentFolder.getFolderId();
+
+        final FolderService service = FolderService.getInstance(this);
+        final Folder fullFolder = service.getFolder(moduleId, folderId);
+
+        Folder upFolder = null;
+        if (fullFolder != null) {
+            final int parentId = fullFolder.getParentId();
+            upFolder = service.getFolder(moduleId, parentId);
+        }
+        if (upFolder == null) {
+            upFolder = Folder.rootFolderOf(moduleId, this);
+        }
+
         final Intent upIntent = getUpIntent(FoldersActivity.class);
+        upIntent.putExtra(KEY_FOLDER, upFolder);
         startActivity(upIntent);
         finish();
         return true;

@@ -3,13 +3,11 @@
  */
 package com.nexuspad.photos.ui.activity;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.view.Window;
 import com.edmondapps.utils.android.activity.SinglePaneActivity;
 import com.edmondapps.utils.android.annotaion.ParentActivity;
 import com.nexuspad.R;
@@ -55,8 +53,6 @@ public class PhotoActivity extends SinglePaneActivity implements EntriesFragment
 
     @Override
     protected void onCreate(Bundle savedState) {
-        requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
-
         final Intent intent = getIntent();
         mFolder = intent.getParcelableExtra(KEY_FOLDER);
         if (mFolder == null) {
@@ -66,10 +62,6 @@ public class PhotoActivity extends SinglePaneActivity implements EntriesFragment
         mPhotos = intent.getParcelableArrayListExtra(KEY_PHOTOS);
 
         super.onCreate(savedState);
-        final ActionBar actionBar = getActionBar();
-        if (actionBar != null) {
-            actionBar.hide();
-        }
     }
 
     @Override
