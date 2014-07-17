@@ -4,17 +4,20 @@
 package com.nexuspad.photos.ui.fragment;
 
 import android.app.ActionBar;
+import android.app.Activity;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.*;
 import android.widget.ImageView;
 import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.google.common.collect.Iterables;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
+import com.nexuspad.app.App;
 import com.nexuspad.datamodel.EntryTemplate;
 import com.nexuspad.datamodel.Folder;
 import com.nexuspad.datamodel.Photo;
@@ -80,8 +83,15 @@ public class PhotoFragment extends EntriesFragment {
         mInitialPhotoIndex = Iterables.indexOf(sPhotos, photo.filterById());
     }
 
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		setHasOptionsMenu(true);
+	}
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+	    Log.i("PHOTO FRAG", "here.........................................");
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.photo_frag, menu);
     }

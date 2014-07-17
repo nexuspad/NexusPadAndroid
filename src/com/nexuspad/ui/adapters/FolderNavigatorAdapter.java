@@ -44,12 +44,11 @@ public class FolderNavigatorAdapter extends FoldersAdapter {
 			holder = (FolderViewHolder) convertView.getTag();
 		}
 
-		holder.getText1().setText(getHeaderText(position, convertView, parent));
+		holder.getText1().setText(parent.getResources().getString(R.string.formatted_sub_folders, mParent.getFolderName()));
 
 		holder.getText1().setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Log.i("FOLDER NAV:", "header clicked");
 				if (mParent.getFolderId() == Folder.ROOT_FOLDER) {
 					mCallback.onFolderClicked(mParent);
 				} else {
@@ -61,8 +60,4 @@ public class FolderNavigatorAdapter extends FoldersAdapter {
 		return convertView;
 	}
 
-	@Override
-	protected CharSequence getHeaderText(int position, View convertView, ViewGroup parent) {
-		return parent.getResources().getString(R.string.formatted_sub_folders, mParent.getFolderName());
-	}
 }
