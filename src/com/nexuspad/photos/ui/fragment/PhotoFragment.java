@@ -91,7 +91,6 @@ public class PhotoFragment extends EntriesFragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-	    Log.i("PHOTO FRAG", "here.........................................");
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.photo_frag, menu);
     }

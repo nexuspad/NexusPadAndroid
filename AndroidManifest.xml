@@ -146,7 +146,7 @@
         <activity
             android:name=".photos.ui.activity.PhotoActivity"
             android:label="@string/photos"
-            android:theme="@style/Transparent"
+            android:theme="@style/PhotoActivity"
             android:icon="@drawable/ic_ab"
             />
         <activity

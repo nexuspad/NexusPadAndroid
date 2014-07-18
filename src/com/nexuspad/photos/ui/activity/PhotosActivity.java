@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
@@ -133,7 +134,7 @@ public class PhotosActivity extends EntriesActivity implements ActionBar.OnNavig
             case REQ_CHOOSE_FILE:
                 if (resultCode == Activity.RESULT_OK) {
                     final ArrayList<Uri> uris = data.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
-                    UploadCenterActivity.startWith(uris, getFolder(), this);
+	                UploadCenterActivity.startWith(uris, getFolder(), this);
                 }
                 break;
             default:

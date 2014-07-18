@@ -3,7 +3,6 @@
  */
 package com.nexuspad.photos.ui.activity;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -11,7 +10,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.Menu;
-import android.view.Window;
 import com.edmondapps.utils.android.activity.SinglePaneActivity;
 import com.edmondapps.utils.android.annotaion.ParentActivity;
 import com.nexuspad.R;
@@ -55,18 +53,8 @@ public class PhotoActivity extends SinglePaneActivity implements EntriesFragment
         return R.layout.no_padding_activity;
     }
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		Log.i("PHOTO ACTIVITY", "here.........................................");
-		super.onCreateOptionsMenu(menu);
-		getMenuInflater().inflate(R.menu.photo_frag, menu);
-		return true;
-	}
-
     @Override
     protected void onCreate(Bundle savedState) {
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-
         final Intent intent = getIntent();
         mFolder = intent.getParcelableExtra(KEY_FOLDER);
         if (mFolder == null) {
@@ -76,12 +64,6 @@ public class PhotoActivity extends SinglePaneActivity implements EntriesFragment
         mPhotos = intent.getParcelableArrayListExtra(KEY_PHOTOS);
 
         super.onCreate(savedState);
-
-        final ActionBar actionBar = getActionBar();
-        if (actionBar != null) {
-	        Log.i("PHOTO ACTIVITY", "Hide action bar.........................................");
-            actionBar.hide();
-        }
     }
 
     @Override

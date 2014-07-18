@@ -94,10 +94,10 @@ public class UploadCenterActivity extends SinglePaneActivity {
             addIfNeeded(uri);
         }
 
-        uri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
-        if (uri != null) {
-            addIfNeeded(uri);
-        }
+//        uri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
+//        if (uri != null) {
+//            addIfNeeded(uri);
+//        }
 
         final List<Uri> list = intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
         if (list != null) {

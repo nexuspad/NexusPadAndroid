@@ -3,6 +3,7 @@ package com.nexuspad.photos.ui.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.*;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -110,7 +111,8 @@ public class AlbumFragment extends EntryFragment<Album> implements AdapterView.O
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        final Photo photo = mPhotosAdapter.getItem(position);
+	    final Photo photo = mPhotosAdapter.getItem(position);
+	    Log.i("ALBUM FRAG", mPhotos.toString());
         PhotoActivity.startWithFolder(getFolder(), photo, mPhotos, getActivity());
     }
 

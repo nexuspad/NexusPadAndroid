@@ -26,96 +26,114 @@ import static com.nexuspad.dataservice.ServiceConstants.*;
  */
 @FragmentName(DashboardFragment.TAG)
 public class DashboardFragment extends FadeListFragment {
-    public static final String TAG = "DashboardFragment";
+	public static final String TAG = "DashboardFragment";
 
-    /*
-     * All 3 arrays must be consistent when re-ordering them
-     */
-    private static final int[] sModules = {
-            CONTACT_MODULE, CALENDAR_MODULE, JOURNAL_MODULE,
-            DOC_MODULE, PHOTO_MODULE, BOOKMARK_MODULE
-    };
-    private static final int[] sDrawables = {
-            R.drawable.contact, R.drawable.event, R.drawable.journal,
-            R.drawable.doc, R.drawable.photo, R.drawable.bookmark
-    };
-    private static final int[] sStrings = {
-            R.string.contacts, R.string.events, R.string.journal,
-            R.string.docs, R.string.photos, R.string.bookmarks
-    };
+	/*
+	 * All 3 arrays must be consistent when re-ordering them
+	 */
+	private static final int[] sModules = {
+			0,
+			CONTACT_MODULE,
+			CALENDAR_MODULE,
+			JOURNAL_MODULE,
+			DOC_MODULE,
+			PHOTO_MODULE,
+			BOOKMARK_MODULE
+	};
 
-    @Override
-    public void onUndoBarShown(Intent token) {
-        // do nothing
-    }
+	private static final int[] sDrawables = {
+			R.drawable.avatar,
+			R.drawable.contact,
+			R.drawable.event,
+			R.drawable.journal,
+			R.drawable.doc,
+			R.drawable.photo,
+			R.drawable.bookmark
+	};
 
-    @Override
-    public void onUndoBarHidden(Intent token) {
-        // do nothing
-    }
+	private static final int[] sStrings = {
+			R.string.file,
+			R.string.contacts,
+			R.string.events,
+			R.string.journal,
+			R.string.docs,
+			R.string.photos,
+			R.string.bookmarks
+	};
 
-    @Override
-    public void onUndoButtonClicked(Intent token) {
-        // do nothing
-    }
+	@Override
+	public void onUndoBarShown(Intent token) {
+		// do nothing
+	}
 
-    public interface Callback {
-        /**
-         * Called when an module is clicked.
-         *
-         * @param f          caller of this method
-         * @param moduleType one of the {@code *_MODULE} constants defined in
-         *                   {@link ServiceConstants}
-         */
-        void onModuleClicked(DashboardFragment f, int moduleType);
-    }
+	@Override
+	public void onUndoBarHidden(Intent token) {
+		// do nothing
+	}
 
-    private Callback mCallback;
+	@Override
+	public void onUndoButtonClicked(Intent token) {
+		// do nothing
+	}
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        mCallback = App.getCallbackOrThrow(activity, Callback.class);
-        setHasOptionsMenu(true);
-    }
+	public interface Callback {
+		/**
+		 * Called when an module is clicked.
+		 *
+		 * @param f          caller of this method
+		 * @param moduleType one of the {@code *_MODULE} constants defined in
+		 *                   {@link ServiceConstants}
+		 */
+		void onModuleClicked(DashboardFragment f, int moduleType);
+	}
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.dashboard_frag, container, false);
-    }
+	private Callback mCallback;
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.main, menu);
-    }
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		mCallback = App.getCallbackOrThrow(activity, Callback.class);
+		setHasOptionsMenu(true);
+	}
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.logout:
-                AccountManager.logout();
-                FragmentActivity activity = getActivity();
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		return inflater.inflate(R.layout.dashboard_frag, container, false);
+	}
 
-                startActivity(new Intent(activity, LoginActivity.class));
-                activity.finish();
-                return true;
-            case R.id.about:
-                startActivity(new Intent(getActivity(), AboutActivity.class));
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(R.menu.main, menu);
+	}
 
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        setListAdapter(new IconListAdapter(getActivity(), sDrawables, sStrings));
-    }
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case R.id.logout:
+				AccountManager.logout();
+				FragmentActivity activity = getActivity();
 
-    @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-        super.onListItemClick(l, v, position, id);
-        mCallback.onModuleClicked(this, sModules[position]);
-    }
+				startActivity(new Intent(activity, LoginActivity.class));
+				activity.finish();
+				return true;
+
+			case R.id.about:
+				startActivity(new Intent(getActivity(), AboutActivity.class));
+				return true;
+			default:
+				return super.onOptionsItemSelected(item);
+		}
+	}
+
+	@Override
+	public void onViewCreated(View view, Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+		setListAdapter(new IconListAdapter(getActivity(), sDrawables, sStrings));
+	}
+
+	@Override
+	public void onListItemClick(ListView l, View v, int position, long id) {
+		super.onListItemClick(l, v, position, id);
+		mCallback.onModuleClicked(this, sModules[position]);
+	}
 }

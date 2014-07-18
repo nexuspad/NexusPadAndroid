@@ -705,7 +705,6 @@ public abstract class EntriesFragment extends FadeListFragment {
 
 		for (NPEntry newEntry : newEntries) {
 			if (!Iterables.tryFind(oldEntries, newEntry.filterById()).isPresent()) {
-				Log.i("ENTRIES FRAG: ", "add new entry........" + newEntry.getTitle());
 				oldEntries.add(newEntry);
 			} else {
 				Log.i("ENTRIES FRAG: ", "entry is already in the list........");

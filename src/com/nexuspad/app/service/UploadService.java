@@ -121,14 +121,14 @@ public final class UploadService extends Service {
 
     public void onNewRequest(Request r) {
         updateUploadCount();
-        switch (r.getTarget()) {
-            case FOLDER:
-                mUploadService.addUploadToFolder(r.getFile(this), r.getFolder(), new CallbackWrapper(r));
-                break;
-            case ENTRY:
-                mUploadService.addUploadToEntry(r.getFile(this), r.getNPEntry(), new CallbackWrapper(r));
-                break;
-        }
+//        switch (r.getTarget()) {
+//            case FOLDER:
+//                mUploadService.addUploadToFolder(r.getFile(this), r.getFolder(), new CallbackWrapper(r));
+//                break;
+//            case ENTRY:
+//                mUploadService.addUploadToEntry(r.getFile(this), r.getNPEntry(), new CallbackWrapper(r));
+//                break;
+//        }
     }
 
     private class CallbackWrapper implements FileUploadService.Callback {

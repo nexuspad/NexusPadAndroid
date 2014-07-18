@@ -8,17 +8,18 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.FragmentActivity;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import com.edmondapps.utils.android.annotaion.FragmentName;
-import com.edmondapps.utils.android.ui.CompoundAdapter;
 import com.nexuspad.R;
 import com.nexuspad.app.Request;
 import com.nexuspad.app.service.UploadService;
 import com.nexuspad.dataservice.FileUploadService;
+import com.nexuspad.ui.adapters.MultiAdapters;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -42,17 +43,27 @@ public class UploadCenterFragment extends FadeListFragment {
             updateUI();
         }
     };
+
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             mBinder = (UploadService.UploadBinder) service;
 
             mBinder.addRequests(mPendingRequests);
-            mPendingRequests.clear();
+//            mPendingRequests.clear();
 
-            addAllRequestsToList(mBinder.peekRequests());
+	        Log.i("UPLOAD FRAG - 0", "binder requests: " + String.valueOf(mBinder.peekRequests().size()));
+
+	        addAllRequestsToList(mBinder.peekRequests());
 
             mBinder.addCallback(mOnNewRequestListener);
+
+	        // -----
+	        mViewCreated = true;
+	        Log.i("UPLOAD FRAG - 4", "albums: " + String.valueOf(mEntryRequests.size()) + " photos: " + String.valueOf(mPhotoRequests.size()));
+	        mAdapter = new UploadAdapter(getActivity(), mEntryRequests, mPhotoRequests);
+	        setListAdapter(mAdapter);
+
             updateUI();
         }
 
@@ -71,7 +82,7 @@ public class UploadCenterFragment extends FadeListFragment {
 
     private void addAllRequestsToList(Iterable<Request> requests) {
         for (Request request : requests) {
-            addRequestToList(request);
+	        addRequestToList(request);
         }
     }
 
@@ -91,24 +102,29 @@ public class UploadCenterFragment extends FadeListFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+	    Log.i("UPLOAD FRAG - 1", "albums: " + String.valueOf(mEntryRequests.size()) + " photos: " + String.valueOf(mPhotoRequests.size()));
         mAdapter = new UploadAdapter(getActivity(), mEntryRequests, mPhotoRequests);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.list_content, container, false);
+	    Log.i("UPLOAD FRAG - 2", "albums: " + String.valueOf(mEntryRequests.size()) + " photos: " + String.valueOf(mPhotoRequests.size()));
+	    return inflater.inflate(R.layout.list_content, container, false);
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mViewCreated = true;
+	    Log.i("UPLOAD FRAG - 3", "albums: " + String.valueOf(mEntryRequests.size()) + " photos: " + String.valueOf(mPhotoRequests.size()));
+
+	    mViewCreated = true;
         setListAdapter(mAdapter);
         updateUI();
     }
 
     private void updateUI() {
         if (mViewCreated) {
+	        Log.i("UPLOAD FRAG", "Update UI.......");
             mAdapter.notifyDataSetChanged();
         }
     }
@@ -184,10 +200,10 @@ public class UploadCenterFragment extends FadeListFragment {
         };
     }
 
-    private static class UploadAdapter extends CompoundAdapter {
+    private static class UploadAdapter extends MultiAdapters {
         public UploadAdapter(Context c, List<Request> albumRequests, List<Request> photoRequests) {
-            super(new RequestAdapter(c, albumRequests, R.string.albums),
-                    new RequestAdapter(c, photoRequests, R.string.photos));
+            super(new RequestAdapter(c, albumRequests, R.string.albums), new RequestAdapter(c, photoRequests, R.string.photos));
+//	        super(new RequestAdapter(c, photoRequests, R.string.photos));
         }
     }
 
@@ -218,21 +234,26 @@ public class UploadCenterFragment extends FadeListFragment {
 
         @Override
         public boolean isEmpty() {
-            return mRequests.isEmpty();
+	        Log.i("REQUEST ADAPTER isEmpty", mHeaderRes + " " + String.valueOf(mRequests.isEmpty()));
+	        return mRequests.isEmpty();
         }
 
         @Override
         public int getCount() {
+	        Log.i("REQUEST ADAPTER count", mHeaderRes + " " + String.valueOf(mRequests.size() + 1));
             return mRequests.size() + 1;
         }
 
         @Override
         public Request getItem(int position) {
+	        Log.i("REQUEST ADAPTER getItem", mHeaderRes + " " + String.valueOf(position));
             return mRequests.get(position - 1);
+	        //return mRequests.get(position);
         }
 
         @Override
         public long getItemId(int position) {
+	        Log.i("REQUEST ADAPTER getItemId", mHeaderRes + " " + String.valueOf(position));
             switch (getItemViewType(position)) {
                 case VIEW_TYPE_HEADER:
                     return -1;
@@ -250,6 +271,7 @@ public class UploadCenterFragment extends FadeListFragment {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
+	        Log.i("RequestAdapter.....position", String.valueOf(position));
             switch (getItemViewType(position)) {
                 case VIEW_TYPE_HEADER:
                     return getHeaderView(convertView, parent);
