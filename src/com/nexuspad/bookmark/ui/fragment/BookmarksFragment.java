@@ -7,7 +7,6 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.*;
-import android.widget.BaseAdapter;
 import android.widget.ListView;
 import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.edmondapps.utils.java.WrapperList;
@@ -19,14 +18,13 @@ import com.nexuspad.datamodel.Bookmark;
 import com.nexuspad.datamodel.EntryList;
 import com.nexuspad.datamodel.EntryTemplate;
 import com.nexuspad.datamodel.Folder;
-import com.nexuspad.dataservice.EntryListService;
-import com.nexuspad.dataservice.EntryService;
 import com.nexuspad.dataservice.ServiceConstants;
-import com.nexuspad.ui.EntriesAdapter;
-import com.nexuspad.ui.FolderEntriesAdapter;
-import com.nexuspad.ui.FoldersAdapter;
-import com.nexuspad.ui.OnEntryMenuClickListener;
+import com.nexuspad.ui.adapters.FoldersEntriesListAdapter;
+import com.nexuspad.ui.adapters.ListEntriesAdapter;
+import com.nexuspad.ui.adapters.ListFoldersAdapter;
+import com.nexuspad.ui.adapters.ListViewHolder;
 import com.nexuspad.ui.fragment.EntriesFragment;
+import com.nexuspad.ui.listeners.OnEntryMenuClickListener;
 
 import java.util.List;
 
@@ -36,184 +34,176 @@ import java.util.List;
 @FragmentName(BookmarksFragment.TAG)
 @ModuleId(moduleId = ServiceConstants.BOOKMARK_MODULE, template = EntryTemplate.BOOKMARK)
 public class BookmarksFragment extends EntriesFragment {
-    public static final String TAG = "BookmarksFragment";
+	public static final String TAG = "BookmarksFragment";
 
-    public static BookmarksFragment of(Folder f) {
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(KEY_FOLDER, f);
+	public static BookmarksFragment of(Folder f) {
+		Bundle bundle = new Bundle();
+		bundle.putParcelable(KEY_FOLDER, f);
 
-        BookmarksFragment fragment = new BookmarksFragment();
-        fragment.setArguments(bundle);
+		BookmarksFragment fragment = new BookmarksFragment();
+		fragment.setArguments(bundle);
 
-        return fragment;
-    }
+		return fragment;
+	}
 
 	/**
 	 * Callback methods that the Activity must implement.
 	 */
-    public interface Callback extends EntriesFragment.Callback {
-        void onBookmarkClick(BookmarksFragment f, Bookmark bookmark);
+	public interface Callback extends EntriesFragment.Callback {
+		void onBookmarkClick(BookmarksFragment f, Bookmark bookmark);
 
-        void onEditBookmark(BookmarksFragment f, Bookmark bookmark);
+		void onEditBookmark(BookmarksFragment f, Bookmark bookmark);
 
-        void onFolderClick(BookmarksFragment f, Folder folder);
-    }
+		void onFolderClick(BookmarksFragment f, Folder folder);
+	}
 
-    private Callback mCallback;
+	private Callback mCallback;
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        mCallback = App.getCallbackOrThrow(activity, Callback.class);
-        setHasOptionsMenu(true);
-    }
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		mCallback = App.getCallbackOrThrow(activity, Callback.class);
+		setHasOptionsMenu(true);
+	}
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.bookmarks_frag, menu);
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		super.onCreateOptionsMenu(menu, inflater);
+		inflater.inflate(R.menu.bookmarks_frag, menu);
 
-	    setUpSearchView(menu.findItem(R.id.search));
-    }
+		setUpSearchView(menu.findItem(R.id.search));
+	}
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.new_bookmark:
-                NewBookmarkActivity.startWithFolder(getActivity(), getFolder());
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case R.id.new_bookmark:
+				NewBookmarkActivity.startWithFolder(getActivity(), getFolder());
+				return true;
+			default:
+				return super.onOptionsItemSelected(item);
+		}
+	}
 
-    @Override
-    protected void onListLoaded(EntryList list) {
-        super.onListLoaded(list);
+	@Override
+	protected void onListLoaded(EntryList list) {
+		Log.i(TAG, "Receiving entry list.");
 
-        FolderBookmarksAdapter a = getListAdapter();
-        if (a != null) {
-            a.notifyDataSetChanged();
-            if (!hasNextPage()) {
-                a.removeAdapter(getLoadMoreAdapter());
-            }
-            return;
-        }
+		super.onListLoaded(list);
 
-        ListView listView = getListView();
+		FoldersEntriesListAdapter a = getListAdapter();
 
-	    final BookmarksAdapter bookmarksAdapter = new BookmarksAdapter(
-			    getActivity(),
-			    new WrapperList<Bookmark>(list.getEntries()));
+		if (a != null) {
+			if (!hasNextPage()) {
+				a.removeLoadMoreAdapter();
+			}
+			a.notifyDataSetChanged();
+			return;
+		}
 
-	    bookmarksAdapter.setOnMenuClickListener(new BookmarkMenuClickListener(getListView(), getEntryService()));
+		final BookmarksAdapter bookmarksAdapter = new BookmarksAdapter(getActivity(), new WrapperList<Bookmark>(list.getEntries()));
 
-	    FoldersAdapter foldersAdapter = newFoldersAdapter();
+		bookmarksAdapter.setOnMenuClickListener(new OnEntryMenuClickListener<Bookmark>(mListView, getEntryService(), getUndoBarController()) {
+			@Override
+			public void onClick(View v) {
+				@SuppressWarnings("unchecked")
+				FoldersEntriesListAdapter felAdapter = (FoldersEntriesListAdapter) mListView.getAdapter();
 
-        FolderBookmarksAdapter adapter;
+				int position = mListView.getPositionForView(v);
 
-        if (hasNextPage()) {
-	        adapter = new FolderBookmarksAdapter(foldersAdapter, bookmarksAdapter, getLoadMoreAdapter());
-        } else {
-            adapter = new FolderBookmarksAdapter(foldersAdapter, bookmarksAdapter);
-        }
+				if (position != ListView.INVALID_POSITION && felAdapter.isPositionEntries(position)) {
+					Bookmark item = (Bookmark)felAdapter.getItem(position);
+					onEntryClick(item, position, v);
+				}
+			}
 
-        setListAdapter(adapter);
-        listView.setOnItemLongClickListener(adapter);
-    }
+			@Override
+			protected boolean onEntryMenuClick(Bookmark entry, int pos, int menuId) {
+				switch (menuId) {
+					case R.id.edit:
+						mCallback.onEditBookmark(BookmarksFragment.this, entry);
+						return true;
+					default:
+						return super.onEntryMenuClick(entry, pos, menuId);
+				}
+			}
+		});
 
-    @Override
-    protected void onSearchLoaded(EntryList list) {
-        getListAdapter().setShouldHideFolders(true);
-        super.onSearchLoaded(list);
-    }
+		ListFoldersAdapter foldersAdapter = newFoldersAdapter();
 
-    @Override
-    protected EntriesAdapter<?> getFilterableAdapter() {
-        return getListAdapter().getEntriesAdapter();
-    }
+		if (hasNextPage()) {
+			mListAdapter = new FoldersEntriesListAdapter(foldersAdapter, bookmarksAdapter, getLoadMoreAdapter());
+		} else {
+			mListAdapter = new FoldersEntriesListAdapter(foldersAdapter, bookmarksAdapter);
+		}
 
-    @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-        super.onListItemClick(l, v, position, id);
+		mListView.setAdapter(mListAdapter);
+		mListView.setOnItemLongClickListener(mListAdapter);
 
-        FolderBookmarksAdapter adapter = getListAdapter();
+		fadeInListFrame();
+	}
 
-        if (adapter.isPositionFolder(position)) {
-            int pos = adapter.getPositionForAdapter(position);
-            mCallback.onFolderClick(this, adapter.getFoldersAdapter().getItem(pos));
+	@Override
+	protected void onSearchLoaded(EntryList list) {
+		getListAdapter().setShouldHideFolders(true);
+		super.onSearchLoaded(list);
+	}
 
-        } else if (adapter.isPositionEntries(position)) {
-            int pos = adapter.getPositionForAdapter(position);
-            mCallback.onBookmarkClick(this, adapter.getEntriesAdapter().getItem(pos));
-        }
-    }
+	@Override
+	public void onListItemClick(ListView l, View v, int position, long id) {
+		super.onListItemClick(l, v, position, id);
 
-    @Override
-    public FolderBookmarksAdapter getListAdapter() {
-        return (FolderBookmarksAdapter) super.getListAdapter();
-    }
+		FoldersEntriesListAdapter adapter = getListAdapter();
 
-    private class BookmarkMenuClickListener extends OnEntryMenuClickListener<Bookmark> {
-        public BookmarkMenuClickListener(ListView listView, EntryService entryService) {
-            super(listView, entryService, getUndoBarController());
-        }
+		if (adapter.isPositionFolder(position)) {
+			mCallback.onFolderClick(this, adapter.getFoldersAdapter().getItem(position));
 
-        @Override
-        protected boolean onEntryMenuClick(Bookmark entry, int pos, int menuId) {
-            switch (menuId) {
-                case R.id.edit:
-                    mCallback.onEditBookmark(BookmarksFragment.this, entry);
-                    return true;
-                default:
-                    return super.onEntryMenuClick(entry, pos, menuId);
-            }
-        }
-    }
+		} else if (adapter.isPositionEntries(position)) {
+			mCallback.onBookmarkClick(this, (Bookmark)adapter.getEntriesAdapter().getItem(position - adapter.getFoldersAdapter().getCount()));
+		}
+	}
 
-    private static class FolderBookmarksAdapter extends FolderEntriesAdapter<BookmarksAdapter> {
-        private FolderBookmarksAdapter(FoldersAdapter folderAdapter, BookmarksAdapter entriesAdapter) {
-            super(folderAdapter, entriesAdapter);
-        }
 
-        public FolderBookmarksAdapter(FoldersAdapter folderAdapter, BookmarksAdapter entriesAdapter, BaseAdapter... others) {
-            super(folderAdapter, entriesAdapter, others);
-        }
-    }
+	@Override
+	public FoldersEntriesListAdapter getListAdapter() {
+		return (FoldersEntriesListAdapter) super.getListAdapter();
+	}
 
-    public class BookmarksAdapter extends EntriesAdapter<Bookmark> {
-        public BookmarksAdapter(Activity a, List<Bookmark> entries) {
-            super(a, entries, getFolder(), getEntryListService(), EntryTemplate.BOOKMARK);
-        }
 
-	    @Override
-        protected View getEntryView(Bookmark entry, int position, View convertView, ViewGroup parent) {
-            if (convertView == null) {
-                convertView = getLayoutInflater().inflate(R.layout.list_item_icon, parent, false);
-            }
-            ViewHolder holder = getHolder(convertView);
+	public class BookmarksAdapter extends ListEntriesAdapter<Bookmark> {
+		public BookmarksAdapter(Activity a, List<Bookmark> entries) {
+			super(a, entries, getFolder(), getEntryListService(), EntryTemplate.BOOKMARK);
+		}
 
-            holder.icon.setImageResource(R.drawable.ic_bookmark);
-            holder.text1.setText(entry.getTitle());
-            holder.menu.setOnClickListener(getOnMenuClickListener());
+		@Override
+		protected View getEntryView(Bookmark entry, int position, View convertView, ViewGroup parent) {
+			if (convertView == null || convertView.findViewById(android.R.id.icon) == null) {
+				convertView = getLayoutInflater().inflate(R.layout.list_item_icon, parent, false);
+			}
 
-            return convertView;
-        }
+			ListViewHolder holder = getHolder(convertView);
 
-        @Override
-        protected String getEntriesHeaderText() {
-            return getString(R.string.bookmarks);
-        }
+			holder.getIcon().setImageResource(R.drawable.ic_bookmark);
+			holder.getText1().setText(entry.getTitle());
+			holder.getMenu().setOnClickListener(getOnMenuClickListener());
 
-        @Override
-        protected View getEmptyEntryView(LayoutInflater i, View c, ViewGroup p) {
-            return getCaptionView(i, c, p, R.string.empty_bookmarks, R.drawable.empty_folder);
-        }
+			return convertView;
+		}
 
-        @Override
-        public void showRawEntries() {
-            getListAdapter().setShouldHideFolders(false);
-            super.showRawEntries();
-        }
-    }
+		@Override
+		protected String getEntriesHeaderText() {
+			return getString(R.string.bookmarks);
+		}
+
+		@Override
+		protected View getEmptyEntryView(LayoutInflater i, View c, ViewGroup p) {
+			return getCaptionView(i, c, p, R.string.empty_bookmarks, R.drawable.empty_folder);
+		}
+
+		@Override
+		public void showRawEntries() {
+			getListAdapter().setShouldHideFolders(false);
+			super.showRawEntries();
+		}
+	}
 }

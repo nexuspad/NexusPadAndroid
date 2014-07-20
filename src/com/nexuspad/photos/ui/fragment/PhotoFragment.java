@@ -10,14 +10,12 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.*;
 import android.widget.ImageView;
 import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.google.common.collect.Iterables;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
-import com.nexuspad.app.App;
 import com.nexuspad.datamodel.EntryTemplate;
 import com.nexuspad.datamodel.Folder;
 import com.nexuspad.datamodel.Photo;
@@ -63,12 +61,6 @@ public class PhotoFragment extends EntriesFragment {
         fragment.setArguments(bundle);
 
         return fragment;
-    }
-
-    @Override
-    protected boolean isLoadListEnabled() {
-        // we have the list
-        return false;
     }
 
     @Override

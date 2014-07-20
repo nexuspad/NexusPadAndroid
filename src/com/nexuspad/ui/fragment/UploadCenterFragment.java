@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.text.Html;
 import android.util.Log;
@@ -33,10 +34,18 @@ import static com.edmondapps.utils.android.view.ViewUtils.findView;
  * Author: edmond
  */
 @FragmentName(UploadCenterFragment.TAG)
-public class UploadCenterFragment extends FadeListFragment {
+public class UploadCenterFragment extends Fragment {
     public static final String TAG = "UploadCenterFragment";
 
-    private final UploadService.OnNewRequestListener mOnNewRequestListener = new UploadService.OnNewRequestListener() {
+	private final List<Request> mEntryRequests = new ArrayList<Request>();
+	private final List<Request> mPhotoRequests = new ArrayList<Request>();
+	private final Set<Request> mPendingRequests = new HashSet<Request>();
+	private UploadAdapter mAdapter;
+	private UploadService.UploadBinder mBinder;
+	private boolean mViewCreated;
+
+
+	private final UploadService.OnNewRequestListener mOnNewRequestListener = new UploadService.OnNewRequestListener() {
         @Override
         public void onNewRequest(Request request) {
             addRequestToList(request);
@@ -62,7 +71,6 @@ public class UploadCenterFragment extends FadeListFragment {
 	        mViewCreated = true;
 	        Log.i("UPLOAD FRAG - 4", "albums: " + String.valueOf(mEntryRequests.size()) + " photos: " + String.valueOf(mPhotoRequests.size()));
 	        mAdapter = new UploadAdapter(getActivity(), mEntryRequests, mPhotoRequests);
-	        setListAdapter(mAdapter);
 
             updateUI();
         }
@@ -72,13 +80,6 @@ public class UploadCenterFragment extends FadeListFragment {
             mBinder = null;
         }
     };
-
-    private final List<Request> mEntryRequests = new ArrayList<Request>();
-    private final List<Request> mPhotoRequests = new ArrayList<Request>();
-    private final Set<Request> mPendingRequests = new HashSet<Request>();
-    private UploadAdapter mAdapter;
-    private UploadService.UploadBinder mBinder;
-    private boolean mViewCreated;
 
     private void addAllRequestsToList(Iterable<Request> requests) {
         for (Request request : requests) {
@@ -118,7 +119,6 @@ public class UploadCenterFragment extends FadeListFragment {
 	    Log.i("UPLOAD FRAG - 3", "albums: " + String.valueOf(mEntryRequests.size()) + " photos: " + String.valueOf(mPhotoRequests.size()));
 
 	    mViewCreated = true;
-        setListAdapter(mAdapter);
         updateUI();
     }
 
@@ -155,21 +155,6 @@ public class UploadCenterFragment extends FadeListFragment {
         } else {
             mBinder.addRequest(request);
         }
-    }
-
-    @Override
-    public void onUndoBarShown(Intent token) {
-        // do nothing
-    }
-
-    @Override
-    public void onUndoBarHidden(Intent token) {
-        // do nothing
-    }
-
-    @Override
-    public void onUndoButtonClicked(Intent token) {
-        // do nothing
     }
 
     private static class ViewHolder {

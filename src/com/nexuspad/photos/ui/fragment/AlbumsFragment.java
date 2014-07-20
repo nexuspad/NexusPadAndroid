@@ -24,7 +24,6 @@ import com.nexuspad.datamodel.EntryList;
 import com.nexuspad.datamodel.EntryTemplate;
 import com.nexuspad.datamodel.Folder;
 import com.nexuspad.dataservice.ServiceConstants;
-import com.nexuspad.photos.ui.activity.AlbumActivity;
 import com.nexuspad.photos.ui.activity.PhotosActivity;
 import com.nexuspad.ui.EntriesAdapter;
 import com.nexuspad.ui.activity.FoldersActivity;
@@ -72,7 +71,7 @@ public class AlbumsFragment extends EntriesFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        setQuickReturnListener(getListViewManager(), null);
+        setQuickReturnListener(getListView(), null);
         setOnFolderSelectedClickListener(REQ_FOLDER);
 
         updateUI();
@@ -111,8 +110,8 @@ public class AlbumsFragment extends EntriesFragment {
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
 
-        final Album album = ((AlbumsAdapter) getListAdapter()).getItem(position);
-        AlbumActivity.startWith(album, getFolder(), getActivity());
+//        final Album album = ((AlbumsAdapter) getListAdapter()).getItem(position);
+//        AlbumActivity.startWith(album, getFolder(), getActivity());
     }
 
     private static class ViewHolder {

@@ -12,6 +12,8 @@ import android.widget.BaseAdapter;
 import com.edmondapps.utils.android.ui.CompoundAdapter;
 
 /**
+ * @deprecated
+ *
  * Handles the list that contains both folders and entries.
  *
  * @author Edmond

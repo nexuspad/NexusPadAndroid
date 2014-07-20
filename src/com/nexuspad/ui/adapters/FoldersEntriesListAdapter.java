@@ -1,29 +1,26 @@
 package com.nexuspad.ui.adapters;
 
 import android.database.DataSetObserver;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import com.nexuspad.ui.EntriesAdapter;
-import com.nexuspad.ui.FoldersAdapter;
 
 /**
  * Created by ren on 7/18/14.
  */
-public class FoldersEntriesListAdapter<T extends EntriesAdapter<?>> extends BaseAdapter implements AdapterView.OnItemLongClickListener {
-	private final FoldersAdapter mFolderAdapter;
+public class FoldersEntriesListAdapter<T extends ListEntriesAdapter<?>> extends BaseAdapter implements AdapterView.OnItemLongClickListener {
+	private final ListFoldersAdapter mFolderAdapter;
 	private final T mEntriesAdapter;
-	private final BaseAdapter mLoadMoreAdapter;
+	private BaseAdapter mLoadMoreAdapter;
 
-	public FoldersEntriesListAdapter(FoldersAdapter folderAdapter, T entriesAdapter) {
+	public FoldersEntriesListAdapter(ListFoldersAdapter folderAdapter, T entriesAdapter) {
 		mFolderAdapter = folderAdapter;
 		mEntriesAdapter = entriesAdapter;
 		mLoadMoreAdapter = null;
 	}
 
-	public FoldersEntriesListAdapter(FoldersAdapter folderAdapter, T entriesAdapter, BaseAdapter loadMoreAdapter) {
+	public FoldersEntriesListAdapter(ListFoldersAdapter folderAdapter, T entriesAdapter, BaseAdapter loadMoreAdapter) {
 		mFolderAdapter = folderAdapter;
 		mEntriesAdapter = entriesAdapter;
 		mLoadMoreAdapter = loadMoreAdapter;
@@ -170,7 +167,7 @@ public class FoldersEntriesListAdapter<T extends EntriesAdapter<?>> extends Base
 		}
 	}
 
-	private boolean isPositionFolder(int position) {
+	public boolean isPositionFolder(int position) {
 		if (mFolderAdapter.getCount() == 0) {
 			return false;
 		} else {
@@ -181,25 +178,26 @@ public class FoldersEntriesListAdapter<T extends EntriesAdapter<?>> extends Base
 		return false;
 	}
 
-	private boolean isPositionEntries(int position) {
+	public boolean isPositionEntries(int position) {
 		if (mEntriesAdapter.getCount() == 0) {
 			return false;
 		} else {
-			if (position < mEntriesAdapter.getCount()) {
-				return true;
-			}
+			return !isPositionFolder(position);
 		}
-		return false;
+	}
+
+	public void removeLoadMoreAdapter() {
+		mLoadMoreAdapter = null;
 	}
 
 	private boolean isPositionLoadMore(int position) {
-		if (position >= getCount() && mLoadMoreAdapter != null) {               // Shouldn't be greater
+		if (position >= (getCount() - 1) && mLoadMoreAdapter != null) {               // Shouldn't be greater
 			return true;
 		}
 		return false;
 	}
 
-	public final FoldersAdapter getFoldersAdapter() {
+	public final ListFoldersAdapter getFoldersAdapter() {
 		return mFolderAdapter;
 	}
 

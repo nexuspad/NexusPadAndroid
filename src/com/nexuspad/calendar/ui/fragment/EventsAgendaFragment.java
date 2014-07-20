@@ -15,7 +15,6 @@ import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.edmondapps.utils.java.WrapperList;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
-import com.nexuspad.calendar.ui.activity.EventActivity;
 import com.nexuspad.datamodel.EntryList;
 import com.nexuspad.datamodel.EntryTemplate;
 import com.nexuspad.datamodel.Event;
@@ -80,7 +79,7 @@ public class EventsAgendaFragment extends EntriesFragment {
         final Date midPoint = mStartTime > 0 ? new Date(mStartTime) : new Date();
         final Date startDate = getStartDate(midPoint);
         final Date endDate = getEndDate(midPoint);
-        service.getEntriesBetweenDates(folder, getTemplate(), startDate, endDate, page, getEntriesCountPerPage());
+        service.getEntriesBetweenDates(folder, getTemplate(), startDate, endDate, page, PAGE_COUNT);
     }
 
     private static Date getEndDate(Date midPoint) {
@@ -129,7 +128,7 @@ public class EventsAgendaFragment extends EntriesFragment {
             for (int i = 0, eventsSize = events.size(); i < eventsSize; i++) {
                 final Event event = events.get(i);
                 if (event.getStartTime().getTime() >= mStartTime) {
-                    getListViewManager().smoothScrollToPosition(i);
+//                    getListViewManager().smoothScrollToPosition(i);
                     break;
                 }
             }
@@ -139,19 +138,10 @@ public class EventsAgendaFragment extends EntriesFragment {
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-        final EventsAgendaAdapter adapter = getListAdapter();
-        EventActivity.startWith(getActivity(), adapter.getItem(position), getFolder());
+//        final EventsAgendaAdapter adapter = (EventsAgendaAdapter) getListAdapter();
+//        EventActivity.startWith(getActivity(), adapter.getItem(position), getFolder());
     }
 
-    @Override
-    public EventsAgendaAdapter getListAdapter() {
-        return (EventsAgendaAdapter) super.getListAdapter();
-    }
-
-    @Override
-    protected EntriesAdapter<?> getFilterableAdapter() {
-        return getListAdapter();
-    }
 
     public void setStartTime(long startTime) {
         final Date newStartTime = new Date(startTime);

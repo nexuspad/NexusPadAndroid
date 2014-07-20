@@ -1,7 +1,7 @@
 /*
  * Copyright (C), NexusPad LLC
  */
-package com.nexuspad.ui;
+package com.nexuspad.ui.adapters;
 
 import android.app.Activity;
 import android.view.LayoutInflater;
@@ -18,11 +18,9 @@ import java.util.List;
 import static com.edmondapps.utils.android.view.ViewUtils.findView;
 
 /**
- * @deprecated
- *
  * @author Edmond
  */
-public class FoldersAdapter extends BaseAdapter implements OnItemLongClickListener {
+public class ListFoldersAdapter extends BaseAdapter implements OnItemLongClickListener {
 	public static final int TYPE_HEADER = 0;
 	public static final int TYPE_FOLDER = 1;
 	public static final int TYPE_EMPTY_FOLDER = 2;
@@ -36,11 +34,11 @@ public class FoldersAdapter extends BaseAdapter implements OnItemLongClickListen
 	private OnClickListener mOnSubFolderClickListener;
 	private boolean mShouldHide;
 
-	public FoldersAdapter(Activity a, List<? extends Folder> folders) {
+	public ListFoldersAdapter(Activity a, List<? extends Folder> folders) {
 		this(a, folders, false);
 	}
 
-	public FoldersAdapter(Activity a, List<? extends Folder> folders, boolean useSubFolderButtons) {
+	public ListFoldersAdapter(Activity a, List<? extends Folder> folders, boolean useSubFolderButtons) {
 		mUseSubFolderButtons = useSubFolderButtons;
 		mInflater = a.getLayoutInflater();
 		mSubFolders = folders;
@@ -55,25 +53,10 @@ public class FoldersAdapter extends BaseAdapter implements OnItemLongClickListen
 		return mShouldHide;
 	}
 
-	public static class FolderViewHolder {
-		ImageView icon;
-		ImageButton icon2;
-		TextView text1;
-		ImageButton menu;
-
-		public TextView getText1() {
-			return text1;
-		}
-
-		public void setText1(TextView textView) {
-			text1 = textView;
-		}
-	}
-
-	private static FolderViewHolder getHolder(View convertView) {
-		FolderViewHolder holder = (FolderViewHolder) convertView.getTag();
+	private static ListViewHolder getHolder(View convertView) {
+		ListViewHolder holder = (ListViewHolder) convertView.getTag();
 		if (holder == null) {
-			holder = new FolderViewHolder();
+			holder = new ListViewHolder();
 			holder.icon = findView(convertView, android.R.id.icon);
 			holder.icon2 = findView(convertView, android.R.id.icon2);
 			holder.text1 = findView(convertView, android.R.id.text1);
@@ -89,41 +72,17 @@ public class FoldersAdapter extends BaseAdapter implements OnItemLongClickListen
 		return holder;
 	}
 
-	protected View getFolderView(Folder folder, int position, View c, ViewGroup p) {
-		if (c == null) {
-			int layout = mUseSubFolderButtons ? R.layout.list_item_icon_2 : R.layout.list_item_icon;
-			c = getLayoutInflater().inflate(layout, p, false);
-		}
-		FolderViewHolder holder = getHolder(c);
-
-		holder.icon.setImageResource(R.drawable.ic_np_folder);
-		holder.text1.setText(folder.getFolderName());
-		holder.menu.setOnClickListener(getOnMenuClickListener());
-
-		if (mUseSubFolderButtons) {
-			if (!folder.getSubFolders().isEmpty()) {
-				holder.icon2.setVisibility(View.VISIBLE);
-				holder.icon2.setImageResource(R.drawable.subfolder);
-				holder.icon2.setOnClickListener(mOnSubFolderClickListener);
-			} else {
-				holder.icon2.setVisibility(View.INVISIBLE);
-			}
-		}
-
-		return c;
-	}
-
 	protected View getEmptyFolderView(LayoutInflater i, View c, ViewGroup p) {
-		FolderViewHolder holder;
+		ListViewHolder holder;
 		if (c == null) {
 			c = i.inflate(R.layout.layout_img_caption, p, false);
 
-			holder = new FolderViewHolder();
+			holder = new ListViewHolder();
 			holder.text1 = findView(c, android.R.id.text1);
 
 			c.setTag(holder);
 		} else {
-			holder = (FolderViewHolder) c.getTag();
+			holder = (ListViewHolder) c.getTag();
 		}
 		holder.text1.setText(R.string.empty_folder);
 		holder.text1.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.empty_subfolders, 0, 0);
@@ -137,7 +96,7 @@ public class FoldersAdapter extends BaseAdapter implements OnItemLongClickListen
 
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-		FolderViewHolder holder = getHolder(view);
+		ListViewHolder holder = getHolder(view);
 		if (mOnMenuClickListener != null) {
 			mOnMenuClickListener.onClick(holder.menu);
 		}
@@ -212,19 +171,51 @@ public class FoldersAdapter extends BaseAdapter implements OnItemLongClickListen
 	}
 
 	public View getHeaderView(int position, View convertView, ViewGroup parent) {
-		FolderViewHolder holder;
-		if (convertView == null) {
-			convertView = mInflater.inflate(R.layout.list_header, parent, false);
+		View header = mInflater.inflate(R.layout.list_header, parent, false);
+		TextView headerText = (TextView)header.findViewById(android.R.id.text1);
+		headerText.setText(parent.getResources().getText(R.string.folders));
 
-			holder = new FolderViewHolder();
-			holder.text1 = findView(convertView, android.R.id.text1);
+		return header;
+//
+//		ListViewHolder holder;
+//		if (convertView == null) {
+//			convertView = mInflater.inflate(R.layout.list_header, parent, false);
+//
+//			holder = new ListViewHolder();
+//			holder.text1 = findView(convertView, android.R.id.text1);
+//
+//			convertView.setTag(holder);
+//		} else {
+//			holder = (ListViewHolder) convertView.getTag();
+//			holder = getHolder(convertView);
+//		}
+//
+//		holder.text1.setText(getHeaderText(position, convertView, parent));
+//
+//		return convertView;
+	}
 
-			convertView.setTag(holder);
-		} else {
-			holder = (FolderViewHolder) convertView.getTag();
+	protected View getFolderView(Folder folder, int position, View convertView, ViewGroup p) {
+		if (convertView == null || convertView.findViewById(R.drawable.ic_np_folder) == null) {
+			int layout = mUseSubFolderButtons ? R.layout.list_item_icon_2 : R.layout.list_item_icon;
+			convertView = getLayoutInflater().inflate(layout, p, false);
 		}
 
-		holder.text1.setText(getHeaderText(position, convertView, parent));
+		ListViewHolder holder = getHolder(convertView);
+
+		holder.icon.setImageResource(R.drawable.ic_np_folder);
+		holder.text1.setText(folder.getFolderName());
+		holder.menu.setOnClickListener(getOnMenuClickListener());
+
+		if (mUseSubFolderButtons) {
+			if (!folder.getSubFolders().isEmpty()) {
+				holder.icon2.setVisibility(View.VISIBLE);
+				holder.icon2.setImageResource(R.drawable.subfolder);
+				holder.icon2.setOnClickListener(mOnSubFolderClickListener);
+			} else {
+				holder.icon2.setVisibility(View.INVISIBLE);
+			}
+		}
 
 		return convertView;
 	}

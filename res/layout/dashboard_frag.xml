@@ -4,7 +4,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <include layout="@layout/list_content" />
+    <FrameLayout
+        android:id="@+id/frame_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+        <ListView
+            android:id="@android:id/list"
+            android:listSelector="?android:attr/selectableItemBackground"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="@dimen/ed__padding_small"
+            android:paddingLeft="@dimen/ed__padding_small"
+            android:paddingRight="@dimen/ed__padding_small"
+            android:paddingTop="@dimen/ed__padding_small"
+            android:scrollbarStyle="outsideOverlay"
+            />
+    </FrameLayout>
 
     <FrameLayout
         android:layout_width="wrap_content"

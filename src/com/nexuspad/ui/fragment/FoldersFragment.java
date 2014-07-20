@@ -6,17 +6,17 @@ package com.nexuspad.ui.fragment;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.*;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.*;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.Toast;
 import com.edmondapps.utils.android.Logs;
 import com.edmondapps.utils.android.annotaion.FragmentName;
-import com.edmondapps.utils.android.ui.CompoundAdapter;
-import com.edmondapps.utils.android.ui.SingleAdapter;
-import com.edmondapps.utils.android.view.ViewUtils;
 import com.google.common.collect.Iterables;
 import com.nexuspad.Manifest;
 import com.nexuspad.R;
@@ -27,16 +27,14 @@ import com.nexuspad.dataservice.FolderService;
 import com.nexuspad.dataservice.FolderService.FolderReceiver;
 import com.nexuspad.dataservice.NPException;
 import com.nexuspad.dataservice.ServiceError;
-import com.nexuspad.ui.FoldersAdapter;
 import com.nexuspad.ui.OnFolderMenuClickListener;
 import com.nexuspad.ui.activity.NewFolderActivity;
 import com.nexuspad.ui.adapters.FolderNavigatorAdapter;
 
 import java.util.List;
 
-import static com.edmondapps.utils.android.view.ViewUtils.findView;
-
 /**
+ *
  * You must pass in a moduleId with {@link FoldersFragment#KEY_PARENT_FOLDER} as an argument or use
  * the static factory method {@link #of(Folder)}.
  *
@@ -47,6 +45,15 @@ public class FoldersFragment extends FadeListFragment {
 	public static final String TAG = "FoldersFragment";
 	public static final String KEY_PARENT_FOLDER = "com.nexuspad.ui.fragment.FoldersFragment.parent_folder";
 	private static final String KEY_LIST_POS = "key_list_pos";
+
+	private Callback mCallback;
+	private FolderService mFolderService;
+	private Folder mParentFolder;
+	private List<Folder> mSubFolders;
+
+	private ListView mListView;
+	private FolderNavigatorAdapter mFoldersAdapter;
+
 
 	/**
 	 * @param folder the parent folder of the folders list
@@ -70,7 +77,7 @@ public class FoldersFragment extends FadeListFragment {
 
 			if (FolderService.ACTION_DELETE.equals(action)) {
 				mSubFolders.add(position, folder);
-				notifyDataSetChanged();
+				mFoldersAdapter.notifyDataSetChanged();
 			}
 		}
 	}
@@ -86,7 +93,7 @@ public class FoldersFragment extends FadeListFragment {
 				if (i >= 0) {
 					mSubFolders.remove(i);
 					token.putExtra(KEY_LIST_POS, i);
-					notifyDataSetChanged();
+					mFoldersAdapter.notifyDataSetChanged();
 				} else {
 					Logs.w(TAG, "deleting folder, but no matching ID found in the list. " + folder);
 				}
@@ -105,7 +112,7 @@ public class FoldersFragment extends FadeListFragment {
 				folder.setOwner(AccountManager.currentAccount());
 			} catch (NPException e) {
 				Logs.e(TAG, e);
-				Context context = getListView().getContext();
+				Context context = mListView.getContext();
 				String msg = context.getString(R.string.formatted_err_delete_failed, folder.getDisplayName());
 				Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
 			}
@@ -143,7 +150,7 @@ public class FoldersFragment extends FadeListFragment {
 		protected void onNew(Context c, Intent i, Folder f) {
 			if (!Iterables.tryFind(mSubFolders, f.filterById()).isPresent()) {
 				mSubFolders.add(f);
-				notifyDataSetChanged();
+				mFoldersAdapter.notifyDataSetChanged();
 			} else {
 				Logs.w(TAG, "folder created on the server, but ID already exists in the list, updating instead: " + f);
 				onUpdate(c, i, f);
@@ -156,7 +163,7 @@ public class FoldersFragment extends FadeListFragment {
 			if (index >= 0) {
 				mSubFolders.remove(index);
 				mSubFolders.add(index, folder);
-				notifyDataSetChanged();
+				mFoldersAdapter.notifyDataSetChanged();
 			} else {
 				Logs.w(TAG, "cannot find the updated entry in the list; folder: " + folder);
 			}
@@ -169,12 +176,6 @@ public class FoldersFragment extends FadeListFragment {
 		}
 	};
 
-	private Callback mCallback;
-	private FolderService mFolderService;
-	private Folder mParentFolder;
-	private List<Folder> mSubFolders;
-
-	private FoldersAdapter foldersAdapter;
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -244,35 +245,32 @@ public class FoldersFragment extends FadeListFragment {
 	 * @param folders same as {@link #getSubFolders()}
 	 */
 	private void initFolderNavigatorList(List<Folder> folders) {
-		foldersAdapter = new FolderNavigatorAdapter(getActivity(), folders, mParentFolder, mCallback);
-		ListView listView = getListView();
-		foldersAdapter.setOnMenuClickListener(new OnFolderMenuClickListener(listView, mParentFolder, mFolderService, getUndoBarController()) {
+		mFoldersAdapter = new FolderNavigatorAdapter(getActivity(), folders, mParentFolder, mCallback);
+
+		mFoldersAdapter.setOnMenuClickListener(new OnFolderMenuClickListener(mListView, mParentFolder, mFolderService, getUndoBarController()) {
 			@Override
 			public void onClick(View v) {
 				final int pos = getListView().getPositionForView(v);
-				onFolderClick(foldersAdapter.getItem(pos), pos, v);
+				onFolderClick(mFoldersAdapter.getItem(pos), pos, v);
 			}
 		});
-		foldersAdapter.setOnSubFolderClickListener(new OnClickListener() {
+
+		mFoldersAdapter.setOnSubFolderClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				final int pos = getListView().getPositionForView(v);
-				final Folder folder = foldersAdapter.getItem(pos);
+				final int pos = mListView.getPositionForView(v);
+				final Folder folder = mFoldersAdapter.getItem(pos);
 				mCallback.onSubFolderClicked(folder);
 			}
 		});
 
-		//super.setListAdapter(adapter);
-
-		super.setListAdapter(foldersAdapter);
-
-		getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+		mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 				if (position != 0) {
 //					final int realPos = getListAdapter().getPositionForAdapter(position);
 //					return getFoldersAdapter().onItemLongClick(parent, view, realPos, id);
-					return foldersAdapter.onItemLongClick(parent, view, position, id);
+					return mFoldersAdapter.onItemLongClick(parent, view, position, id);
 				} else {
 					return false;
 				}
@@ -320,13 +318,10 @@ public class FoldersFragment extends FadeListFragment {
 //			}
 //		} else {
 //			final int realPos = getListAdapter().getPositionForAdapter(position);
-			mCallback.onFolderClicked(foldersAdapter.getItem(position));
+			mCallback.onFolderClicked(mFoldersAdapter.getItem(position));
 //		}
 	}
 
-	private void notifyDataSetChanged() {
-		foldersAdapter.notifyDataSetChanged();
-	}
 
 //	/**
 //	 * This {@code Fragment} guarantees the use of {@link FoldersAdapter}.

@@ -5,8 +5,6 @@ package com.nexuspad.home.ui.activity;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Bundle;
-import android.os.Parcel;
 import android.support.v4.app.Fragment;
 import com.edmondapps.utils.android.Logs;
 import com.edmondapps.utils.android.activity.SinglePaneActivity;
@@ -24,7 +22,6 @@ import com.nexuspad.ui.activity.UploadCenterActivity;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
 import static com.nexuspad.dataservice.ServiceConstants.*;
 
@@ -32,7 +29,7 @@ import static com.nexuspad.dataservice.ServiceConstants.*;
  * @author Edmond
  */
 public class DashboardActivity extends SinglePaneActivity implements DashboardFragment.Callback {
-	public static final String TAG = "MainPhoneActivity";
+	public static final String TAG = DashboardActivity.class.getName();
 
 	@Override
 	protected int onCreateLayoutId() {

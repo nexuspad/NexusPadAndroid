@@ -6,9 +6,13 @@ package com.nexuspad.home.ui.fragment;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.*;
+import android.widget.AdapterView;
+import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.AdapterView.OnItemClickListener;
 import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.nexuspad.R;
 import com.nexuspad.about.activity.AboutActivity;
@@ -17,7 +21,6 @@ import com.nexuspad.app.App;
 import com.nexuspad.dataservice.ServiceConstants;
 import com.nexuspad.home.ui.activity.LoginActivity;
 import com.nexuspad.ui.IconListAdapter;
-import com.nexuspad.ui.fragment.FadeListFragment;
 
 import static com.nexuspad.dataservice.ServiceConstants.*;
 
@@ -25,7 +28,7 @@ import static com.nexuspad.dataservice.ServiceConstants.*;
  * @author Edmond
  */
 @FragmentName(DashboardFragment.TAG)
-public class DashboardFragment extends FadeListFragment {
+public class DashboardFragment extends Fragment {
 	public static final String TAG = "DashboardFragment";
 
 	/*
@@ -61,21 +64,6 @@ public class DashboardFragment extends FadeListFragment {
 			R.string.bookmarks
 	};
 
-	@Override
-	public void onUndoBarShown(Intent token) {
-		// do nothing
-	}
-
-	@Override
-	public void onUndoBarHidden(Intent token) {
-		// do nothing
-	}
-
-	@Override
-	public void onUndoButtonClicked(Intent token) {
-		// do nothing
-	}
-
 	public interface Callback {
 		/**
 		 * Called when an module is clicked.
@@ -88,6 +76,8 @@ public class DashboardFragment extends FadeListFragment {
 	}
 
 	private Callback mCallback;
+	private ListAdapter mListAdapter;
+	private ListView mListView;
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -128,12 +118,21 @@ public class DashboardFragment extends FadeListFragment {
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		setListAdapter(new IconListAdapter(getActivity(), sDrawables, sStrings));
+
+		final ListView listView = (ListView)view.findViewById(android.R.id.list);
+
+		mListAdapter = new IconListAdapter(getActivity(), sDrawables, sStrings);
+		listView.setAdapter(mListAdapter);
+
+		listView.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				onListItemClick(listView, view, position, id);
+			}
+		});
 	}
 
-	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
-		super.onListItemClick(l, v, position, id);
 		mCallback.onModuleClicked(this, sModules[position]);
 	}
 }

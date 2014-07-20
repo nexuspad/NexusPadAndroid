@@ -1,7 +1,7 @@
 /*
  * Copyright (C), NexusPad LLC
  */
-package com.nexuspad.ui;
+package com.nexuspad.ui.adapters;
 
 import android.app.Activity;
 import android.text.TextUtils;
@@ -9,8 +9,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.BaseAdapter;
+import android.widget.Filter;
+import android.widget.TextView;
 import com.edmondapps.utils.java.WrapperList;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
@@ -33,11 +36,9 @@ import static com.edmondapps.utils.android.view.ViewUtils.findView;
 /**
  * Common Adapter to be used in entries list view.
  *
- * @deprecated
- *
  * @author Edmond
  */
-public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter implements OnItemLongClickListener {
+public abstract class ListEntriesAdapter<T extends NPEntry> extends BaseAdapter implements OnItemLongClickListener {
 	public static final int TYPE_HEADER = 0;
 	public static final int TYPE_ENTRY = 1;
 	public static final int TYPE_EMPTY_ENTRY = 2;
@@ -53,12 +54,11 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter impl
 
 	private List<T> mDisplayEntries;  // may be filtered entries displayed ons screen
 	private OnClickListener mOnMenuClickListener;
-	private boolean mResetConvertView;
 
 	/**
 	 * use this constructor if you want filtering abilities
 	 */
-	public EntriesAdapter(Activity a, List<T> entries, Folder folder, EntryListService service, EntryTemplate template) {
+	public ListEntriesAdapter(Activity a, List<T> entries, Folder folder, EntryListService service, EntryTemplate template) {
 		mFolder = folder;
 		mService = service;
 		mTemplate = template;
@@ -80,7 +80,6 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter impl
 	 */
 	public void setDisplayEntries(List<T> displayEntries) {
 		mDisplayEntries = displayEntries;
-		mResetConvertView = true;
 		notifyDataSetChanged();
 	}
 
@@ -94,7 +93,6 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter impl
 	public void showRawEntries() {
 		mDisplayEntries.clear();
 		mDisplayEntries.addAll(mRawEntries);
-		mResetConvertView = true;
 		notifyDataSetChanged();
 	}
 
@@ -107,16 +105,10 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter impl
 		return !Strings.isNullOrEmpty(mEntryHeaderText);
 	}
 
-	protected static class ViewHolder {
-		public ImageView icon;
-		public TextView text1;
-		public ImageButton menu;
-	}
-
-	protected static ViewHolder getHolder(View convertView) {
-		ViewHolder holder = (ViewHolder) convertView.getTag();
+	protected static ListViewHolder getHolder(View convertView) {
+		ListViewHolder holder = (ListViewHolder) convertView.getTag();
 		if (holder == null) {
-			holder = new ViewHolder();
+			holder = new ListViewHolder();
 			holder.icon = findView(convertView, android.R.id.icon);
 			holder.text1 = findView(convertView, android.R.id.text1);
 			holder.menu = findView(convertView, R.id.menu);
@@ -131,7 +123,7 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter impl
 
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-		ViewHolder holder = getHolder(view);
+		ListViewHolder holder = getHolder(view);
 		OnClickListener listener = getOnMenuClickListener();
 		if (listener != null) {
 			listener.onClick(holder.menu);
@@ -150,6 +142,7 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter impl
 			// One view - empty view
 			return 1;
 		}
+
 		if (isHeaderEnabled()) {
 			// Header view and entry views
 			return mDisplayEntries.size() + 1;
@@ -205,11 +198,6 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter impl
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		if (mResetConvertView) {
-			convertView = null;
-			mResetConvertView = false;
-		}
-
 		switch (getItemViewType(position)) {
 			case TYPE_HEADER:
 				return getHeaderView(position, convertView, parent);
@@ -223,27 +211,52 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter impl
 	}
 
 	public View getHeaderView(int position, View convertView, ViewGroup parent) {
-		if (convertView == null) {
-			convertView = mInflater.inflate(R.layout.list_header, parent, false);
-		}
-		ViewHolder holder = getHolder(convertView);
+		View header = mInflater.inflate(R.layout.list_header, parent, false);
+		TextView headerText = (TextView)header.findViewById(android.R.id.text1);
+		headerText.setText(getEntriesHeaderText());
 
-		holder.text1.setText(getEntriesHeaderText());
+		return header;
 
-		return convertView;
+
+//		ListViewHolder holder;
+//
+//		if (convertView == null) {
+//			convertView = mInflater.inflate(R.layout.list_header, parent, false);
+//
+//			holder = new ListViewHolder();
+//			holder.text1 = findView(convertView, android.R.id.text1);
+//
+//			convertView.setTag(holder);
+//		} else {
+//			holder = getHolder(convertView);
+//		}
+//
+//		holder.text1.setText(getEntriesHeaderText());
+//
+//		return convertView;
+
+//		if (convertView == null) {
+//			convertView = mInflater.inflate(R.layout.list_header, parent, false);
+//		}
+//
+//		ListViewHolder holder = getHolder(convertView);
+//
+//		holder.text1.setText(getEntriesHeaderText());
+//
+//		return convertView;
 	}
 
 	protected static View getCaptionView(LayoutInflater i, View c, ViewGroup p, int stringId, int drawableId) {
-		ViewHolder holder;
+		ListViewHolder holder;
 		if (c == null) {
 			c = i.inflate(R.layout.layout_img_caption, p, false);
 
-			holder = new ViewHolder();
+			holder = new ListViewHolder();
 			holder.text1 = findView(c, android.R.id.text1);
 
 			c.setTag(holder);
 		} else {
-			holder = (ViewHolder) c.getTag();
+			holder = (ListViewHolder) c.getTag();
 		}
 		holder.text1.setText(stringId);
 		holder.text1.setCompoundDrawablesWithIntrinsicBounds(0, drawableId, 0, 0);
@@ -271,7 +284,7 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter impl
 	 *
 	 * @param string
 	 */
-	public void filter(String string) {
+	public void doSearch(String string) {
 		filterWithWeb(string);
 	}
 

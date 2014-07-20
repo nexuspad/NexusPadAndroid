@@ -3,7 +3,6 @@
  */
 package com.nexuspad.ui;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.view.MenuItem;
@@ -11,15 +10,13 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ListView;
 import android.widget.PopupMenu;
-import android.widget.Toast;
-import com.edmondapps.utils.android.Logs;
 import com.nexuspad.R;
-import com.nexuspad.account.AccountManager;
 import com.nexuspad.datamodel.Folder;
-import com.nexuspad.dataservice.EntryService;
 import com.nexuspad.dataservice.FolderService;
-import com.nexuspad.dataservice.NPException;
 import com.nexuspad.ui.activity.NewFolderActivity;
+import com.nexuspad.ui.adapters.FoldersEntriesListAdapter;
+import com.nexuspad.ui.adapters.ListFoldersAdapter;
+
 
 public class OnFolderMenuClickListener implements OnClickListener {
     public static final String TAG = "OnFolderMenuClickListener";
@@ -53,13 +50,11 @@ public class OnFolderMenuClickListener implements OnClickListener {
      */
     @Override
     public void onClick(View v) {
-        FolderEntriesAdapter<?> compoundAdapter = ((FolderEntriesAdapter<?>) mListView.getAdapter());
+	    FoldersEntriesListAdapter<?> felAdapter = ((FoldersEntriesListAdapter<?>) mListView.getAdapter());
 
-        int pos = mListView.getPositionForView(v);
-        if (pos != ListView.INVALID_POSITION) {
-            FoldersAdapter adapter = compoundAdapter.getFoldersAdapter();
-            int position = compoundAdapter.getPositionForAdapter(pos);
-
+        int position = mListView.getPositionForView(v);
+        if (position != ListView.INVALID_POSITION) {
+            ListFoldersAdapter adapter = felAdapter.getFoldersAdapter();
             Folder item = adapter.getItem(position);
             onFolderClick(item, position, v);
         }

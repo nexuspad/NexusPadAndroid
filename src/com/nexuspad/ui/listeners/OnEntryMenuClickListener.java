@@ -1,55 +1,52 @@
 /*
  * Copyright (C), NexusPad LLC
  */
-package com.nexuspad.ui;
+package com.nexuspad.ui.listeners;
 
 import android.content.Intent;
 import android.content.res.Resources;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ListView;
 import android.widget.PopupMenu;
 import com.nexuspad.R;
 import com.nexuspad.datamodel.NPEntry;
 import com.nexuspad.dataservice.EntryService;
-import com.nexuspad.ui.adapters.FoldersEntriesListAdapter;
-import com.nexuspad.ui.adapters.ListEntriesAdapter;
+import com.nexuspad.ui.UndoBarController;
 
 /**
- * @deprecated
+ * Listener to handle entry item menu click.
  *
  * @param <T>
  */
-public class OnEntryMenuClickListener<T extends NPEntry> implements OnClickListener {
+public abstract class OnEntryMenuClickListener<T extends NPEntry> implements OnClickListener {
     public static final String TAG = OnEntryMenuClickListener.class.getName();
 
-    protected ListView mListView;
+	protected View mView;
     protected EntryService mEntryService;
     protected UndoBarController mController;
 
-	public OnEntryMenuClickListener() {
-		mListView = null;
-	}
-
-    public OnEntryMenuClickListener(ListView listView, EntryService entryService, UndoBarController controller) {
-        mListView = listView;
+    public OnEntryMenuClickListener(View view, EntryService entryService, UndoBarController controller) {
+	    mView = view;
         mEntryService = entryService;
         mController = controller;
     }
 
-    @Override
-    public void onClick(View v) {
-        @SuppressWarnings("unchecked")
-        FoldersEntriesListAdapter<? extends ListEntriesAdapter<T>> felAdapter = ((FoldersEntriesListAdapter<? extends ListEntriesAdapter<T>>) mListView.getAdapter());
+	/**
+	 * Must be overridden in individual fragments.
+	 *
+	 * @param v
+	 */
+    public abstract void onClick(View v);
 
-        int position = mListView.getPositionForView(v);
-        if (position != ListView.INVALID_POSITION && felAdapter.isPositionEntries(position)) {
-            T item = (T)felAdapter.getItem(position);
-            onEntryClick(item, position, v);
-        }
-    }
-
+	/**
+	 * Pop up the menu.
+	 * Usually called from onClick override.
+	 *
+	 * @param entry
+	 * @param position
+	 * @param view
+	 */
 	protected void onEntryClick(final T entry, final int position, View view) {
         PopupMenu popupMenu = getPopupMenu(view);
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -61,6 +58,14 @@ public class OnEntryMenuClickListener<T extends NPEntry> implements OnClickListe
         popupMenu.show();
     }
 
+	/**
+	 * Handles each entry menu click.
+	 *
+	 * @param entry
+	 * @param position
+	 * @param menuId
+	 * @return
+	 */
     protected boolean onEntryMenuClick(T entry, int position, int menuId) {
         switch (menuId) {
             case R.id.delete:
@@ -70,15 +75,21 @@ public class OnEntryMenuClickListener<T extends NPEntry> implements OnClickListe
         return false;
     }
 
+	/**
+	 * Handles deleting entry with undo bar.
+	 *
+	 * @param entry
+	 */
     private void deleteEntry(T entry) {
-        final Resources resources = mListView.getResources();
-        final String string = resources.getString(
-                R.string.format_deleted_entry, getEntryString(entry, resources), entry.getTitle());
+        final Resources resources = mView.getResources();
+	    if (resources != null) {
+		    String string = resources.getString(R.string.format_deleted_entry, getEntryString(entry, resources), entry.getTitle());
 
-        final Intent undoToken = new Intent(EntryService.ACTION_DELETE);
-        undoToken.putExtra(EntryService.KEY_ENTRY, entry);
+		    final Intent undoToken = new Intent(EntryService.ACTION_DELETE);
+		    undoToken.putExtra(EntryService.KEY_ENTRY, entry);
 
-        mController.showUndoBar(false, string, undoToken);
+		    mController.showUndoBar(false, string, undoToken);
+	    }
     }
 
 	public static PopupMenu getPopupMenu(View view) {
@@ -132,10 +143,6 @@ public class OnEntryMenuClickListener<T extends NPEntry> implements OnClickListe
                 break;
         }
         return resources.getString(id);
-    }
-
-    public final ListView getListView() {
-        return mListView;
     }
 
     public final EntryService getEntryService() {

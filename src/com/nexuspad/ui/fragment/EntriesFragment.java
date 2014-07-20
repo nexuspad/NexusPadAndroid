@@ -31,11 +31,13 @@ import com.nexuspad.dataservice.EntryService.EntryReceiver;
 import com.nexuspad.dataservice.FolderService.FolderReceiver;
 import com.nexuspad.home.ui.activity.LoginActivity;
 import com.nexuspad.ui.DirectionalScrollListener;
-import com.nexuspad.ui.FoldersAdapter;
 import com.nexuspad.ui.OnFolderMenuClickListener;
 import com.nexuspad.ui.OnListEndListener;
 import com.nexuspad.ui.activity.FoldersActivity;
 import com.nexuspad.ui.activity.NewFolderActivity;
+import com.nexuspad.ui.adapters.FoldersEntriesListAdapter;
+import com.nexuspad.ui.adapters.ListFoldersAdapter;
+import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
 import java.util.Iterator;
 import java.util.List;
@@ -57,20 +59,30 @@ import static com.nexuspad.dataservice.EntryListService.EntryListReceiver;
 public abstract class EntriesFragment extends FadeListFragment {
 	public static final String KEY_FOLDER = "key_folder";
 
-	private static final int PAGE_COUNT = 20;
+	public static final int PAGE_COUNT = 20;
+
 	private static final String TAG = "EntriesFragment";
 	private static final String KEY_LIST_POS = "key_list_pos";
 
+	private EntryList mEntryList;
+
+	private Callback mCallback;
+	private int mCurrentPage;
+	private Folder mFolder;
+	private ModuleId mModuleId;
+
+	private View mQuickReturnV;
+	private TextView mFolderSelectorV;
+
+	protected ListView mListView;
+
+	protected FoldersEntriesListAdapter mListAdapter;
+
+	private String mCurrentSearchKeyword;
+
+
 	public interface Callback {
 		void onListLoaded(EntriesFragment f, EntryList list);
-	}
-
-	public interface FilterableAdapter {
-		void showRawEntries();
-
-		void filter(String newText);
-
-		void setDisplayEntries(EntryList entries);
 	}
 
 	private final Lazy<FolderService> mFolderService = new Lazy<FolderService>() {
@@ -209,31 +221,8 @@ public abstract class EntriesFragment extends FadeListFragment {
 		}
 	};
 
-	private EntryList mEntryList;
-
-	private Callback mCallback;
-	private int mCurrentPage;
-	private Folder mFolder;
-	private ModuleId mModuleId;
-
-	private View mQuickReturnV;
-	private TextView mFolderSelectorV;
-
-	private String mCurrentSearchKeyword;
-
-	/**
-	 * For subclass to implement. return the entries adapter to use the filtering features
-	 *
-	 * @return the underlying entries adapter; return a non-null adapter to use the default behaviours in methods like {@link #onSearchLoaded(EntryList)}
-	 */
-	protected FilterableAdapter getFilterableAdapter() {
-		throw new IllegalStateException("you must implement this method to use any goodies from EntriesFragment");
-	}
-
 	/**
 	 * set up {@code OnQueryTextListener}, {@code OnCloseListener}, and {@code OnActionExpandListener}.
-	 * <p></p>
-	 * it will not be expanded if {@link #getListAdapter()} is null; must implement {@link #getFilterableAdapter()}
 	 *
 	 * @param searchItem
 	 */
@@ -246,7 +235,7 @@ public abstract class EntriesFragment extends FadeListFragment {
 					if (Strings.isNullOrEmpty(query)) {
 						reDisplayListEntries();
 					} else {
-						filter(query);
+						doSearch(query);
 					}
 					return true;
 				}
@@ -261,7 +250,7 @@ public abstract class EntriesFragment extends FadeListFragment {
 						if (Strings.isNullOrEmpty(newText)) {
 							reDisplayListEntries();
 						} else {
-							filter(newText);
+							doSearch(newText);
 						}
 						return true;
 					} else {
@@ -281,7 +270,7 @@ public abstract class EntriesFragment extends FadeListFragment {
 			MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
 				@Override
 				public boolean onMenuItemActionExpand(MenuItem item) {
-					if (getListAdapter() != null) {
+					if (mListAdapter != null) {
 						return true;
 					}
 
@@ -297,23 +286,21 @@ public abstract class EntriesFragment extends FadeListFragment {
 		}
 	}
 
-	private void filter(String newText) {
+	private void doSearch(String keyword) {
 		fadeInProgressFrame();
-		mCurrentSearchKeyword = newText;
-		getFilterableAdapter().filter(newText);
+		mCurrentSearchKeyword = keyword;
 	}
 
 	private void reDisplayListEntries() {
 		fadeInListFrame();
 		mCurrentSearchKeyword = null;
-		getFilterableAdapter().showRawEntries();
+		mListAdapter.getEntriesAdapter().showRawEntries();
 
 		/*
 		 * notifyDataSetChanged has to be called here and the views are refreshed.
 		 */
-		final BaseAdapter adapter = getListAdapter();
-		if (adapter != null) {
-			adapter.notifyDataSetChanged();
+		if (mListAdapter != null) {
+			mListAdapter.notifyDataSetChanged();
 		}
 	}
 
@@ -343,9 +330,8 @@ public abstract class EntriesFragment extends FadeListFragment {
 	}
 
 	protected void onEntryListUpdated() {
-		final BaseAdapter adapter = getListAdapter();
-		if (adapter != null) {
-			adapter.notifyDataSetChanged();
+		if (mListAdapter != null) {
+			mListAdapter.notifyDataSetChanged();
 		}
 	}
 
@@ -470,26 +456,34 @@ public abstract class EntriesFragment extends FadeListFragment {
 		mQuickReturnV = findView(view, R.id.quick_return);
 		mFolderSelectorV = findView(view, R.id.lbl_folder);
 
-		ListView listView = getListView();
-		if (listView != null) {
-			listView.setItemsCanFocus(true);
-			listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+		final View theView = view.findViewById(android.R.id.list);
+
+		if (theView instanceof ListView) {
+			mListView = (ListView) theView;
+		}
+
+		if (mListView != null) {
+			mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+					onListItemClick(mListView, view, position, id);
+				}
+			});
+
+			mListView.setItemsCanFocus(true);
+			mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 			if (isAutoLoadMoreEnabled()) {
-				listView.setOnScrollListener(mLoadMoreScrollListener);
+				mListView.setOnScrollListener(mLoadMoreScrollListener);
 			}
 		}
 
-		if (isLoadListEnabled()) {
-			queryEntriesAsync();
-		}
+		queryEntriesAsync();
 	}
 
 	@Override
 	protected void onRetryClicked(View button) {
 		super.onRetryClicked(button);
-		if (isRetryEnabled()) {
-			queryEntriesAsync();
-		}
+		queryEntriesAsync();
 	}
 
 	@Override
@@ -571,22 +565,6 @@ public abstract class EntriesFragment extends FadeListFragment {
 	}
 
 	/**
-	 * @return true if this Fragment should call {@link #queryEntriesAsync()}
-	 * automatically after view is created; false to disable it
-	 */
-	protected boolean isLoadListEnabled() {
-		return true;
-	}
-
-	/**
-	 * @return true if this Fragment should call {@link #queryEntriesAsync()}
-	 * automatically after the retry button is clicked; false to disable it
-	 */
-	protected boolean isRetryEnabled() {
-		return true;
-	}
-
-	/**
 	 * @return if the {@link EntryList} should be updated when the list reaches the end
 	 */
 	protected boolean isAutoLoadMoreEnabled() {
@@ -659,13 +637,14 @@ public abstract class EntriesFragment extends FadeListFragment {
 	 * You may override this method to use other mechanisms, such as
 	 */
 	protected void getEntriesInFolder(EntryListService service, Folder folder, int page) throws NPException {
-		service.getEntriesInFolder(mFolder, getTemplate(), page, getEntriesCountPerPage());
+		service.getEntriesInFolder(mFolder, getTemplate(), page, PAGE_COUNT);
 	}
 
-	protected int getEntriesCountPerPage() {
-		return PAGE_COUNT;
-	}
-
+	/**
+	 * Place holder. Subclass should override.
+	 *
+	 * @param list
+	 */
 	protected void onListLoaded(EntryList list) {
 	}
 
@@ -673,10 +652,24 @@ public abstract class EntriesFragment extends FadeListFragment {
 		if (mEntryList == null) {
 			mEntryList = list;
 		} else {
-			expandEntryList(list);
+			final List<NPEntry> oldEntries = mEntryList.getEntries();
+			final List<NPEntry> newEntries = list.getEntries();
+
+			for (NPEntry newEntry : newEntries) {
+				if (!Iterables.tryFind(oldEntries, newEntry.filterById()).isPresent()) {
+					oldEntries.add(newEntry);
+				} else {
+					Log.i("ENTRIES FRAG: ", "entry is already in the list........");
+				}
+			}
+
+			mEntryList.setPageId(list.getPageId());
 		}
+
 		onListLoaded(mEntryList);
-		mCallback.onListLoaded(this, mEntryList);
+
+		// REN - not sure why this is called since it does nothing.
+//		mCallback.onListLoaded(this, mEntryList);
 	}
 
 	/**
@@ -685,7 +678,7 @@ public abstract class EntriesFragment extends FadeListFragment {
 	 * @param list the filtered entries
 	 */
 	protected void onSearchLoaded(EntryList list) {
-		getFilterableAdapter().setDisplayEntries(list);
+		mListAdapter.getEntriesAdapter().setDisplayEntries(list);
 	}
 
 	private void onSearchLoadedInternal(EntryList list) {
@@ -693,26 +686,6 @@ public abstract class EntriesFragment extends FadeListFragment {
 		fadeInListFrame();
 	}
 
-	/**
-	 * Add the entries to the current {@code EntryList} from another
-	 * {@code EntryList}.
-	 *
-	 * @param o other {@code EntryList}
-	 */
-	private void expandEntryList(EntryList o) {
-		final List<NPEntry> oldEntries = mEntryList.getEntries();
-		final List<NPEntry> newEntries = o.getEntries();
-
-		for (NPEntry newEntry : newEntries) {
-			if (!Iterables.tryFind(oldEntries, newEntry.filterById()).isPresent()) {
-				oldEntries.add(newEntry);
-			} else {
-				Log.i("ENTRIES FRAG: ", "entry is already in the list........");
-			}
-		}
-
-		mEntryList.setPageId(o.getPageId());
-	}
 
 	/**
 	 * Decide whether there is more to be displayed on the page.
@@ -720,16 +693,15 @@ public abstract class EntriesFragment extends FadeListFragment {
 	 * @return
 	 */
 	protected boolean hasNextPage() {
-		final EntryList list = mEntryList;
-		return list != null && list.getTotalCount() > (list.getCountPerPage() * list.getPageId());
+		return mEntryList != null && mEntryList.getTotalCount() > (mEntryList.getCountPerPage() * mEntryList.getPageId());
 	}
 
 	public void deleteEntry(NPEntry entry) {
 		getEntryService().safeDeleteEntry(getActivity(), entry);
 	}
 
-	protected FoldersAdapter newFoldersAdapter() {
-		FoldersAdapter foldersAdapter = new FoldersAdapter(getActivity(), getSubFolders());
+	protected ListFoldersAdapter newFoldersAdapter() {
+		ListFoldersAdapter foldersAdapter = new ListFoldersAdapter(getActivity(), getSubFolders());
 		OnFolderMenuClickListener listener = new OnFolderMenuClickListener(getListView(), mFolder, getFolderService(), getUndoBarController());
 		foldersAdapter.setOnMenuClickListener(listener);
 		return foldersAdapter;
@@ -741,11 +713,14 @@ public abstract class EntriesFragment extends FadeListFragment {
 	 * This will replace the OnScrollListener in the {@code AbsListView} inside {@code ListViewManager}, use {@code other} if you want to include
 	 * another {@code OnScrollListener}.
 	 *
-	 * @param listViewManager the listview manager
 	 * @param other           the other scroll listener; optional
 	 */
-	protected void setQuickReturnListener(ListViewManager listViewManager, AbsListView.OnScrollListener other) {
-		listViewManager.setOnScrollListener(newDirectionalScrollListener(other));
+//	protected void setQuickReturnListener(ListViewManager listViewManager, AbsListView.OnScrollListener other) {
+//		listViewManager.setOnScrollListener(newDirectionalScrollListener(other));
+//	}
+
+	protected void setQuickReturnListener(ListView view, AbsListView.OnScrollListener other) {
+		view.setOnScrollListener(newDirectionalScrollListener(other));
 	}
 
 	/**
@@ -767,7 +742,7 @@ public abstract class EntriesFragment extends FadeListFragment {
 	 * @param other
 	 * @return
 	 */
-	private DirectionalScrollListener newDirectionalScrollListener(final AbsListView.OnScrollListener other) {
+	protected DirectionalScrollListener newDirectionalScrollListener(final AbsListView.OnScrollListener other) {
 		return new DirectionalScrollListener(0, other) {
 			@Override
 			public void onScrollDirectionChanged(final boolean showing) {
@@ -833,23 +808,15 @@ public abstract class EntriesFragment extends FadeListFragment {
 		return mEntryList;
 	}
 
-	/**
-	 * @throws UnsupportedOperationException every time this method is invoked
-	 * @deprecated use {@link #setListAdapter(BaseAdapter)}
-	 */
-	@Override
-	@Deprecated
-	public void setListAdapter(ListAdapter adapter) {
-		throw new UnsupportedOperationException("You must use setListAdapter(BaseAdapter).");
+	public ListView getListView() {
+		return mListView;
+	}
+
+	public FoldersEntriesListAdapter getListAdapter() {
+		return mListAdapter;
 	}
 
 	public void setListAdapter(BaseAdapter adapter) {
-		super.setListAdapter(adapter);
-	}
-
-	@Override
-	public BaseAdapter getListAdapter() {
-		return (BaseAdapter) super.getListAdapter();
 	}
 
 	public Folder getFolder() {

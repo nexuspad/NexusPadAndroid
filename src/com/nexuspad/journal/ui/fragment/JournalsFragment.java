@@ -131,7 +131,7 @@ public class JournalsFragment extends EntriesFragment {
         final long now = System.currentTimeMillis();
         mStartDate = DateUtil.getFirstDateOfTheMonth(now);
         mEndDate = DateUtil.getEndDateOfTheMonth(now);
-        service.getEntriesBetweenDates(folder, getTemplate(), mStartDate, mEndDate, page, getEntriesCountPerPage());
+        service.getEntriesBetweenDates(folder, getTemplate(), mStartDate, mEndDate, page, PAGE_COUNT);
     }
 
     @Override
@@ -213,7 +213,7 @@ public class JournalsFragment extends EntriesFragment {
         return emptyJournal;
     }
 
-    private class JournalsAdapter extends FragmentPagerAdapter implements FilterableAdapter {
+    private class JournalsAdapter extends FragmentPagerAdapter {
         private SparseArray<NewJournalFragment> mAliveFragments = new SparseArray<NewJournalFragment>();
 
         private JournalsAdapter() {
@@ -263,23 +263,5 @@ public class JournalsFragment extends EntriesFragment {
             return mAliveFragments;
         }
 
-        @Override
-        public void showRawEntries() {
-            // TODO
-        }
-
-        @Override
-        public void filter(String newText) {
-            try {
-                getEntryListService().searchEntriesInFolder(newText, getFolder(), getTemplate(), 1, 99);
-            } catch (NPException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-        @Override
-        public void setDisplayEntries(EntryList entries) {
-            // TODO
-        }
     }
 }

@@ -5,8 +5,8 @@ package com.nexuspad.doc.ui.fragment;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.*;
-import android.widget.BaseAdapter;
 import android.widget.ListView;
 import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.edmondapps.utils.java.WrapperList;
@@ -17,15 +17,14 @@ import com.nexuspad.datamodel.Doc;
 import com.nexuspad.datamodel.EntryList;
 import com.nexuspad.datamodel.EntryTemplate;
 import com.nexuspad.datamodel.Folder;
-import com.nexuspad.dataservice.EntryListService;
-import com.nexuspad.dataservice.EntryService;
 import com.nexuspad.dataservice.ServiceConstants;
 import com.nexuspad.doc.ui.activity.NewDocActivity;
-import com.nexuspad.ui.EntriesAdapter;
-import com.nexuspad.ui.FolderEntriesAdapter;
-import com.nexuspad.ui.FoldersAdapter;
-import com.nexuspad.ui.OnEntryMenuClickListener;
+import com.nexuspad.ui.adapters.FoldersEntriesListAdapter;
+import com.nexuspad.ui.adapters.ListEntriesAdapter;
+import com.nexuspad.ui.adapters.ListFoldersAdapter;
+import com.nexuspad.ui.adapters.ListViewHolder;
 import com.nexuspad.ui.fragment.EntriesFragment;
+import com.nexuspad.ui.listeners.OnEntryMenuClickListener;
 
 import java.util.List;
 
@@ -83,37 +82,60 @@ public class DocsFragment extends EntriesFragment {
 
     @Override
     protected void onListLoaded(EntryList list) {
-        super.onListLoaded(list);
+	    Log.i(TAG, "Receiving entry list.");
 
-        FoldersDocsAdapter a = getListAdapter();
-        if (a != null) {
-            a.notifyDataSetChanged();
-            if (!hasNextPage()) {
-                a.removeAdapter(getLoadMoreAdapter());
-            }
-            return;
-        }
+	    super.onListLoaded(list);
 
-        ListView listView = getListView();
+	    FoldersEntriesListAdapter a = getListAdapter();
 
-        FoldersAdapter foldersAdapter = newFoldersAdapter();
+	    if (a != null) {
+		    if (!hasNextPage()) {
+			    a.removeLoadMoreAdapter();
+		    }
+		    a.notifyDataSetChanged();
+		    return;
+	    }
+
+	    ListView listView = getListView();
 
 	    final DocsAdapter docsAdapter = new DocsAdapter(
 			    getActivity(),
 			    new WrapperList<Doc>(list.getEntries()));
 
-	    docsAdapter.setOnMenuClickListener(new OnDocMenuClickListener(getListView(), getEntryService()));
+	    docsAdapter.setOnMenuClickListener(new OnEntryMenuClickListener<Doc>(mListView, getEntryService(), getUndoBarController()) {
+		    @Override
+		    public void onClick(View v) {
+			    @SuppressWarnings("unchecked")
+			    FoldersEntriesListAdapter<? extends ListEntriesAdapter<Doc>> felAdapter = ((FoldersEntriesListAdapter<? extends ListEntriesAdapter<Doc>>) mListView.getAdapter());
 
-	    FoldersDocsAdapter foldersDocsAdapter;
+			    int position = mListView.getPositionForView(v);
+			    if (position != ListView.INVALID_POSITION && felAdapter.isPositionEntries(position)) {
+				    Doc item = (Doc)felAdapter.getItem(position);
+				    onEntryClick(item, position, v);
+			    }
+		    }
 
-        if (hasNextPage()) {
-            foldersDocsAdapter = new FoldersDocsAdapter(foldersAdapter, docsAdapter, getLoadMoreAdapter());
-        } else {
-            foldersDocsAdapter = new FoldersDocsAdapter(foldersAdapter, docsAdapter);
-        }
+		    @Override
+		    protected boolean onEntryMenuClick(Doc entry, int pos, int menuId) {
+			    switch (menuId) {
+				    case R.id.edit:
+					    NewDocActivity.startWithDoc(getActivity(), getFolder(), entry);
+					    return true;
+				    default:
+					    return super.onEntryMenuClick(entry, pos, menuId);
+			    }
+		    }
+	    });
 
-        setListAdapter(foldersDocsAdapter);
-        listView.setOnItemLongClickListener(foldersDocsAdapter);
+	    ListFoldersAdapter foldersAdapter = newFoldersAdapter();
+
+	    if (hasNextPage()) {
+		    mListAdapter = new FoldersEntriesListAdapter(foldersAdapter, docsAdapter, getLoadMoreAdapter());
+	    } else {
+		    mListAdapter = new FoldersEntriesListAdapter(foldersAdapter, docsAdapter);
+	    }
+
+	    listView.setOnItemLongClickListener(mListAdapter);
     }
 
     @Override
@@ -122,61 +144,27 @@ public class DocsFragment extends EntriesFragment {
         super.onSearchLoaded(list);
     }
 
-    @Override
-    protected FilterableAdapter getFilterableAdapter() {
-        return getListAdapter().getEntriesAdapter();
-    }
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        super.onListItemClick(l, v, position, id);
+	    super.onListItemClick(l, v, position, id);
 
-        FoldersDocsAdapter adapter = getListAdapter();
-        int realPos = adapter.getPositionForAdapter(position);
+	    FoldersEntriesListAdapter adapter = getListAdapter();
 
-        if (adapter.isPositionFolder(position)) {
-            Folder folder = adapter.getFoldersAdapter().getItem(realPos);
-            mCallback.onFolderClick(this, folder);
+	    if (adapter.isPositionFolder(position)) {
+		    mCallback.onFolderClick(this, adapter.getFoldersAdapter().getItem(position));
 
-        } else if (adapter.isPositionEntries(position)) {
-            Doc doc = adapter.getEntriesAdapter().getItem(realPos);
-            mCallback.onDocClick(this, doc);
-        }
+	    } else if (adapter.isPositionEntries(position)) {
+		    mCallback.onDocClick(this, (Doc)adapter.getEntriesAdapter().getItem(position - adapter.getFoldersAdapter().getCount()));
+	    }
     }
 
-    @Override
-    public FoldersDocsAdapter getListAdapter() {
-        return (FoldersDocsAdapter) super.getListAdapter();
-    }
+	@Override
+	public FoldersEntriesListAdapter getListAdapter() {
+		return (FoldersEntriesListAdapter) super.getListAdapter();
+	}
 
-    private class OnDocMenuClickListener extends OnEntryMenuClickListener<Doc> {
-        public OnDocMenuClickListener(ListView listView, EntryService entryService) {
-            super(listView, entryService, getUndoBarController());
-        }
-
-        @Override
-        protected boolean onEntryMenuClick(Doc entry, int pos, int menuId) {
-            switch (menuId) {
-                case R.id.edit:
-                    NewDocActivity.startWithDoc(getActivity(), getFolder(), entry);
-                    return true;
-                default:
-                    return super.onEntryMenuClick(entry, pos, menuId);
-            }
-        }
-    }
-
-    private static class FoldersDocsAdapter extends FolderEntriesAdapter<DocsAdapter> {
-        public FoldersDocsAdapter(FoldersAdapter folderAdapter, DocsAdapter entriesAdapter) {
-            super(folderAdapter, entriesAdapter);
-        }
-
-        public FoldersDocsAdapter(FoldersAdapter folderAdapter, DocsAdapter entriesAdapter, BaseAdapter a) {
-            super(folderAdapter, entriesAdapter, a);
-        }
-    }
-
-    public class DocsAdapter extends EntriesAdapter<Doc> {
+    public class DocsAdapter extends ListEntriesAdapter<Doc> {
         public DocsAdapter(Activity a, List<Doc> entries) {
             super(a, entries, getFolder(), getEntryListService(), EntryTemplate.DOC);
         }
@@ -186,11 +174,11 @@ public class DocsFragment extends EntriesFragment {
             if (convertView == null) {
                 convertView = getLayoutInflater().inflate(R.layout.list_item_icon, parent, false);
             }
-            ViewHolder holder = getHolder(convertView);
+            ListViewHolder holder = getHolder(convertView);
 
-            holder.icon.setImageResource(R.drawable.ic_doc);
-            holder.text1.setText(entry.getTitle());
-            holder.menu.setOnClickListener(getOnMenuClickListener());
+            holder.getIcon().setImageResource(R.drawable.ic_doc);
+            holder.getText1().setText(entry.getTitle());
+            holder.getMenu().setOnClickListener(getOnMenuClickListener());
 
             return convertView;
         }
