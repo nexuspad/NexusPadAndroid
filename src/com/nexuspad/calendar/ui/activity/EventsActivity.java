@@ -11,7 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.CalendarView;
-import com.edmondapps.utils.android.annotaion.ParentActivity;
+import com.nexuspad.common.annotaion.ParentActivity;
 import com.google.common.collect.ImmutableList;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
@@ -19,10 +19,10 @@ import com.nexuspad.calendar.ui.fragment.EventsAgendaFragment;
 import com.nexuspad.calendar.ui.fragment.EventsMonthFragment;
 import com.nexuspad.datamodel.EntryList;
 import com.nexuspad.datamodel.EntryTemplate;
-import com.nexuspad.datamodel.Folder;
-import com.nexuspad.home.ui.activity.DashboardActivity;
-import com.nexuspad.ui.activity.EntriesActivity;
-import com.nexuspad.ui.fragment.EntriesFragment;
+import com.nexuspad.datamodel.NPFolder;
+import com.nexuspad.home.activity.DashboardActivity;
+import com.nexuspad.common.activity.EntriesActivity;
+import com.nexuspad.common.fragment.EntriesFragment;
 import com.nexuspad.util.DateUtil;
 
 import java.util.Date;
@@ -51,7 +51,7 @@ public class EventsActivity extends EntriesActivity implements EventsMonthFragme
     protected void onCreate(Bundle savedState) {
         super.onCreate(savedState);
 
-        final Folder folder = Folder.rootFolderOf(getModule(), this);
+        final NPFolder folder = NPFolder.rootFolderOf(getModule(), this);
 
         mEventsMonthFragment = new EventsMonthFragment();
         mEventsAgendaFragment = EventsAgendaFragment.of(folder);

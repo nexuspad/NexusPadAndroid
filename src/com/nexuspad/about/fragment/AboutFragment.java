@@ -3,7 +3,6 @@
  */
 package com.nexuspad.about.fragment;
 
-import android.accounts.Account;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -18,22 +17,21 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.edmondapps.utils.android.annotaion.FragmentName;
-import com.edmondapps.utils.java.Lazy;
 import com.nexuspad.Manifest;
 import com.nexuspad.R;
 import com.nexuspad.account.AccountManager;
 import com.nexuspad.app.App;
+import com.nexuspad.common.Lazy;
+import com.nexuspad.common.annotaion.FragmentName;
 import com.nexuspad.datamodel.NPUser;
 import com.nexuspad.datamodel.UserSetting;
-import com.nexuspad.dataservice.*;
 import com.nexuspad.dataservice.AccountService;
 import com.nexuspad.dataservice.AccountService.AccountInfoReceiver;
-import com.nexuspad.home.ui.activity.LoginActivity;
-import com.nexuspad.util.Logs;
+import com.nexuspad.dataservice.ErrorCode;
+import com.nexuspad.dataservice.NPException;
+import com.nexuspad.dataservice.ServiceError;
+import com.nexuspad.home.activity.LoginActivity;
 import com.squareup.picasso.Picasso;
-
-import static com.edmondapps.utils.android.view.ViewUtils.findView;
 
 /**
  * @author Edmond
@@ -99,11 +97,11 @@ public class AboutFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mAccountEmailV = findView(view, R.id.lbl_ac_email);
-        mAccountUsageV = findView(view, R.id.lbl_ac_usage);
-        mProfileImageV = findView(view, android.R.id.icon);
-        mNameV = findView(view, R.id.lbl_ac_name);
-        mUsernameV = findView(view, R.id.lbl_ac_username);
+        mAccountEmailV = (TextView)view.findViewById(R.id.lbl_ac_email);
+        mAccountUsageV = (TextView)view.findViewById(R.id.lbl_ac_usage);
+        mProfileImageV = (ImageView)view.findViewById(android.R.id.icon);
+        mNameV = (TextView)view.findViewById(R.id.lbl_ac_name);
+        mUsernameV = (TextView)view.findViewById(R.id.lbl_ac_username);
 
         installListeners(view);
     }
@@ -142,13 +140,16 @@ public class AboutFragment extends Fragment {
     }
 
     private void installListeners(View parent) {
-        findView(parent, R.id.lbl_email_support).setOnClickListener(new OnClickListener() {
+	    TextView emailSupport = (TextView)parent.findViewById(R.id.lbl_email_support);
+        emailSupport.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 sendEmailTo(SUPPORT_EMAIL);
             }
         });
-        findView(parent, R.id.lbl_terms_of_use).setOnClickListener(new OnClickListener() {
+
+	    TextView termOfUse = (TextView)parent.findViewById(R.id.lbl_terms_of_use);
+        termOfUse.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_VIEW);

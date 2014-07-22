@@ -6,6 +6,13 @@
         <item name="android:textColorPrimary">?android:textColorPrimaryInverse</item>
     </style>
 
+    <style name="ed__styleActivityMargin">
+        <item name="android:paddingBottom">@dimen/ed__activity_margin_vertical</item>
+        <item name="android:paddingLeft">@dimen/ed__activity_margin_horizontal</item>
+        <item name="android:paddingRight">@dimen/ed__activity_margin_horizontal</item>
+        <item name="android:paddingTop">@dimen/ed__activity_margin_vertical</item>
+    </style>
+
     <style name="PhotoActivity" parent="@android:style/Theme.Holo">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>

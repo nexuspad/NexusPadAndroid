@@ -17,12 +17,12 @@
         android:layout_alignParentBottom="true"
         android:background="@color/transparent_black">
 
-        <com.nexuspad.ui.view.FolderSelectBarView
+        <com.nexuspad.common.view.FolderSelectBarView
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1" />
 
-        <com.nexuspad.ui.view.UploadBarView
+        <com.nexuspad.common.view.UploadBarView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="right" />

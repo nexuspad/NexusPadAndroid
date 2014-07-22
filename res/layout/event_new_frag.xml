@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:text="@string/location" />
 
-        <com.nexuspad.ui.view.LocationTextView
+        <com.nexuspad.common.view.LocationTextView
             android:id="@+id/txt_location"
             style="@style/selectableTextView"
             android:layout_width="match_parent"

@@ -10,8 +10,6 @@ import android.widget.CalendarView;
 import com.nexuspad.R;
 import com.nexuspad.app.App;
 
-import static com.edmondapps.utils.android.view.ViewUtils.findView;
-
 /**
  * User: edmond
  */
@@ -37,7 +35,7 @@ public class JournalMonthFragment extends DialogFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mCalendarV = findView(view, R.id.calendar_view);
+        mCalendarV = (CalendarView)view.findViewById(R.id.calendar_view);
         mCalendarV.setOnDateChangeListener(mCallback);
     }
 }

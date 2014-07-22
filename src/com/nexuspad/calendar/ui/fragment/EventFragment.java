@@ -5,26 +5,24 @@ import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.view.*;
 import android.widget.TextView;
-import com.edmondapps.utils.android.annotaion.FragmentName;
+import com.nexuspad.common.annotaion.FragmentName;
 import com.nexuspad.R;
 import com.nexuspad.app.App;
 import com.nexuspad.calendar.ui.activity.NewEventActivity;
-import com.nexuspad.datamodel.Event;
-import com.nexuspad.datamodel.Folder;
-import com.nexuspad.ui.fragment.EntryFragment;
+import com.nexuspad.datamodel.NPEvent;
+import com.nexuspad.datamodel.NPFolder;
+import com.nexuspad.common.fragment.EntryFragment;
 
 import java.util.Date;
-
-import static com.edmondapps.utils.android.view.ViewUtils.findView;
 
 /**
  * Author: edmond
  */
 @FragmentName(EventFragment.TAG)
-public class EventFragment extends EntryFragment<Event> {
+public class EventFragment extends EntryFragment<NPEvent> {
     public static final String TAG = "EventFragment";
 
-    public static EventFragment of(Event event, Folder folder) {
+    public static EventFragment of(NPEvent event, NPFolder folder) {
         final Bundle bundle = new Bundle();
         bundle.putParcelable(KEY_ENTRY, event);
         bundle.putParcelable(KEY_FOLDER, folder);
@@ -74,15 +72,15 @@ public class EventFragment extends EntryFragment<Event> {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        mTitleV = findView(view, R.id.lbl_title);
-        mDateTimeV = findView(view, R.id.lbl_date_time);
-        mLocationV = findView(view, R.id.lbl_location);
-        mTagsV = findView(view, R.id.lbl_tags);
-        mNoteV = findView(view, R.id.lbl_note);
+        mTitleV = (TextView)view.findViewById(R.id.lbl_title);
+        mDateTimeV = (TextView)view.findViewById(R.id.lbl_date_time);
+        mLocationV = (TextView)view.findViewById(R.id.lbl_location);
+        mTagsV = (TextView)view.findViewById(R.id.lbl_tags);
+        mNoteV = (TextView)view.findViewById(R.id.lbl_note);
 
-        mLocationFrameV = findView(view, R.id.lbl_location_frame);
-        mTagsFrameV = findView(view, R.id.lbl_tags_title);
-        mNoteFrameV = findView(view, R.id.lbl_note_frame);
+        mLocationFrameV = (TextView)view.findViewById(R.id.lbl_location_frame);
+        mTagsFrameV = (TextView)view.findViewById(R.id.lbl_tags_title);
+        mNoteFrameV = (TextView)view.findViewById(R.id.lbl_note_frame);
 
         mTitleV.setTypeface(App.getRobotoLight());
 
@@ -91,7 +89,7 @@ public class EventFragment extends EntryFragment<Event> {
 
     @Override
     protected void updateUI() {
-        final Event event = getEntry();
+        final NPEvent event = getEntry();
         if (event != null) {
             mTitleV.setText(event.getTitle());
             final Date eventTime = event.getStartTime();
@@ -104,7 +102,7 @@ public class EventFragment extends EntryFragment<Event> {
         }
     }
 
-    private void updateVisibility(Event event) {
+    private void updateVisibility(NPEvent event) {
         final int locationFlag = event.getLocation().isEmpty() ? View.GONE : View.VISIBLE;
         final int tagsFlag = TextUtils.isEmpty(event.getTags()) ? View.GONE : View.VISIBLE;
         final int noteFlag = TextUtils.isEmpty(event.getNote()) ? View.GONE : View.VISIBLE;

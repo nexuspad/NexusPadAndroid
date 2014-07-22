@@ -5,7 +5,6 @@
         android:id="@+id/menu_new"
         android:icon="@drawable/ic_action_new"
         android:showAsAction="ifRoom"
-        android:visible="false"
         android:title="@string/new_">
         <menu>
             <group>

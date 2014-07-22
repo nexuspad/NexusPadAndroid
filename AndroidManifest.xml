@@ -6,8 +6,8 @@
     >
 
     <uses-sdk
-        android:minSdkVersion="14"
-        android:targetSdkVersion="17"
+        android:minSdkVersion="17"
+        android:targetSdkVersion="19"
         />
 
     <permission
@@ -67,7 +67,7 @@
 
         <!-- android:icon is for the launcher; android:logo is for the actionBar -->
         <activity
-            android:name=".home.ui.activity.MainActivity"
+            android:name=".home.activity.MainActivity"
             android:label="@string/app_name"
             android:icon="@drawable/ic_launcher"
             android:logo="@drawable/ic_ab"
@@ -79,13 +79,15 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".home.ui.activity.LoginActivity"
+            android:name=".home.activity.LoginActivity"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar"
             android:icon="@drawable/ic_ab"
-            />
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden"
+        />
         <activity
-            android:name=".home.ui.activity.DashboardActivity"
+            android:name=".home.activity.DashboardActivity"
             android:label="@string/app_name"
             android:icon="@drawable/ic_ab"
             />
@@ -95,17 +97,17 @@
             android:icon="@drawable/ic_ab"
             />
         <activity
-            android:name=".bookmark.ui.activity.BookmarkActivity"
+            android:name=".bookmark.activity.BookmarkActivity"
             android:label="@string/bookmark"
             android:icon="@drawable/ic_ab"
             />
         <activity
-            android:name=".bookmark.ui.activity.BookmarksActivity"
+            android:name=".bookmark.activity.BookmarksActivity"
             android:label="@string/bookmarks"
             android:icon="@drawable/ic_ab"
             />
         <activity
-            android:name=".bookmark.ui.activity.NewBookmarkActivity"
+            android:name=".bookmark.activity.NewBookmarkActivity"
             android:exported="true"
             android:label="@string/bookmark"
             >
@@ -118,20 +120,22 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".doc.ui.activity.DocActivity"
+            android:name=".doc.activity.DocActivity"
             android:label="@string/docs"
             android:icon="@drawable/ic_ab"
             />
         <activity
-            android:name=".doc.ui.activity.DocsActivity"
+            android:name=".doc.activity.DocsActivity"
             android:label="@string/docs"
             android:icon="@drawable/ic_ab"
             />
-        <activity android:name=".doc.ui.activity.NewDocActivity" />
+        <activity android:name=".doc.activity.NewDocActivity" />
         <activity
             android:name=".journal.ui.activity.JournalsActivity"
             android:label="@string/journal"
             android:icon="@drawable/ic_ab"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden"
             />
         <activity
             android:name=".journal.ui.activity.JournalsMonthActivity"
@@ -139,23 +143,23 @@
             android:icon="@drawable/ic_ab"
             />
         <activity
-            android:name=".photos.ui.activity.PhotosActivity"
+            android:name=".photo.activity.PhotosActivity"
             android:label="@string/photos"
             android:icon="@drawable/ic_ab"
             />
         <activity
-            android:name=".photos.ui.activity.PhotoActivity"
+            android:name=".photo.activity.PhotoActivity"
             android:label="@string/photos"
             android:theme="@style/PhotoActivity"
             android:icon="@drawable/ic_ab"
             />
         <activity
-            android:name=".photos.ui.activity.PhotosSelectActivity"
+            android:name=".photo.activity.PhotosSelectActivity"
             android:label="@string/photos"
             android:icon="@drawable/ic_ab"
             />
         <activity
-            android:name=".ui.activity.UploadCenterActivity"
+            android:name=".common.activity.UploadCenterActivity"
             android:label="@string/photos_upload"
             android:icon="@drawable/ic_ab"
             >
@@ -177,21 +181,21 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".photos.ui.activity.AlbumActivity"
+            android:name=".photo.activity.AlbumActivity"
             android:label="@string/photos"
             android:icon="@drawable/ic_ab"
             />
-        <activity android:name=".photos.ui.activity.NewAlbumActivity" />
+        <activity android:name=".photo.activity.NewAlbumActivity" />
         <activity
-            android:name=".contacts.ui.activity.ContactsActivity"
+            android:name=".contacts.activity.ContactsActivity"
             android:label="@string/contacts"
             />
         <activity
-            android:name=".contacts.ui.activity.ContactActivity"
+            android:name=".contacts.activity.ContactActivity"
             android:label="@string/contacts"
             />
-        <activity android:name=".contacts.ui.activity.NewContactActivity" />
-        <activity android:name=".contacts.ui.activity.NewLocationActivity" />
+        <activity android:name=".contacts.activity.NewContactActivity" />
+        <activity android:name=".contacts.activity.NewLocationActivity" />
         <activity
             android:name=".calendar.ui.activity.EventActivity"
             android:label="@string/event"
@@ -202,11 +206,11 @@
             />
         <activity android:name=".calendar.ui.activity.NewEventActivity" />
         <activity
-            android:name=".ui.activity.NewFolderActivity"
+            android:name=".common.activity.NewFolderActivity"
             android:label="@string/new_folder"
             />
         <activity
-            android:name=".ui.activity.FoldersActivity"
+            android:name=".common.activity.FoldersActivity"
             android:label="@string/folders"
             />
 

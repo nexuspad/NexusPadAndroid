@@ -7,7 +7,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
-import com.nexuspad.datamodel.Folder;
+import com.nexuspad.datamodel.NPFolder;
 import com.nexuspad.datamodel.NPEntry;
 import com.nexuspad.dataservice.FileUploadService;
 
@@ -29,7 +29,7 @@ public class Request {
         FOLDER, ENTRY
     }
 
-    public static Request forFolder(Uri uri, Folder folder, FileUploadService.Callback callback) {
+    public static Request forFolder(Uri uri, NPFolder folder, FileUploadService.Callback callback) {
         return new Request(uri, folder, Target.FOLDER, callback);
     }
 
@@ -40,13 +40,13 @@ public class Request {
     private final long mTimeStamp;
     private final Uri mUri;
     private final NPEntry mNPEntry;
-    private final Folder mFolder;
+    private final NPFolder mFolder;
     private final Target mTarget;
 
     private File mFile;
     private WeakReference<FileUploadService.Callback> mCallback;
 
-    private Request(Uri uri, Folder folder, Target target, FileUploadService.Callback callback) {
+    private Request(Uri uri, NPFolder folder, Target target, FileUploadService.Callback callback) {
         mNPEntry = null;
         mUri = checkNotNull(uri);
         mFolder = checkNotNull(folder);
@@ -116,9 +116,9 @@ public class Request {
     }
 
     /**
-     * @return a {@link Folder} if {@link #getTarget()} is {@link Target#FOLDER}; null otherwise
+     * @return a {@link com.nexuspad.datamodel.NPFolder} if {@link #getTarget()} is {@link Target#FOLDER}; null otherwise
      */
-    public Folder getFolder() {
+    public NPFolder getFolder() {
         return mFolder;
     }
 

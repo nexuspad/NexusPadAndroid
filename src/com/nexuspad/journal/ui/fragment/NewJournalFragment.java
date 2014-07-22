@@ -1,25 +1,18 @@
 package com.nexuspad.journal.ui.fragment;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import com.edmondapps.utils.android.annotaion.FragmentName;
-import com.edmondapps.utils.android.view.ViewUtils;
+import com.nexuspad.common.annotaion.FragmentName;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
-import com.nexuspad.app.App;
 import com.nexuspad.datamodel.EntryTemplate;
-import com.nexuspad.datamodel.Folder;
-import com.nexuspad.datamodel.Journal;
-import com.nexuspad.ui.fragment.EntryFragment;
-import com.nexuspad.ui.fragment.NewEntryFragment;
+import com.nexuspad.datamodel.NPFolder;
+import com.nexuspad.datamodel.NPJournal;
+import com.nexuspad.common.fragment.NewEntryFragment;
 
-import java.text.DateFormat;
-
-import static com.edmondapps.utils.android.view.ViewUtils.findView;
 import static com.nexuspad.dataservice.ServiceConstants.JOURNAL_MODULE;
 
 /**
@@ -27,10 +20,10 @@ import static com.nexuspad.dataservice.ServiceConstants.JOURNAL_MODULE;
  */
 @FragmentName(NewJournalFragment.TAG)
 @ModuleId(moduleId = JOURNAL_MODULE, template = EntryTemplate.JOURNAL)
-public class NewJournalFragment extends NewEntryFragment<Journal> {
+public class NewJournalFragment extends NewEntryFragment<NPJournal> {
     public static final String TAG = "NewJournalFragment";
 
-    public static NewJournalFragment of(Journal journal, Folder folder) {
+    public static NewJournalFragment of(NPJournal journal, NPFolder folder) {
         final Bundle argument = new Bundle();
         argument.putParcelable(KEY_ENTRY, journal);
         argument.putParcelable(KEY_FOLDER, folder);
@@ -40,7 +33,7 @@ public class NewJournalFragment extends NewEntryFragment<Journal> {
         return fragment;
     }
 
-    public interface Callback extends NewEntryFragment.Callback<Journal> {
+    public interface Callback extends NewEntryFragment.Callback<NPJournal> {
     }
 
     private TextView mNoteView;
@@ -52,7 +45,7 @@ public class NewJournalFragment extends NewEntryFragment<Journal> {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        mNoteView = findView(view, R.id.txt_note);
+        mNoteView = (TextView)view.findViewById(R.id.txt_note);
         super.onViewCreated(view, savedInstanceState);
     }
 
@@ -60,7 +53,7 @@ public class NewJournalFragment extends NewEntryFragment<Journal> {
     protected void updateUI() {
         super.updateUI();
 
-        final Journal entry = getEntry();
+        final NPJournal entry = getEntry();
         if (entry != null) {
             mNoteView.setText(entry.getNote());
         }
@@ -72,9 +65,9 @@ public class NewJournalFragment extends NewEntryFragment<Journal> {
     }
 
     @Override
-    public Journal getEditedEntry() {
-        final Journal entry = getEntry();
-        final Journal journal = entry == null ? new Journal(getFolder()) : new Journal(entry);
+    public NPJournal getEditedEntry() {
+        final NPJournal entry = getEntry();
+        final NPJournal journal = entry == null ? new NPJournal(getFolder()) : new NPJournal(entry);
 
         journal.setNote(mNoteView.getText().toString());
 

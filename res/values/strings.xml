@@ -116,6 +116,9 @@
     <string name="agenda">Agenda</string>
     <string name="undo">Undo</string>
 
+    <string name="done">DONE</string>
+    <string name="discard">DISCARD</string>
+
     <!-- example: Deleted Bookmark: "Google" -->
     <string name="format_deleted_entry">Deleted %1$s: \"%2$s\"</string>
     <!-- example: Deleted Folder: "Just for fun" -->

@@ -9,18 +9,18 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.Menu;
 import android.view.MenuItem;
-import com.edmondapps.utils.android.annotaion.ParentActivity;
+import com.nexuspad.common.annotaion.ParentActivity;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
 import com.nexuspad.datamodel.EntryTemplate;
-import com.nexuspad.datamodel.Folder;
-import com.nexuspad.datamodel.Journal;
+import com.nexuspad.datamodel.NPFolder;
+import com.nexuspad.datamodel.NPJournal;
 import com.nexuspad.dataservice.ServiceConstants;
-import com.nexuspad.home.ui.activity.DashboardActivity;
+import com.nexuspad.home.activity.DashboardActivity;
 import com.nexuspad.journal.ui.fragment.JournalsFragment;
 import com.nexuspad.journal.ui.fragment.NewJournalFragment;
-import com.nexuspad.ui.activity.EntriesActivity;
-import com.nexuspad.ui.fragment.EntryFragment;
+import com.nexuspad.common.activity.EntriesActivity;
+import com.nexuspad.common.fragment.EntryFragment;
 
 import java.text.DateFormat;
 
@@ -108,11 +108,11 @@ public class JournalsActivity extends EntriesActivity implements JournalsFragmen
 
     @Override
     protected Fragment onCreateFragment() {
-        return JournalsFragment.of(Folder.rootFolderOf(ServiceConstants.JOURNAL_MODULE));
+        return JournalsFragment.of(NPFolder.rootFolderOf(ServiceConstants.JOURNAL_MODULE));
     }
 
     @Override
-    public void onDeleting(EntryFragment<Journal> f, Journal entry) {
+    public void onDeleting(EntryFragment<NPJournal> f, NPJournal entry) {
         // do nothing, the JournalFragment will receive update for the EntryList update
     }
 
@@ -122,7 +122,7 @@ public class JournalsActivity extends EntriesActivity implements JournalsFragmen
     }
 
     @Override
-    public void onJournalSelected(JournalsFragment f, Journal journal) {
+    public void onJournalSelected(JournalsFragment f, NPJournal journal) {
         final String dateString = mDateFormat.format(journal.getCreateTime());
 
         final ActionBar actionBar = getActionBar();

@@ -15,24 +15,23 @@ import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.edmondapps.utils.android.annotaion.FragmentName;
-import com.edmondapps.utils.android.view.ViewUtils;
-import com.edmondapps.utils.java.WrapperList;
+import com.nexuspad.common.annotaion.FragmentName;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
 import com.nexuspad.app.App;
+import com.nexuspad.common.WrapperList;
+import com.nexuspad.common.fragment.EntriesFragment;
+import com.nexuspad.common.view.EndlessViewPager;
 import com.nexuspad.datamodel.EntryList;
 import com.nexuspad.datamodel.EntryTemplate;
-import com.nexuspad.datamodel.Folder;
-import com.nexuspad.datamodel.Journal;
+import com.nexuspad.datamodel.NPFolder;
+import com.nexuspad.datamodel.NPJournal;
 import com.nexuspad.dataservice.EntryListService;
 import com.nexuspad.dataservice.EntryService;
 import com.nexuspad.dataservice.NPException;
 import com.nexuspad.dataservice.ServiceConstants;
-import com.nexuspad.ui.fragment.EntriesFragment;
-import com.nexuspad.ui.view.EndlessViewPager;
 import com.nexuspad.util.DateUtil;
 
 import java.util.ArrayList;
@@ -49,7 +48,7 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 public class JournalsFragment extends EntriesFragment {
     public static final String TAG = "com.nexuspad.journal.ui.fragment.JournalsFragment";
 
-    public static JournalsFragment of(Folder folder) {
+    public static JournalsFragment of(NPFolder folder) {
         final Bundle bundle = new Bundle();
         bundle.putParcelable(KEY_FOLDER, folder);
 
@@ -59,7 +58,7 @@ public class JournalsFragment extends EntriesFragment {
     }
 
     public interface Callback extends EntriesFragment.Callback {
-        void onJournalSelected(JournalsFragment f, Journal journal);
+        void onJournalSelected(JournalsFragment f, NPJournal journal);
     }
 
     private EndlessViewPager mViewPager;
@@ -67,7 +66,7 @@ public class JournalsFragment extends EntriesFragment {
     private Date mStartDate;
     private Date mEndDate;
 
-    private List<Journal> mJournals = new ArrayList<Journal>();
+    private List<NPJournal> mJournals = new ArrayList<NPJournal>();
 
     @Override
     public void onAttach(Activity activity) {
@@ -82,7 +81,7 @@ public class JournalsFragment extends EntriesFragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        mViewPager = ViewUtils.findView(view, R.id.view_pager);
+        mViewPager = (EndlessViewPager)view.findViewById(R.id.view_pager);
 
         super.onViewCreated(view, savedInstanceState);
     }
@@ -94,7 +93,7 @@ public class JournalsFragment extends EntriesFragment {
         updateJournalsFromUI();
         final EntryService entryService = getEntryService();
         final FragmentActivity activity = getActivity();
-        for (Journal journal : mJournals) {
+        for (NPJournal journal : mJournals) {
             if (!isNullOrEmpty(journal.getNote())) {
                 entryService.safePutEntry(activity, journal);
             }
@@ -127,7 +126,7 @@ public class JournalsFragment extends EntriesFragment {
     }
 
     @Override
-    protected void getEntriesInFolder(EntryListService service, Folder folder, int page) throws NPException {
+    protected void getEntriesInFolder(EntryListService service, NPFolder folder, int page) throws NPException {
         final long now = System.currentTimeMillis();
         mStartDate = DateUtil.getFirstDateOfTheMonth(now);
         mEndDate = DateUtil.getEndDateOfTheMonth(now);
@@ -169,7 +168,7 @@ public class JournalsFragment extends EntriesFragment {
             if (entriesSize > 0) {
                 int initialIndex = 0;
                 for (int i = 0; i < entriesSize; i++) {
-                    final Journal journal = mJournals.get(i);
+                    final NPJournal journal = mJournals.get(i);
                     final long journalTime = journal.getCreateTime().getTime();
                     if (DateUtils.isToday(journalTime)) {
                         initialIndex = i;
@@ -181,20 +180,20 @@ public class JournalsFragment extends EntriesFragment {
         }
     }
 
-    private void onJournalSelected(Journal journal) {
+    private void onJournalSelected(NPJournal journal) {
         mCallback.onJournalSelected(JournalsFragment.this, journal);
     }
 
     private void updateJournalList(EntryList list) {
         mJournals.clear();
 
-        final WrapperList<Journal> journals = new WrapperList<Journal>(list.getEntries());
+        final WrapperList<NPJournal> journals = new WrapperList<NPJournal>(list.getEntries());
         for (Date day = mStartDate; day.compareTo(mEndDate) <= 0; day = DateUtil.addDaysTo(day, 1)) {
             final Date theDay = day;
 
-            Journal journal = Iterables.tryFind(journals, new Predicate<Journal>() {
+            NPJournal journal = Iterables.tryFind(journals, new Predicate<NPJournal>() {
                 @Override
-                public boolean apply(Journal journal) {
+                public boolean apply(NPJournal journal) {
                     final Date time = journal.getCreateTime();
                     return DateUtil.isSameDay(time, theDay);
                 }
@@ -207,8 +206,8 @@ public class JournalsFragment extends EntriesFragment {
         }
     }
 
-    private Journal createJournalForDate(Date date) {
-        final Journal emptyJournal = new Journal(getFolder());
+    private NPJournal createJournalForDate(Date date) {
+        final NPJournal emptyJournal = new NPJournal(getFolder());
         emptyJournal.setCreateTime(date);
         return emptyJournal;
     }
@@ -220,7 +219,7 @@ public class JournalsFragment extends EntriesFragment {
             super(getChildFragmentManager());
         }
 
-        private Journal getJournal(int pos) {
+        private NPJournal getJournal(int pos) {
             return mJournals.get(pos);
         }
 
@@ -244,7 +243,7 @@ public class JournalsFragment extends EntriesFragment {
         }
 
         public void updateJournalFromUI(int position, NewJournalFragment fragment) {
-            final Journal journal = fragment.getEditedEntry();
+            final NPJournal journal = fragment.getEditedEntry();
             mJournals.remove(position);
             mJournals.add(position, journal);
         }

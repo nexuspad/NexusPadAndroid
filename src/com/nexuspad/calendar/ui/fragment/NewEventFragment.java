@@ -13,24 +13,22 @@ import android.widget.EditText;
 import android.widget.TextView;
 import com.android.datetimepicker.date.DatePickerDialog;
 import com.android.datetimepicker.time.TimePickerDialog;
-import com.edmondapps.utils.android.annotaion.FragmentName;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
 import com.nexuspad.calendar.ui.view.DateButton;
 import com.nexuspad.calendar.ui.view.TimeButton;
-import com.nexuspad.contacts.ui.activity.NewLocationActivity;
+import com.nexuspad.common.annotaion.FragmentName;
+import com.nexuspad.common.fragment.NewEntryFragment;
+import com.nexuspad.common.view.LocationTextView;
+import com.nexuspad.contacts.activity.NewLocationActivity;
 import com.nexuspad.datamodel.EntryTemplate;
-import com.nexuspad.datamodel.Event;
-import com.nexuspad.datamodel.Folder;
+import com.nexuspad.datamodel.NPEvent;
+import com.nexuspad.datamodel.NPFolder;
 import com.nexuspad.datamodel.Location;
-import com.nexuspad.ui.fragment.NewEntryFragment;
-import com.nexuspad.ui.view.LocationTextView;
 
 import java.util.Calendar;
 import java.util.Date;
 
-import static com.edmondapps.utils.android.view.ViewUtils.findView;
-import static com.edmondapps.utils.android.view.ViewUtils.isTextEmpty;
 import static com.nexuspad.dataservice.ServiceConstants.CALENDAR_MODULE;
 
 /**
@@ -38,12 +36,12 @@ import static com.nexuspad.dataservice.ServiceConstants.CALENDAR_MODULE;
  */
 @FragmentName(NewEventFragment.TAG)
 @ModuleId(moduleId = CALENDAR_MODULE, template = EntryTemplate.EVENT)
-public class NewEventFragment extends NewEntryFragment<Event> {
+public class NewEventFragment extends NewEntryFragment<NPEvent> {
     public static final String TAG = "NewEventFragment";
 
     private static final int REQ_LOCATION = REQ_SUBCLASSES + 1;
 
-    public static NewEventFragment of(Event event, Folder folder) {
+    public static NewEventFragment of(NPEvent event, NPFolder folder) {
         final Bundle bundle = new Bundle();
         bundle.putParcelable(KEY_ENTRY, event);
         bundle.putParcelable(KEY_FOLDER, folder);
@@ -92,7 +90,7 @@ public class NewEventFragment extends NewEntryFragment<Event> {
         final View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final Event event = getEntry();
+                final NPEvent event = getEntry();
                 final int id = v.getId();
                 switch (id) {
                     case R.id.txt_location:
@@ -158,18 +156,18 @@ public class NewEventFragment extends NewEntryFragment<Event> {
     }
 
     private void findViews(View view) {
-        mTitleV = findView(view, R.id.txt_title);
-        mLocationV = findView(view, R.id.txt_location);
+        mTitleV = (EditText)view.findViewById(R.id.txt_title);
+        mLocationV = (LocationTextView)view.findViewById(R.id.txt_location);
 
-        mStartDayV = findView(view, R.id.spinner_start_day);
-        mStartTimeV = findView(view, R.id.spinner_start_time);
-        mToDayV = findView(view, R.id.spinner_to_day);
-        mToTimeV = findView(view, R.id.spinner_to_time);
+        mStartDayV = (DateButton)view.findViewById(R.id.spinner_start_day);
+        mStartTimeV = (TimeButton)view.findViewById(R.id.spinner_start_time);
+        mToDayV = (DateButton)view.findViewById(R.id.spinner_to_day);
+        mToTimeV = (TimeButton)view.findViewById(R.id.spinner_to_time);
 
-        mAllDayV = findView(view, R.id.chk_all_day);
-        mRepeatV = findView(view, R.id.spinner_repeat);
-        mTagsV = findView(view, R.id.txt_tags);
-        mNoteV = findView(view, R.id.txt_note);
+        mAllDayV = (CheckBox)view.findViewById(R.id.chk_all_day);
+        mRepeatV = (TextView)view.findViewById(R.id.spinner_repeat);
+        mTagsV = (EditText)view.findViewById(R.id.txt_tags);
+        mNoteV = (EditText)view.findViewById(R.id.txt_note);
     }
 
     // only works after findViews(View)
@@ -196,7 +194,7 @@ public class NewEventFragment extends NewEntryFragment<Event> {
         }
     }
 
-    private Calendar nowOrEventTime(Event event) {
+    private Calendar nowOrEventTime(NPEvent event) {
         final long time = event == null ? System.currentTimeMillis() : event.getStartTime().getTime();
         final Calendar c = Calendar.getInstance();
         c.setTimeInMillis(time);
@@ -218,7 +216,7 @@ public class NewEventFragment extends NewEntryFragment<Event> {
     @Override
     protected void updateUI() {
         super.updateUI();
-        final Event event = getEntry();
+        final NPEvent event = getEntry();
         if (event != null) {
             mTitleV.setText(event.getTitle());
             mLocationV.setLocation(event.getLocation());
@@ -239,15 +237,15 @@ public class NewEventFragment extends NewEntryFragment<Event> {
         }
     }
 
-    @Override
-    public boolean isEditedEntryValid() {
-        return !isTextEmpty(R.string.err_empty_field, mTitleV);
-    }
+	@Override
+	public boolean isEditedEntryValid() {
+		return true;
+	}
 
-    @Override
-    public Event getEditedEntry() {
-        final Event entry = getEntry();
-        Event event = entry == null ? new Event(getFolder()) : new Event(entry);
+	@Override
+    public NPEvent getEditedEntry() {
+        final NPEvent entry = getEntry();
+        NPEvent event = entry == null ? new NPEvent(getFolder()) : new NPEvent(entry);
 
         event.setTitle(mTitleV.getText().toString());
         event.setLocation(mLocationV.getLocation());

@@ -11,9 +11,9 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.widget.Toast;
-import com.edmondapps.utils.android.Logs;
 import com.nexuspad.BuildConfig;
 import com.nexuspad.R;
+import com.nexuspad.common.Logs;
 import com.nexuspad.db.DatabaseManager;
 
 import java.util.regex.Pattern;

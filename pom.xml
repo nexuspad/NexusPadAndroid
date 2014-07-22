@@ -10,7 +10,7 @@
     </parent>
 
     <groupId>com.nexuspad</groupId>
-    <artifactId>NexusPad2</artifactId>
+    <artifactId>NexusPad</artifactId>
     <version>1.0-SNAPSHOT</version>
 
 
@@ -32,15 +32,10 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.nexuspad</groupId>
-            <artifactId>NexusPadCore</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>17.0</version>
         </dependency>
-        <!--<dependency>-->
-            <!--<groupId>com.android.support</groupId>-->
-            <!--<artifactId>support-v4</artifactId>-->
-            <!--<version>19.0.0</version>-->
-        <!--</dependency>-->
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>

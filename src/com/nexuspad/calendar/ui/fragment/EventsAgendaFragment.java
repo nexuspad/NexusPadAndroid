@@ -11,19 +11,19 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import com.edmondapps.utils.android.annotaion.FragmentName;
-import com.edmondapps.utils.java.WrapperList;
+import com.nexuspad.common.annotaion.FragmentName;
+import com.nexuspad.common.WrapperList;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
 import com.nexuspad.datamodel.EntryList;
 import com.nexuspad.datamodel.EntryTemplate;
-import com.nexuspad.datamodel.Event;
-import com.nexuspad.datamodel.Folder;
+import com.nexuspad.datamodel.NPEvent;
+import com.nexuspad.datamodel.NPFolder;
 import com.nexuspad.dataservice.EntryListService;
 import com.nexuspad.dataservice.NPException;
 import com.nexuspad.dataservice.ServiceConstants;
-import com.nexuspad.ui.EntriesAdapter;
-import com.nexuspad.ui.fragment.EntriesFragment;
+import com.nexuspad.common.EntriesAdapter;
+import com.nexuspad.common.fragment.EntriesFragment;
 import com.nexuspad.util.DateUtil;
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
@@ -34,8 +34,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import static com.edmondapps.utils.android.view.ViewUtils.findView;
-
 /**
  * User: edmond
  */
@@ -45,7 +43,7 @@ public class EventsAgendaFragment extends EntriesFragment {
     public static final String TAG = "EventsAgendaFragment";
     public static final String KEY_START_DAY = "key_start_day";
 
-    public static EventsAgendaFragment of(Folder folder) {
+    public static EventsAgendaFragment of(NPFolder folder) {
         final Bundle bundle = new Bundle();
         bundle.putParcelable(KEY_FOLDER, folder);
 
@@ -54,7 +52,7 @@ public class EventsAgendaFragment extends EntriesFragment {
         return fragment;
     }
 
-    public static EventsAgendaFragment of(Folder folder, long startDay) {
+    public static EventsAgendaFragment of(NPFolder folder, long startDay) {
         final Bundle bundle = new Bundle();
         bundle.putParcelable(KEY_FOLDER, folder);
         bundle.putLong(KEY_START_DAY, startDay);
@@ -64,7 +62,7 @@ public class EventsAgendaFragment extends EntriesFragment {
         return fragment;
     }
 
-    private List<Event> mEvents = new ArrayList<Event>();
+    private List<NPEvent> mEvents = new ArrayList<NPEvent>();
     private long mStartTime = -1;
 
     @Override
@@ -75,7 +73,7 @@ public class EventsAgendaFragment extends EntriesFragment {
     }
 
     @Override
-    protected void getEntriesInFolder(EntryListService service, Folder folder, int page) throws NPException {
+    protected void getEntriesInFolder(EntryListService service, NPFolder folder, int page) throws NPException {
         final Date midPoint = mStartTime > 0 ? new Date(mStartTime) : new Date();
         final Date startDate = getStartDate(midPoint);
         final Date endDate = getEndDate(midPoint);
@@ -107,7 +105,7 @@ public class EventsAgendaFragment extends EntriesFragment {
 
     @Override
     protected void onListLoaded(EntryList list) {
-        final List<Event> events = new WrapperList<Event>(list.getEntries());
+        final List<NPEvent> events = new WrapperList<NPEvent>(list.getEntries());
         mEvents.clear();
         mEvents.addAll(events);
 
@@ -123,10 +121,10 @@ public class EventsAgendaFragment extends EntriesFragment {
         super.onListLoaded(list);
     }
 
-    private void scrollToStartTime(List<Event> events) {
+    private void scrollToStartTime(List<NPEvent> events) {
         if (mStartTime >= 0) {
             for (int i = 0, eventsSize = events.size(); i < eventsSize; i++) {
-                final Event event = events.get(i);
+                final NPEvent event = events.get(i);
                 if (event.getStartTime().getTime() >= mStartTime) {
 //                    getListViewManager().smoothScrollToPosition(i);
                     break;
@@ -167,34 +165,34 @@ public class EventsAgendaFragment extends EntriesFragment {
         private TextView mTimeV;
     }
 
-    private class EventsAgendaAdapter extends EntriesAdapter<Event> implements StickyListHeadersAdapter {
+    private class EventsAgendaAdapter extends EntriesAdapter<NPEvent> implements StickyListHeadersAdapter {
         private final DateFormat mDayOfWeekFormat = new SimpleDateFormat("EEEE");
         private final DateFormat mMonthFormat = new SimpleDateFormat("MMMM yyyy");
         private final DateFormat mDateFormat;
         private final DateFormat mTimeFormat;
 
-        private EventsAgendaAdapter(List<Event> list) {
+        private EventsAgendaAdapter(List<NPEvent> list) {
             this(getActivity(), list);
         }
 
-        private EventsAgendaAdapter(Activity activity, List<Event> list) {
+        private EventsAgendaAdapter(Activity activity, List<NPEvent> list) {
             super(activity, list, getFolder(), getEntryListService(), getTemplate());
             mDateFormat = android.text.format.DateFormat.getMediumDateFormat(activity);
             mTimeFormat = android.text.format.DateFormat.getTimeFormat(activity);
         }
 
         @Override
-        protected View getEntryView(Event event, int position, View convertView, ViewGroup parent) {
+        protected View getEntryView(NPEvent event, int position, View convertView, ViewGroup parent) {
             final EventViewHolder viewHolder;
             if (convertView == null) {
                 convertView = getLayoutInflater().inflate(R.layout.list_item_event, parent, false);
 
                 viewHolder = new EventViewHolder();
-                viewHolder.mDayOfWeekV = findView(convertView, R.id.lbl_day_of_week);
-                viewHolder.mDateV = findView(convertView, R.id.lbl_date);
-                viewHolder.mTitleV = findView(convertView, R.id.lbl_title);
-                viewHolder.mTimeV = findView(convertView, R.id.lbl_time);
-                viewHolder.mDateFrame = findView(convertView, R.id.date_frame);
+                viewHolder.mDayOfWeekV = (TextView)convertView.findViewById(R.id.lbl_day_of_week);
+                viewHolder.mDateV = (TextView)convertView.findViewById(R.id.lbl_date);
+                viewHolder.mTitleV = (TextView)convertView.findViewById(R.id.lbl_title);
+                viewHolder.mTimeV = (TextView)convertView.findViewById(R.id.lbl_time);
+                viewHolder.mDateFrame = (ViewGroup)convertView.findViewById(R.id.date_frame);
 
                 convertView.setTag(viewHolder);
             } else {
@@ -232,7 +230,7 @@ public class EventsAgendaFragment extends EntriesFragment {
                 convertView = getLayoutInflater().inflate(R.layout.list_header, parent, false);
             }
             final ViewHolder holder = getHolder(convertView);
-            final Event item = getItem(position);
+            final NPEvent item = getItem(position);
 
             holder.text1.setText(mMonthFormat.format(item.getStartTime()));
 
@@ -251,7 +249,7 @@ public class EventsAgendaFragment extends EntriesFragment {
 
         @Override
         public long getHeaderId(int position) {
-            final Event item = getItem(position);
+            final NPEvent item = getItem(position);
             final Date time = item.getStartTime();
             final Calendar calendar = Calendar.getInstance();
             calendar.setTime(time);

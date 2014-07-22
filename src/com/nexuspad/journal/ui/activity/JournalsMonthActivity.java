@@ -4,10 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.widget.CalendarView;
-import com.edmondapps.utils.android.activity.SinglePaneActivity;
+import com.nexuspad.common.activity.SinglePaneActivity;
 import com.nexuspad.datamodel.EntryList;
 import com.nexuspad.journal.ui.fragment.JournalMonthFragment;
-import com.nexuspad.ui.fragment.EntriesFragment;
+import com.nexuspad.common.fragment.EntriesFragment;
 
 /**
  * User: edmond

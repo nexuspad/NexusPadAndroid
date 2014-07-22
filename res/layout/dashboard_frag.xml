@@ -30,7 +30,7 @@
         android:layout_alignParentRight="true"
         android:background="@color/transparent_black">
 
-        <com.nexuspad.ui.view.UploadBarView
+        <com.nexuspad.common.view.UploadBarView
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </FrameLayout>

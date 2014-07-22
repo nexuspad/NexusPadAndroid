@@ -7,11 +7,11 @@ import android.app.ActionBar;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.Window;
-import com.edmondapps.utils.android.activity.SinglePaneActivity;
-import com.edmondapps.utils.android.annotaion.ParentActivity;
+import com.nexuspad.common.activity.SinglePaneActivity;
+import com.nexuspad.common.annotaion.ParentActivity;
 import com.nexuspad.R;
 import com.nexuspad.about.fragment.AboutFragment;
-import com.nexuspad.home.ui.activity.DashboardActivity;
+import com.nexuspad.home.activity.DashboardActivity;
 
 /**
  * @author Edmond

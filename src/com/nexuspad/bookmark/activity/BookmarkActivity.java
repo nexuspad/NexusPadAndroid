@@ -1,0 +1,41 @@
+/*
+ * Copyright (C), NexusPad LLC
+ */
+package com.nexuspad.bookmark.activity;
+
+import android.support.v4.app.Fragment;
+import com.nexuspad.bookmark.fragment.BookmarkFragment;
+import com.nexuspad.datamodel.NPBookmark;
+import com.nexuspad.common.activity.EntryActivity;
+import com.nexuspad.common.annotaion.ParentActivity;
+
+/**
+ * @author Edmond
+ */
+@ParentActivity(BookmarksActivity.class)
+public class BookmarkActivity extends EntryActivity<NPBookmark> implements BookmarkFragment.Callback {
+
+    @Override
+    protected Fragment onCreateFragment() {
+        return BookmarkFragment.of(getEntry(), getFolder());
+    }
+
+    @Override
+    public void onEdit(BookmarkFragment f, NPBookmark b) {
+        NewBookmarkActivity.startWithBookmark(this, getFolder(), b);
+    }
+
+    @Override
+    protected void onNewEntry(NPBookmark entry) {
+        super.onNewEntry(entry);
+        BookmarkFragment fragment = getFragment();
+        if (fragment != null) {
+            fragment.setEntry(entry);
+        }
+    }
+
+    @Override
+    protected BookmarkFragment getFragment() {
+        return (BookmarkFragment) super.getFragment();
+    }
+}
