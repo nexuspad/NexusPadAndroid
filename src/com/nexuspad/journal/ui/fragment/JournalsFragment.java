@@ -21,7 +21,7 @@ import com.google.common.collect.Iterables;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
 import com.nexuspad.app.App;
-import com.nexuspad.common.WrapperList;
+import com.nexuspad.common.utils.WrapperList;
 import com.nexuspad.common.fragment.EntriesFragment;
 import com.nexuspad.common.view.EndlessViewPager;
 import com.nexuspad.datamodel.EntryList;

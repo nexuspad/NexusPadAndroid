@@ -20,7 +20,7 @@ import com.nexuspad.account.AccountManager;
 import com.nexuspad.app.App;
 import com.nexuspad.dataservice.ServiceConstants;
 import com.nexuspad.home.activity.LoginActivity;
-import com.nexuspad.common.IconListAdapter;
+import com.nexuspad.common.adapters.IconListAdapter;
 
 import static com.nexuspad.dataservice.ServiceConstants.*;
 

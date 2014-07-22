@@ -15,7 +15,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.nexuspad.R;
 import com.nexuspad.app.App;
-import com.nexuspad.common.WrapperList;
+import com.nexuspad.common.utils.WrapperList;
 import com.nexuspad.datamodel.EntryList;
 import com.nexuspad.datamodel.EntryTemplate;
 import com.nexuspad.datamodel.NPFolder;
@@ -46,9 +46,10 @@ public abstract class ListEntriesAdapter<T extends NPEntry> extends BaseAdapter 
 	private final EntryListService mService;
 	private final EntryTemplate mTemplate;
 
-
 	private List<T> mDisplayEntries;  // may be filtered entries displayed ons screen
 	private OnClickListener mOnMenuClickListener;
+
+	protected BaseAdapter mLoadMoreAdapter;
 
 	/**
 	 * use this constructor if you want filtering abilities
@@ -244,6 +245,18 @@ public abstract class ListEntriesAdapter<T extends NPEntry> extends BaseAdapter 
 
 	public ImmutableList<T> getRawEntries() {
 		return mRawEntries;
+	}
+
+	public boolean hasMoreToLoad() {
+		return true;
+	}
+
+	public BaseAdapter getLoadMoreAdapter() {
+		return mLoadMoreAdapter;
+	}
+
+	public void setLoadMoreAdapter(BaseAdapter loadMoreAdapter) {
+		mLoadMoreAdapter = loadMoreAdapter;
 	}
 
 	/**

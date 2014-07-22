@@ -8,7 +8,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.nexuspad.R;
 import com.nexuspad.datamodel.NPFolder;
-import com.nexuspad.common.FoldersAdapter;
 import com.nexuspad.common.fragment.FoldersFragment;
 import com.nexuspad.common.fragment.FoldersFragment.Callback;
 

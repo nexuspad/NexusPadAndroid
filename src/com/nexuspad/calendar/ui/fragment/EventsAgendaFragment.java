@@ -11,10 +11,13 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import com.nexuspad.common.annotaion.FragmentName;
-import com.nexuspad.common.WrapperList;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
+import com.nexuspad.common.adapters.ListEntriesAdapter;
+import com.nexuspad.common.adapters.ListViewHolder;
+import com.nexuspad.common.annotaion.FragmentName;
+import com.nexuspad.common.fragment.EntriesFragment;
+import com.nexuspad.common.utils.WrapperList;
 import com.nexuspad.datamodel.EntryList;
 import com.nexuspad.datamodel.EntryTemplate;
 import com.nexuspad.datamodel.NPEvent;
@@ -22,8 +25,6 @@ import com.nexuspad.datamodel.NPFolder;
 import com.nexuspad.dataservice.EntryListService;
 import com.nexuspad.dataservice.NPException;
 import com.nexuspad.dataservice.ServiceConstants;
-import com.nexuspad.common.EntriesAdapter;
-import com.nexuspad.common.fragment.EntriesFragment;
 import com.nexuspad.util.DateUtil;
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
@@ -165,7 +166,7 @@ public class EventsAgendaFragment extends EntriesFragment {
         private TextView mTimeV;
     }
 
-    private class EventsAgendaAdapter extends EntriesAdapter<NPEvent> implements StickyListHeadersAdapter {
+    private class EventsAgendaAdapter extends ListEntriesAdapter<NPEvent> implements StickyListHeadersAdapter {
         private final DateFormat mDayOfWeekFormat = new SimpleDateFormat("EEEE");
         private final DateFormat mMonthFormat = new SimpleDateFormat("MMMM yyyy");
         private final DateFormat mDateFormat;
@@ -229,10 +230,10 @@ public class EventsAgendaFragment extends EntriesFragment {
             if (convertView == null) {
                 convertView = getLayoutInflater().inflate(R.layout.list_header, parent, false);
             }
-            final ViewHolder holder = getHolder(convertView);
+            final ListViewHolder holder = getHolder(convertView);
             final NPEvent item = getItem(position);
 
-            holder.text1.setText(mMonthFormat.format(item.getStartTime()));
+            holder.getText1().setText(mMonthFormat.format(item.getStartTime()));
 
             return convertView;
         }

@@ -16,14 +16,14 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import com.nexuspad.common.annotaion.FragmentName;
-import com.nexuspad.common.WrapperList;
+import com.nexuspad.common.utils.WrapperList;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
 import com.nexuspad.datamodel.*;
 import com.nexuspad.photo.adapter.PhotosAdapter;
 import com.nexuspad.photo.activity.PhotoActivity;
 import com.nexuspad.photo.activity.PhotosActivity;
-import com.nexuspad.common.OnListEndListener;
+import com.nexuspad.common.adapters.OnListEndListener;
 import com.nexuspad.common.activity.FoldersActivity;
 import com.nexuspad.common.fragment.EntriesFragment;
 

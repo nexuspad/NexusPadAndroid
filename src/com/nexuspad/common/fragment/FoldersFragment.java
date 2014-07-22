@@ -15,7 +15,7 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
-import com.nexuspad.common.Logs;
+import com.nexuspad.common.utils.Logs;
 import com.nexuspad.common.annotaion.FragmentName;
 import com.google.common.collect.Iterables;
 import com.nexuspad.Manifest;
@@ -27,7 +27,7 @@ import com.nexuspad.dataservice.FolderService;
 import com.nexuspad.dataservice.FolderService.FolderReceiver;
 import com.nexuspad.dataservice.NPException;
 import com.nexuspad.dataservice.ServiceError;
-import com.nexuspad.common.OnFolderMenuClickListener;
+import com.nexuspad.common.adapters.OnFolderMenuClickListener;
 import com.nexuspad.common.activity.NewFolderActivity;
 import com.nexuspad.common.adapters.FolderNavigatorAdapter;
 

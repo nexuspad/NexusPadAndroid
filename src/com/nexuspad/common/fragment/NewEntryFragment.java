@@ -9,7 +9,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
-import com.nexuspad.common.Logs;
+import com.nexuspad.common.utils.Logs;
 import com.nexuspad.account.AccountManager;
 import com.nexuspad.annotation.ModuleId;
 import com.nexuspad.datamodel.NPFolder;

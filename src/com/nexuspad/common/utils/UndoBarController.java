@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.nexuspad.common;
+package com.nexuspad.common.utils;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;

@@ -13,7 +13,7 @@ import android.support.v4.app.Fragment;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
-import com.nexuspad.common.Logs;
+import com.nexuspad.common.utils.Logs;
 import com.nexuspad.common.annotaion.ParentActivity;
 import com.google.common.collect.ImmutableList;
 import com.nexuspad.R;

@@ -1,7 +1,7 @@
 /*
  * Copyright (C), NexusPad LLC
  */
-package com.nexuspad.common;
+package com.nexuspad.common.adapters;
 
 import android.content.Intent;
 import android.content.res.Resources;
@@ -11,11 +11,10 @@ import android.view.View.OnClickListener;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import com.nexuspad.R;
+import com.nexuspad.common.utils.UndoBarController;
 import com.nexuspad.datamodel.NPFolder;
 import com.nexuspad.dataservice.FolderService;
 import com.nexuspad.common.activity.NewFolderActivity;
-import com.nexuspad.common.adapters.FoldersEntriesListAdapter;
-import com.nexuspad.common.adapters.ListFoldersAdapter;
 
 
 public class OnFolderMenuClickListener implements OnClickListener {

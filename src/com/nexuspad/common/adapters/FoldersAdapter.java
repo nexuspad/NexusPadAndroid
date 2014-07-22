@@ -1,7 +1,7 @@
 /*
  * Copyright (C), NexusPad LLC
  */
-package com.nexuspad.common;
+package com.nexuspad.common.adapters;
 
 import android.app.Activity;
 import android.view.LayoutInflater;

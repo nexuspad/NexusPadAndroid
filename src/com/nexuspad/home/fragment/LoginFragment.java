@@ -15,7 +15,7 @@ import android.view.ViewTreeObserver.OnPreDrawListener;
 import android.widget.*;
 import com.nexuspad.common.annotaion.FragmentName;
 import com.nexuspad.common.view.LoadingViews;
-import com.nexuspad.common.Lazy;
+import com.nexuspad.common.utils.Lazy;
 import com.nexuspad.R;
 import com.nexuspad.account.AccountManager;
 import com.nexuspad.app.App;

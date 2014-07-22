@@ -1,4 +1,4 @@
-package com.nexuspad.common;
+package com.nexuspad.common.listeners;
 
 import android.widget.AbsListView;
 

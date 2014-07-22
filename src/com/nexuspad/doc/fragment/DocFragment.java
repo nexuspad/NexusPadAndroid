@@ -15,7 +15,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.nexuspad.common.annotaion.FragmentName;
-import com.nexuspad.common.Lazy;
+import com.nexuspad.common.utils.Lazy;
 import com.nexuspad.R;
 import com.nexuspad.datamodel.NPDoc;
 import com.nexuspad.datamodel.NPFolder;

@@ -12,7 +12,7 @@ import android.widget.PopupMenu;
 import com.nexuspad.R;
 import com.nexuspad.datamodel.NPEntry;
 import com.nexuspad.dataservice.EntryService;
-import com.nexuspad.common.UndoBarController;
+import com.nexuspad.common.utils.UndoBarController;
 
 /**
  * Listener to handle entry item menu click.

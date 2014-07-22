@@ -8,7 +8,7 @@ import android.net.Uri;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
-import com.nexuspad.common.Logs;
+import com.nexuspad.common.utils.Logs;
 import uk.co.senab.photoview.IPhotoView;
 import uk.co.senab.photoview.PhotoViewAttacher;
 

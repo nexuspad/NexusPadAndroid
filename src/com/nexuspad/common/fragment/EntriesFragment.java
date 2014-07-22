@@ -21,12 +21,12 @@ import com.nexuspad.R;
 import com.nexuspad.account.AccountManager;
 import com.nexuspad.annotation.ModuleId;
 import com.nexuspad.app.App;
-import com.nexuspad.common.*;
 import com.nexuspad.common.activity.FoldersActivity;
 import com.nexuspad.common.activity.NewFolderActivity;
-import com.nexuspad.common.adapters.FoldersEntriesListAdapter;
-import com.nexuspad.common.adapters.ListFoldersAdapter;
-import com.nexuspad.common.adapters.SingleAdapter;
+import com.nexuspad.common.adapters.*;
+import com.nexuspad.common.listeners.DirectionalScrollListener;
+import com.nexuspad.common.utils.Lazy;
+import com.nexuspad.common.utils.Logs;
 import com.nexuspad.datamodel.*;
 import com.nexuspad.dataservice.*;
 import com.nexuspad.dataservice.EntryService.EntryReceiver;
@@ -662,9 +662,6 @@ public abstract class EntriesFragment extends FadeListFragment {
 		}
 
 		onListLoaded(mEntryList);
-
-		// REN - not sure why this is called since it does nothing.
-//		mCallback.onListLoaded(this, mEntryList);
 	}
 
 	/**

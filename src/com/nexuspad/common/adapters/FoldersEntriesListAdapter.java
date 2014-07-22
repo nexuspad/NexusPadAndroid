@@ -12,18 +12,16 @@ import android.widget.BaseAdapter;
 public class FoldersEntriesListAdapter<T extends ListEntriesAdapter<?>> extends BaseAdapter implements AdapterView.OnItemLongClickListener {
 	private final ListFoldersAdapter mFolderAdapter;
 	private final T mEntriesAdapter;
-	private BaseAdapter mLoadMoreAdapter;
 
 	public FoldersEntriesListAdapter(ListFoldersAdapter folderAdapter, T entriesAdapter) {
 		mFolderAdapter = folderAdapter;
 		mEntriesAdapter = entriesAdapter;
-		mLoadMoreAdapter = null;
 	}
 
 	public FoldersEntriesListAdapter(ListFoldersAdapter folderAdapter, T entriesAdapter, BaseAdapter loadMoreAdapter) {
 		mFolderAdapter = folderAdapter;
 		mEntriesAdapter = entriesAdapter;
-		mLoadMoreAdapter = loadMoreAdapter;
+		mEntriesAdapter.setLoadMoreAdapter(loadMoreAdapter);
 	}
 
 	@Override
@@ -41,11 +39,7 @@ public class FoldersEntriesListAdapter<T extends ListEntriesAdapter<?>> extends 
 			return 1;
 		}
 
-		if (mLoadMoreAdapter == null) {
-			return mFolderAdapter.getCount() + mEntriesAdapter.getCount();
-		}
-
-		return mFolderAdapter.getCount() + mEntriesAdapter.getCount() + 1;
+		return mFolderAdapter.getCount() + mEntriesAdapter.getCount();
 	}
 
 	public void setShouldHideFolders(boolean shouldHideFolders) {
@@ -102,7 +96,7 @@ public class FoldersEntriesListAdapter<T extends ListEntriesAdapter<?>> extends 
 		if (isPositionFolder(position)) {
 			return mFolderAdapter.isEnabled(position);
 		} else if (isPositionLoadMore(position)) {
-			return mLoadMoreAdapter.isEnabled(position);
+			return mEntriesAdapter.getLoadMoreAdapter().isEnabled(position);
 		}
 		return mEntriesAdapter.isEnabled(position);
 	}
@@ -112,7 +106,7 @@ public class FoldersEntriesListAdapter<T extends ListEntriesAdapter<?>> extends 
 		if (isPositionFolder(position)) {
 			return mFolderAdapter.getItemViewType(position);
 		} else if (isPositionLoadMore(position)) {
-			return mLoadMoreAdapter.getItemViewType(0);
+			return mEntriesAdapter.getLoadMoreAdapter().getItemViewType(0);
 		}
 
 		return mEntriesAdapter.getItemViewType(position);
@@ -120,7 +114,7 @@ public class FoldersEntriesListAdapter<T extends ListEntriesAdapter<?>> extends 
 
 	@Override
 	public int getViewTypeCount() {
-		return mFolderAdapter.getViewTypeCount() + mEntriesAdapter.getViewTypeCount() + (mLoadMoreAdapter == null ? 0 : 1);
+		return mFolderAdapter.getViewTypeCount() + mEntriesAdapter.getViewTypeCount() + (mEntriesAdapter.getLoadMoreAdapter() == null ? 0 : 1);
 	}
 
 	@Override
@@ -136,7 +130,7 @@ public class FoldersEntriesListAdapter<T extends ListEntriesAdapter<?>> extends 
 		if (isPositionFolder(position)) {
 			return mFolderAdapter.getItem(position);
 		} else if (isPositionLoadMore(position)) {
-			return mLoadMoreAdapter.getItem(0);
+			return mEntriesAdapter.getLoadMoreAdapter().getItem(0);
 		} else {
 			position = position - mFolderAdapter.getCount();
 			return mEntriesAdapter.getItem(position);
@@ -148,7 +142,7 @@ public class FoldersEntriesListAdapter<T extends ListEntriesAdapter<?>> extends 
 		if (isPositionFolder(position)) {
 			return mFolderAdapter.getItemId(position);
 		} else if (isPositionLoadMore(position)) {
-			return mLoadMoreAdapter.getItemId(0);
+			return mEntriesAdapter.getLoadMoreAdapter().getItemId(0);
 		} else {
 			position = position - mFolderAdapter.getCount();
 			return mEntriesAdapter.getItemId(position);
@@ -160,7 +154,7 @@ public class FoldersEntriesListAdapter<T extends ListEntriesAdapter<?>> extends 
 		if (isPositionFolder(position)) {
 			return mFolderAdapter.getView(position, convertView, parent);
 		} else if (isPositionLoadMore(position)) {
-			return mLoadMoreAdapter.getView(0, convertView, parent);
+			return mEntriesAdapter.getLoadMoreAdapter().getView(0, convertView, parent);
 		} else {
 			position = position - mFolderAdapter.getCount();
 			return mEntriesAdapter.getView(position, convertView, parent);
@@ -187,11 +181,11 @@ public class FoldersEntriesListAdapter<T extends ListEntriesAdapter<?>> extends 
 	}
 
 	public void removeLoadMoreAdapter() {
-		mLoadMoreAdapter = null;
+		mEntriesAdapter.setLoadMoreAdapter(null);
 	}
 
 	private boolean isPositionLoadMore(int position) {
-		if (position >= (getCount() - 1) && mLoadMoreAdapter != null) {               // Shouldn't be greater
+		if (position >= (getCount() - 1) && mEntriesAdapter.hasMoreToLoad()) {               // Shouldn't be greater
 			return true;
 		}
 		return false;

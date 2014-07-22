@@ -14,7 +14,7 @@ import android.view.animation.Animation;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import com.nexuspad.R;
-import com.nexuspad.common.UndoBarController;
+import com.nexuspad.common.utils.UndoBarController;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
 import static android.view.animation.AnimationUtils.loadAnimation;

@@ -1,7 +1,7 @@
 /*
  * Copyright (C), NexusPad LLC
  */
-package com.nexuspad.common;
+package com.nexuspad.common.adapters;
 
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;

@@ -15,19 +15,19 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import com.nexuspad.common.annotaion.FragmentName;
-import com.nexuspad.common.WrapperList;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
-import com.nexuspad.datamodel.NPAlbum;
+import com.nexuspad.common.activity.FoldersActivity;
+import com.nexuspad.common.adapters.ListEntriesAdapter;
+import com.nexuspad.common.annotaion.FragmentName;
+import com.nexuspad.common.fragment.EntriesFragment;
+import com.nexuspad.common.utils.WrapperList;
 import com.nexuspad.datamodel.EntryList;
 import com.nexuspad.datamodel.EntryTemplate;
+import com.nexuspad.datamodel.NPAlbum;
 import com.nexuspad.datamodel.NPFolder;
 import com.nexuspad.dataservice.ServiceConstants;
 import com.nexuspad.photo.activity.PhotosActivity;
-import com.nexuspad.common.EntriesAdapter;
-import com.nexuspad.common.activity.FoldersActivity;
-import com.nexuspad.common.fragment.EntriesFragment;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -117,7 +117,7 @@ public class AlbumsFragment extends EntriesFragment {
         TextView title;
     }
 
-    private class AlbumsAdapter extends EntriesAdapter<NPAlbum> {
+    private class AlbumsAdapter extends ListEntriesAdapter<NPAlbum> {
 
         public AlbumsAdapter() {
             super(getActivity(), mAlbums, getFolder(), getEntryListService(), getTemplate());

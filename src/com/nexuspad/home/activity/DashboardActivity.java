@@ -9,7 +9,7 @@ import android.support.v4.app.Fragment;
 import com.nexuspad.R;
 import com.nexuspad.bookmark.activity.BookmarksActivity;
 import com.nexuspad.calendar.ui.activity.EventsActivity;
-import com.nexuspad.common.Logs;
+import com.nexuspad.common.utils.Logs;
 import com.nexuspad.common.activity.SinglePaneActivity;
 import com.nexuspad.common.activity.UploadCenterActivity;
 import com.nexuspad.contacts.activity.ContactsActivity;

@@ -9,7 +9,7 @@ import android.util.Log;
 import android.view.*;
 import android.widget.ListView;
 import com.nexuspad.common.annotaion.FragmentName;
-import com.nexuspad.common.WrapperList;
+import com.nexuspad.common.utils.WrapperList;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
 import com.nexuspad.app.App;
