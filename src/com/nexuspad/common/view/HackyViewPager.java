@@ -3,8 +3,8 @@ package com.nexuspad.common.view;
 import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
-import com.nexuspad.common.utils.Logs;
 
 /**
  * Hacky fix for Issue #4 and
@@ -37,10 +37,10 @@ public class HackyViewPager extends ViewPager {
         try {
             return super.onInterceptTouchEvent(ev);
         } catch (IllegalArgumentException e) {
-            Logs.e(TAG, e);
+            Log.e(TAG, e.toString());
             return false;
         } catch (ArrayIndexOutOfBoundsException e) {
-            Logs.e(TAG, e);
+            Log.e(TAG, e.toString());
             return false;
         }
     }

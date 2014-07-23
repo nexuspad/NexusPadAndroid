@@ -10,21 +10,21 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
-import com.nexuspad.common.utils.Logs;
-import com.nexuspad.common.annotaion.ParentActivity;
 import com.google.common.collect.ImmutableList;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
+import com.nexuspad.common.activity.EntriesActivity;
+import com.nexuspad.common.activity.UploadCenterActivity;
+import com.nexuspad.common.annotaion.ParentActivity;
 import com.nexuspad.datamodel.EntryTemplate;
 import com.nexuspad.datamodel.NPFolder;
 import com.nexuspad.home.activity.DashboardActivity;
 import com.nexuspad.photo.fragment.AlbumsFragment;
 import com.nexuspad.photo.fragment.PhotosFragment;
-import com.nexuspad.common.activity.EntriesActivity;
-import com.nexuspad.common.activity.UploadCenterActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -137,7 +137,7 @@ public class PhotosActivity extends EntriesActivity implements ActionBar.OnNavig
                 break;
             default:
                 // probably from fragments
-                Logs.w(TAG, "unknown requestCode: " + requestCode);
+                Log.w(TAG, "unknown requestCode: " + requestCode);
         }
     }
 

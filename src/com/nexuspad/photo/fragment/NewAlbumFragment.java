@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,14 +15,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
-import com.nexuspad.common.utils.Lazy;
-import com.nexuspad.common.utils.Logs;
 import com.nexuspad.common.activity.NewEntryActivity;
 import com.nexuspad.common.activity.UploadCenterActivity;
 import com.nexuspad.common.annotaion.FragmentName;
 import com.nexuspad.common.fragment.NewEntryFragment;
-import com.nexuspad.datamodel.NPAlbum;
+import com.nexuspad.common.utils.Lazy;
 import com.nexuspad.datamodel.EntryTemplate;
+import com.nexuspad.datamodel.NPAlbum;
 import com.nexuspad.datamodel.NPFolder;
 import com.nexuspad.datamodel.NPUpload;
 import com.nexuspad.dataservice.EntryUploadService;
@@ -192,7 +192,7 @@ public class NewAlbumFragment extends NewEntryFragment<NPAlbum> {
         super.onAddEntry(entry);
         final List<NPUpload> attachments = entry.getAttachments();
         if (!attachments.isEmpty()) {
-            Logs.e(TAG, "attachments are not uploaded (entry not created yet): " + attachments);
+            Log.e(TAG, "attachments are not uploaded (entry not created yet): " + attachments);
         }
     }
 

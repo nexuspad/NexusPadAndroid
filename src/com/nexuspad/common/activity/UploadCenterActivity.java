@@ -25,6 +25,8 @@ public class UploadCenterActivity extends SinglePaneActivity {
     public static final String KEY_FOLDER = "key_folder";
     public static final String KEY_ENTRY = "key_entry";
 
+	private List<Uri> mUris = new ArrayList<Uri>();
+
 	/**
 	 * Upload files to a folder.
 	 *
@@ -83,8 +85,6 @@ public class UploadCenterActivity extends SinglePaneActivity {
         return R.layout.no_padding_activity;
     }
 
-    private List<Uri> mUris = new ArrayList<Uri>();
-
     @Override
     protected void onCreate(Bundle savedState) {
         final Intent intent = getIntent();
@@ -92,11 +92,6 @@ public class UploadCenterActivity extends SinglePaneActivity {
         if (uri != null) {
             addIfNeeded(uri);
         }
-
-//        uri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
-//        if (uri != null) {
-//            addIfNeeded(uri);
-//        }
 
         final List<Uri> list = intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
         if (list != null) {

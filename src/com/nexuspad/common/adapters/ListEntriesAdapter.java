@@ -12,14 +12,12 @@ import android.view.ViewGroup;
 import android.widget.*;
 import android.widget.AdapterView.OnItemLongClickListener;
 import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableList;
 import com.nexuspad.R;
 import com.nexuspad.app.App;
-import com.nexuspad.common.utils.WrapperList;
 import com.nexuspad.datamodel.EntryList;
 import com.nexuspad.datamodel.EntryTemplate;
-import com.nexuspad.datamodel.NPFolder;
 import com.nexuspad.datamodel.NPEntry;
+import com.nexuspad.datamodel.NPFolder;
 import com.nexuspad.dataservice.EntryListService;
 import com.nexuspad.dataservice.NPException;
 
@@ -38,7 +36,6 @@ public abstract class ListEntriesAdapter<T extends NPEntry> extends BaseAdapter 
 	public static final int TYPE_ENTRY = 1;
 	public static final int TYPE_EMPTY_ENTRY = 2;
 
-	private final ImmutableList<T> mRawEntries;     // unfiltered, original entries
 	private final LayoutInflater mInflater;
 	private final String mEntryHeaderText;
 
@@ -46,7 +43,11 @@ public abstract class ListEntriesAdapter<T extends NPEntry> extends BaseAdapter 
 	private final EntryListService mService;
 	private final EntryTemplate mTemplate;
 
-	private List<T> mDisplayEntries;  // may be filtered entries displayed ons screen
+	private EntryList mDisplayEntryList;
+
+//	private final ImmutableList<T> mRawEntries;     // unfiltered, original entries
+//	private List<T> mDisplayEntries;  // may be filtered entries displayed ons screen
+
 	private OnClickListener mOnMenuClickListener;
 
 	protected BaseAdapter mLoadMoreAdapter;
@@ -54,12 +55,13 @@ public abstract class ListEntriesAdapter<T extends NPEntry> extends BaseAdapter 
 	/**
 	 * use this constructor if you want filtering abilities
 	 */
-	public ListEntriesAdapter(Activity a, List<T> entries, NPFolder folder, EntryListService service, EntryTemplate template) {
+	public ListEntriesAdapter(Activity a, EntryList entryList, NPFolder folder, EntryListService service, EntryTemplate template) {
 		mFolder = folder;
 		mService = service;
 		mTemplate = template;
-		mRawEntries = ImmutableList.copyOf(entries);
-		mDisplayEntries = entries;
+		mDisplayEntryList = entryList;
+//		mRawEntries = ImmutableList.copyOf(entries);
+//		mDisplayEntries = entries;
 		mInflater = a.getLayoutInflater();
 		mEntryHeaderText = getEntriesHeaderText();
 	}
@@ -72,23 +74,19 @@ public abstract class ListEntriesAdapter<T extends NPEntry> extends BaseAdapter 
 	 * Swap out the current entries with the specified one. The original entries passed in the constructor will
 	 * be preserved.
 	 *
-	 * @param displayEntries the new entries to be displayed
+	 * @param entryList the new entries to be displayed
 	 */
-	public void setDisplayEntries(List<T> displayEntries) {
-		mDisplayEntries = displayEntries;
+	public void setDisplayEntries(EntryList entryList) {
+		mDisplayEntryList = entryList;
 		notifyDataSetChanged();
-	}
-
-	public void setDisplayEntries(EntryList entries) {
-		setDisplayEntries(new WrapperList<T>(entries.getEntries()));
 	}
 
 	/**
 	 * Reset the adapter to display the original, unfiltered entries passed from the constructor.
 	 */
 	public void showRawEntries() {
-		mDisplayEntries.clear();
-		mDisplayEntries.addAll(mRawEntries);
+//		mDisplayEntries.clear();
+//		mDisplayEntries.addAll(mRawEntries);
 		notifyDataSetChanged();
 	}
 
@@ -129,28 +127,28 @@ public abstract class ListEntriesAdapter<T extends NPEntry> extends BaseAdapter 
 
 	@Override
 	public boolean isEmpty() {
-		return mDisplayEntries.isEmpty();
+		return mDisplayEntryList == null || mDisplayEntryList.getEntries().isEmpty();
 	}
 
 	@Override
 	public int getCount() {
-		if (mDisplayEntries.isEmpty()) {
+		if (mDisplayEntryList == null || mDisplayEntryList.getEntries().isEmpty()) {
 			// One view - empty view
 			return 1;
 		}
 
 		if (isHeaderEnabled()) {
 			// Header view and entry views
-			return mDisplayEntries.size() + 1;
+			return mDisplayEntryList.getEntries().size() + 1;
 		}
 
 		// Entry views
-		return mDisplayEntries.size();
+		return mDisplayEntryList.getEntries().size();
 	}
 
 	@Override
 	public int getItemViewType(int position) {
-		if (mDisplayEntries.isEmpty()) {
+		if (isEmpty()) {
 			return TYPE_EMPTY_ENTRY;
 		}
 		if (position == 0 && isHeaderEnabled()) {
@@ -184,7 +182,7 @@ public abstract class ListEntriesAdapter<T extends NPEntry> extends BaseAdapter 
 
 	@Override
 	public T getItem(int position) {
-		return mDisplayEntries.get(isHeaderEnabled() ? position - 1 : position);
+		return (T)mDisplayEntryList.getEntries().get(isHeaderEnabled() ? position - 1 : position);
 	}
 
 	@Override
@@ -243,12 +241,12 @@ public abstract class ListEntriesAdapter<T extends NPEntry> extends BaseAdapter 
 		return mInflater;
 	}
 
-	public ImmutableList<T> getRawEntries() {
-		return mRawEntries;
-	}
 
 	public boolean hasMoreToLoad() {
-		return true;
+		if (mDisplayEntryList.getEntries().size() < mDisplayEntryList.getTotalCount()) {
+			return true;
+		}
+		return false;
 	}
 
 	public BaseAdapter getLoadMoreAdapter() {
@@ -293,15 +291,15 @@ public abstract class ListEntriesAdapter<T extends NPEntry> extends BaseAdapter 
 
 		@Override
 		protected FilterResults performFiltering(CharSequence constraint) {
-			final List<T> willDisplayEntries = new ArrayList<T>();
+			final List<NPEntry> willDisplayEntries = new ArrayList<NPEntry>();
 
 			willDisplayEntries.clear();
 			if (TextUtils.isEmpty(constraint)) {
-				willDisplayEntries.addAll(getRawEntries());
+				willDisplayEntries.addAll(mDisplayEntryList.getEntries());
 				return null;
 			}
 			final Pattern pattern = App.createSearchPattern(constraint.toString().trim());
-			for (T entry : getRawEntries()) {
+			for (NPEntry entry : mDisplayEntryList.getEntries()) {
 				if (entry.filterByPattern(pattern)) {
 					willDisplayEntries.add(entry);
 				}
@@ -318,7 +316,10 @@ public abstract class ListEntriesAdapter<T extends NPEntry> extends BaseAdapter 
 		protected void publishResults(CharSequence constraint, FilterResults results) {
 			@SuppressWarnings("unchecked")
 			final List<T> list = (List<T>) results.values;
-			setDisplayEntries(list);
+
+			EntryList displayEntryList = new EntryList();
+			displayEntryList.getEntries().addAll(list);
+			setDisplayEntries(displayEntryList);
 
 			if (mOnFilterDoneListener != null) {
 				final OnFilterDoneListener<T> listener = mOnFilterDoneListener.get();

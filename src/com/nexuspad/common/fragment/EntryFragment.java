@@ -8,20 +8,20 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import com.nexuspad.common.utils.Logs;
-import com.nexuspad.common.utils.Lazy;
 import com.nexuspad.R;
 import com.nexuspad.app.App;
+import com.nexuspad.common.activity.FoldersActivity;
+import com.nexuspad.common.utils.Lazy;
 import com.nexuspad.core.Manifest;
-import com.nexuspad.datamodel.NPFolder;
 import com.nexuspad.datamodel.NPEntry;
+import com.nexuspad.datamodel.NPFolder;
 import com.nexuspad.dataservice.EntryService;
 import com.nexuspad.dataservice.EntryService.EntryReceiver;
 import com.nexuspad.dataservice.NPException;
 import com.nexuspad.dataservice.ServiceError;
-import com.nexuspad.common.activity.FoldersActivity;
 
 /**
  * You must pass in a {@code Folder} with the key {@link EntryFragment#KEY_FOLDER}
@@ -54,7 +54,7 @@ public abstract class EntryFragment<T extends NPEntry> extends DialogFragment {
         @Override
         protected void onError(Context context, Intent intent, ServiceError error) {
             super.onError(context, intent, error);
-            Logs.e(TAG, error.toString());
+            Log.e(TAG, error.toString());
         }
 
         @Override
@@ -104,7 +104,7 @@ public abstract class EntryFragment<T extends NPEntry> extends DialogFragment {
                     getEntryService().getEntry(entry);
                 }
             } catch (NPException e) {
-                Logs.e(TAG, e);
+                Log.e(TAG, e.toString());
             }
         }
     }

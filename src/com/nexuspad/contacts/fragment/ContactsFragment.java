@@ -6,15 +6,21 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.MenuItemCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.*;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import com.nexuspad.common.annotaion.FragmentName;
-import com.nexuspad.common.utils.WrapperList;
+import android.widget.SearchView;
+import com.google.common.base.Strings;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
+import com.nexuspad.common.activity.FoldersActivity;
+import com.nexuspad.common.adapters.ListEntriesAdapter;
+import com.nexuspad.common.adapters.ListViewHolder;
+import com.nexuspad.common.annotaion.FragmentName;
+import com.nexuspad.common.fragment.EntriesFragment;
 import com.nexuspad.common.listeners.OnEntryMenuClickListener;
 import com.nexuspad.contacts.activity.ContactActivity;
 import com.nexuspad.contacts.activity.ContactsActivity;
@@ -22,10 +28,6 @@ import com.nexuspad.contacts.activity.NewContactActivity;
 import com.nexuspad.datamodel.*;
 import com.nexuspad.dataservice.EntryListService;
 import com.nexuspad.dataservice.ServiceConstants;
-import com.nexuspad.common.activity.FoldersActivity;
-import com.nexuspad.common.adapters.ListEntriesAdapter;
-import com.nexuspad.common.adapters.ListViewHolder;
-import com.nexuspad.common.fragment.EntriesFragment;
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
@@ -40,7 +42,6 @@ public final class ContactsFragment extends EntriesFragment {
 
 	private static final int REQ_FOLDER = 1;
 
-	private List<NPPerson> mContacts;
 	private SortTask mSortTask;
 
 	private ContactsAdapter mContactsAdapter;
@@ -133,11 +134,10 @@ public final class ContactsFragment extends EntriesFragment {
 	protected void onListLoaded(EntryList list) {
 		Log.i(TAG, "Receiving entry list.");
 
-		mContacts = new WrapperList<NPPerson>(list.getEntries());
 		if (mSortTask != null) {
 			mSortTask.cancel(true);
 		}
-		mSortTask = new SortTask(mContacts, this);
+		mSortTask = new SortTask(mEntryList, this);
 		mSortTask.execute((Void[]) null);
 	}
 
@@ -167,8 +167,8 @@ public final class ContactsFragment extends EntriesFragment {
 	}
 
 
-	private ContactsAdapter newContactsAdapter(List<NPPerson> contacts) {
-		final ContactsAdapter a = new ContactsAdapter(getActivity(), contacts, getFolder(), getEntryListService(), getTemplate(), mFilterDoneListener);
+	private ContactsAdapter newContactsAdapter(EntryList entryList) {
+		final ContactsAdapter a = new ContactsAdapter(getActivity(), entryList, getFolder(), getEntryListService(), getTemplate(), mFilterDoneListener);
 
 		a.setOnMenuClickListener(new OnEntryMenuClickListener<NPPerson>(mStickyHeaderContactListView, getEntryService(), getUndoBarController()) {
 			@Override
@@ -195,14 +195,74 @@ public final class ContactsFragment extends EntriesFragment {
 	}
 
 
+	@Override
+	protected void setUpSearchView(MenuItem searchItem) {
+		final SearchView searchView = (SearchView) searchItem.getActionView();
+		if (searchView != null) {
+			searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+				@Override
+				public boolean onQueryTextSubmit(String query) {
+					if (Strings.isNullOrEmpty(query)) {
+						reDisplayListEntries();
+					} else {
+						mContactsAdapter.doSearch(query);
+					}
+					return true;
+				}
+
+				@Override
+				public boolean onQueryTextChange(String newText) {
+					// For Contact module, enable the instant search feedback since the search is done locally.
+					if (Strings.isNullOrEmpty(newText)) {
+						reDisplayListEntries();
+					} else {
+						mContactsAdapter.doSearch(newText);
+					}
+					return true;
+				}
+			});
+
+			searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+				@Override
+				public boolean onClose() {
+					reDisplayListEntries();
+					return true;
+				}
+			});
+
+			MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
+				@Override
+				public boolean onMenuItemActionExpand(MenuItem item) {
+					if (mEntryList.getEntries().size() > 0) {
+						return true;
+					}
+					return false;
+				}
+
+				@Override
+				public boolean onMenuItemActionCollapse(MenuItem item) {
+					reDisplayListEntries();
+					return true;
+				}
+			});
+		}
+	}
+
+	@Override
+	protected void reDisplayListEntries() {
+		fadeInListFrame();
+		mContactsAdapter.setDisplayEntries(mEntryList);
+		mContactsAdapter.notifyDataSetChanged();
+	}
+
 	/**
 	 * Override common ListEntriesAdapter for Contact list.
 	 */
 	public static class ContactsAdapter extends ListEntriesAdapter<NPPerson> implements StickyListHeadersAdapter {
 		private final EntriesAdapterLocalFilter mFilter;
 
-		private ContactsAdapter(Activity a, List<NPPerson> contacts, NPFolder folder, EntryListService service, EntryTemplate template, OnFilterDoneListener<NPPerson> onFilterDoneListener) {
-			super(a, contacts, folder, service, template);
+		private ContactsAdapter(Activity a, EntryList entryList, NPFolder folder, EntryListService service, EntryTemplate template, OnFilterDoneListener<NPPerson> onFilterDoneListener) {
+			super(a, entryList, folder, service, template);
 			mFilter = new EntriesAdapterLocalFilter(onFilterDoneListener);
 		}
 
@@ -285,17 +345,17 @@ public final class ContactsFragment extends EntriesFragment {
 	}
 
 	private static class SortTask extends AsyncTask<Void, Void, Void> {
-		private final List<NPPerson> mContacts;
+		private final EntryList mContactList;
 		private final WeakReference<ContactsFragment> mFragment;
 
-		private SortTask(List<NPPerson> contacts, ContactsFragment fragment) {
-			mContacts = contacts;
+		private SortTask(EntryList contactList, ContactsFragment fragment) {
+			mContactList = contactList;
 			mFragment = new WeakReference<ContactsFragment>(fragment);
 		}
 
 		@Override
 		protected Void doInBackground(Void... params) {
-			Collections.sort(mContacts, NPEntry.ORDERING_BY_TITLE);
+			Collections.sort(mContactList.getEntries(), NPEntry.ORDERING_BY_TITLE);
 			return null;
 		}
 
@@ -304,7 +364,7 @@ public final class ContactsFragment extends EntriesFragment {
 			final ContactsFragment fragment = mFragment.get();
 			if (fragment != null && fragment.isAdded()) {
 				if (fragment.mContactsAdapter == null) {
-					fragment.mContactsAdapter = fragment.newContactsAdapter(mContacts);
+					fragment.mContactsAdapter = fragment.newContactsAdapter(mContactList);
 					fragment.mStickyHeaderContactListView.setAdapter(fragment.mContactsAdapter);
 				}
 

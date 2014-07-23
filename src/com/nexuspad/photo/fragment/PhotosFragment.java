@@ -15,17 +15,16 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
-import com.nexuspad.common.annotaion.FragmentName;
-import com.nexuspad.common.utils.WrapperList;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
+import com.nexuspad.common.activity.FoldersActivity;
+import com.nexuspad.common.adapters.OnListEndListener;
+import com.nexuspad.common.annotaion.FragmentName;
+import com.nexuspad.common.fragment.EntriesFragment;
 import com.nexuspad.datamodel.*;
-import com.nexuspad.photo.adapter.PhotosAdapter;
 import com.nexuspad.photo.activity.PhotoActivity;
 import com.nexuspad.photo.activity.PhotosActivity;
-import com.nexuspad.common.adapters.OnListEndListener;
-import com.nexuspad.common.activity.FoldersActivity;
-import com.nexuspad.common.fragment.EntriesFragment;
+import com.nexuspad.photo.adapter.PhotosAdapter;
 
 import java.util.ArrayList;
 
@@ -37,121 +36,119 @@ import static com.nexuspad.dataservice.ServiceConstants.PHOTO_MODULE;
 @FragmentName(PhotosFragment.TAG)
 @ModuleId(moduleId = PHOTO_MODULE, template = EntryTemplate.PHOTO)
 public class PhotosFragment extends EntriesFragment implements OnItemClickListener {
-    public static final String TAG = "PhotosFragment";
+	public static final String TAG = "PhotosFragment";
 
-    private static final int REQ_FOLDER = 1;
+	private static final int REQ_FOLDER = 1;
 
-    private GridView mGridView;
+	private GridView mGridView;
 
-    // Parcelable
-    private ArrayList<Photo> mPhotos = new ArrayList<Photo>();
+	public static PhotosFragment of(NPFolder f) {
+		Bundle bundle = new Bundle();
+		bundle.putParcelable(KEY_FOLDER, f);
 
-    public static PhotosFragment of(NPFolder f) {
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(KEY_FOLDER, f);
+		PhotosFragment fragment = new PhotosFragment();
+		fragment.setArguments(bundle);
+		return fragment;
+	}
 
-        PhotosFragment fragment = new PhotosFragment();
-        fragment.setArguments(bundle);
-        return fragment;
-    }
+	@Override
+	protected void onListLoaded(EntryList list) {
+		Log.i(TAG, "Receiving photo list.");
 
-    @Override
-    protected void onNewEntry(NPEntry entry) {
-        if (entry instanceof Photo) {  // or album, which will be handled at AlbumsFragment
-            final Photo photo = (Photo) entry;
-            mPhotos.add(photo);
-        }
-        super.onNewEntry(entry);
-    }
+		PhotosAdapter a = (PhotosAdapter)mGridView.getAdapter();
+		if (a != null) {
+			a.notifyDataSetChanged();
+			return;
+		}
 
-    @Override
-    protected void onDeleteEntry(NPEntry entry) {
-        if (entry instanceof Photo) {
-            final Photo photo = (Photo) entry;
-            mPhotos.remove(photo);
-        }
-        super.onDeleteEntry(entry);
-    }
+		a = new PhotosAdapter(getActivity(), mEntryList, getFolder(), getEntryListService(), getTemplate());
 
-    @Override
-    protected void onEntryListUpdated() {
-        super.onEntryListUpdated();
-        BaseAdapter adapter = (BaseAdapter) mGridView.getAdapter();
-        stableNotifyAdapter(adapter);
-    }
+		mGridView.setAdapter(a);
+		stableNotifyAdapter(a);
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case REQ_FOLDER:
-                if (resultCode == Activity.RESULT_OK) {
-                    final FragmentActivity activity = getActivity();
-                    final NPFolder folder = data.getParcelableExtra(FoldersActivity.KEY_FOLDER);
-                    PhotosActivity.startWithFolder(folder, activity);
-                    activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                }
-                break;
-            default:
-                throw new AssertionError("unknown requestCode: " + requestCode);
-        }
-    }
+		fadeInListFrame();
+	}
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.photos_frag, container, false);
-    }
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+		PhotosAdapter adapter = (PhotosAdapter) mGridView.getAdapter();
+		NPPhoto photo = adapter.getItem(position);
+		ArrayList<NPPhoto> photos = new ArrayList<NPPhoto>();
+		for (NPEntry e : mEntryList.getEntries()) {
+			photos.add(NPPhoto.fromEntry(e));
+		}
+		PhotoActivity.startWithFolder(getFolder(), photo, photos, getActivity());
+	}
 
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        mGridView = (GridView)view.findViewById(R.id.grid_view);
+	@Override
+	protected void onNewEntry(NPEntry entry) {
+		if (entry instanceof NPPhoto) {  // or album, which will be handled at AlbumsFragment
+			final NPPhoto photo = (NPPhoto) entry;
+//            mPhotos.add(photo);
+		}
+		super.onNewEntry(entry);
+	}
 
-        setQuickReturnListener(mGridView, new OnListEndListener() {
-            @Override
-            protected void onListEnd(int page) {
-                queryEntriesAsync(getCurrentPage() + 1);
-            }
-        });
-        mGridView.setOnItemClickListener(this);
-        mGridView.setAdapter(newPhotosAdapter());
+	@Override
+	protected void onDeleteEntry(NPEntry entry) {
+		if (entry instanceof NPPhoto) {
+			final NPPhoto photo = (NPPhoto) entry;
+			mEntryList.getEntries().remove(photo);
+		}
+		super.onDeleteEntry(entry);
+	}
 
-        super.onViewCreated(view, savedInstanceState);
+	@Override
+	protected void onEntryListUpdated() {
+		super.onEntryListUpdated();
+		BaseAdapter adapter = (BaseAdapter) mGridView.getAdapter();
+		stableNotifyAdapter(adapter);
+	}
 
-        setOnFolderSelectedClickListener(REQ_FOLDER);
-    }
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		switch (requestCode) {
+			case REQ_FOLDER:
+				if (resultCode == Activity.RESULT_OK) {
+					final FragmentActivity activity = getActivity();
+					final NPFolder folder = data.getParcelableExtra(FoldersActivity.KEY_FOLDER);
+					PhotosActivity.startWithFolder(folder, activity);
+					activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+				}
+				break;
+			default:
+				throw new AssertionError("unknown requestCode: " + requestCode);
+		}
+	}
 
-    private PhotosAdapter newPhotosAdapter() {
-        return new PhotosAdapter(getActivity(), mPhotos, getFolder(), getEntryListService(), getTemplate());
-    }
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		return inflater.inflate(R.layout.photos_frag, container, false);
+	}
 
-    private void stableNotifyAdapter(BaseAdapter adapter) {
-        final int prevPos = mGridView.getFirstVisiblePosition();
-        adapter.notifyDataSetChanged();
-        mGridView.setSelection(prevPos);
-    }
+	@Override
+	public void onViewCreated(View view, Bundle savedInstanceState) {
+		mGridView = (GridView)view.findViewById(R.id.grid_view);
 
-    @Override
-    protected void onListLoaded(EntryList list) {
-	    Log.i(TAG, "Receiving entry list.");
+		setQuickReturnListener(mGridView, new OnListEndListener() {
+			@Override
+			protected void onListEnd(int page) {
+				queryEntriesAsync(getCurrentPage() + 1);
+			}
+		});
 
-        super.onListLoaded(list);
+		mGridView.setOnItemClickListener(this);
 
-        mPhotos.clear();
-        mPhotos.addAll(new WrapperList<Photo>(list.getEntries()));
+		super.onViewCreated(view, savedInstanceState);
 
-        final BaseAdapter adapter = (BaseAdapter) mGridView.getAdapter();
-        stableNotifyAdapter(adapter);
-
-        fadeInListFrame();
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        PhotosAdapter adapter = (PhotosAdapter) mGridView.getAdapter();
-        Photo photo = adapter.getItem(position);
-
-        PhotoActivity.startWithFolder(getFolder(), photo, mPhotos, getActivity());
-    }
+		setOnFolderSelectedClickListener(REQ_FOLDER);
+	}
 
 
+	private void stableNotifyAdapter(BaseAdapter adapter) {
+		final int prevPos = mGridView.getFirstVisiblePosition();
+		adapter.notifyDataSetChanged();
+		mGridView.setSelection(prevPos);
+	}
 }

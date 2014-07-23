@@ -21,7 +21,6 @@ import com.nexuspad.common.activity.FoldersActivity;
 import com.nexuspad.common.adapters.ListEntriesAdapter;
 import com.nexuspad.common.annotaion.FragmentName;
 import com.nexuspad.common.fragment.EntriesFragment;
-import com.nexuspad.common.utils.WrapperList;
 import com.nexuspad.datamodel.EntryList;
 import com.nexuspad.datamodel.EntryTemplate;
 import com.nexuspad.datamodel.NPAlbum;
@@ -29,8 +28,6 @@ import com.nexuspad.datamodel.NPFolder;
 import com.nexuspad.dataservice.ServiceConstants;
 import com.nexuspad.photo.activity.PhotosActivity;
 import com.squareup.picasso.Picasso;
-
-import java.util.List;
 
 /**
  * @author Edmond
@@ -51,7 +48,7 @@ public class AlbumsFragment extends EntriesFragment {
 
     private static final int REQ_FOLDER = 1;
 
-    private List<NPAlbum> mAlbums;
+    private EntryList mAlbumList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -61,7 +58,7 @@ public class AlbumsFragment extends EntriesFragment {
     @Override
     protected void onListLoaded(EntryList list) {
         super.onListLoaded(list);
-        mAlbums = new WrapperList<NPAlbum>(list.getEntries());
+        mAlbumList = list;
         updateUI();
     }
 
@@ -76,7 +73,7 @@ public class AlbumsFragment extends EntriesFragment {
     }
 
     private void updateUI() {
-        if (mAlbums != null) {
+        if (mAlbumList != null) {
             final BaseAdapter adapter = getListAdapter();
             if (adapter == null) {
                 setListAdapter(new AlbumsAdapter());
@@ -120,7 +117,7 @@ public class AlbumsFragment extends EntriesFragment {
     private class AlbumsAdapter extends ListEntriesAdapter<NPAlbum> {
 
         public AlbumsAdapter() {
-            super(getActivity(), mAlbums, getFolder(), getEntryListService(), getTemplate());
+            super(getActivity(), mAlbumList, getFolder(), getEntryListService(), getTemplate());
         }
 
         @Override

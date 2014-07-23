@@ -1,4 +1,4 @@
-package com.nexuspad.journal.ui.fragment;
+package com.nexuspad.journal.fragment;
 
 import android.app.Activity;
 import android.os.Bundle;

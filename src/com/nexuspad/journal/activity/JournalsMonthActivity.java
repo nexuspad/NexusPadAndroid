@@ -1,4 +1,4 @@
-package com.nexuspad.journal.ui.activity;
+package com.nexuspad.journal.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,7 +6,7 @@ import android.support.v4.app.Fragment;
 import android.widget.CalendarView;
 import com.nexuspad.common.activity.SinglePaneActivity;
 import com.nexuspad.datamodel.EntryList;
-import com.nexuspad.journal.ui.fragment.JournalMonthFragment;
+import com.nexuspad.journal.fragment.JournalMonthFragment;
 import com.nexuspad.common.fragment.EntriesFragment;
 
 /**

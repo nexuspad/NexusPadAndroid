@@ -131,14 +131,14 @@
             />
         <activity android:name=".doc.activity.NewDocActivity" />
         <activity
-            android:name=".journal.ui.activity.JournalsActivity"
+            android:name=".journal.activity.JournalsActivity"
             android:label="@string/journal"
             android:icon="@drawable/ic_ab"
             android:screenOrientation="portrait"
             android:configChanges="orientation|keyboardHidden"
             />
         <activity
-            android:name=".journal.ui.activity.JournalsMonthActivity"
+            android:name=".journal.activity.JournalsMonthActivity"
             android:label="@string/journal"
             android:icon="@drawable/ic_ab"
             />

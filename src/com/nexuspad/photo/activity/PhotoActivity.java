@@ -8,14 +8,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import com.nexuspad.R;
 import com.nexuspad.common.activity.SinglePaneActivity;
 import com.nexuspad.common.annotaion.ParentActivity;
-import com.nexuspad.R;
+import com.nexuspad.common.fragment.EntriesFragment;
 import com.nexuspad.datamodel.EntryList;
 import com.nexuspad.datamodel.NPFolder;
-import com.nexuspad.datamodel.Photo;
+import com.nexuspad.datamodel.NPPhoto;
 import com.nexuspad.photo.fragment.PhotoFragment;
-import com.nexuspad.common.fragment.EntriesFragment;
 
 import java.util.ArrayList;
 
@@ -29,12 +29,12 @@ public class PhotoActivity extends SinglePaneActivity implements EntriesFragment
     private static final String KEY_PHOTO = "key_photo";
     private static final String KEY_PHOTOS = "key_photos";
 
-    public static void startWithFolder(NPFolder f, Photo photo, ArrayList<? extends Photo> photos, Activity c) {
+    public static void startWithFolder(NPFolder f, NPPhoto photo, ArrayList<NPPhoto> photos, Activity c) {
         c.startActivity(PhotoActivity.of(f, photo, photos, c));
         c.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
 
-    public static Intent of(NPFolder f, Photo photo, ArrayList<? extends Photo> photos, Context c) {
+    public static Intent of(NPFolder f, NPPhoto photo, ArrayList<NPPhoto> photos, Context c) {
         Intent intent = new Intent(c, PhotoActivity.class);
         intent.putExtra(KEY_FOLDER, f);
         intent.putExtra(KEY_PHOTO, photo);
@@ -43,8 +43,8 @@ public class PhotoActivity extends SinglePaneActivity implements EntriesFragment
     }
 
     private NPFolder mFolder;
-    private Photo mPhoto;
-    private ArrayList<? extends Photo> mPhotos;
+    private NPPhoto mPhoto;
+    private ArrayList<? extends NPPhoto> mPhotos;
 
     @Override
     protected int onCreateLayoutId() {

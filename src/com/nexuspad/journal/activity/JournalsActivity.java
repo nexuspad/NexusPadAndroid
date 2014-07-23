@@ -1,7 +1,7 @@
 /*
  * Copyright (C), NexusPad LLC
  */
-package com.nexuspad.journal.ui.activity;
+package com.nexuspad.journal.activity;
 
 import android.app.ActionBar;
 import android.content.Intent;
@@ -17,8 +17,8 @@ import com.nexuspad.datamodel.NPFolder;
 import com.nexuspad.datamodel.NPJournal;
 import com.nexuspad.dataservice.ServiceConstants;
 import com.nexuspad.home.activity.DashboardActivity;
-import com.nexuspad.journal.ui.fragment.JournalsFragment;
-import com.nexuspad.journal.ui.fragment.NewJournalFragment;
+import com.nexuspad.journal.fragment.JournalsFragment;
+import com.nexuspad.journal.fragment.NewJournalFragment;
 import com.nexuspad.common.activity.EntriesActivity;
 import com.nexuspad.common.fragment.EntryFragment;
 

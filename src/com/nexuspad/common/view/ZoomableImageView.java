@@ -6,9 +6,9 @@ import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import com.nexuspad.common.utils.Logs;
 import uk.co.senab.photoview.IPhotoView;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
@@ -163,7 +163,7 @@ public class ZoomableImageView extends ImageView implements IPhotoView {
                 mAttacher.update();
             } catch (IllegalStateException e) {
                 // Picasso's callback fires even when the image view is not referenced
-                Logs.e(TAG, e);
+                Log.e(TAG, e.toString());
             }
         }
     }

@@ -92,7 +92,7 @@
     <string name="no_name">(No Name)</string>
     <string name="usage_unavailable">(usage unavailable)</string>
     <!-- example: 50%  150/300 -->
-    <string name="formatted_progress">%1$d%%  %2$d/%3$d</string>
+    <string name="formatted_progress">%1$s%%  %2$s/%3$s</string>
     <string name="upload_completed">Upload completed</string>
     <string name="upload_failed">Upload failed</string>
     <string name="add_more">Add More…</string>

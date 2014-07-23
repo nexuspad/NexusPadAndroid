@@ -26,7 +26,6 @@ import com.nexuspad.common.activity.NewFolderActivity;
 import com.nexuspad.common.adapters.*;
 import com.nexuspad.common.listeners.DirectionalScrollListener;
 import com.nexuspad.common.utils.Lazy;
-import com.nexuspad.common.utils.Logs;
 import com.nexuspad.datamodel.*;
 import com.nexuspad.dataservice.*;
 import com.nexuspad.dataservice.EntryService.EntryReceiver;
@@ -49,7 +48,7 @@ import static com.nexuspad.dataservice.EntryListService.EntryListReceiver;
  *
  * @author Edmond
  */
-public abstract class EntriesFragment extends FadeListFragment {
+public abstract class EntriesFragment extends UndoBarFragment {
 	public static final String KEY_FOLDER = "key_folder";
 
 	public static final int PAGE_COUNT = 20;
@@ -57,7 +56,7 @@ public abstract class EntriesFragment extends FadeListFragment {
 	private static final String TAG = "EntriesFragment";
 	private static final String KEY_LIST_POS = "key_list_pos";
 
-	private EntryList mEntryList;
+	protected EntryList mEntryList;
 
 	private Callback mCallback;
 	private int mCurrentPage;
@@ -72,7 +71,6 @@ public abstract class EntriesFragment extends FadeListFragment {
 	protected FoldersEntriesListAdapter mListAdapter;
 
 	private String mCurrentSearchKeyword;
-
 
 	public interface Callback {
 		void onListLoaded(EntriesFragment f, EntryList list);
@@ -105,26 +103,44 @@ public abstract class EntriesFragment extends FadeListFragment {
 	 */
 	private final EntryListReceiver mEntryListReceiver = new EntryListReceiver() {
 		@Override
-		protected void onGotAll(Context c, Intent i, EntryTemplate entryTemplate, String key) {
+		protected void onReceiveFolderListing(Context c, Intent i, EntryTemplate entryTemplate, String key) {
 			if (mModuleId.template().equals(entryTemplate)) {
-				onListLoadedInternal(mEntryListService.get().getEntryListFromKey(key));
+				EntryList entryList = mEntryListService.get().getEntryListFromKey(key);
+
+				if (mEntryList == null) {
+					mEntryList = entryList;
+				} else {
+					final List<NPEntry> oldEntries = mEntryList.getEntries();
+					final List<NPEntry> newEntries = entryList.getEntries();
+
+					for (NPEntry newEntry : newEntries) {
+						if (!Iterables.tryFind(oldEntries, newEntry.filterById()).isPresent()) {
+							oldEntries.add(newEntry);
+						} else {
+							Log.i("ENTRIES FRAG: ", "entry is already in the list........");
+						}
+					}
+
+					mEntryList.setPageId(entryList.getPageId());
+				}
+
+				onListLoaded(mEntryList);
 			}
 		}
 
 		@Override
-		protected void onGotSearch(Context c, Intent i, EntryTemplate entryTemplate, String key) {
+		protected void onReceiveSearchResult(Context c, Intent i, EntryTemplate entryTemplate, String key) {
 			if (mModuleId.template().equals(entryTemplate)) {
 				final EntryList entryList = mEntryListService.get().getEntryListFromKey(key);
-				final String searchKeyword = nullToEmpty(entryList.getKeyword());
-				if (searchKeyword.equals(mCurrentSearchKeyword)) {
-					onSearchLoadedInternal(entryList);
-				}
+				mCurrentSearchKeyword = nullToEmpty(entryList.getKeyword());
+				onSearchLoaded(entryList);
+				fadeInListFrame();
 			}
 		}
 
 		@Override
 		protected void onError(Context context, Intent intent, ServiceError error) {
-			Logs.e(TAG, error.toString());
+			Log.e(TAG, error.toString());
 			handleServiceError(error);
 		}
 	};
@@ -142,7 +158,7 @@ public abstract class EntriesFragment extends FadeListFragment {
 					}
 					onEntryListUpdated();
 				} else {
-					Logs.w(TAG, "folder created on the server, but ID already exists in the list, updating instead: " + f);
+					Log.w(TAG, "folder created on the server, but ID already exists in the list, updating instead: " + f);
 					onUpdate(c, i, f);
 				}
 			}
@@ -162,7 +178,7 @@ public abstract class EntriesFragment extends FadeListFragment {
 					subFolders.add(index, folder);
 					onEntryListUpdated();
 				} else {
-					Logs.w(TAG, "cannot find the updated entry in the list; folder: " + folder);
+					Log.w(TAG, "cannot find the updated entry in the list; folder: " + folder);
 				}
 			}
 		}
@@ -170,7 +186,7 @@ public abstract class EntriesFragment extends FadeListFragment {
 		@Override
 		protected void onError(Context context, Intent intent, ServiceError error) {
 			super.onError(context, intent, error);
-			Logs.e(TAG, error.toString());
+			Log.e(TAG, error.toString());
 			handleServiceError(error);
 		}
 	};
@@ -194,7 +210,7 @@ public abstract class EntriesFragment extends FadeListFragment {
 		@Override
 		protected void onError(Context context, Intent intent, ServiceError error) {
 			super.onError(context, intent, error);
-			Logs.e(TAG, error.toString());
+			Log.e(TAG, error.toString());
 			handleServiceError(error);
 		}
 	};
@@ -255,6 +271,7 @@ public abstract class EntriesFragment extends FadeListFragment {
 			searchView.setOnCloseListener(new SearchView.OnCloseListener() {
 				@Override
 				public boolean onClose() {
+					mCurrentSearchKeyword = null;
 					reDisplayListEntries();
 					return true;
 				}
@@ -272,6 +289,7 @@ public abstract class EntriesFragment extends FadeListFragment {
 
 				@Override
 				public boolean onMenuItemActionCollapse(MenuItem item) {
+					mCurrentSearchKeyword = null;
 					reDisplayListEntries();
 					return true;
 				}
@@ -279,24 +297,20 @@ public abstract class EntriesFragment extends FadeListFragment {
 		}
 	}
 
-	private void doSearch(String keyword) {
+	protected void doSearch(String keyword) {
 		fadeInProgressFrame();
 		mCurrentSearchKeyword = keyword;
-
 		mListAdapter.getEntriesAdapter().doSearch(keyword);
 	}
 
-	private void reDisplayListEntries() {
+	protected void reDisplayListEntries() {
 		fadeInListFrame();
-		mCurrentSearchKeyword = null;
-		mListAdapter.getEntriesAdapter().showRawEntries();
 
-		/*
-		 * notifyDataSetChanged has to be called here and the views are refreshed.
-		 */
-		if (mListAdapter != null) {
-			mListAdapter.notifyDataSetChanged();
-		}
+		// Need to reset the scroll listener.
+		mLoadMoreScrollListener.reset();
+
+		mListAdapter.getEntriesAdapter().setDisplayEntries(mEntryList);
+		mListAdapter.notifyDataSetChanged();
 	}
 
 	/**
@@ -337,7 +351,7 @@ public abstract class EntriesFragment extends FadeListFragment {
 			if (Iterables.removeIf(entries, entry.filterById())) {
 				onEntryListUpdated();
 			} else {
-				Logs.w(TAG, "entry deleted on the server, but ID does not exists in the list");
+				Log.w(TAG, "entry deleted on the server, but ID does not exists in the list");
 			}
 		}
 	}
@@ -354,7 +368,7 @@ public abstract class EntriesFragment extends FadeListFragment {
 				}
 				onEntryListUpdated();
 			} else {
-				Logs.w(TAG, "entry created on the server, but ID already exists in the list, updating instead: " + entry);
+				Log.w(TAG, "entry created on the server, but ID already exists in the list, updating instead: " + entry);
 				onUpdateEntry(entry);
 			}
 		}
@@ -383,7 +397,7 @@ public abstract class EntriesFragment extends FadeListFragment {
 					return;
 				}
 			}
-			Logs.w(TAG, "cannot find the updated entry in the list; entry: " + updatedEntry);
+			Log.w(TAG, "cannot find the updated entry in the list; entry: " + updatedEntry);
 		}
 	}
 
@@ -519,7 +533,7 @@ public abstract class EntriesFragment extends FadeListFragment {
 						token.putExtra(KEY_LIST_POS, i);
 						onEntryListUpdated();
 					} else {
-						Logs.w(TAG, "deleting entry, but no matching ID exists in the list. " + entry.getEntryId());
+						Log.w(TAG, "deleting entry, but no matching ID exists in the list. " + entry.getEntryId());
 					}
 				}
 			} else if (FolderService.ACTION_DELETE.equals(action)) {
@@ -531,7 +545,7 @@ public abstract class EntriesFragment extends FadeListFragment {
 						token.putExtra(KEY_LIST_POS, i);
 						onEntryListUpdated();
 					} else {
-						Logs.w(TAG, "deleting folder, but no matching ID found in the list. " + folder);
+						Log.w(TAG, "deleting folder, but no matching ID found in the list. " + folder);
 					}
 				}
 			}
@@ -553,7 +567,7 @@ public abstract class EntriesFragment extends FadeListFragment {
 					folder.setOwner(AccountManager.currentAccount());
 					service.deleteFolder(folder);
 				} catch (NPException e) {
-					Logs.e(TAG, e);
+					Log.e(TAG, e.toString());
 				}
 			}
 		}
@@ -589,7 +603,7 @@ public abstract class EntriesFragment extends FadeListFragment {
 			getEntriesInFolder(mEntryListService.get(), mFolder, page);
 
 		} catch (NPException e) {
-			Logs.e(TAG, e);
+			Log.e(TAG, e.toString());
 			handleServiceError(e.getServiceError());
 		}
 	}
@@ -643,26 +657,6 @@ public abstract class EntriesFragment extends FadeListFragment {
 	protected void onListLoaded(EntryList list) {
 	}
 
-	private void onListLoadedInternal(EntryList list) {
-		if (mEntryList == null) {
-			mEntryList = list;
-		} else {
-			final List<NPEntry> oldEntries = mEntryList.getEntries();
-			final List<NPEntry> newEntries = list.getEntries();
-
-			for (NPEntry newEntry : newEntries) {
-				if (!Iterables.tryFind(oldEntries, newEntry.filterById()).isPresent()) {
-					oldEntries.add(newEntry);
-				} else {
-					Log.i("ENTRIES FRAG: ", "entry is already in the list........");
-				}
-			}
-
-			mEntryList.setPageId(list.getPageId());
-		}
-
-		onListLoaded(mEntryList);
-	}
 
 	/**
 	 * The search result is here. Use {@link EntryList#getKeyword()} to see the original search string.
@@ -671,21 +665,6 @@ public abstract class EntriesFragment extends FadeListFragment {
 	 */
 	protected void onSearchLoaded(EntryList list) {
 		mListAdapter.getEntriesAdapter().setDisplayEntries(list);
-	}
-
-	private void onSearchLoadedInternal(EntryList list) {
-		onSearchLoaded(list);
-		fadeInListFrame();
-	}
-
-
-	/**
-	 * Decide whether there is more to be displayed on the page.
-	 *
-	 * @return
-	 */
-	protected boolean hasNextPage() {
-		return mEntryList != null && mEntryList.getTotalCount() > (mEntryList.getCountPerPage() * mEntryList.getPageId());
 	}
 
 	public void deleteEntry(NPEntry entry) {

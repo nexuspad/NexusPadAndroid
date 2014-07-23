@@ -1,4 +1,4 @@
-package com.nexuspad.journal.ui.view;
+package com.nexuspad.journal.view;
 
 import android.content.Context;
 import android.graphics.Canvas;

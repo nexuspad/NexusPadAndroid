@@ -6,10 +6,10 @@ package com.nexuspad.home.activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import com.nexuspad.R;
 import com.nexuspad.bookmark.activity.BookmarksActivity;
 import com.nexuspad.calendar.ui.activity.EventsActivity;
-import com.nexuspad.common.utils.Logs;
 import com.nexuspad.common.activity.SinglePaneActivity;
 import com.nexuspad.common.activity.UploadCenterActivity;
 import com.nexuspad.contacts.activity.ContactsActivity;
@@ -17,7 +17,7 @@ import com.nexuspad.datamodel.NPFolder;
 import com.nexuspad.datamodel.NPModule;
 import com.nexuspad.doc.activity.DocsActivity;
 import com.nexuspad.home.fragment.DashboardFragment;
-import com.nexuspad.journal.ui.activity.JournalsActivity;
+import com.nexuspad.journal.activity.JournalsActivity;
 import com.nexuspad.photo.activity.PhotosActivity;
 
 import java.io.File;
@@ -77,7 +77,7 @@ public class DashboardActivity extends SinglePaneActivity implements DashboardFr
 				break;
 
 			default:
-				Logs.v(TAG, "moduleType: " + moduleType);
+				Log.v(TAG, "moduleType: " + moduleType);
 		}
 
 	}

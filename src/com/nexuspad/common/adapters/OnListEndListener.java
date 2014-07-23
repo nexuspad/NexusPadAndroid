@@ -40,7 +40,7 @@ public abstract class OnListEndListener implements OnScrollListener {
     public void onScroll(AbsListView v, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
 //	    Log.i("SCROLL LISTENER: ", String.valueOf(mLoading) + " total:" + String.valueOf(totalItemCount)
 //			    + " previous total:" + String.valueOf(mPreviousTotal) + " visible:" + visibleItemCount + " first visible:" + firstVisibleItem
-//	            + " current page:" + mCurrentPage);
+//			    + " current page:" + mCurrentPage);
 
         if (mLoading) {
             if (totalItemCount > mPreviousTotal) {
@@ -55,6 +55,10 @@ public abstract class OnListEndListener implements OnScrollListener {
             mLoading = true;
         }
     }
+
+	public void reset() {
+		mLoading = false;
+	}
 
     /**
      * Called when the list has reached the end (or the threshold).

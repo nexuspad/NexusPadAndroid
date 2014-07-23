@@ -8,25 +8,22 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.*;
 import android.widget.ListView;
-import com.nexuspad.common.annotaion.FragmentName;
-import com.nexuspad.common.utils.WrapperList;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
 import com.nexuspad.app.App;
 import com.nexuspad.bookmark.activity.NewBookmarkActivity;
-import com.nexuspad.datamodel.NPBookmark;
-import com.nexuspad.datamodel.EntryList;
-import com.nexuspad.datamodel.EntryTemplate;
-import com.nexuspad.datamodel.NPFolder;
-import com.nexuspad.dataservice.ServiceConstants;
 import com.nexuspad.common.adapters.FoldersEntriesListAdapter;
 import com.nexuspad.common.adapters.ListEntriesAdapter;
 import com.nexuspad.common.adapters.ListFoldersAdapter;
 import com.nexuspad.common.adapters.ListViewHolder;
+import com.nexuspad.common.annotaion.FragmentName;
 import com.nexuspad.common.fragment.EntriesFragment;
 import com.nexuspad.common.listeners.OnEntryMenuClickListener;
-
-import java.util.List;
+import com.nexuspad.datamodel.EntryList;
+import com.nexuspad.datamodel.EntryTemplate;
+import com.nexuspad.datamodel.NPBookmark;
+import com.nexuspad.datamodel.NPFolder;
+import com.nexuspad.dataservice.ServiceConstants;
 
 /**
  * @author Edmond
@@ -69,7 +66,6 @@ public class BookmarksFragment extends EntriesFragment {
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
 		inflater.inflate(R.menu.bookmarks_frag, menu);
-
 		setUpSearchView(menu.findItem(R.id.search));
 	}
 
@@ -88,19 +84,14 @@ public class BookmarksFragment extends EntriesFragment {
 	protected void onListLoaded(EntryList list) {
 		Log.i(TAG, "Receiving entry list.");
 
-		super.onListLoaded(list);
-
 		FoldersEntriesListAdapter a = getListAdapter();
 
 		if (a != null) {
-			if (!hasNextPage()) {
-				a.removeLoadMoreAdapter();
-			}
 			a.notifyDataSetChanged();
 			return;
 		}
 
-		final BookmarksAdapter bookmarksAdapter = new BookmarksAdapter(getActivity(), new WrapperList<NPBookmark>(list.getEntries()));
+		final BookmarksAdapter bookmarksAdapter = new BookmarksAdapter(getActivity(), list);
 
 		bookmarksAdapter.setOnMenuClickListener(new OnEntryMenuClickListener<NPBookmark>(mListView, getEntryService(), getUndoBarController()) {
 			@Override
@@ -130,11 +121,7 @@ public class BookmarksFragment extends EntriesFragment {
 
 		ListFoldersAdapter foldersAdapter = newFoldersAdapter();
 
-		if (hasNextPage()) {
-			mListAdapter = new FoldersEntriesListAdapter(foldersAdapter, bookmarksAdapter, getLoadMoreAdapter());
-		} else {
-			mListAdapter = new FoldersEntriesListAdapter(foldersAdapter, bookmarksAdapter);
-		}
+		mListAdapter = new FoldersEntriesListAdapter(foldersAdapter, bookmarksAdapter, getLoadMoreAdapter());
 
 		mListView.setAdapter(mListAdapter);
 		mListView.setOnItemLongClickListener(mListAdapter);
@@ -163,8 +150,8 @@ public class BookmarksFragment extends EntriesFragment {
 	}
 
 	public class BookmarksAdapter extends ListEntriesAdapter<NPBookmark> {
-		public BookmarksAdapter(Activity a, List<NPBookmark> entries) {
-			super(a, entries, getFolder(), getEntryListService(), EntryTemplate.BOOKMARK);
+		public BookmarksAdapter(Activity a, EntryList entryList) {
+			super(a, entryList, getFolder(), getEntryListService(), EntryTemplate.BOOKMARK);
 		}
 
 		@Override

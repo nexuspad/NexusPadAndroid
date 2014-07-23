@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -15,21 +16,20 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
-import com.nexuspad.common.utils.Logs;
-import com.nexuspad.common.annotaion.FragmentName;
 import com.google.common.collect.Iterables;
 import com.nexuspad.Manifest;
 import com.nexuspad.R;
 import com.nexuspad.account.AccountManager;
 import com.nexuspad.app.App;
+import com.nexuspad.common.activity.NewFolderActivity;
+import com.nexuspad.common.adapters.FolderNavigatorAdapter;
+import com.nexuspad.common.adapters.OnFolderMenuClickListener;
+import com.nexuspad.common.annotaion.FragmentName;
 import com.nexuspad.datamodel.NPFolder;
 import com.nexuspad.dataservice.FolderService;
 import com.nexuspad.dataservice.FolderService.FolderReceiver;
 import com.nexuspad.dataservice.NPException;
 import com.nexuspad.dataservice.ServiceError;
-import com.nexuspad.common.adapters.OnFolderMenuClickListener;
-import com.nexuspad.common.activity.NewFolderActivity;
-import com.nexuspad.common.adapters.FolderNavigatorAdapter;
 
 import java.util.List;
 
@@ -41,7 +41,7 @@ import java.util.List;
  * @author Edmond
  */
 @FragmentName(FoldersFragment.TAG)
-public class FoldersFragment extends FadeListFragment {
+public class FoldersFragment extends UndoBarFragment {
 	public static final String TAG = "FoldersFragment";
 	public static final String KEY_PARENT_FOLDER = "com.nexuspad.ui.fragment.FoldersFragment.parent_folder";
 	private static final String KEY_LIST_POS = "key_list_pos";
@@ -98,7 +98,7 @@ public class FoldersFragment extends FadeListFragment {
 				mSubFolders.add(f);
 				mFoldersAdapter.notifyDataSetChanged();
 			} else {
-				Logs.w(TAG, "folder created on the server, but ID already exists in the list, updating instead: " + f);
+				Log.w(TAG, "folder created on the server, but ID already exists in the list, updating instead: " + f);
 				onUpdate(c, i, f);
 			}
 		}
@@ -111,14 +111,14 @@ public class FoldersFragment extends FadeListFragment {
 				mSubFolders.add(index, folder);
 				mFoldersAdapter.notifyDataSetChanged();
 			} else {
-				Logs.w(TAG, "cannot find the updated entry in the list; folder: " + folder);
+				Log.w(TAG, "cannot find the updated entry in the list; folder: " + folder);
 			}
 		}
 
 		@Override
 		protected void onError(Context context, Intent intent, ServiceError error) {
 			super.onError(context, intent, error);
-			Logs.e(TAG, error.toString());
+			Log.e(TAG, error.toString());
 		}
 	};
 
@@ -174,7 +174,7 @@ public class FoldersFragment extends FadeListFragment {
 			mFolderService.getSubFolders(mParentFolder);
 
 		} catch (NPException e) {
-			Logs.e(TAG, e);
+			Log.e(TAG, e.toString());
 			Toast.makeText(getActivity(), R.string.err_network, Toast.LENGTH_LONG).show();
 		}
 	}
@@ -281,7 +281,7 @@ public class FoldersFragment extends FadeListFragment {
 					token.putExtra(KEY_LIST_POS, i);
 					mFoldersAdapter.notifyDataSetChanged();
 				} else {
-					Logs.w(TAG, "deleting folder, but no matching ID found in the list. " + folder);
+					Log.w(TAG, "deleting folder, but no matching ID found in the list. " + folder);
 				}
 			}
 		}
@@ -297,7 +297,7 @@ public class FoldersFragment extends FadeListFragment {
 			try {
 				folder.setOwner(AccountManager.currentAccount());
 			} catch (NPException e) {
-				Logs.e(TAG, e);
+				Log.e(TAG, e.toString());
 				Context context = mListView.getContext();
 				String msg = context.getString(R.string.formatted_err_delete_failed, folder.getDisplayName());
 				Toast.makeText(context, msg, Toast.LENGTH_LONG).show();

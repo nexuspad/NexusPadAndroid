@@ -8,25 +8,22 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.*;
 import android.widget.ListView;
-import com.nexuspad.common.annotaion.FragmentName;
-import com.nexuspad.common.utils.WrapperList;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
 import com.nexuspad.app.App;
-import com.nexuspad.datamodel.NPDoc;
-import com.nexuspad.datamodel.EntryList;
-import com.nexuspad.datamodel.EntryTemplate;
-import com.nexuspad.datamodel.NPFolder;
-import com.nexuspad.dataservice.ServiceConstants;
-import com.nexuspad.doc.activity.NewDocActivity;
 import com.nexuspad.common.adapters.FoldersEntriesListAdapter;
 import com.nexuspad.common.adapters.ListEntriesAdapter;
 import com.nexuspad.common.adapters.ListFoldersAdapter;
 import com.nexuspad.common.adapters.ListViewHolder;
+import com.nexuspad.common.annotaion.FragmentName;
 import com.nexuspad.common.fragment.EntriesFragment;
 import com.nexuspad.common.listeners.OnEntryMenuClickListener;
-
-import java.util.List;
+import com.nexuspad.datamodel.EntryList;
+import com.nexuspad.datamodel.EntryTemplate;
+import com.nexuspad.datamodel.NPDoc;
+import com.nexuspad.datamodel.NPFolder;
+import com.nexuspad.dataservice.ServiceConstants;
+import com.nexuspad.doc.activity.NewDocActivity;
 
 /**
  * @author Edmond
@@ -83,19 +80,14 @@ public class DocsFragment extends EntriesFragment {
 	protected void onListLoaded(EntryList list) {
 		Log.i(TAG, "Receiving entry list.");
 
-		super.onListLoaded(list);
-
 		FoldersEntriesListAdapter a = getListAdapter();
 
 		if (a != null) {
-			if (!hasNextPage()) {
-				a.removeLoadMoreAdapter();
-			}
 			a.notifyDataSetChanged();
 			return;
 		}
 
-		final DocsAdapter docsAdapter = new DocsAdapter(getActivity(), new WrapperList<NPDoc>(list.getEntries()));
+		final DocsAdapter docsAdapter = new DocsAdapter(getActivity(), list);
 
 		docsAdapter.setOnMenuClickListener(new OnEntryMenuClickListener<NPDoc>(mListView, getEntryService(), getUndoBarController()) {
 			@Override
@@ -124,11 +116,7 @@ public class DocsFragment extends EntriesFragment {
 
 		ListFoldersAdapter foldersAdapter = newFoldersAdapter();
 
-		if (hasNextPage()) {
-			mListAdapter = new FoldersEntriesListAdapter(foldersAdapter, docsAdapter, getLoadMoreAdapter());
-		} else {
-			mListAdapter = new FoldersEntriesListAdapter(foldersAdapter, docsAdapter);
-		}
+		mListAdapter = new FoldersEntriesListAdapter(foldersAdapter, docsAdapter, getLoadMoreAdapter());
 
 		mListView.setAdapter(mListAdapter);
 		mListView.setOnItemLongClickListener(mListAdapter);
@@ -159,8 +147,8 @@ public class DocsFragment extends EntriesFragment {
 
 
 	public class DocsAdapter extends ListEntriesAdapter<NPDoc> {
-		public DocsAdapter(Activity a, List<NPDoc> entries) {
-			super(a, entries, getFolder(), getEntryListService(), EntryTemplate.DOC);
+		public DocsAdapter(Activity a, EntryList entryList) {
+			super(a, entryList, getFolder(), getEntryListService(), EntryTemplate.DOC);
 		}
 
 		@Override

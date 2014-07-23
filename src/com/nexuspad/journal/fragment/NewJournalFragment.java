@@ -1,4 +1,4 @@
-package com.nexuspad.journal.ui.fragment;
+package com.nexuspad.journal.fragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

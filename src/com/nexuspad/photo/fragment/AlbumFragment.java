@@ -3,18 +3,17 @@ package com.nexuspad.photo.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.*;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import com.nexuspad.common.annotaion.FragmentName;
 import com.nexuspad.R;
+import com.nexuspad.common.annotaion.FragmentName;
+import com.nexuspad.common.fragment.EntryFragment;
 import com.nexuspad.datamodel.*;
 import com.nexuspad.dataservice.EntryListService;
-import com.nexuspad.photo.adapter.PhotosAdapter;
 import com.nexuspad.photo.activity.NewAlbumActivity;
 import com.nexuspad.photo.activity.PhotoActivity;
-import com.nexuspad.common.fragment.EntryFragment;
+import com.nexuspad.photo.adapter.PhotosAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,8 +37,8 @@ public class AlbumFragment extends EntryFragment<NPAlbum> implements AdapterView
         return fragment;
     }
 
+	private EntryList mPhotosList;
     private PhotosAdapter mPhotosAdapter;
-    private ArrayList<Photo> mPhotos = new ArrayList<Photo>();  // ArrayList for Parcelling
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -94,7 +93,7 @@ public class AlbumFragment extends EntryFragment<NPAlbum> implements AdapterView
             final List<NPUpload> attachments = album.getAttachments();
             if (attachments != null) {
                 for (NPUpload npUpload : attachments) {
-                    mPhotos.add(new Photo(npUpload));
+                    mPhotosList.getEntries().add(new NPPhoto(npUpload));
                 }
 
                 if (mPhotosAdapter == null) {
@@ -109,13 +108,16 @@ public class AlbumFragment extends EntryFragment<NPAlbum> implements AdapterView
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-	    final Photo photo = mPhotosAdapter.getItem(position);
-	    Log.i("ALBUM FRAG", mPhotos.toString());
-        PhotoActivity.startWithFolder(getFolder(), photo, mPhotos, getActivity());
+	    final NPPhoto photo = mPhotosAdapter.getItem(position);
+	    ArrayList<NPPhoto> photos = new ArrayList<NPPhoto>();
+	    for (NPEntry e : mPhotosList.getEntries()) {
+		    photos.add(NPPhoto.fromEntry(e));
+	    }
+        PhotoActivity.startWithFolder(getFolder(), photo, photos, getActivity());
     }
 
     private PhotosAdapter newPhotosAdapter() {
         final FragmentActivity a = getActivity();
-        return new PhotosAdapter(a, mPhotos, getFolder(), EntryListService.getInstance(a), EntryTemplate.PHOTO);
+        return new PhotosAdapter(a, mPhotosList, getFolder(), EntryListService.getInstance(a), EntryTemplate.PHOTO);
     }
 }

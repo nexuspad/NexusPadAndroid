@@ -7,15 +7,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import com.nexuspad.R;
 import com.nexuspad.common.adapters.ListEntriesAdapter;
+import com.nexuspad.datamodel.EntryList;
 import com.nexuspad.datamodel.EntryTemplate;
 import com.nexuspad.datamodel.NPFolder;
-import com.nexuspad.datamodel.Photo;
+import com.nexuspad.datamodel.NPPhoto;
 import com.nexuspad.dataservice.EntryListService;
 import com.squareup.picasso.Picasso;
 
-import java.util.List;
-
-public class PhotosAdapter extends ListEntriesAdapter<Photo> {
+public class PhotosAdapter extends ListEntriesAdapter<NPPhoto> {
 
     private final Activity mActivity;
     private final Picasso mPicasso;
@@ -24,19 +23,19 @@ public class PhotosAdapter extends ListEntriesAdapter<Photo> {
      * use this constructor if you want filtering abilities
      *
      * @param a
-     * @param entries
+     * @param entryList
      * @param folder
      * @param service
      * @param template
      */
-    public PhotosAdapter(Activity a, List<Photo> entries, NPFolder folder, EntryListService service, EntryTemplate template) {
-        super(a, entries, folder, service, template);
+    public PhotosAdapter(Activity a, EntryList entryList, NPFolder folder, EntryListService service, EntryTemplate template) {
+        super(a, entryList, folder, service, template);
         mActivity = a;
         mPicasso = Picasso.with(a);
     }
 
     @Override
-    protected View getEntryView(Photo entry, int position, View convertView, ViewGroup parent) {
+    protected View getEntryView(NPPhoto entry, int position, View convertView, ViewGroup parent) {
         final ImageView view;
 
         if (convertView == null) {

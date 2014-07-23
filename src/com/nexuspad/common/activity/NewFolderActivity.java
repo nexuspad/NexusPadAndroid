@@ -7,9 +7,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import com.nexuspad.R;
 import com.nexuspad.account.AccountManager;
-import com.nexuspad.common.utils.Logs;
 import com.nexuspad.common.fragment.NewFolderFragment;
 import com.nexuspad.datamodel.NPFolder;
 import com.nexuspad.dataservice.FolderService;
@@ -86,7 +86,7 @@ public class NewFolderActivity extends DoneDiscardActivity {
                 }
                 mFolderService.updateFolder(editedFolder);
             } else {
-                Logs.w(TAG, "folder not updated because no changes when made: " + editedFolder);
+                Log.w(TAG, "folder not updated because no changes when made: " + editedFolder);
             }
             finish();
         }

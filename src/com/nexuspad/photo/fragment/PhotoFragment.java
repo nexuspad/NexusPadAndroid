@@ -18,7 +18,7 @@ import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
 import com.nexuspad.datamodel.EntryTemplate;
 import com.nexuspad.datamodel.NPFolder;
-import com.nexuspad.datamodel.Photo;
+import com.nexuspad.datamodel.NPPhoto;
 import com.nexuspad.dataservice.NPException;
 import com.nexuspad.dataservice.NPWebServiceUtil;
 import com.nexuspad.dataservice.ServiceConstants;
@@ -43,18 +43,18 @@ public class PhotoFragment extends EntriesFragment {
 
     public static final String KEY_PHOTO = "key_photo";
 
-    private static List<? extends Photo> sPhotos;
+    private static List<? extends NPPhoto> sPhotos;
 
     private ViewPager mViewPager;
     private Picasso mPicasso;
     private int mInitialPhotoIndex = -1;
 
-    public static PhotoFragment of(NPFolder f, Photo photo, List<? extends Photo> photos) {
+    public static PhotoFragment of(NPFolder f, NPPhoto photo, List<? extends NPPhoto> photos) {
         final Bundle bundle = new Bundle();
         bundle.putParcelable(KEY_FOLDER, f);
         bundle.putParcelable(KEY_PHOTO, photo);
 
-        sPhotos = new ArrayList<Photo>(photos); // parceling is too slow
+        sPhotos = new ArrayList<NPPhoto>(photos); // parceling is too slow
 
         final PhotoFragment fragment = new PhotoFragment();
         fragment.setArguments(bundle);
@@ -70,7 +70,7 @@ public class PhotoFragment extends EntriesFragment {
         final Bundle arguments = getArguments();
 
         mPicasso = Picasso.with(getActivity());
-        final Photo photo = arguments.getParcelable(KEY_PHOTO);
+        final NPPhoto photo = arguments.getParcelable(KEY_PHOTO);
         mInitialPhotoIndex = Iterables.indexOf(sPhotos, photo.filterById());
     }
 
@@ -90,7 +90,7 @@ public class PhotoFragment extends EntriesFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.delete:
-                final Photo photo = sPhotos.get(mViewPager.getCurrentItem());
+                final NPPhoto photo = sPhotos.get(mViewPager.getCurrentItem());
                 deleteEntry(photo);
                 sPhotos.remove(photo);
                 stableNotifyAdapter();
@@ -129,7 +129,7 @@ public class PhotoFragment extends EntriesFragment {
         return new PagerAdapter() {
             @Override
             public Object instantiateItem(ViewGroup container, int position) {
-                final Photo photo = sPhotos.get(position);
+                final NPPhoto photo = sPhotos.get(position);
 
                 final FragmentActivity activity = getActivity();
                 final ActionBar actionBar = activity.getActionBar();
@@ -177,7 +177,7 @@ public class PhotoFragment extends EntriesFragment {
             @Override
             public void setPrimaryItem(ViewGroup container, int position, Object object) {
                 super.setPrimaryItem(container, position, object);
-                final Photo photo = sPhotos.get(position);
+                final NPPhoto photo = sPhotos.get(position);
                 final ActionBar actionBar = getActivity().getActionBar();
                 if (actionBar != null) {
                     actionBar.setTitle(photo.getTitle());

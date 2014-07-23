@@ -8,7 +8,7 @@
     tools:context=".journal.ui.activity.NewJournalActivity"
     >
 
-    <com.nexuspad.journal.ui.view.LinedEditText
+    <com.nexuspad.journal.view.LinedEditText
         android:id="@+id/txt_note"
         style="@style/listItemTextView"
         android:layout_width="match_parent"

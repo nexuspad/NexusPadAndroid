@@ -17,7 +17,6 @@ import com.nexuspad.common.adapters.ListEntriesAdapter;
 import com.nexuspad.common.adapters.ListViewHolder;
 import com.nexuspad.common.annotaion.FragmentName;
 import com.nexuspad.common.fragment.EntriesFragment;
-import com.nexuspad.common.utils.WrapperList;
 import com.nexuspad.datamodel.EntryList;
 import com.nexuspad.datamodel.EntryTemplate;
 import com.nexuspad.datamodel.NPEvent;
@@ -30,10 +29,8 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 /**
  * User: edmond
@@ -63,7 +60,7 @@ public class EventsAgendaFragment extends EntriesFragment {
         return fragment;
     }
 
-    private List<NPEvent> mEvents = new ArrayList<NPEvent>();
+    private EntryList mEventList;
     private long mStartTime = -1;
 
     @Override
@@ -106,26 +103,24 @@ public class EventsAgendaFragment extends EntriesFragment {
 
     @Override
     protected void onListLoaded(EntryList list) {
-        final List<NPEvent> events = new WrapperList<NPEvent>(list.getEntries());
-        mEvents.clear();
-        mEvents.addAll(events);
+		mEventList = list;
 
         final BaseAdapter adapter = getListAdapter();
         if (adapter == null) {
-            setListAdapter(new EventsAgendaAdapter(mEvents));
+            setListAdapter(new EventsAgendaAdapter(mEventList));
         } else {
             adapter.notifyDataSetChanged();
         }
 
-        scrollToStartTime(events);
+        scrollToStartTime(mEventList);
 
         super.onListLoaded(list);
     }
 
-    private void scrollToStartTime(List<NPEvent> events) {
+    private void scrollToStartTime(EntryList eventList) {
         if (mStartTime >= 0) {
-            for (int i = 0, eventsSize = events.size(); i < eventsSize; i++) {
-                final NPEvent event = events.get(i);
+            for (int i = 0, eventsSize = eventList.getEntries().size(); i < eventsSize; i++) {
+                final NPEvent event = NPEvent.fromEntry(eventList.getEntries().get(i));
                 if (event.getStartTime().getTime() >= mStartTime) {
 //                    getListViewManager().smoothScrollToPosition(i);
                     break;
@@ -152,7 +147,7 @@ public class EventsAgendaFragment extends EntriesFragment {
         mStartTime = startTime;
 
         if (newStartTime.after(startDate) && newStartTime.before(endDate)) {
-            scrollToStartTime(mEvents);
+	        scrollToStartTime(mEventList);
         } else {
             queryEntriesAsync();
         }
@@ -172,12 +167,12 @@ public class EventsAgendaFragment extends EntriesFragment {
         private final DateFormat mDateFormat;
         private final DateFormat mTimeFormat;
 
-        private EventsAgendaAdapter(List<NPEvent> list) {
-            this(getActivity(), list);
+        private EventsAgendaAdapter(EntryList eventList) {
+            this(getActivity(), eventList);
         }
 
-        private EventsAgendaAdapter(Activity activity, List<NPEvent> list) {
-            super(activity, list, getFolder(), getEntryListService(), getTemplate());
+        private EventsAgendaAdapter(Activity activity, EntryList eventList) {
+            super(activity, eventList, getFolder(), getEntryListService(), getTemplate());
             mDateFormat = android.text.format.DateFormat.getMediumDateFormat(activity);
             mTimeFormat = android.text.format.DateFormat.getTimeFormat(activity);
         }

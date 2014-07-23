@@ -7,16 +7,16 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import com.nexuspad.common.utils.Logs;
 import com.nexuspad.account.AccountManager;
 import com.nexuspad.annotation.ModuleId;
-import com.nexuspad.datamodel.NPFolder;
-import com.nexuspad.datamodel.NPEntry;
-import com.nexuspad.dataservice.*;
 import com.nexuspad.common.activity.FoldersActivity;
 import com.nexuspad.common.activity.NewEntryActivity;
+import com.nexuspad.datamodel.NPEntry;
+import com.nexuspad.datamodel.NPFolder;
+import com.nexuspad.dataservice.*;
 
 /**
  * Annotate it with {@link ModuleId}.
@@ -122,7 +122,7 @@ public abstract class NewEntryFragment<T extends NPEntry> extends EntryFragment<
                 }
                 onUpdateEntry(entry);
             } else {
-                Logs.w(TAG, "entry not updated because no changes when made: " + entry);
+                Log.w(TAG, "entry not updated because no changes when made: " + entry);
             }
         }
     }

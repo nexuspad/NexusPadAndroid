@@ -11,9 +11,7 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.widget.Toast;
-import com.nexuspad.BuildConfig;
 import com.nexuspad.R;
-import com.nexuspad.common.utils.Logs;
 import com.nexuspad.db.DatabaseManager;
 
 import java.util.regex.Pattern;
@@ -27,7 +25,6 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Logs.setShouldLog(BuildConfig.DEBUG);
 
         // initialize the database
         DatabaseManager.getDb(this);
