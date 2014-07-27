@@ -25,8 +25,6 @@ import java.lang.annotation.Target;
 /**
  * Specifies a parent {@code Activity} for the "up" button affordance.
  *
- * @see com.edmondapps.utils.android.activity.UpableActivity
- *
  * @author Edmond
  *
  */

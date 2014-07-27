@@ -9,7 +9,7 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 import com.nexuspad.R;
 import com.nexuspad.bookmark.activity.BookmarksActivity;
-import com.nexuspad.calendar.ui.activity.EventsActivity;
+import com.nexuspad.calendar.activity.EventsActivity;
 import com.nexuspad.common.activity.SinglePaneActivity;
 import com.nexuspad.common.activity.UploadCenterActivity;
 import com.nexuspad.contacts.activity.ContactsActivity;
@@ -33,7 +33,7 @@ public class DashboardActivity extends SinglePaneActivity implements DashboardFr
 
 	@Override
 	protected int onCreateLayoutId() {
-		return R.layout.no_padding_activity;
+		return R.layout.np_padding_activity;
 	}
 
 	@Override

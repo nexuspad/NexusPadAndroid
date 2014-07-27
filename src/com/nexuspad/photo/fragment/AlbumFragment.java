@@ -37,7 +37,7 @@ public class AlbumFragment extends EntryFragment<NPAlbum> implements AdapterView
         return fragment;
     }
 
-	private EntryList mPhotosList;
+	private EntryList mPhotosList = new EntryList();
     private PhotosAdapter mPhotosAdapter;
 
     @Override
@@ -82,7 +82,6 @@ public class AlbumFragment extends EntryFragment<NPAlbum> implements AdapterView
     public void onViewCreated(View view, Bundle savedInstanceState) {
         mGridView = (GridView)view.findViewById(R.id.grid_view);
         mGridView.setOnItemClickListener(this);
-
         super.onViewCreated(view, savedInstanceState);
     }
 
@@ -97,7 +96,8 @@ public class AlbumFragment extends EntryFragment<NPAlbum> implements AdapterView
                 }
 
                 if (mPhotosAdapter == null) {
-                    mPhotosAdapter = newPhotosAdapter();
+	                final FragmentActivity a = getActivity();
+                    mPhotosAdapter = new PhotosAdapter(a, mPhotosList, getFolder(), EntryListService.getInstance(a), EntryTemplate.PHOTO);
                     mGridView.setAdapter(mPhotosAdapter);
                 } else {
                     mPhotosAdapter.notifyDataSetChanged();
@@ -110,14 +110,9 @@ public class AlbumFragment extends EntryFragment<NPAlbum> implements AdapterView
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 	    final NPPhoto photo = mPhotosAdapter.getItem(position);
 	    ArrayList<NPPhoto> photos = new ArrayList<NPPhoto>();
-	    for (NPEntry e : mPhotosList.getEntries()) {
+	    for (NPEntry e : (List<? extends NPEntry>)mPhotosList.getEntries()) {
 		    photos.add(NPPhoto.fromEntry(e));
 	    }
         PhotoActivity.startWithFolder(getFolder(), photo, photos, getActivity());
-    }
-
-    private PhotosAdapter newPhotosAdapter() {
-        final FragmentActivity a = getActivity();
-        return new PhotosAdapter(a, mPhotosList, getFolder(), EntryListService.getInstance(a), EntryTemplate.PHOTO);
     }
 }

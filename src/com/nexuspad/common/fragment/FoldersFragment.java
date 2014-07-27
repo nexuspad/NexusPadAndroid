@@ -21,7 +21,7 @@ import com.nexuspad.Manifest;
 import com.nexuspad.R;
 import com.nexuspad.account.AccountManager;
 import com.nexuspad.app.App;
-import com.nexuspad.common.activity.NewFolderActivity;
+import com.nexuspad.common.activity.UpdateFolderActivity;
 import com.nexuspad.common.adapters.FolderNavigatorAdapter;
 import com.nexuspad.common.adapters.OnFolderMenuClickListener;
 import com.nexuspad.common.annotaion.FragmentName;
@@ -46,7 +46,7 @@ public class FoldersFragment extends UndoBarFragment {
 	public static final String KEY_PARENT_FOLDER = "com.nexuspad.ui.fragment.FoldersFragment.parent_folder";
 	private static final String KEY_LIST_POS = "key_list_pos";
 
-	private Callback mCallback;
+	private NavigationCallback mCallback;
 	private FolderService mFolderService;
 	private NPFolder mParentFolder;
 	private List<NPFolder> mSubFolders;
@@ -70,7 +70,7 @@ public class FoldersFragment extends UndoBarFragment {
 	}
 
 
-	public interface Callback {
+	public interface NavigationCallback {
 		void onFolderClicked(NPFolder folder);
 
 		void onSubFolderClicked(NPFolder folder);
@@ -126,7 +126,7 @@ public class FoldersFragment extends UndoBarFragment {
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-		mCallback = App.getCallbackOrThrow(activity, Callback.class);
+		mCallback = App.getCallbackOrThrow(activity, NavigationCallback.class);
 		setHasOptionsMenu(true);
 	}
 
@@ -140,7 +140,7 @@ public class FoldersFragment extends UndoBarFragment {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.new_folder:
-				NewFolderActivity.startWithParentFolder(mParentFolder, getActivity());
+				UpdateFolderActivity.startWithParentFolder(mParentFolder, getActivity());
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
@@ -209,8 +209,6 @@ public class FoldersFragment extends UndoBarFragment {
 			mListView.setItemsCanFocus(true);
 			mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 		}
-
-		fadeInListFrame();
 	}
 
 
@@ -251,6 +249,8 @@ public class FoldersFragment extends UndoBarFragment {
 		});
 
 		mListView.setAdapter(mFoldersAdapter);
+
+		fadeInListFrame();
 	}
 
 

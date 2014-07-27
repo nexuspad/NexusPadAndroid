@@ -22,7 +22,7 @@ import com.nexuspad.R;
 import com.nexuspad.common.annotaion.FragmentName;
 
 /**
- * A simple {@link UpableActivity} which helps building an {@code Activity}
+ * A simple {@link NPNavigateActivity} which helps building an {@code Activity}
  * containing a single {@code Fragment}.
  * <p/>
  * Overriding {@link #onCreateFragment()} is all you needed.
@@ -33,9 +33,9 @@ import com.nexuspad.common.annotaion.FragmentName;
  * @author Edmond
  *
  */
-public abstract class SinglePaneActivity extends UpableActivity {
-    private static final String KEY_FRAGMENT_TAG = "ed__fragment_tag";
-    private static final String KEY_FRAGMENT_LAYOUT_ID = "ed__fragment_layout_id";
+public abstract class SinglePaneActivity extends NPNavigateActivity {
+    private static final String KEY_FRAGMENT_TAG = "fragment_tag";
+    private static final String KEY_FRAGMENT_LAYOUT_ID = "fragment_layout_id";
 
     private boolean mCalled;
     private String mFragmentTag;
@@ -103,7 +103,7 @@ public abstract class SinglePaneActivity extends UpableActivity {
      * @return an id of {@code R.layout.*}
      */
     protected int onCreateLayoutId() {
-        return R.layout.ed__layout_single_pane;
+        return R.layout.np_layout_single_pane;
     }
 
     /**
@@ -132,7 +132,7 @@ public abstract class SinglePaneActivity extends UpableActivity {
      * @return an {@code id} for the {@code Fragment} to be placed in
      */
     protected int onCreateFragmentLayoutId() {
-        return R.id.ed__frame_main;
+        return R.id.np_frame_main;
     }
 
     /**
@@ -178,7 +178,7 @@ public abstract class SinglePaneActivity extends UpableActivity {
      * @return an unique {@code String} to identify the {@code Fragment}.
      */
     protected String onCreateFragmentTag() {
-        FragmentName tag = mFragment.getClass().getAnnotation(FragmentName.class);
+        FragmentName tag = ((Object)mFragment).getClass().getAnnotation(FragmentName.class);
         return tag == null ? null : tag.value();
     }
 

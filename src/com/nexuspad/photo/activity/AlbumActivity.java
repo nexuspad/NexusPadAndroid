@@ -51,7 +51,7 @@ public class AlbumActivity extends SinglePaneActivity implements EntryFragment.C
 
     @Override
     protected int onCreateLayoutId() {
-        return R.layout.no_padding_activity;
+        return R.layout.np_padding_activity;
     }
 
     @Override

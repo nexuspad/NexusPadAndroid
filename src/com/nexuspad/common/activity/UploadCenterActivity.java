@@ -82,7 +82,7 @@ public class UploadCenterActivity extends SinglePaneActivity {
 
     @Override
     protected int onCreateLayoutId() {
-        return R.layout.no_padding_activity;
+        return R.layout.np_padding_activity;
     }
 
     @Override

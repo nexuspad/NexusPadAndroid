@@ -8,10 +8,10 @@ import android.widget.TextView;
 import com.nexuspad.common.annotaion.FragmentName;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
+import com.nexuspad.common.fragment.UpdateEntryFragment;
 import com.nexuspad.datamodel.EntryTemplate;
 import com.nexuspad.datamodel.NPFolder;
 import com.nexuspad.datamodel.NPJournal;
-import com.nexuspad.common.fragment.NewEntryFragment;
 
 import static com.nexuspad.dataservice.ServiceConstants.JOURNAL_MODULE;
 
@@ -20,7 +20,7 @@ import static com.nexuspad.dataservice.ServiceConstants.JOURNAL_MODULE;
  */
 @FragmentName(NewJournalFragment.TAG)
 @ModuleId(moduleId = JOURNAL_MODULE, template = EntryTemplate.JOURNAL)
-public class NewJournalFragment extends NewEntryFragment<NPJournal> {
+public class NewJournalFragment extends UpdateEntryFragment<NPJournal> {
     public static final String TAG = "NewJournalFragment";
 
     public static NewJournalFragment of(NPJournal journal, NPFolder folder) {
@@ -33,14 +33,14 @@ public class NewJournalFragment extends NewEntryFragment<NPJournal> {
         return fragment;
     }
 
-    public interface Callback extends NewEntryFragment.Callback<NPJournal> {
+    public interface Callback extends UpdateEntryFragment.Callback<NPJournal> {
     }
 
     private TextView mNoteView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.journal_new_frag, container, false);
+        return inflater.inflate(R.layout.journal_edit_frag, container, false);
     }
 
     @Override

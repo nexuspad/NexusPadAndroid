@@ -9,7 +9,6 @@ import android.widget.TextView;
 import com.nexuspad.R;
 import com.nexuspad.datamodel.NPFolder;
 import com.nexuspad.common.fragment.FoldersFragment;
-import com.nexuspad.common.fragment.FoldersFragment.Callback;
 
 import java.util.List;
 
@@ -19,7 +18,7 @@ import java.util.List;
 public class FolderNavigatorAdapter extends FoldersAdapter {
 
 	private final NPFolder mParent;
-	private FoldersFragment.Callback mCallback;
+	private FoldersFragment.NavigationCallback mCallback;
 
 	/**
 	 * View holder for folder navigator.
@@ -39,7 +38,7 @@ public class FolderNavigatorAdapter extends FoldersAdapter {
 		}
 	}
 
-	public FolderNavigatorAdapter(Activity a, List<? extends NPFolder> folders, NPFolder parent, Callback callback) {
+	public FolderNavigatorAdapter(Activity a, List<? extends NPFolder> folders, NPFolder parent, FoldersFragment.NavigationCallback callback) {
 		super(a, folders, true);
 		mParent = parent;
 		mCallback = callback;

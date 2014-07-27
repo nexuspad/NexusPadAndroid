@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import com.nexuspad.R;
-import com.nexuspad.common.adapters.ListEntriesAdapter;
+import com.nexuspad.common.adapters.EntriesAdapter;
 import com.nexuspad.datamodel.EntryList;
 import com.nexuspad.datamodel.EntryTemplate;
 import com.nexuspad.datamodel.NPFolder;
@@ -14,7 +14,7 @@ import com.nexuspad.datamodel.NPPhoto;
 import com.nexuspad.dataservice.EntryListService;
 import com.squareup.picasso.Picasso;
 
-public class PhotosAdapter extends ListEntriesAdapter<NPPhoto> {
+public class PhotosAdapter extends EntriesAdapter<NPPhoto> {
 
     private final Activity mActivity;
     private final Picasso mPicasso;

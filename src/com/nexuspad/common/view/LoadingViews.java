@@ -19,7 +19,7 @@ import android.view.View;
 
 /**
  * This class reduces the boiler-plate code needed to perform UI updates while
- * loading data. Calling {@link #startLoading()} causes the main content view to
+ * loading data. Calling {@link #startLoading()} causes the dashboard content view to
  * fade out and the progress view to fade in. Calling {@link #doneLoading()}
  * does the opposite.
  * </p>
@@ -67,7 +67,7 @@ public class LoadingViews {
      * Creates an instance of {@link LoadingViews} with {@code DEFAULT_DURATION}
      * of {@value #DEFAULT_DURATION}.
      *
-     * @param view the reference to the main content {@code View}.
+     * @param view the reference to the dashboard content {@code View}.
      * @param p    the reference to the {@code View} (usually
      *             an indeterminate {@code ProgressBar})
      * @return
@@ -86,7 +86,7 @@ public class LoadingViews {
     }
 
     /**
-     * Hides the main content view and displays the progress view. This action
+     * Hides the dashboard content view and displays the progress view. This action
      * is
      * animated with a fade in / fade out animation by default.
      */
@@ -101,7 +101,7 @@ public class LoadingViews {
     }
 
     /**
-     * Displays the main content view and hides the progress view. This action
+     * Displays the dashboard content view and hides the progress view. This action
      * is animated with a fade in / fade out animation by default.
      */
     public void doneLoading() {

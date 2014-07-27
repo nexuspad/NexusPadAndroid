@@ -15,7 +15,7 @@ import com.google.common.base.Strings;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
 import com.nexuspad.app.App;
-import com.nexuspad.contacts.activity.NewContactActivity;
+import com.nexuspad.contacts.activity.UpdateContactActivity;
 import com.nexuspad.datamodel.*;
 import com.nexuspad.dataservice.ServiceConstants;
 import com.nexuspad.common.fragment.EntryFragment;
@@ -43,9 +43,11 @@ public class ContactFragment extends EntryFragment<NPPerson> {
 
     private LayoutInflater mInflater;
 
-    private TextView mTitleV;
 	private TextView mFullnameV;
+
+	private TextView mBussinessNameHeaderV;
     private TextView mBussinessNameV;
+
     private TextView mWebAddressV;
     private TextView mTagsV;
     private TextView mNoteV;
@@ -83,7 +85,7 @@ public class ContactFragment extends EntryFragment<NPPerson> {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.edit:
-                NewContactActivity.startWithContact(getActivity(), getFolder(), getEntry());
+                UpdateContactActivity.startWithContact(getActivity(), getFolder(), getEntry());
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -97,9 +99,11 @@ public class ContactFragment extends EntryFragment<NPPerson> {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-//        mTitleV = findView(view, android.R.id.title);
         mFullnameV = (TextView)view.findViewById(R.id.lbl_full_name);
+
+	    mBussinessNameHeaderV = (TextView)view.findViewById(R.id.lbl_business_name_title);
         mBussinessNameV = (TextView)view.findViewById(R.id.lbl_bussiness_name);
+
         mWebAddressV = (TextView)view.findViewById(R.id.lbl_web_address);
         mTagsV = (TextView)view.findViewById(R.id.lbl_tags);
         mNoteV = (TextView)view.findViewById(R.id.lbl_note);
@@ -122,7 +126,6 @@ public class ContactFragment extends EntryFragment<NPPerson> {
     protected void updateUI() {
         final NPPerson contact = getEntry();
         if (contact != null) {
-//            mTitleV.setText(contact.getTitle());
 	        mFullnameV.setText(contact.getFullName());
             mBussinessNameV.setText(contact.getBusinessName());
             mWebAddressV.setText(contact.getWebAddress());

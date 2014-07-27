@@ -17,7 +17,7 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
-import com.nexuspad.common.activity.FoldersActivity;
+import com.nexuspad.common.activity.FoldersNavigatorActivity;
 import com.nexuspad.common.adapters.OnListEndListener;
 import com.nexuspad.common.annotaion.FragmentName;
 import com.nexuspad.common.fragment.EntriesFragment;
@@ -27,6 +27,7 @@ import com.nexuspad.photo.activity.PhotosActivity;
 import com.nexuspad.photo.adapter.PhotosAdapter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static com.nexuspad.dataservice.ServiceConstants.PHOTO_MODULE;
 
@@ -74,7 +75,7 @@ public class PhotosFragment extends EntriesFragment implements OnItemClickListen
 		PhotosAdapter adapter = (PhotosAdapter) mGridView.getAdapter();
 		NPPhoto photo = adapter.getItem(position);
 		ArrayList<NPPhoto> photos = new ArrayList<NPPhoto>();
-		for (NPEntry e : mEntryList.getEntries()) {
+		for (NPEntry e : (List<? extends NPEntry>)mEntryList.getEntries()) {
 			photos.add(NPPhoto.fromEntry(e));
 		}
 		PhotoActivity.startWithFolder(getFolder(), photo, photos, getActivity());
@@ -112,7 +113,7 @@ public class PhotosFragment extends EntriesFragment implements OnItemClickListen
 			case REQ_FOLDER:
 				if (resultCode == Activity.RESULT_OK) {
 					final FragmentActivity activity = getActivity();
-					final NPFolder folder = data.getParcelableExtra(FoldersActivity.KEY_FOLDER);
+					final NPFolder folder = data.getParcelableExtra(FoldersNavigatorActivity.KEY_FOLDER);
 					PhotosActivity.startWithFolder(folder, activity);
 					activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
 				}
@@ -142,7 +143,7 @@ public class PhotosFragment extends EntriesFragment implements OnItemClickListen
 
 		super.onViewCreated(view, savedInstanceState);
 
-		setOnFolderSelectedClickListener(REQ_FOLDER);
+		initFolderSelector(REQ_FOLDER);
 	}
 
 

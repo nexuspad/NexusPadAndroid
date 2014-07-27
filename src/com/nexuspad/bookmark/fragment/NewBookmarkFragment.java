@@ -17,14 +17,14 @@ import com.nexuspad.datamodel.NPBookmark;
 import com.nexuspad.datamodel.EntryTemplate;
 import com.nexuspad.datamodel.NPFolder;
 import com.nexuspad.dataservice.ServiceConstants;
-import com.nexuspad.common.fragment.NewEntryFragment;
+import com.nexuspad.common.fragment.UpdateEntryFragment;
 
 /**
  * @author Edmond
  */
 @FragmentName(NewBookmarkFragment.TAG)
 @ModuleId(moduleId = ServiceConstants.BOOKMARK_MODULE, template = EntryTemplate.BOOKMARK)
-public class NewBookmarkFragment extends NewEntryFragment<NPBookmark> {
+public class NewBookmarkFragment extends UpdateEntryFragment<NPBookmark> {
     public static final String TAG = "NewBookmarkFragment";
 
     public static NewBookmarkFragment of(NPFolder folder) {

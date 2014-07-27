@@ -11,10 +11,10 @@ import android.view.View.OnClickListener;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import com.nexuspad.R;
+import com.nexuspad.common.activity.UpdateFolderActivity;
 import com.nexuspad.common.utils.UndoBarController;
 import com.nexuspad.datamodel.NPFolder;
 import com.nexuspad.dataservice.FolderService;
-import com.nexuspad.common.activity.NewFolderActivity;
 
 
 public class OnFolderMenuClickListener implements OnClickListener {
@@ -49,7 +49,7 @@ public class OnFolderMenuClickListener implements OnClickListener {
      */
     @Override
     public void onClick(View v) {
-	    FoldersEntriesListAdapter<?> felAdapter = ((FoldersEntriesListAdapter<?>) mListView.getAdapter());
+	    FoldersAndEntriesAdapter<?> felAdapter = ((FoldersAndEntriesAdapter<?>) mListView.getAdapter());
 
         int position = mListView.getPositionForView(v);
         if (position != ListView.INVALID_POSITION) {
@@ -83,7 +83,7 @@ public class OnFolderMenuClickListener implements OnClickListener {
     }
 
     private void renameFolder(NPFolder f) {
-        NewFolderActivity.startWithParentFolder(mParentFolder, f, mListView.getContext());
+        UpdateFolderActivity.startWithParentFolder(mParentFolder, f, mListView.getContext());
     }
 
     private void deleteFolder(NPFolder folder) {

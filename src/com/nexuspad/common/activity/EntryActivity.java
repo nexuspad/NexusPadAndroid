@@ -23,7 +23,7 @@ public abstract class EntryActivity<T extends NPEntry> extends SinglePaneActivit
 
     @Override
     protected int onCreateLayoutId() {
-        return R.layout.no_padding_activity;
+        return R.layout.np_padding_activity;
     }
 
     @Override

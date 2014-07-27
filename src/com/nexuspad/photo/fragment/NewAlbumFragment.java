@@ -15,10 +15,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
-import com.nexuspad.common.activity.NewEntryActivity;
+import com.nexuspad.common.activity.UpdateEntryActivity;
 import com.nexuspad.common.activity.UploadCenterActivity;
 import com.nexuspad.common.annotaion.FragmentName;
-import com.nexuspad.common.fragment.NewEntryFragment;
+import com.nexuspad.common.fragment.UpdateEntryFragment;
 import com.nexuspad.common.utils.Lazy;
 import com.nexuspad.datamodel.EntryTemplate;
 import com.nexuspad.datamodel.NPAlbum;
@@ -35,7 +35,7 @@ import java.util.List;
 
 @FragmentName(NewAlbumFragment.TAG)
 @ModuleId(moduleId = ServiceConstants.PHOTO_MODULE, template = EntryTemplate.ALBUM)
-public class NewAlbumFragment extends NewEntryFragment<NPAlbum> {
+public class NewAlbumFragment extends UpdateEntryFragment<NPAlbum> {
     public static final String TAG = "NewAlbumFragment";
     private static final String KEY_PATHS = "key_paths";
 
@@ -93,7 +93,7 @@ public class NewAlbumFragment extends NewEntryFragment<NPAlbum> {
     private int getLayoutId() {
         switch (getMode()) {
             case NEW:
-                return R.layout.album_new_frag;
+                return R.layout.album_edit_frag;
             case EDIT:
                 return R.layout.album_edit_frag;
             default:
@@ -107,7 +107,7 @@ public class NewAlbumFragment extends NewEntryFragment<NPAlbum> {
 
         installFolderSelectorListener(mFolderV);
 
-        if (NewEntryActivity.Mode.EDIT.equals(getMode())) {
+        if (UpdateEntryActivity.Mode.EDIT.equals(getMode())) {
             final int size = mUris.size();
             mNumPhotosV.setText(getResources().getQuantityString(R.plurals.numberOfPhotos, size, size));
 

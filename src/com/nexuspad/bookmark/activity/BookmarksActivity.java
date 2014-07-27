@@ -23,7 +23,7 @@ import com.nexuspad.common.activity.EntryActivity;
 @ParentActivity(DashboardActivity.class)
 @ModuleId(moduleId = ServiceConstants.BOOKMARK_MODULE, template = EntryTemplate.BOOKMARK)
 public class BookmarksActivity extends EntriesActivity implements BookmarksFragment.Callback {
-    public static final String TAG = "BookmarksActivity";
+    public static final String TAG = BookmarksActivity.class.getSimpleName();
 
     public static void startWithFolder(NPFolder f, Context c) {
         Intent intent = new Intent(c, BookmarksActivity.class);
@@ -47,7 +47,7 @@ public class BookmarksActivity extends EntriesActivity implements BookmarksFragm
 
     @Override
     public void onEditBookmark(BookmarksFragment f, NPBookmark bookmark) {
-        NewBookmarkActivity.startWithBookmark(this, getFolder(), bookmark);
+        UpdateBookmarkActivity.startWithBookmark(this, getFolder(), bookmark);
     }
 
     @Override

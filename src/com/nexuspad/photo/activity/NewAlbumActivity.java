@@ -10,12 +10,12 @@ import com.nexuspad.datamodel.EntryTemplate;
 import com.nexuspad.datamodel.NPFolder;
 import com.nexuspad.dataservice.ServiceConstants;
 import com.nexuspad.photo.fragment.NewAlbumFragment;
-import com.nexuspad.common.activity.NewEntryActivity;
-import com.nexuspad.common.fragment.NewEntryFragment;
+import com.nexuspad.common.activity.UpdateEntryActivity;
+import com.nexuspad.common.fragment.UpdateEntryFragment;
 
 @ModuleId(moduleId = ServiceConstants.PHOTO_MODULE, template = EntryTemplate.ALBUM)
 @ParentActivity(PhotosActivity.class)
-public class NewAlbumActivity extends NewEntryActivity<NPAlbum> {
+public class NewAlbumActivity extends UpdateEntryActivity<NPAlbum> {
 
     public static Intent of(Context context, NPFolder folder) {
         return NewAlbumActivity.of(context, folder, null);
@@ -35,7 +35,7 @@ public class NewAlbumActivity extends NewEntryActivity<NPAlbum> {
 
     @Override
     protected void onDoneEditing() {
-        NewEntryFragment<NPAlbum> fragment = getFragment();
+        UpdateEntryFragment<NPAlbum> fragment = getFragment();
         if (fragment.isEditedEntryValid()) {
             fragment.updateEntry();
             finish();

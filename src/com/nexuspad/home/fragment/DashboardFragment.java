@@ -93,7 +93,7 @@ public class DashboardFragment extends Fragment {
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		inflater.inflate(R.menu.main, menu);
+		inflater.inflate(R.menu.dashboard, menu);
 	}
 
 	@Override
@@ -119,15 +119,15 @@ public class DashboardFragment extends Fragment {
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 
-		final ListView listView = (ListView)view.findViewById(android.R.id.list);
+		mListView = (ListView)view.findViewById(android.R.id.list);
 
 		mListAdapter = new IconListAdapter(getActivity(), sDrawables, sStrings);
-		listView.setAdapter(mListAdapter);
+		mListView.setAdapter(mListAdapter);
 
-		listView.setOnItemClickListener(new OnItemClickListener() {
+		mListView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				onListItemClick(listView, view, position, id);
+				onListItemClick(mListView, view, position, id);
 			}
 		});
 	}

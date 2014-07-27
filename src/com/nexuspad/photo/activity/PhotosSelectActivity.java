@@ -29,7 +29,7 @@ public class PhotosSelectActivity extends SinglePaneActivity implements PhotoSel
 
     @Override
     protected int onCreateLayoutId() {
-        return R.layout.no_padding_activity;
+        return R.layout.np_padding_activity;
     }
 
     @Override

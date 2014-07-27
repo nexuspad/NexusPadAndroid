@@ -34,58 +34,47 @@ import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
  *
  */
 public abstract class DoneDiscardActivity extends SinglePaneActivity {
-    @Override
-    protected void onCreate(Bundle savedState) {
-        super.onCreate(savedState);
+	@Override
+	protected void onCreate(Bundle savedState) {
+		super.onCreate(savedState);
 
-        if (!isDoneDiscardEnabled()) {
-            return;
-        }
+		ActionBar actionBar = getActionBar();
 
-        ActionBar actionBar = getActionBar();
+		LayoutInflater inflater = LayoutInflater.from(actionBar.getThemedContext());
+		View view = inflater.inflate(R.layout.np_actionbar_view_done_discard, null);
 
-        LayoutInflater inflater = LayoutInflater.from(actionBar.getThemedContext());
-        View view = inflater.inflate(R.layout.ed__ab_custom_view_done_discard, null);
-        view.findViewById(R.id.ed__ab_done).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onDonePressed();
-            }
-        });
-        view.findViewById(R.id.ed__ab_discard).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onDiscardPressed();
-            }
-        });
+		view.findViewById(R.id.np_actionbar_done).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				onDonePressed();
+			}
+		});
+		view.findViewById(R.id.np_actionbar_discard).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				onDiscardPressed();
+			}
+		});
 
-        actionBar.setDisplayShowCustomEnabled(true);
-        actionBar.setDisplayShowHomeEnabled(false);
-        actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setDisplayHomeAsUpEnabled(false);
-        actionBar.setCustomView(view, new ActionBar.LayoutParams(MATCH_PARENT, MATCH_PARENT));
-    }
+		actionBar.setDisplayShowCustomEnabled(true);
+		actionBar.setDisplayShowHomeEnabled(false);
+		actionBar.setDisplayShowTitleEnabled(false);
+		actionBar.setDisplayHomeAsUpEnabled(false);
+		actionBar.setCustomView(view, new ActionBar.LayoutParams(MATCH_PARENT, MATCH_PARENT));
+	}
 
-    /**
-     *
-     * @return false to completely disable the done/discard function
-     */
-    protected boolean isDoneDiscardEnabled() {
-        return true;
-    }
+	/**
+	 * Called when the "Done" button is clicked.
+	 */
+	protected void onDonePressed() {
+	}
 
-    /**
-     * Called when the "Done" button is clicked.
-     */
-    protected void onDonePressed() {
-    }
-
-    /**
-     * Called when the "Discard" button is clicked.
-     * <p>
-     * Calls {@link #finish()} by default.
-     */
-    protected void onDiscardPressed() {
-        finish();
-    }
+	/**
+	 * Called when the "Discard" button is clicked.
+	 * <p>
+	 * Calls {@link #finish()} by default.
+	 */
+	protected void onDiscardPressed() {
+		finish();
+	}
 }

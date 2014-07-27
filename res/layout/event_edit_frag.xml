@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/scrollableFrame"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/txt_title"
+            style="@style/formMargin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/title" />
+
+        <TextView
+            style="?android:attr/listSeparatorTextViewStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/location" />
+
+        <com.nexuspad.common.view.LocationTextView
+            android:id="@+id/txt_location"
+            style="@style/selectableTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/location"
+            android:drawableRight="@android:drawable/ic_menu_edit" />
+
+        <TextView
+            style="?android:attr/listSeparatorTextViewStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/from" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.nexuspad.calendar.view.DateButton
+                android:id="@+id/spinner_start_day"
+                style="@style/formMargin"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="5"
+                android:layout_marginTop="0dp" />
+
+            <com.nexuspad.calendar.view.TimeButton
+                android:id="@+id/spinner_start_time"
+                style="@style/formMargin"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:layout_marginTop="0dp" />
+        </LinearLayout>
+
+        <TextView
+            style="?android:attr/listSeparatorTextViewStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/to" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.nexuspad.calendar.view.DateButton
+                android:id="@+id/spinner_to_day"
+                style="@style/formMargin"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="5"
+                android:layout_marginTop="0dp" />
+
+            <com.nexuspad.calendar.view.TimeButton
+                android:id="@+id/spinner_to_time"
+                style="@style/formMargin"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:layout_marginTop="0dp" />
+        </LinearLayout>
+
+        <CheckBox
+            android:id="@+id/chk_all_day"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/ed__textsize_small"
+            android:text="@string/all_day" />
+
+        <TextView
+            android:id="@+id/spinner_repeat"
+            style="@style/formMargin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp" />
+
+        <EditText
+            android:id="@+id/txt_tags"
+            style="@style/formMargin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/tags" />
+
+        <EditText
+            android:id="@+id/txt_note"
+            style="@style/formMargin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minLines="@integer/notes_min_lines"
+            android:gravity="top"
+            android:hint="@string/note" />
+    </LinearLayout>
+
+</ScrollView>

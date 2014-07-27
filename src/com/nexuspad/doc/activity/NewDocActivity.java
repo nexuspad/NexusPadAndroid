@@ -14,8 +14,8 @@ import com.nexuspad.datamodel.EntryTemplate;
 import com.nexuspad.datamodel.NPFolder;
 import com.nexuspad.datamodel.NPUpload;
 import com.nexuspad.dataservice.ServiceConstants;
-import com.nexuspad.doc.fragment.NewDocFragment;
-import com.nexuspad.common.activity.NewEntryActivity;
+import com.nexuspad.doc.fragment.UpdateDocFragment;
+import com.nexuspad.common.activity.UpdateEntryActivity;
 import com.nexuspad.common.activity.UploadCenterActivity;
 
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ import java.util.List;
  */
 @ParentActivity(DocsActivity.class)
 @ModuleId(moduleId = ServiceConstants.DOC_MODULE, template = EntryTemplate.DOC)
-public class NewDocActivity extends NewEntryActivity<NPDoc> implements NewDocFragment.Callback {
+public class NewDocActivity extends UpdateEntryActivity<NPDoc> implements UpdateDocFragment.Callback {
 
     public static void startWithFolder(Context c, NPFolder f) {
         NewDocActivity.startWithDoc(c, f, null);
@@ -41,7 +41,7 @@ public class NewDocActivity extends NewEntryActivity<NPDoc> implements NewDocFra
 
     @Override
     protected void onDoneEditing() {
-        NewDocFragment fragment = getFragment();
+        UpdateDocFragment fragment = getFragment();
         if (fragment.isEditedEntryValid()) {
             fragment.updateEntry();
             // don't go up, it is handled at onUpdateEntry(…)
@@ -67,16 +67,16 @@ public class NewDocActivity extends NewEntryActivity<NPDoc> implements NewDocFra
 
     @Override
     protected Fragment onCreateFragment() {
-        return NewDocFragment.of(getEntry(), getFolder());
+        return UpdateDocFragment.of(getEntry(), getFolder());
     }
 
     @Override
-    protected Intent getUpIntent(Class<?> activity) {
-        return super.getUpIntent(activity).putExtra(DocActivity.KEY_FOLDER, getFolder());
+    protected Intent getGoBackIntent(Class<?> activity) {
+        return super.getGoBackIntent(activity).putExtra(DocActivity.KEY_FOLDER, getFolder());
     }
 
     @Override
-    protected NewDocFragment getFragment() {
-        return (NewDocFragment) super.getFragment();
+    protected UpdateDocFragment getFragment() {
+        return (UpdateDocFragment) super.getFragment();
     }
 }

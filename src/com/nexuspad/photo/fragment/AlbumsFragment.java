@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,8 +18,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
-import com.nexuspad.common.activity.FoldersActivity;
-import com.nexuspad.common.adapters.ListEntriesAdapter;
+import com.nexuspad.common.activity.FoldersNavigatorActivity;
+import com.nexuspad.common.adapters.EntriesAdapter;
 import com.nexuspad.common.annotaion.FragmentName;
 import com.nexuspad.common.fragment.EntriesFragment;
 import com.nexuspad.datamodel.EntryList;
@@ -26,6 +27,7 @@ import com.nexuspad.datamodel.EntryTemplate;
 import com.nexuspad.datamodel.NPAlbum;
 import com.nexuspad.datamodel.NPFolder;
 import com.nexuspad.dataservice.ServiceConstants;
+import com.nexuspad.photo.activity.AlbumActivity;
 import com.nexuspad.photo.activity.PhotosActivity;
 import com.squareup.picasso.Picasso;
 
@@ -35,133 +37,127 @@ import com.squareup.picasso.Picasso;
 @FragmentName(AlbumsFragment.TAG)
 @ModuleId(moduleId = ServiceConstants.PHOTO_MODULE, template = EntryTemplate.ALBUM)
 public class AlbumsFragment extends EntriesFragment {
-    public static final String TAG = "AlbumsFragment";
+	public static final String TAG = "AlbumsFragment";
 
-    public static AlbumsFragment of(NPFolder folder) {
-        final Bundle bundle = new Bundle();
-        bundle.putParcelable(KEY_FOLDER, folder);
+	public static AlbumsFragment of(NPFolder folder) {
+		final Bundle bundle = new Bundle();
+		bundle.putParcelable(KEY_FOLDER, folder);
 
-        final AlbumsFragment fragment = new AlbumsFragment();
-        fragment.setArguments(bundle);
-        return fragment;
-    }
+		final AlbumsFragment fragment = new AlbumsFragment();
+		fragment.setArguments(bundle);
+		return fragment;
+	}
 
-    private static final int REQ_FOLDER = 1;
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		return inflater.inflate(R.layout.albums_frag, container, false);
+	}
 
-    private EntryList mAlbumList;
+	@Override
+	protected void onListLoaded(EntryList list) {
+		Log.i(TAG, "Receiving entry list.");
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.albums_frag, container, false);
-    }
+		BaseAdapter albumsAdapter = getAdapter();
 
-    @Override
-    protected void onListLoaded(EntryList list) {
-        super.onListLoaded(list);
-        mAlbumList = list;
-        updateUI();
-    }
+		if (albumsAdapter == null) {
+			albumsAdapter = new AlbumsAdapter();
+			setAdapter(albumsAdapter);
+			mListView.setAdapter(albumsAdapter);
+		}
 
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+		albumsAdapter.notifyDataSetChanged();
+		fadeInListFrame();
+	}
 
-        setQuickReturnListener(getListView(), null);
-        setOnFolderSelectedClickListener(REQ_FOLDER);
 
-        updateUI();
-    }
+	@Override
+	public void onViewCreated(View view, Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
 
-    private void updateUI() {
-        if (mAlbumList != null) {
-            final BaseAdapter adapter = getListAdapter();
-            if (adapter == null) {
-                setListAdapter(new AlbumsAdapter());
-            } else {
-                adapter.notifyDataSetChanged();
-            }
-        }
-    }
+		setQuickReturnListener(getListView(), null);
+		initFolderSelector(ACTIVITY_REQ_CODE_FOLDER_SELECTOR);
+	}
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case REQ_FOLDER:
-                if (resultCode == Activity.RESULT_OK) {
-                    final FragmentActivity activity = getActivity();
-                    final NPFolder folder = data.getParcelableExtra(FoldersActivity.KEY_FOLDER);
-                    PhotosActivity.startWithFolderAndIndex(folder, activity, 1);
-                    activity.finish();
-                    activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                }
-                break;
-            default:
-                throw new AssertionError("unexpected requestCode: " + requestCode);
-        }
-    }
 
-    @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-        super.onListItemClick(l, v, position, id);
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		switch (requestCode) {
+			case ACTIVITY_REQ_CODE_FOLDER_SELECTOR:
+				if (resultCode == Activity.RESULT_OK) {
+					final FragmentActivity activity = getActivity();
+					final NPFolder folder = data.getParcelableExtra(FoldersNavigatorActivity.KEY_FOLDER);
+					PhotosActivity.startWithFolderAndIndex(folder, activity, 1);
+					activity.finish();
+					activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+				}
+				break;
+			default:
+				throw new AssertionError("unexpected requestCode: " + requestCode);
+		}
+	}
 
-//        final Album album = ((AlbumsAdapter) getListAdapter()).getItem(position);
-//        AlbumActivity.startWith(album, getFolder(), getActivity());
-    }
+	@Override
+	public void onListItemClick(ListView l, View v, int position, long id) {
+		super.onListItemClick(l, v, position, id);
 
-    private static class ViewHolder {
-        ImageView thumbnail;
-        TextView title;
-    }
+        final NPAlbum album = ((AlbumsAdapter) getAdapter()).getItem(position);
+        AlbumActivity.startWith(album, getFolder(), getActivity());
+	}
 
-    private class AlbumsAdapter extends ListEntriesAdapter<NPAlbum> {
+	private static class ViewHolder {
+		ImageView thumbnail;
+		TextView title;
+	}
 
-        public AlbumsAdapter() {
-            super(getActivity(), mAlbumList, getFolder(), getEntryListService(), getTemplate());
-        }
+	private class AlbumsAdapter extends EntriesAdapter<NPAlbum> {
 
-        @Override
-        protected View getEntryView(NPAlbum entry, int position, View convertView, ViewGroup parent) {
-            final AlbumsFragment.ViewHolder holder;
-            if (convertView == null) {
-                convertView = getActivity().getLayoutInflater().inflate(R.layout.list_item_album, parent, false);
+		public AlbumsAdapter() {
+			super(getActivity(), mEntryList, getFolder(), getEntryListService(), getTemplate());
+		}
 
-                holder = new AlbumsFragment.ViewHolder();
-                holder.thumbnail = (ImageView)convertView.findViewById(android.R.id.icon);
-                holder.title = (TextView)convertView.findViewById(android.R.id.text1);
+		@Override
+		protected View getEntryView(NPAlbum entry, int position, View convertView, ViewGroup parent) {
+			final AlbumsFragment.ViewHolder holder;
+			if (convertView == null) {
+				convertView = getActivity().getLayoutInflater().inflate(R.layout.list_item_album, parent, false);
 
-                convertView.setTag(holder);
-            } else {
-                holder = (AlbumsFragment.ViewHolder) convertView.getTag();
-            }
+				holder = new AlbumsFragment.ViewHolder();
+				holder.thumbnail = (ImageView)convertView.findViewById(android.R.id.icon);
+				holder.title = (TextView)convertView.findViewById(android.R.id.text1);
 
-            final NPAlbum album = getItem(position);
-            holder.title.setText(album.getTitle());
-            final String tnUrl = album.getTnUrl();
-            if (!TextUtils.isEmpty(tnUrl)) {
+				convertView.setTag(holder);
+			} else {
+				holder = (AlbumsFragment.ViewHolder) convertView.getTag();
+			}
 
-                Picasso.with(getActivity())
-                        .load(tnUrl)
-                        .resizeDimen(R.dimen.photo_grid_width, R.dimen.photo_grid_height)
-                        .centerCrop()
-                        .placeholder(R.drawable.placeholder)
-                        .error(R.drawable.ic_launcher)
-                        .into(holder.thumbnail);
-            } else {
-                holder.thumbnail.setImageResource(R.drawable.placeholder);
-            }
+			final NPAlbum album = getItem(position);
+			holder.title.setText(album.getTitle());
+			final String tnUrl = album.getTnUrl();
+			if (!TextUtils.isEmpty(tnUrl)) {
 
-            return convertView;
-        }
+				Picasso.with(getActivity())
+						.load(tnUrl)
+						.resizeDimen(R.dimen.photo_grid_width, R.dimen.photo_grid_height)
+						.centerCrop()
+						.placeholder(R.drawable.placeholder)
+						.error(R.drawable.ic_launcher)
+						.into(holder.thumbnail);
+			} else {
+				holder.thumbnail.setImageResource(R.drawable.placeholder);
+			}
 
-        @Override
-        protected View getEmptyEntryView(LayoutInflater i, View c, ViewGroup p) {
-            return getCaptionView(i, c, p, R.string.empty_photos, R.drawable.empty_folder);
-        }
+			return convertView;
+		}
 
-        @Override
-        protected String getEntriesHeaderText() {
-            return null;
-        }
-    }
+		@Override
+		protected View getEmptyEntryView(LayoutInflater i, View c, ViewGroup p) {
+			return getCaptionView(i, c, p, R.string.empty_photos, R.drawable.empty_folder);
+		}
+
+		@Override
+		protected String getEntriesHeaderText() {
+			return null;
+		}
+	}
 }

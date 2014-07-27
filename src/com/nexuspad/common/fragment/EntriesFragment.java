@@ -21,15 +21,14 @@ import com.nexuspad.R;
 import com.nexuspad.account.AccountManager;
 import com.nexuspad.annotation.ModuleId;
 import com.nexuspad.app.App;
-import com.nexuspad.common.activity.FoldersActivity;
-import com.nexuspad.common.activity.NewFolderActivity;
+import com.nexuspad.common.activity.FoldersNavigatorActivity;
+import com.nexuspad.common.activity.UpdateFolderActivity;
 import com.nexuspad.common.adapters.*;
 import com.nexuspad.common.listeners.DirectionalScrollListener;
 import com.nexuspad.common.utils.Lazy;
 import com.nexuspad.datamodel.*;
 import com.nexuspad.dataservice.*;
 import com.nexuspad.dataservice.EntryService.EntryReceiver;
-import com.nexuspad.dataservice.FolderService.FolderReceiver;
 import com.nexuspad.home.activity.LoginActivity;
 
 import java.util.Iterator;
@@ -48,54 +47,50 @@ import static com.nexuspad.dataservice.EntryListService.EntryListReceiver;
  *
  * @author Edmond
  */
-public abstract class EntriesFragment extends UndoBarFragment {
+public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBarFragment {
+	private static final String TAG = EntriesFragment.class.getSimpleName();
+
+	public static final int ACTIVITY_REQ_CODE_FOLDER_SELECTOR = 1;
+
 	public static final String KEY_FOLDER = "key_folder";
+	public static final String KEY_LIST_POS = "key_list_pos";
 
 	public static final int PAGE_COUNT = 20;
-
-	private static final String TAG = "EntriesFragment";
-	private static final String KEY_LIST_POS = "key_list_pos";
 
 	protected EntryList mEntryList;
 
 	private Callback mCallback;
+
 	private int mCurrentPage;
-	private NPFolder mFolder;
+
+	protected NPFolder mFolder;
+
 	private ModuleId mModuleId;
 
-	private View mQuickReturnV;
-	private TextView mFolderSelectorV;
+	protected View mQuickReturnV;
+	protected TextView mFolderSelectorV;
 
 	protected ListView mListView;
 
-	protected FoldersEntriesListAdapter mListAdapter;
+	protected String mCurrentSearchKeyword;
 
-	private String mCurrentSearchKeyword;
+	/** Keep private to force using getAdapter and setAdapter */
+	private EntriesAdapter mEntriesAdapter;
+
+	public BaseAdapter getAdapter() {
+		return mEntriesAdapter;
+	}
+
+	public void setAdapter(BaseAdapter adapter) {
+		mEntriesAdapter = (T)adapter;
+	}
 
 	public interface Callback {
 		void onListLoaded(EntriesFragment f, EntryList list);
 	}
 
-	private final Lazy<FolderService> mFolderService = new Lazy<FolderService>() {
-		@Override
-		protected FolderService onCreate() {
-			return FolderService.getInstance(getActivity());
-		}
-	};
-
-	private final Lazy<EntryService> mEntryService = new Lazy<EntryService>() {
-		@Override
-		protected EntryService onCreate() {
-			return EntryService.getInstance(getActivity());
-		}
-	};
-
-	private final Lazy<EntryListService> mEntryListService = new Lazy<EntryListService>() {
-		@Override
-		protected EntryListService onCreate() {
-			return EntryListService.getInstance(getActivity());
-		}
-	};
+	private EntryService mEntryService = null;
+	private EntryListService mEntryListService = null;
 
 
 	/**
@@ -105,7 +100,7 @@ public abstract class EntriesFragment extends UndoBarFragment {
 		@Override
 		protected void onReceiveFolderListing(Context c, Intent i, EntryTemplate entryTemplate, String key) {
 			if (mModuleId.template().equals(entryTemplate)) {
-				EntryList entryList = mEntryListService.get().getEntryListFromKey(key);
+				EntryList entryList = getEntryListService().getEntryListFromKey(key);
 
 				if (mEntryList == null) {
 					mEntryList = entryList;
@@ -131,7 +126,7 @@ public abstract class EntriesFragment extends UndoBarFragment {
 		@Override
 		protected void onReceiveSearchResult(Context c, Intent i, EntryTemplate entryTemplate, String key) {
 			if (mModuleId.template().equals(entryTemplate)) {
-				final EntryList entryList = mEntryListService.get().getEntryListFromKey(key);
+				final EntryList entryList = getEntryListService().getEntryListFromKey(key);
 				mCurrentSearchKeyword = nullToEmpty(entryList.getKeyword());
 				onSearchLoaded(entryList);
 				fadeInListFrame();
@@ -145,52 +140,10 @@ public abstract class EntriesFragment extends UndoBarFragment {
 		}
 	};
 
-	private final FolderReceiver mFolderReceiver = new FolderReceiver() {
-		@Override
-		protected void onNew(Context c, Intent i, NPFolder f) {
-			final List<NPFolder> subFolders = getSubFolders();
-			if (mFolder.getFolderId() == f.getParentId()) {
-				if (!Iterables.tryFind(subFolders, f.filterById()).isPresent()) {
-					if (subFolders.size() == 0) {
-						subFolders.add(f);
-					} else {
-						subFolders.add(0, f);
-					}
-					onEntryListUpdated();
-				} else {
-					Log.w(TAG, "folder created on the server, but ID already exists in the list, updating instead: " + f);
-					onUpdate(c, i, f);
-				}
-			}
-		}
 
-		@Override
-		protected void onDelete(Context c, Intent i, NPFolder folder) {
-		}
-
-		@Override
-		protected void onUpdate(Context c, Intent i, NPFolder folder) {
-			if (mFolder.getFolderId() == folder.getParentId()) {
-				final List<NPFolder> subFolders = getSubFolders();
-				final int index = Iterables.indexOf(subFolders, folder.filterById());
-				if (index >= 0) {
-					subFolders.remove(index);
-					subFolders.add(index, folder);
-					onEntryListUpdated();
-				} else {
-					Log.w(TAG, "cannot find the updated entry in the list; folder: " + folder);
-				}
-			}
-		}
-
-		@Override
-		protected void onError(Context context, Intent intent, ServiceError error) {
-			super.onError(context, intent, error);
-			Log.e(TAG, error.toString());
-			handleServiceError(error);
-		}
-	};
-
+	/**
+	 * Handles adding/updating/deleting entry
+	 */
 	private final EntryReceiver mEntryReceiver = new EntryReceiver() {
 		@Override
 		public void onDelete(Context context, Intent intent, NPEntry entry) {
@@ -215,7 +168,7 @@ public abstract class EntriesFragment extends UndoBarFragment {
 		}
 	};
 
-	private final Lazy<SingleAdapter<View>> mLoadMoreAdapter = new Lazy<SingleAdapter<View>>() {
+	protected final Lazy<SingleAdapter<View>> mLoadMoreAdapter = new Lazy<SingleAdapter<View>>() {
 		@Override
 		protected SingleAdapter<View> onCreate() {
 			return new SingleAdapter<View>(getActivity().getLayoutInflater()
@@ -223,7 +176,7 @@ public abstract class EntriesFragment extends UndoBarFragment {
 		}
 	};
 
-	private OnListEndListener mLoadMoreScrollListener = new OnListEndListener() {
+	protected OnListEndListener mLoadMoreScrollListener = new OnListEndListener() {
 		@Override
 		protected void onListEnd(int page) {
 			queryEntriesAsync(getCurrentPage() + 1);
@@ -280,11 +233,7 @@ public abstract class EntriesFragment extends UndoBarFragment {
 			MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
 				@Override
 				public boolean onMenuItemActionExpand(MenuItem item) {
-					if (mListAdapter != null) {
-						return true;
-					}
-
-					return false;
+					return true;
 				}
 
 				@Override
@@ -300,7 +249,7 @@ public abstract class EntriesFragment extends UndoBarFragment {
 	protected void doSearch(String keyword) {
 		fadeInProgressFrame();
 		mCurrentSearchKeyword = keyword;
-		mListAdapter.getEntriesAdapter().doSearch(keyword);
+		mEntriesAdapter.doSearch(keyword);
 	}
 
 	protected void reDisplayListEntries() {
@@ -309,8 +258,8 @@ public abstract class EntriesFragment extends UndoBarFragment {
 		// Need to reset the scroll listener.
 		mLoadMoreScrollListener.reset();
 
-		mListAdapter.getEntriesAdapter().setDisplayEntries(mEntryList);
-		mListAdapter.notifyDataSetChanged();
+		mEntriesAdapter.setDisplayEntries(mEntryList);
+		mEntriesAdapter.notifyDataSetChanged();
 	}
 
 	/**
@@ -339,8 +288,8 @@ public abstract class EntriesFragment extends UndoBarFragment {
 	}
 
 	protected void onEntryListUpdated() {
-		if (mListAdapter != null) {
-			mListAdapter.notifyDataSetChanged();
+		if (getAdapter() != null) {
+			getAdapter().notifyDataSetChanged();
 		}
 	}
 
@@ -375,9 +324,8 @@ public abstract class EntriesFragment extends UndoBarFragment {
 	}
 
 	protected void onUpdateEntry(NPEntry updatedEntry) {
-		final EntryList entryList = getEntryList();
-		if (entryList != null) {
-			final List<NPEntry> entries = entryList.getEntries();
+		if (mEntryList != null) {
+			final List<NPEntry> entries = mEntryList.getEntries();
 			final Iterator<NPEntry> iterator = entries.iterator();
 			final Predicate<NPEntry> predicate = updatedEntry.filterById();
 
@@ -428,11 +376,6 @@ public abstract class EntriesFragment extends UndoBarFragment {
 		super.onResume();
 		final FragmentActivity activity = getActivity();
 
-		activity.registerReceiver(mFolderReceiver,
-				FolderReceiver.getIntentFilter(),
-				Manifest.permission.LISTEN_FOLDER_CHANGES,
-				null);
-
 		activity.registerReceiver(mEntryReceiver,
 				EntryReceiver.getIntentFilter(),
 				Manifest.permission.LISTEN_ENTRY_CHANGES,
@@ -449,7 +392,6 @@ public abstract class EntriesFragment extends UndoBarFragment {
 		super.onPause();
 		final FragmentActivity activity = getActivity();
 
-		activity.unregisterReceiver(mFolderReceiver);
 		activity.unregisterReceiver(mEntryReceiver);
 		activity.unregisterReceiver(mEntryListReceiver);
 	}
@@ -481,12 +423,17 @@ public abstract class EntriesFragment extends UndoBarFragment {
 
 			mListView.setItemsCanFocus(true);
 			mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+
 			if (isAutoLoadMoreEnabled()) {
 				mListView.setOnScrollListener(mLoadMoreScrollListener);
 			}
 		}
 
 		queryEntriesAsync();
+	}
+
+	protected boolean isAutoLoadMoreEnabled() {
+		return true;
 	}
 
 	@Override
@@ -552,39 +499,29 @@ public abstract class EntriesFragment extends UndoBarFragment {
 		}
 	}
 
+	/**
+	 * When the unbar is finally hidden, call the service API to delete the entry.
+	 *
+	 * @param token
+	 */
 	@Override
 	public void onUndoBarHidden(Intent token) {
 		if (token != null) {
 			final String action = token.getAction();
 			final NPEntry entry = token.getParcelableExtra(EntryService.KEY_ENTRY);
-			final NPFolder folder = token.getParcelableExtra(FolderService.KEY_FOLDER);
-			final FolderService service = getFolderService();
 
 			if (EntryService.ACTION_DELETE.equals(action)) {
 				getEntryService().safeDeleteEntry(getActivity(), entry);
-			} else if (FolderService.ACTION_DELETE.equals(action)) {
-				try {
-					folder.setOwner(AccountManager.currentAccount());
-					service.deleteFolder(folder);
-				} catch (NPException e) {
-					Log.e(TAG, e.toString());
-				}
 			}
 		}
 	}
 
-	/**
-	 * @return if the {@link EntryList} should be updated when the list reaches the end
-	 */
-	protected boolean isAutoLoadMoreEnabled() {
-		return true;
-	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.new_folder:
-				NewFolderActivity.startWithParentFolder(getFolder(), getActivity());
+				UpdateFolderActivity.startWithParentFolder(getFolder(), getActivity());
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
@@ -600,7 +537,7 @@ public abstract class EntriesFragment extends UndoBarFragment {
 
 		try {
 			mFolder.setOwner(AccountManager.currentAccount());
-			getEntriesInFolder(mEntryListService.get(), mFolder, page);
+			getEntriesInFolder(getEntryListService(), mFolder, page);
 
 		} catch (NPException e) {
 			Log.e(TAG, e.toString());
@@ -608,7 +545,7 @@ public abstract class EntriesFragment extends UndoBarFragment {
 		}
 	}
 
-	private void handleServiceError(ServiceError error) {
+	protected void handleServiceError(ServiceError error) {
 		final ErrorCode errorCode = error.getErrorCode();
 		if (shouldKickToLogin(errorCode)) {
 			kickToLoginScreen();
@@ -664,18 +601,11 @@ public abstract class EntriesFragment extends UndoBarFragment {
 	 * @param list the filtered entries
 	 */
 	protected void onSearchLoaded(EntryList list) {
-		mListAdapter.getEntriesAdapter().setDisplayEntries(list);
+		((EntriesAdapter)getAdapter()).setDisplayEntries(list);
 	}
 
 	public void deleteEntry(NPEntry entry) {
 		getEntryService().safeDeleteEntry(getActivity(), entry);
-	}
-
-	protected ListFoldersAdapter newFoldersAdapter() {
-		ListFoldersAdapter foldersAdapter = new ListFoldersAdapter(getActivity(), getSubFolders());
-		OnFolderMenuClickListener listener = new OnFolderMenuClickListener(getListView(), mFolder, getFolderService(), getUndoBarController());
-		foldersAdapter.setOnMenuClickListener(listener);
-		return foldersAdapter;
 	}
 
 	protected void setQuickReturnListener(ListView view, AbsListView.OnScrollListener other) {
@@ -724,7 +654,7 @@ public abstract class EntriesFragment extends UndoBarFragment {
 		};
 	}
 
-	protected void setOnFolderSelectedClickListener(final int reqCode) {
+	protected void initFolderSelector(final int reqCode) {
 		final TextView folderSelectorView = getFolderSelectorView();
 		final int module = getModule();
 
@@ -733,7 +663,7 @@ public abstract class EntriesFragment extends UndoBarFragment {
 			@Override
 			public void onClick(View v) {
 				final FragmentActivity activity = getActivity();
-				final Intent intent = FoldersActivity.ofParentFolder(activity, NPFolder.rootFolderOf(module, activity));
+				final Intent intent = FoldersNavigatorActivity.ofParentFolder(activity, NPFolder.rootFolderOf(module, activity));
 				startActivityForResult(intent, reqCode);
 				activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
 			}
@@ -770,10 +700,6 @@ public abstract class EntriesFragment extends UndoBarFragment {
 		return mListView;
 	}
 
-	public FoldersEntriesListAdapter getListAdapter() {
-		return mListAdapter;
-	}
-
 	public void setListAdapter(BaseAdapter adapter) {
 	}
 
@@ -785,16 +711,18 @@ public abstract class EntriesFragment extends UndoBarFragment {
 		return mCurrentPage;
 	}
 
-	public final FolderService getFolderService() {
-		return mFolderService.get();
-	}
-
 	public final EntryService getEntryService() {
-		return mEntryService.get();
+		if (mEntryService == null) {
+			mEntryService = EntryService.getInstance(getActivity());
+		}
+		return mEntryService;
 	}
 
 	public final EntryListService getEntryListService() {
-		return mEntryListService.get();
+		if (mEntryListService == null) {
+			mEntryListService = EntryListService.getInstance(getActivity());
+		}
+		return mEntryListService;
 	}
 
 }

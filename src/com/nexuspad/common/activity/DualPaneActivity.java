@@ -23,7 +23,7 @@ import com.nexuspad.R;
 import com.nexuspad.common.annotaion.FragmentName;
 
 /**
- * A simple {@link UpableActivity} which helps building an {@code Activity} with
+ * A simple {@link NPNavigateActivity} which helps building an {@code Activity} with
  * dual-pane layout.
  * <p/>
  * Overriding {@link #onCreateFragment()} and {@link #onCreateDetailFragment()}
@@ -84,12 +84,12 @@ public abstract class DualPaneActivity extends SinglePaneActivity {
     @Override
     protected int onCreateLayoutId() {
         isCustomLayout = false;
-        return R.layout.ed__layout_dual_pane;
+        return R.layout.np_layout_dual_pane;
     }
 
     @Override
     protected int onCreateFragmentLayoutId() {
-        return R.id.ed__frame_main;
+        return R.id.np_frame_main;
     }
 
     /**

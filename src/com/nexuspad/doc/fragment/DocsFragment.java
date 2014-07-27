@@ -11,12 +11,13 @@ import android.widget.ListView;
 import com.nexuspad.R;
 import com.nexuspad.annotation.ModuleId;
 import com.nexuspad.app.App;
-import com.nexuspad.common.adapters.FoldersEntriesListAdapter;
-import com.nexuspad.common.adapters.ListEntriesAdapter;
+import com.nexuspad.common.adapters.EntriesAdapter;
+import com.nexuspad.common.adapters.FoldersAndEntriesAdapter;
 import com.nexuspad.common.adapters.ListFoldersAdapter;
 import com.nexuspad.common.adapters.ListViewHolder;
 import com.nexuspad.common.annotaion.FragmentName;
 import com.nexuspad.common.fragment.EntriesFragment;
+import com.nexuspad.common.fragment.FoldersAndEntriesFragment;
 import com.nexuspad.common.listeners.OnEntryMenuClickListener;
 import com.nexuspad.datamodel.EntryList;
 import com.nexuspad.datamodel.EntryTemplate;
@@ -30,7 +31,7 @@ import com.nexuspad.doc.activity.NewDocActivity;
  */
 @FragmentName(DocsFragment.TAG)
 @ModuleId(moduleId = ServiceConstants.DOC_MODULE, template = EntryTemplate.DOC)
-public class DocsFragment extends EntriesFragment {
+public class DocsFragment extends FoldersAndEntriesFragment {
 	public static final String TAG = "DocsFragment";
 
 	private Callback mCallback;
@@ -80,7 +81,7 @@ public class DocsFragment extends EntriesFragment {
 	protected void onListLoaded(EntryList list) {
 		Log.i(TAG, "Receiving entry list.");
 
-		FoldersEntriesListAdapter a = getListAdapter();
+		FoldersAndEntriesAdapter a = (FoldersAndEntriesAdapter)getAdapter();
 
 		if (a != null) {
 			a.notifyDataSetChanged();
@@ -93,7 +94,7 @@ public class DocsFragment extends EntriesFragment {
 			@Override
 			public void onClick(View v) {
 				@SuppressWarnings("unchecked")
-				FoldersEntriesListAdapter<? extends ListEntriesAdapter<NPDoc>> felAdapter = ((FoldersEntriesListAdapter<? extends ListEntriesAdapter<NPDoc>>) mListView.getAdapter());
+				FoldersAndEntriesAdapter<? extends EntriesAdapter<NPDoc>> felAdapter = ((FoldersAndEntriesAdapter<? extends EntriesAdapter<NPDoc>>) mListView.getAdapter());
 
 				int position = mListView.getPositionForView(v);
 				if (position != ListView.INVALID_POSITION && felAdapter.isPositionEntries(position)) {
@@ -116,17 +117,17 @@ public class DocsFragment extends EntriesFragment {
 
 		ListFoldersAdapter foldersAdapter = newFoldersAdapter();
 
-		mListAdapter = new FoldersEntriesListAdapter(foldersAdapter, docsAdapter, getLoadMoreAdapter());
-
-		mListView.setAdapter(mListAdapter);
-		mListView.setOnItemLongClickListener(mListAdapter);
+		FoldersAndEntriesAdapter combinedAdapter = new FoldersAndEntriesAdapter(foldersAdapter, docsAdapter, getLoadMoreAdapter());
+		setAdapter(combinedAdapter);
+		mListView.setAdapter(combinedAdapter);
+		mListView.setOnItemLongClickListener(combinedAdapter);
 
 		fadeInListFrame();
 	}
 
 	@Override
 	protected void onSearchLoaded(EntryList list) {
-		getListAdapter().setShouldHideFolders(true);
+		((FoldersAndEntriesAdapter)getAdapter()).setShouldHideFolders(true);
 		super.onSearchLoaded(list);
 	}
 
@@ -135,7 +136,7 @@ public class DocsFragment extends EntriesFragment {
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
 
-		FoldersEntriesListAdapter adapter = getListAdapter();
+		FoldersAndEntriesAdapter adapter = ((FoldersAndEntriesAdapter)getAdapter());
 
 		if (adapter.isPositionFolder(position)) {
 			mCallback.onFolderClick(this, adapter.getFoldersAdapter().getItem(position));
@@ -146,7 +147,7 @@ public class DocsFragment extends EntriesFragment {
 	}
 
 
-	public class DocsAdapter extends ListEntriesAdapter<NPDoc> {
+	public class DocsAdapter extends EntriesAdapter<NPDoc> {
 		public DocsAdapter(Activity a, EntryList entryList) {
 			super(a, entryList, getFolder(), getEntryListService(), EntryTemplate.DOC);
 		}
@@ -174,12 +175,6 @@ public class DocsFragment extends EntriesFragment {
 		@Override
 		protected View getEmptyEntryView(LayoutInflater i, View c, ViewGroup p) {
 			return getCaptionView(i, c, p, R.string.empty_docs, R.drawable.empty_folder);
-		}
-
-		@Override
-		public void showRawEntries() {
-			getListAdapter().setShouldHideFolders(false);
-			super.showRawEntries();
 		}
 	}
 }

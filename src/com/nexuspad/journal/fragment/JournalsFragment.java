@@ -184,7 +184,7 @@ public class JournalsFragment extends EntriesFragment {
 		mJournals.clear();
 
 		List<NPJournal> journals = new ArrayList<NPJournal>();
-		for (NPEntry e : list.getEntries()) {
+		for (NPEntry e : (List<? extends NPEntry>)list.getEntries()) {
 			journals.add(NPJournal.fromEntry(e));
 		}
 

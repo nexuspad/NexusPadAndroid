@@ -107,7 +107,7 @@
             android:icon="@drawable/ic_ab"
             />
         <activity
-            android:name=".bookmark.activity.NewBookmarkActivity"
+            android:name=".bookmark.activity.UpdateBookmarkActivity"
             android:exported="true"
             android:label="@string/bookmark"
             >
@@ -194,23 +194,23 @@
             android:name=".contacts.activity.ContactActivity"
             android:label="@string/contacts"
             />
-        <activity android:name=".contacts.activity.NewContactActivity" />
-        <activity android:name=".contacts.activity.NewLocationActivity" />
+        <activity android:name=".contacts.activity.UpdateContactActivity" />
+        <activity android:name=".contacts.activity.UpdateLocationActivity" />
         <activity
-            android:name=".calendar.ui.activity.EventActivity"
+            android:name=".calendar.activity.EventActivity"
             android:label="@string/event"
             />
         <activity
-            android:name=".calendar.ui.activity.EventsActivity"
+            android:name=".calendar.activity.EventsActivity"
             android:label="@string/events"
             />
-        <activity android:name=".calendar.ui.activity.NewEventActivity" />
+        <activity android:name=".calendar.activity.NewEventActivity" />
         <activity
-            android:name=".common.activity.NewFolderActivity"
+            android:name=".common.activity.UpdateFolderActivity"
             android:label="@string/new_folder"
             />
         <activity
-            android:name=".common.activity.FoldersActivity"
+            android:name=".common.activity.FoldersNavigatorActivity"
             android:label="@string/folders"
             />
 
