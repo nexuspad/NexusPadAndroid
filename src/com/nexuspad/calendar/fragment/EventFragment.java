@@ -5,7 +5,7 @@ import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.view.*;
 import android.widget.TextView;
-import com.nexuspad.common.annotaion.FragmentName;
+import com.nexuspad.common.annotation.FragmentName;
 import com.nexuspad.R;
 import com.nexuspad.app.App;
 import com.nexuspad.calendar.activity.NewEventActivity;

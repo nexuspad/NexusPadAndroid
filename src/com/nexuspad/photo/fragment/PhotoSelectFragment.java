@@ -19,7 +19,7 @@ import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.GridView;
 import android.widget.ImageView;
-import com.nexuspad.common.annotaion.FragmentName;
+import com.nexuspad.common.annotation.FragmentName;
 import com.nexuspad.R;
 import com.nexuspad.app.App;
 import com.squareup.picasso.Picasso;

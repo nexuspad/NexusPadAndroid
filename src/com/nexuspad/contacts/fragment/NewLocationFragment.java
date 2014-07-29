@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import com.nexuspad.R;
-import com.nexuspad.common.annotaion.FragmentName;
+import com.nexuspad.common.annotation.FragmentName;
 import com.nexuspad.datamodel.Location;
 
 /**
@@ -46,7 +46,7 @@ public final class NewLocationFragment extends DialogFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.location_new_frag, container, false);
+        return inflater.inflate(R.layout.contact_location_edit_frag, container, false);
     }
 
     @Override

@@ -11,8 +11,8 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="3"
-        android:layout_margin="@dimen/ed__padding_small"
-        android:padding="@dimen/ed__padding_small"
+        android:layout_margin="@dimen/np_padding_small"
+        android:padding="@dimen/np_padding_small"
         android:background="#777777">
 
         <TextView
@@ -37,7 +37,7 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="7"
-        android:padding="@dimen/ed__padding_small"
+        android:padding="@dimen/np_padding_small"
         android:gravity="center">
 
         <TextView
@@ -45,7 +45,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:textSize="@dimen/ed__textsize_medium"
+            android:textSize="@dimen/np_textsize_medium"
             android:textStyle="bold" />
 
         <TextView

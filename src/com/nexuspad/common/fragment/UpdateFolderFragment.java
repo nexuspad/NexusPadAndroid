@@ -16,7 +16,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 import com.nexuspad.common.activity.FoldersNavigatorActivity;
-import com.nexuspad.common.annotaion.FragmentName;
+import com.nexuspad.common.annotation.FragmentName;
 import com.nexuspad.R;
 import com.nexuspad.datamodel.NPFolder;
 

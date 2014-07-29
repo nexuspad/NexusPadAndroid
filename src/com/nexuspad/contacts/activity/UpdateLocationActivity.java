@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import com.nexuspad.common.activity.DoneDiscardActivity;
-import com.nexuspad.common.annotaion.ParentActivity;
+import com.nexuspad.common.annotation.ParentActivity;
 import com.nexuspad.contacts.fragment.NewLocationFragment;
 import com.nexuspad.datamodel.Location;
 

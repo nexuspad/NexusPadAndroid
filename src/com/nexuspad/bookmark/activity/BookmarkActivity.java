@@ -7,7 +7,7 @@ import android.support.v4.app.Fragment;
 import com.nexuspad.bookmark.fragment.BookmarkFragment;
 import com.nexuspad.datamodel.NPBookmark;
 import com.nexuspad.common.activity.EntryActivity;
-import com.nexuspad.common.annotaion.ParentActivity;
+import com.nexuspad.common.annotation.ParentActivity;
 
 /**
  * @author Edmond

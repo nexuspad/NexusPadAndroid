@@ -16,7 +16,7 @@
             <ImageView
                 android:layout_width="38dp"
                 android:layout_height="38dp"
-                android:layout_marginBottom="@dimen/ed__padding_medium"
+                android:layout_marginBottom="@dimen/np_padding_medium"
                 android:contentDescription="@string/app_name"
                 android:src="@drawable/ic_ab" />
             <TextView
@@ -92,9 +92,9 @@
             android:focusable="true"
             android:gravity="center"
             android:minHeight="48dp"
-            android:padding="@dimen/ed__padding_small"
+            android:padding="@dimen/np_padding_small"
             android:text="@string/lbl_sign_up"
-            android:textSize="@dimen/ed__textsize_small" />
+            android:textSize="@dimen/np_textsize_small" />
     </LinearLayout>
 
 </ScrollView>

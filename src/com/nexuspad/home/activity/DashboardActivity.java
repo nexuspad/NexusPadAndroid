@@ -5,9 +5,11 @@ package com.nexuspad.home.activity;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import com.nexuspad.R;
+import com.nexuspad.account.AccountManager;
 import com.nexuspad.bookmark.activity.BookmarksActivity;
 import com.nexuspad.calendar.activity.EventsActivity;
 import com.nexuspad.common.activity.SinglePaneActivity;
@@ -15,6 +17,7 @@ import com.nexuspad.common.activity.UploadCenterActivity;
 import com.nexuspad.contacts.activity.ContactsActivity;
 import com.nexuspad.datamodel.NPFolder;
 import com.nexuspad.datamodel.NPModule;
+import com.nexuspad.dataservice.NPException;
 import com.nexuspad.doc.activity.DocsActivity;
 import com.nexuspad.home.fragment.DashboardFragment;
 import com.nexuspad.journal.activity.JournalsActivity;
@@ -34,6 +37,16 @@ public class DashboardActivity extends SinglePaneActivity implements DashboardFr
 	@Override
 	protected int onCreateLayoutId() {
 		return R.layout.np_padding_activity;
+	}
+
+	@Override
+	protected void onCreate(Bundle savedState) {
+		super.onCreate(savedState);
+		try {
+			setTitle(AccountManager.currentAccount().getFirstName());
+		} catch (NPException e) {
+			Log.e(TAG, e.toString());
+		}
 	}
 
 	@Override

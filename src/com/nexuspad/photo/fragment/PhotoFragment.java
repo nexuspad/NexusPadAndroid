@@ -12,10 +12,10 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.*;
 import android.widget.ImageView;
-import com.nexuspad.common.annotaion.FragmentName;
+import com.nexuspad.common.annotation.FragmentName;
 import com.google.common.collect.Iterables;
 import com.nexuspad.R;
-import com.nexuspad.annotation.ModuleId;
+import com.nexuspad.common.annotation.ModuleId;
 import com.nexuspad.datamodel.EntryTemplate;
 import com.nexuspad.datamodel.NPFolder;
 import com.nexuspad.datamodel.NPPhoto;
@@ -116,7 +116,7 @@ public class PhotoFragment extends EntriesFragment {
 
         final Resources resources = getResources();
         mViewPager.setBackgroundColor(resources.getColor(android.R.color.background_dark));
-        mViewPager.setPageMargin(resources.getDimensionPixelSize(R.dimen.ed__padding_medium));
+        mViewPager.setPageMargin(resources.getDimensionPixelSize(R.dimen.np_padding_medium));
     }
 
     private void stableNotifyAdapter() {

@@ -62,7 +62,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/add_attachment"
-            android:drawablePadding="@dimen/ed__padding_medium"
+            android:drawablePadding="@dimen/np_padding_medium"
             android:drawableLeft="@drawable/ic_action_new"
             />
     </LinearLayout>

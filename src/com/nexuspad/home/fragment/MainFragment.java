@@ -7,7 +7,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-import com.nexuspad.common.annotaion.FragmentName;
+import com.nexuspad.common.annotation.FragmentName;
 import com.nexuspad.account.AccountManager;
 import com.nexuspad.app.App;
 import com.nexuspad.datamodel.NPUser;

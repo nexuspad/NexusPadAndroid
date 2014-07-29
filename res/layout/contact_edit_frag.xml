@@ -4,8 +4,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="@dimen/ed__padding_medium"
-    android:paddingRight="@dimen/ed__padding_medium"
+    android:paddingLeft="@dimen/np_padding_medium"
+    android:paddingRight="@dimen/np_padding_medium"
     >
 
     <LinearLayout
@@ -59,8 +59,8 @@
             android:layout_gravity="center_vertical"
             android:hint="@string/title"
             android:inputType="textPersonName|textCapWords"
-            android:padding="@dimen/ed__padding_small"
-            android:textSize="@dimen/ed__textsize_medium"
+            android:padding="@dimen/np_padding_small"
+            android:textSize="@dimen/np_textsize_medium"
             />
 
 
@@ -78,7 +78,7 @@
                 android:layout_weight="1"
                 android:hint="@string/first_name"
                 android:inputType="textPersonName|textCapWords"
-                android:textSize="@dimen/ed__textsize_medium"
+                android:textSize="@dimen/np_textsize_medium"
                 />
 
             <EditText
@@ -88,7 +88,7 @@
                 android:layout_weight="1"
                 android:hint="@string/middle_name"
                 android:inputType="textPersonName|textCapWords"
-                android:textSize="@dimen/ed__textsize_medium"
+                android:textSize="@dimen/np_textsize_medium"
                 />
         </LinearLayout>
 
@@ -99,7 +99,7 @@
             android:layout_height="wrap_content"
             android:hint="@string/last_name"
             android:inputType="textPersonName|textCapWords"
-            android:textSize="@dimen/ed__textsize_medium"
+            android:textSize="@dimen/np_textsize_medium"
             />
 
         <EditText
@@ -107,10 +107,10 @@
             style="@style/formMargin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/ed__padding_small"
+            android:layout_marginBottom="@dimen/np_padding_small"
             android:hint="@string/business_name"
             android:inputType="textPersonName|textCapWords"
-            android:textSize="@dimen/ed__textsize_medium"
+            android:textSize="@dimen/np_textsize_medium"
             />
 
         <TextView

@@ -10,7 +10,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import com.nexuspad.R;
 import com.nexuspad.common.activity.SinglePaneActivity;
-import com.nexuspad.common.annotaion.ParentActivity;
+import com.nexuspad.common.annotation.ParentActivity;
 import com.nexuspad.common.fragment.EntriesFragment;
 import com.nexuspad.datamodel.EntryList;
 import com.nexuspad.datamodel.NPFolder;

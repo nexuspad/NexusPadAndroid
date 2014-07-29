@@ -10,8 +10,10 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.MenuItemCompat;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.*;
 import com.google.common.base.Predicate;
 import com.google.common.base.Strings;
@@ -19,7 +21,7 @@ import com.google.common.collect.Iterables;
 import com.nexuspad.Manifest;
 import com.nexuspad.R;
 import com.nexuspad.account.AccountManager;
-import com.nexuspad.annotation.ModuleId;
+import com.nexuspad.common.annotation.ModuleId;
 import com.nexuspad.app.App;
 import com.nexuspad.common.activity.FoldersNavigatorActivity;
 import com.nexuspad.common.activity.UpdateFolderActivity;
@@ -57,6 +59,9 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 
 	public static final int PAGE_COUNT = 20;
 
+	private EntryService mEntryService = null;
+	private EntryListService mEntryListService = null;
+
 	protected EntryList mEntryList;
 
 	private Callback mCallback;
@@ -67,10 +72,11 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 
 	private ModuleId mModuleId;
 
-	protected View mQuickReturnV;
-	protected TextView mFolderSelectorV;
-
+	protected View mQuickReturnView;
+	protected TextView mFolderSelectorView;
 	protected ListView mListView;
+
+	protected View mEmptyFolderView;
 
 	protected String mCurrentSearchKeyword;
 
@@ -88,9 +94,6 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 	public interface Callback {
 		void onListLoaded(EntriesFragment f, EntryList list);
 	}
-
-	private EntryService mEntryService = null;
-	private EntryListService mEntryListService = null;
 
 
 	/**
@@ -119,7 +122,11 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 					mEntryList.setPageId(entryList.getPageId());
 				}
 
-				onListLoaded(mEntryList);
+				if (mEntryList.getEntries().size() == 0) {
+					fadeInEmptyFolderView();
+				} else {
+					onListLoaded(mEntryList);
+				}
 			}
 		}
 
@@ -128,8 +135,13 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 			if (mModuleId.template().equals(entryTemplate)) {
 				final EntryList entryList = getEntryListService().getEntryListFromKey(key);
 				mCurrentSearchKeyword = nullToEmpty(entryList.getKeyword());
-				onSearchLoaded(entryList);
-				fadeInListFrame();
+
+				if (entryList.getEntries().size() == 0) {
+					fadeInEmptyFolderView();
+				} else {
+					onSearchLoaded(entryList);
+					fadeInListFrame();
+				}
 			}
 		}
 
@@ -396,6 +408,13 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 		activity.unregisterReceiver(mEntryListReceiver);
 	}
 
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		return inflater.inflate(R.layout.list_content, container, false);
+	}
+
+
 	/**
 	 * {@link #onListLoaded(EntryList)} may get called immediately in the
 	 * method.
@@ -404,10 +423,51 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 
-		mQuickReturnV = view.findViewById(R.id.quick_return);
-		mFolderSelectorV = (TextView)view.findViewById(R.id.lbl_folder);
+		/*
+		 * main list frame
+		 */
+		final View listFrame = view.findViewById(R.id.main_list_frame);
 
-		final View theView = view.findViewById(android.R.id.list);
+		/*
+		 * progress frame and retry button
+		 */
+		final View progressFrame = view.findViewById(R.id.frame_progress);
+		final View retryFrame = view.findViewById(R.id.frame_retry);
+
+		if (listFrame != null && progressFrame != null && retryFrame != null) {
+			mLoadingUiManager = new LoadingUiManager(listFrame, retryFrame, progressFrame, new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					mLoadingUiManager.fadeInProgressFrame();
+					onRetryClicked(v);
+				}
+			});
+		}
+
+		/*
+		 * quick return
+		 */
+		mQuickReturnView = view.findViewById(R.id.quick_return);
+
+		/*
+		 * empty folder
+		 */
+		if (mEmptyFolderView == null) {
+			mEmptyFolderView = view.findViewById(R.id.frame_empty_folder);
+		}
+		if (mEmptyFolderView != null) {
+			mEmptyFolderView.setVisibility(View.GONE);
+		}
+
+		/*
+		 * folder selector
+		 */
+		mFolderSelectorView = (TextView)view.findViewById(R.id.lbl_folder);
+
+		/*
+		 * main list view
+		 */
+		final View theView = view.findViewById(R.id.main_list_view);
 
 		if (theView instanceof ListView) {
 			mListView = (ListView) theView;
@@ -671,17 +731,24 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 	}
 
 	protected View getQuickReturnView() {
-		if (mQuickReturnV == null) {
+		if (mQuickReturnView == null) {
 			throw new IllegalStateException("that is no view with id R.id.quick_return");
 		}
-		return mQuickReturnV;
+		return mQuickReturnView;
 	}
 
 	public TextView getFolderSelectorView() {
-		if (mFolderSelectorV == null) {
+		if (mFolderSelectorView == null) {
 			throw new IllegalStateException("that is no view with id R.id.lbl_folder");
 		}
-		return mFolderSelectorV;
+		return mFolderSelectorView;
+	}
+
+	protected void fadeInEmptyFolderView() {
+		if (mEmptyFolderView != null) {
+			mLoadingUiManager.fadeOutProgressFrame();
+			mEmptyFolderView.setVisibility(View.VISIBLE);
+		}
 	}
 
 	/**

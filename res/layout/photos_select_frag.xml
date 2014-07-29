@@ -24,7 +24,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:background="?android:attr/selectableItemBackground"
-            android:textSize="@dimen/ed__textsize_medium"
+            android:textSize="@dimen/np_textsize_medium"
             android:textColor="@android:color/white"
             android:text="@android:string/cancel" />
 
@@ -35,7 +35,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:background="?android:attr/selectableItemBackground"
-            android:textSize="@dimen/ed__textsize_medium"
+            android:textSize="@dimen/np_textsize_medium"
             android:textColor="@android:color/white"
             android:text="@android:string/ok" />
     </LinearLayout>

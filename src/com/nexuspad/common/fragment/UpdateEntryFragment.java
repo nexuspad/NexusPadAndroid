@@ -11,7 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import com.nexuspad.account.AccountManager;
-import com.nexuspad.annotation.ModuleId;
+import com.nexuspad.common.annotation.ModuleId;
 import com.nexuspad.common.activity.FoldersNavigatorActivity;
 import com.nexuspad.common.activity.UpdateEntryActivity;
 import com.nexuspad.datamodel.NPEntry;

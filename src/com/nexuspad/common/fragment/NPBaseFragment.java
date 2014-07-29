@@ -1,11 +1,8 @@
 package com.nexuspad.common.fragment;
 
-import android.support.v4.app.Fragment;
 import android.content.Context;
-import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.support.v4.app.Fragment;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.widget.ListView;
 import com.nexuspad.R;
@@ -18,31 +15,7 @@ import static android.view.animation.AnimationUtils.loadAnimation;
 public class NPBaseFragment extends Fragment {
 	public static final String TAG = NPBaseFragment.class.getSimpleName();
 
-	private LoadingUiManager mLoadingUiManager;
-
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.list_content, container, false);
-	}
-
-	@Override
-	public void onViewCreated(View view, Bundle savedInstanceState) {
-		super.onViewCreated(view, savedInstanceState);
-
-		final View listFrame = view.findViewById(R.id.frame_list);
-		final View progressFrame = view.findViewById(R.id.frame_progress);
-		final View retryFrame = view.findViewById(R.id.frame_retry);
-
-		if (listFrame != null && progressFrame != null && retryFrame != null) {
-			mLoadingUiManager = new LoadingUiManager(listFrame, retryFrame, progressFrame, new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					mLoadingUiManager.fadeInProgressFrame();
-					onRetryClicked(v);
-				}
-			});
-		}
-	}
+	protected LoadingUiManager mLoadingUiManager;
 
 	protected void onRetryClicked(View button) {
 	}
@@ -66,15 +39,18 @@ public class NPBaseFragment extends Fragment {
 	 * Fade out the progress or retrying screen element.
 	 */
 	protected void fadeInListFrame() {
-		mLoadingUiManager.fadeInListFrame();
+		if (mLoadingUiManager != null)
+			mLoadingUiManager.fadeInListFrame();
 	}
 
 	protected void fadeInProgressFrame() {
-		mLoadingUiManager.fadeInProgressFrame();
+		if (mLoadingUiManager != null)
+			mLoadingUiManager.fadeInProgressFrame();
 	}
 
 	protected void fadeInRetryFrame() {
-		mLoadingUiManager.fadeInRetryFrame();
+		if (mLoadingUiManager != null)
+			mLoadingUiManager.fadeInRetryFrame();
 	}
 
 	protected static final class LoadingUiManager {
@@ -140,6 +116,10 @@ public class NPBaseFragment extends Fragment {
 			}
 
 			fadeIn(mProgressV);
+		}
+
+		protected void fadeOutProgressFrame() {
+			fadeOut(mProgressV);
 		}
 
 		private void fadeOut(View view) {

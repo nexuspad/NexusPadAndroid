@@ -12,7 +12,7 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.widget.Toast;
 import com.nexuspad.R;
-import com.nexuspad.db.DatabaseManager;
+import com.nexuspad.datastore.db.DatabaseManager;
 
 import java.util.regex.Pattern;
 

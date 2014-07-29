@@ -13,8 +13,8 @@
         android:layout_height="match_parent"
         android:background="?android:attr/selectableItemBackground"
         android:duplicateParentState="false"
-        android:paddingLeft="@dimen/ed__padding_micro"
-        android:paddingRight="@dimen/ed__padding_micro"
+        android:paddingLeft="@dimen/np_padding_micro"
+        android:paddingRight="@dimen/np_padding_micro"
         android:scaleType="centerInside"
         tools:ignore="ContentDescription" />
 
@@ -35,11 +35,11 @@
         android:ellipsize="end"
         android:gravity="center_vertical"
         android:maxLines="1"
-        android:paddingBottom="@dimen/ed__padding_micro"
-        android:paddingLeft="@dimen/ed__padding_small"
-        android:paddingTop="@dimen/ed__padding_micro"
+        android:paddingBottom="@dimen/np_padding_micro"
+        android:paddingLeft="@dimen/np_padding_small"
+        android:paddingTop="@dimen/np_padding_micro"
         android:scrollHorizontally="true"
-        android:textSize="@dimen/ed__textsize_medium" />
+        android:textSize="@dimen/np_textsize_medium" />
 
     <ImageButton
         android:id="@+id/menu"

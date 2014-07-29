@@ -15,11 +15,11 @@ import android.widget.ListView;
 import android.widget.SearchView;
 import com.google.common.base.Strings;
 import com.nexuspad.R;
-import com.nexuspad.annotation.ModuleId;
+import com.nexuspad.common.annotation.ModuleId;
 import com.nexuspad.common.activity.FoldersNavigatorActivity;
 import com.nexuspad.common.adapters.EntriesAdapter;
 import com.nexuspad.common.adapters.ListViewHolder;
-import com.nexuspad.common.annotaion.FragmentName;
+import com.nexuspad.common.annotation.FragmentName;
 import com.nexuspad.common.fragment.EntriesFragment;
 import com.nexuspad.common.listeners.OnEntryMenuClickListener;
 import com.nexuspad.common.utils.EntriesLocalSearchFilter;
@@ -109,7 +109,7 @@ public final class ContactsFragment extends EntriesFragment {
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 
-		final View theView = view.findViewById(android.R.id.list);
+		final View theView = view.findViewById(R.id.main_list_view);
 
 		mStickyHeaderContactListView = (StickyListHeadersListView)theView;
 

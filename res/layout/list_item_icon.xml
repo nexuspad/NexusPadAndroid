@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:minHeight="48dp"
     android:orientation="horizontal"
-    android:paddingLeft="@dimen/ed__padding_small"
+    android:paddingLeft="@dimen/np_padding_small"
     tools:context=".home.ui.activity.MainActivity">
 
     <ImageView
@@ -24,11 +24,11 @@
         android:ellipsize="end"
         android:gravity="center_vertical"
         android:maxLines="1"
-        android:paddingBottom="@dimen/ed__padding_micro"
-        android:paddingLeft="@dimen/ed__padding_small"
-        android:paddingTop="@dimen/ed__padding_micro"
+        android:paddingBottom="@dimen/np_padding_micro"
+        android:paddingLeft="@dimen/np_padding_small"
+        android:paddingTop="@dimen/np_padding_micro"
         android:scrollHorizontally="true"
-        android:textSize="@dimen/ed__textsize_medium" />
+        android:textSize="@dimen/np_textsize_medium" />
 
     <ImageButton
         android:id="@+id/menu"

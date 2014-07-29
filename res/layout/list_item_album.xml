@@ -25,9 +25,9 @@
         android:maxLines="2"
         android:textStyle="bold"
         android:scrollHorizontally="true"
-        android:paddingBottom="@dimen/ed__padding_micro"
-        android:paddingLeft="@dimen/ed__padding_small"
-        android:paddingTop="@dimen/ed__padding_micro"
-        android:textSize="@dimen/ed__textsize_medium" />
+        android:paddingBottom="@dimen/np_padding_micro"
+        android:paddingLeft="@dimen/np_padding_small"
+        android:paddingTop="@dimen/np_padding_micro"
+        android:textSize="@dimen/np_textsize_medium" />
 
 </com.nexuspad.common.view.DuplicateParentStateAwareLinearLayout>

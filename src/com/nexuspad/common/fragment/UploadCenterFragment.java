@@ -16,7 +16,7 @@ import android.widget.*;
 import com.nexuspad.R;
 import com.nexuspad.app.Request;
 import com.nexuspad.app.service.UploadService;
-import com.nexuspad.common.annotaion.FragmentName;
+import com.nexuspad.common.annotation.FragmentName;
 import com.nexuspad.dataservice.FileUploadService;
 import com.squareup.picasso.Picasso;
 

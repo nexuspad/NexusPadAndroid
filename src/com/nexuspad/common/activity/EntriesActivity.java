@@ -7,7 +7,7 @@ import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 import com.nexuspad.R;
-import com.nexuspad.annotation.ModuleId;
+import com.nexuspad.common.annotation.ModuleId;
 import com.nexuspad.common.fragment.EntriesFragment;
 import com.nexuspad.datamodel.EntryList;
 import com.nexuspad.datamodel.NPFolder;

@@ -3,7 +3,7 @@ package com.nexuspad.calendar.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
-import com.nexuspad.common.annotaion.ParentActivity;
+import com.nexuspad.common.annotation.ParentActivity;
 import com.nexuspad.calendar.fragment.EventFragment;
 import com.nexuspad.datamodel.NPEvent;
 import com.nexuspad.datamodel.NPFolder;

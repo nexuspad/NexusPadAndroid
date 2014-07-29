@@ -10,7 +10,7 @@
     <include layout="@layout/include_frame_retry" />
 
     <FrameLayout
-        android:id="@+id/frame_list"
+        android:id="@+id/main_list_frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone">

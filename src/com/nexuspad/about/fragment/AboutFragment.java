@@ -22,7 +22,7 @@ import com.nexuspad.R;
 import com.nexuspad.account.AccountManager;
 import com.nexuspad.app.App;
 import com.nexuspad.common.utils.Lazy;
-import com.nexuspad.common.annotaion.FragmentName;
+import com.nexuspad.common.annotation.FragmentName;
 import com.nexuspad.datamodel.NPUser;
 import com.nexuspad.datamodel.UserSetting;
 import com.nexuspad.dataservice.AccountService;

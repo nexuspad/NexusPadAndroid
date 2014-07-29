@@ -5,10 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="48dp"
     android:drawableLeft="@drawable/ic_np_folder"
-    android:drawablePadding="@dimen/ed__padding_small"
+    android:drawablePadding="@dimen/np_padding_small"
     android:ellipsize="end"
     android:maxLines="1"
     android:scrollHorizontally="true"
     android:text="@string/root"
-    android:textSize="@dimen/ed__textsize_medium" />
+    android:textSize="@dimen/np_textsize_medium" />
 

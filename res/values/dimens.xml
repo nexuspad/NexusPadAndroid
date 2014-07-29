@@ -1,16 +1,16 @@
 <resources>
 
-    <dimen name="ed__activity_margin_vertical">8dp</dimen>
+    <dimen name="np_activity_margin_vertical">8dp</dimen>
 
-    <dimen name="ed__activity_margin_horizontal">16dp</dimen>
+    <dimen name="np_activity_margin_horizontal">16dp</dimen>
 
-    <dimen name="ed__padding_micro">4dp</dimen>
-    <dimen name="ed__padding_small">8dp</dimen>
-    <dimen name="ed__padding_medium">16dp</dimen>
-    <dimen name="ed__textsize_micro">12sp</dimen>
-    <dimen name="ed__textsize_small">14sp</dimen>
-    <dimen name="ed__textsize_medium">18sp</dimen>
-    <dimen name="ed__textsize_large">22sp</dimen>
+    <dimen name="np_padding_micro">4dp</dimen>
+    <dimen name="np_padding_small">8dp</dimen>
+    <dimen name="np_padding_medium">16dp</dimen>
+    <dimen name="np_textsize_micro">12sp</dimen>
+    <dimen name="np_textsize_small">14sp</dimen>
+    <dimen name="np_textsize_medium">18sp</dimen>
+    <dimen name="np_textsize_large">22sp</dimen>
 
     <dimen name="photo_grid_width">99dp</dimen>
     <dimen name="photo_grid_height">99dp</dimen>

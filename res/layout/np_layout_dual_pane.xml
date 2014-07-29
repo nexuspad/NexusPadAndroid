@@ -26,14 +26,14 @@
         android:id="@+id/np_frame_main"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_marginRight="@dimen/ed__padding_small"
+        android:layout_marginRight="@dimen/np_padding_small"
         android:layout_weight="4" />
 
     <FrameLayout
         android:id="@+id/ed__frame_detail"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_marginLeft="@dimen/ed__padding_small"
+        android:layout_marginLeft="@dimen/np_padding_small"
         android:layout_weight="6" />
 
 </LinearLayout>

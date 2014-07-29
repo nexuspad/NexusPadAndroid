@@ -91,7 +91,7 @@
             android:id="@+id/chk_all_day"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/ed__textsize_small"
+            android:textSize="@dimen/np_textsize_small"
             android:text="@string/all_day" />
 
         <TextView

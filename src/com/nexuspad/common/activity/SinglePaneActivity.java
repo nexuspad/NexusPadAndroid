@@ -19,7 +19,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import com.nexuspad.R;
-import com.nexuspad.common.annotaion.FragmentName;
+import com.nexuspad.common.annotation.FragmentName;
 
 /**
  * A simple {@link NPNavigateActivity} which helps building an {@code Activity}
@@ -28,7 +28,7 @@ import com.nexuspad.common.annotaion.FragmentName;
  * Overriding {@link #onCreateFragment()} is all you needed.
  * <p/>
  * Although not necessary, it is strongly recommended to provide tags for the
- * {@code Fragment} by annotating a {@link com.nexuspad.common.annotaion.FragmentName} on its class.
+ * {@code Fragment} by annotating a {@link com.nexuspad.common.annotation.FragmentName} on its class.
  *
  * @author Edmond
  *
@@ -153,7 +153,7 @@ public abstract class SinglePaneActivity extends NPNavigateActivity {
     /**
      * Called during {@code Activity} {@link #onCreate(android.os.Bundle)} if necessary.
      * <p/>
-     * You should also supply a {@link com.nexuspad.common.annotaion.FragmentName} to the target
+     * You should also supply a {@link com.nexuspad.common.annotation.FragmentName} to the target
      * {@code Fragment} for {@link #getFragment()} to function properly.
      *
      * @see #getFragment()
@@ -162,7 +162,7 @@ public abstract class SinglePaneActivity extends NPNavigateActivity {
     protected abstract Fragment onCreateFragment();
 
     /**
-     * <b>Most classes should use {@link com.nexuspad.common.annotaion.FragmentName} on
+     * <b>Most classes should use {@link com.nexuspad.common.annotation.FragmentName} on
      * the target {@code Fragment}.</b><br/>
      * This method is for advanced users, for example, to differentiate multiple
      * instances of the same {@code Fragment} class.
@@ -170,7 +170,7 @@ public abstract class SinglePaneActivity extends NPNavigateActivity {
      * Passed to {@code FragmentManager} for transactions and retrieval. <br />
      * This method is guaranteed to be called after {@link #onCreateFragment()}.
      * </p>
-     * The default implementation looks for the {@link com.nexuspad.common.annotaion.FragmentName} Annotation.
+     * The default implementation looks for the {@link com.nexuspad.common.annotation.FragmentName} Annotation.
      * You may override this method if you wish to return a dynamically
      * generated tag.
      *
@@ -183,7 +183,7 @@ public abstract class SinglePaneActivity extends NPNavigateActivity {
     }
 
     /**
-     * You must supply a {@link com.nexuspad.common.annotaion.FragmentName} to the target {@code Fragment}, or
+     * You must supply a {@link com.nexuspad.common.annotation.FragmentName} to the target {@code Fragment}, or
      * override {@link #onCreateFragmentTag()} for this method to function
      * properly.
      *
@@ -196,7 +196,7 @@ public abstract class SinglePaneActivity extends NPNavigateActivity {
 
     /**
      *
-     * @return the stored {@code String} annotated by {@link com.nexuspad.common.annotaion.FragmentName}.
+     * @return the stored {@code String} annotated by {@link com.nexuspad.common.annotation.FragmentName}.
      */
     protected String getFragmentTag() {
         return mFragmentTag;

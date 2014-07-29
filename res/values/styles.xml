@@ -7,10 +7,10 @@
     </style>
 
     <style name="ed__styleActivityMargin">
-        <item name="android:paddingBottom">@dimen/ed__activity_margin_vertical</item>
-        <item name="android:paddingLeft">@dimen/ed__activity_margin_horizontal</item>
-        <item name="android:paddingRight">@dimen/ed__activity_margin_horizontal</item>
-        <item name="android:paddingTop">@dimen/ed__activity_margin_vertical</item>
+        <item name="android:paddingBottom">@dimen/np_activity_margin_vertical</item>
+        <item name="android:paddingLeft">@dimen/np_activity_margin_horizontal</item>
+        <item name="android:paddingRight">@dimen/np_activity_margin_horizontal</item>
+        <item name="android:paddingTop">@dimen/np_activity_margin_vertical</item>
     </style>
 
     <style name="PhotoActivity" parent="@android:style/Theme.Holo">
@@ -22,8 +22,8 @@
     <style name="autoMargin" />
 
     <style name="formMargin">
-        <item name="android:layout_marginBottom">@dimen/ed__padding_small</item>
-        <item name="android:layout_marginTop">@dimen/ed__padding_small</item>
+        <item name="android:layout_marginBottom">@dimen/np_padding_small</item>
+        <item name="android:layout_marginTop">@dimen/np_padding_small</item>
     </style>
 
     <style name="logoTextView" parent="android:Widget.Holo.Light.TextView">
@@ -35,23 +35,23 @@
     <style name="listItemTextView">
         <item name="android:gravity">center_vertical</item>
         <item name="android:minHeight">48dp</item>
-        <item name="android:padding">@dimen/ed__padding_small</item>
-        <item name="android:textSize">@dimen/ed__textsize_medium</item>
+        <item name="android:padding">@dimen/np_padding_small</item>
+        <item name="android:textSize">@dimen/np_textsize_medium</item>
     </style>
 
     <style name="listTitleTextView">
         <item name="android:gravity">center_vertical</item>
         <item name="android:minHeight">48dp</item>
-        <item name="android:padding">@dimen/ed__padding_small</item>
-        <item name="android:textSize">@dimen/ed__textsize_large</item>
+        <item name="android:padding">@dimen/np_padding_small</item>
+        <item name="android:textSize">@dimen/np_textsize_large</item>
         <item name="android:background">#DFDFDF</item>
     </style>
 
     <style name="BlockTextTextView">
         <item name="android:gravity">top</item>
         <item name="android:minHeight">48dp</item>
-        <item name="android:padding">@dimen/ed__padding_small</item>
-        <item name="android:textSize">@dimen/ed__textsize_medium</item>
+        <item name="android:padding">@dimen/np_padding_small</item>
+        <item name="android:textSize">@dimen/np_textsize_medium</item>
     </style>
 
     <style name="selectableTextView" parent="@style/listItemTextView">
@@ -61,26 +61,26 @@
     </style>
 
     <style name="scrollableFrame" parent="android:Widget.Holo.Light.ScrollView">
-        <item name="android:paddingBottom">@dimen/ed__padding_small</item>
-        <item name="android:paddingLeft">@dimen/ed__padding_small</item>
-        <item name="android:paddingRight">@dimen/ed__padding_small</item>
-        <item name="android:paddingTop">@dimen/ed__padding_small</item>
+        <item name="android:paddingBottom">@dimen/np_padding_small</item>
+        <item name="android:paddingLeft">@dimen/np_padding_small</item>
+        <item name="android:paddingRight">@dimen/np_padding_small</item>
+        <item name="android:paddingTop">@dimen/np_padding_small</item>
         <item name="android:scrollbarStyle">outsideOverlay</item>
     </style>
 
     <style name="stylePrimaryTextView" parent="android:Widget.Holo.Light.TextView">
-        <item name="android:layout_marginBottom">@dimen/ed__padding_micro</item>
-        <item name="android:layout_marginTop">@dimen/ed__padding_small</item>
-        <item name="android:layout_marginLeft">@dimen/ed__padding_small</item>
-        <item name="android:layout_marginRight">@dimen/ed__padding_small</item>
-        <item name="android:textSize">@dimen/ed__textsize_large</item>
+        <item name="android:layout_marginBottom">@dimen/np_padding_micro</item>
+        <item name="android:layout_marginTop">@dimen/np_padding_small</item>
+        <item name="android:layout_marginLeft">@dimen/np_padding_small</item>
+        <item name="android:layout_marginRight">@dimen/np_padding_small</item>
+        <item name="android:textSize">@dimen/np_textsize_large</item>
     </style>
 
     <style name="styleSecondaryTextView" parent="android:Widget.Holo.Light.TextView">
-        <item name="android:layout_marginBottom">@dimen/ed__padding_small</item>
-        <item name="android:layout_marginLeft">@dimen/ed__padding_small</item>
-        <item name="android:layout_marginRight">@dimen/ed__padding_small</item>
-        <item name="android:textSize">@dimen/ed__textsize_small</item>
+        <item name="android:layout_marginBottom">@dimen/np_padding_small</item>
+        <item name="android:layout_marginLeft">@dimen/np_padding_small</item>
+        <item name="android:layout_marginRight">@dimen/np_padding_small</item>
+        <item name="android:textSize">@dimen/np_textsize_small</item>
     </style>
 
     <style name="UndoBar">

@@ -12,15 +12,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:paddingRight="@dimen/ed__padding_micro" />
+        android:paddingRight="@dimen/np_padding_micro" />
 
     <TextView
         android:id="@android:id/text1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:paddingLeft="@dimen/ed__padding_micro"
+        android:paddingLeft="@dimen/np_padding_micro"
         android:text="@string/loading_more"
-        android:textSize="@dimen/ed__textsize_medium" />
+        android:textSize="@dimen/np_textsize_medium" />
 
 </LinearLayout>

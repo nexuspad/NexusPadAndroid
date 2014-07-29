@@ -3,7 +3,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/ed__padding_small"
+    android:padding="@dimen/np_padding_small"
     android:orientation="horizontal"
     android:baselineAligned="false">
 
@@ -12,7 +12,7 @@
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_height="match_parent"
-        android:layout_marginRight="@dimen/ed__padding_small"
+        android:layout_marginRight="@dimen/np_padding_small"
         android:orientation="vertical">
 
         <include layout="@layout/include_album_new" />
@@ -30,7 +30,7 @@
 
             <TextView
                 android:id="@+id/pick_img"
-                android:padding="@dimen/ed__padding_small"
+                android:padding="@dimen/np_padding_small"
                 android:drawableLeft="@drawable/photo"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -40,7 +40,7 @@
 
             <TextView
                 android:id="@+id/lbl_num_photos"
-                android:padding="@dimen/ed__padding_small"
+                android:padding="@dimen/np_padding_small"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"

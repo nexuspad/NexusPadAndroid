@@ -14,7 +14,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:drawablePadding="@dimen/ed__padding_small"
+            android:drawablePadding="@dimen/np_padding_small"
             android:drawableLeft="@drawable/ic_upload"
             android:textColor="@android:color/white" />
 
@@ -25,7 +25,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:drawablePadding="@dimen/ed__padding_small"
+            android:drawablePadding="@dimen/np_padding_small"
             android:drawableLeft="@drawable/ic_download"
             android:textColor="@android:color/white" />
     </LinearLayout>

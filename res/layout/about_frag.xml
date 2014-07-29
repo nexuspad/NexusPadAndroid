@@ -2,8 +2,8 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="@dimen/ed__padding_small"
-    android:paddingRight="@dimen/ed__padding_small"
+    android:paddingLeft="@dimen/np_padding_small"
+    android:paddingRight="@dimen/np_padding_small"
     android:scrollbarStyle="outsideOverlay">
 
     <LinearLayout
@@ -43,7 +43,7 @@
                 android:id="@android:id/icon"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:layout_margin="@dimen/ed__padding_small"
+                android:layout_margin="@dimen/np_padding_small"
                 android:contentDescription="@string/porfile_image"
                 android:scaleType="centerInside"
                 android:src="@drawable/avatar" />
@@ -65,7 +65,7 @@
                     style="@style/styleSecondaryTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/ed__textsize_medium" />
+                    android:textSize="@dimen/np_textsize_medium" />
             </LinearLayout>
         </LinearLayout>
 

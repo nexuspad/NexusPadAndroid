@@ -5,11 +5,11 @@
     >
 
     <include layout="@layout/include_frame_progress" />
-
     <include layout="@layout/include_frame_retry" />
+    <include layout="@layout/include_frame_empty_folder" />
 
     <FrameLayout
-        android:id="@+id/frame_list"
+        android:id="@+id/main_list_frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone"
@@ -17,13 +17,13 @@
 
         <view
             class="se.emilsjolander.stickylistheaders.StickyListHeadersListView"
-            android:id="@android:id/list"
+            android:id="@+id/main_list_view"
             android:listSelector="?android:attr/selectableItemBackground"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingBottom="@dimen/ed__padding_small"
-            android:paddingLeft="@dimen/ed__padding_small"
-            android:paddingRight="@dimen/ed__padding_small"
+            android:paddingBottom="@dimen/np_padding_small"
+            android:paddingLeft="@dimen/np_padding_small"
+            android:paddingRight="@dimen/np_padding_small"
             android:scrollbarStyle="outsideOverlay"
             />
     </FrameLayout>

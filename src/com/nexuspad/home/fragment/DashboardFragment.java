@@ -13,7 +13,7 @@ import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
-import com.nexuspad.common.annotaion.FragmentName;
+import com.nexuspad.common.annotation.FragmentName;
 import com.nexuspad.R;
 import com.nexuspad.about.activity.AboutActivity;
 import com.nexuspad.account.AccountManager;
@@ -102,7 +102,6 @@ public class DashboardFragment extends Fragment {
 			case R.id.logout:
 				AccountManager.logout();
 				FragmentActivity activity = getActivity();
-
 				startActivity(new Intent(activity, LoginActivity.class));
 				activity.finish();
 				return true;
@@ -119,7 +118,7 @@ public class DashboardFragment extends Fragment {
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 
-		mListView = (ListView)view.findViewById(android.R.id.list);
+		mListView = (ListView)view.findViewById(R.id.main_list_view);
 
 		mListAdapter = new IconListAdapter(getActivity(), sDrawables, sStrings);
 		mListView.setAdapter(mListAdapter);

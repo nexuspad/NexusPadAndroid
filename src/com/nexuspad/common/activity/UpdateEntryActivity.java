@@ -6,7 +6,7 @@ package com.nexuspad.common.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import com.nexuspad.R;
-import com.nexuspad.annotation.ModuleId;
+import com.nexuspad.common.annotation.ModuleId;
 import com.nexuspad.common.fragment.EntryFragment;
 import com.nexuspad.common.fragment.UpdateEntryFragment;
 import com.nexuspad.datamodel.NPEntry;

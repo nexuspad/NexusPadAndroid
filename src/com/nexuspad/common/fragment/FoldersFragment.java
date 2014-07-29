@@ -8,10 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
+import android.view.*;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -24,7 +21,7 @@ import com.nexuspad.app.App;
 import com.nexuspad.common.activity.UpdateFolderActivity;
 import com.nexuspad.common.adapters.FolderNavigatorAdapter;
 import com.nexuspad.common.adapters.OnFolderMenuClickListener;
-import com.nexuspad.common.annotaion.FragmentName;
+import com.nexuspad.common.annotation.FragmentName;
 import com.nexuspad.datamodel.NPFolder;
 import com.nexuspad.dataservice.FolderService;
 import com.nexuspad.dataservice.FolderService.FolderReceiver;
@@ -187,12 +184,35 @@ public class FoldersFragment extends UndoBarFragment {
 
 
 	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		return inflater.inflate(R.layout.list_content, container, false);
+	}
+
+
+	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 
+		/*
+		 * Init the loading UI manager.
+		 */
+		final View listFrame = view.findViewById(R.id.main_list_frame);
+		final View progressFrame = view.findViewById(R.id.frame_progress);
+		final View retryFrame = view.findViewById(R.id.frame_retry);
+
+		if (listFrame != null && progressFrame != null && retryFrame != null) {
+			mLoadingUiManager = new LoadingUiManager(listFrame, retryFrame, progressFrame, new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					mLoadingUiManager.fadeInProgressFrame();
+					onRetryClicked(v);
+				}
+			});
+		}
+
 		mQuickReturnV = view.findViewById(R.id.quick_return);
 
-		final View theView = view.findViewById(android.R.id.list);
+		final View theView = view.findViewById(R.id.main_list_view);
 
 		if (theView instanceof ListView) {
 			mListView = (ListView) theView;
