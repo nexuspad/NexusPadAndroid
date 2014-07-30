@@ -5,10 +5,10 @@ import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.view.*;
 import android.widget.TextView;
+import com.nexuspad.calendar.activity.EventEditActivity;
 import com.nexuspad.common.annotation.FragmentName;
 import com.nexuspad.R;
 import com.nexuspad.app.App;
-import com.nexuspad.calendar.activity.NewEventActivity;
 import com.nexuspad.datamodel.NPEvent;
 import com.nexuspad.datamodel.NPFolder;
 import com.nexuspad.common.fragment.EntryFragment;
@@ -58,7 +58,7 @@ public class EventFragment extends EntryFragment<NPEvent> {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.edit:
-                NewEventActivity.startWithEvent(getActivity(), getFolder(), getEntry());
+                EventEditActivity.startWithEvent(getActivity(), getFolder(), getEntry());
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

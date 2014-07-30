@@ -18,9 +18,9 @@ import com.nexuspad.common.annotation.ModuleId;
 import com.nexuspad.calendar.view.DateButton;
 import com.nexuspad.calendar.view.TimeButton;
 import com.nexuspad.common.annotation.FragmentName;
-import com.nexuspad.common.fragment.UpdateEntryFragment;
+import com.nexuspad.common.fragment.EntryEditFragment;
 import com.nexuspad.common.view.LocationTextView;
-import com.nexuspad.contacts.activity.UpdateLocationActivity;
+import com.nexuspad.contacts.activity.LocationEditActivity;
 import com.nexuspad.datamodel.EntryTemplate;
 import com.nexuspad.datamodel.NPEvent;
 import com.nexuspad.datamodel.NPFolder;
@@ -34,34 +34,35 @@ import static com.nexuspad.dataservice.ServiceConstants.CALENDAR_MODULE;
 /**
  * Author: edmond
  */
-@FragmentName(NewEventFragment.TAG)
+@FragmentName(EventEditFragment.TAG)
 @ModuleId(moduleId = CALENDAR_MODULE, template = EntryTemplate.EVENT)
-public class NewEventFragment extends UpdateEntryFragment<NPEvent> {
-    public static final String TAG = "NewEventFragment";
+public class EventEditFragment extends EntryEditFragment<NPEvent> {
+    public static final String TAG = "EventEditFragment";
 
-    private static final int REQ_LOCATION = REQ_SUBCLASSES + 1;
+    private static final int LOCATION_EDIT_REQUEST = 2;
+	private static final int RECURRENCE_EDIT_REQUEST = 3;
 
-    public static NewEventFragment of(NPEvent event, NPFolder folder) {
+    public static EventEditFragment of(NPEvent event, NPFolder folder) {
         final Bundle bundle = new Bundle();
         bundle.putParcelable(KEY_ENTRY, event);
         bundle.putParcelable(KEY_FOLDER, folder);
 
-        final NewEventFragment fragment = new NewEventFragment();
+        final EventEditFragment fragment = new EventEditFragment();
         fragment.setArguments(bundle);
         return fragment;
     }
 
-    private EditText mTitleV;
-    private LocationTextView mLocationV;
+    private EditText mTitleView;
+    private LocationTextView mLocationView;
 
-    private DateButton mStartDayV;
-    private TimeButton mStartTimeV;
-    private DateButton mToDayV;
-    private TimeButton mToTimeV;
+    private DateButton mFromDateView;
+    private TimeButton mFromTimeView;
+    private DateButton mToDateView;
+    private TimeButton mToTimeView;
 
-    private CheckBox mAllDayV;
+    private CheckBox mAllDayView;
     private TextView mRepeatV;
-    private EditText mTagsV;
+    private EditText mTagsView;
     private EditText mNoteV;
 
     @Override
@@ -72,10 +73,10 @@ public class NewEventFragment extends UpdateEntryFragment<NPEvent> {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
-            case REQ_LOCATION:
+            case LOCATION_EDIT_REQUEST:
                 if (resultCode == Activity.RESULT_OK) {
-                    final Location location = data.getParcelableExtra(UpdateLocationActivity.KEY_LOCATION);
-                    mLocationV.setLocation(location);
+                    final Location location = data.getParcelableExtra(LocationEditActivity.KEY_LOCATION);
+                    mLocationView.setLocation(location);
                 }
                 break;
             default:
@@ -94,8 +95,8 @@ public class NewEventFragment extends UpdateEntryFragment<NPEvent> {
                 final int id = v.getId();
                 switch (id) {
                     case R.id.txt_location:
-                        final Intent intent = UpdateLocationActivity.of(getActivity(), event == null ? null : event.getLocation());
-                        startActivityForResult(intent, REQ_LOCATION);
+                        final Intent intent = LocationEditActivity.of(getActivity(), event == null ? null : event.getLocation());
+                        startActivityForResult(intent, LOCATION_EDIT_REQUEST);
                         break;
                     case R.id.spinner_start_day:
                         showDatePicker((DateButton) v, nowOrEventTime(event), String.valueOf(id));
@@ -115,11 +116,11 @@ public class NewEventFragment extends UpdateEntryFragment<NPEvent> {
             }
         };
 
-        mLocationV.setOnClickListener(listener);
-        mStartDayV.setOnClickListener(listener);
-        mStartTimeV.setOnClickListener(listener);
-        mToDayV.setOnClickListener(listener);
-        mToTimeV.setOnClickListener(listener);
+        mLocationView.setOnClickListener(listener);
+        mFromDateView.setOnClickListener(listener);
+        mFromTimeView.setOnClickListener(listener);
+        mToDateView.setOnClickListener(listener);
+        mToTimeView.setOnClickListener(listener);
 
         if (savedInstanceState != null) {
             final FragmentManager manager = getActivity().getFragmentManager();
@@ -156,17 +157,17 @@ public class NewEventFragment extends UpdateEntryFragment<NPEvent> {
     }
 
     private void findViews(View view) {
-        mTitleV = (EditText)view.findViewById(R.id.txt_title);
-        mLocationV = (LocationTextView)view.findViewById(R.id.txt_location);
+        mTitleView = (EditText)view.findViewById(R.id.txt_title);
+        mLocationView = (LocationTextView)view.findViewById(R.id.txt_location);
 
-        mStartDayV = (DateButton)view.findViewById(R.id.spinner_start_day);
-        mStartTimeV = (TimeButton)view.findViewById(R.id.spinner_start_time);
-        mToDayV = (DateButton)view.findViewById(R.id.spinner_to_day);
-        mToTimeV = (TimeButton)view.findViewById(R.id.spinner_to_time);
+        mFromDateView = (DateButton)view.findViewById(R.id.spinner_start_day);
+        mFromTimeView = (TimeButton)view.findViewById(R.id.spinner_start_time);
+        mToDateView = (DateButton)view.findViewById(R.id.spinner_to_day);
+        mToTimeView = (TimeButton)view.findViewById(R.id.spinner_to_time);
 
-        mAllDayV = (CheckBox)view.findViewById(R.id.chk_all_day);
+        mAllDayView = (CheckBox)view.findViewById(R.id.chk_all_day);
         mRepeatV = (TextView)view.findViewById(R.id.spinner_repeat);
-        mTagsV = (EditText)view.findViewById(R.id.txt_tags);
+        mTagsView = (EditText)view.findViewById(R.id.txt_tags);
         mNoteV = (EditText)view.findViewById(R.id.txt_note);
     }
 
@@ -174,9 +175,9 @@ public class NewEventFragment extends UpdateEntryFragment<NPEvent> {
     private DateButton findDatePicker(int id) {
         switch (id) {
             case R.id.spinner_start_day:
-                return mStartDayV;
+                return mFromDateView;
             case R.id.spinner_to_day:
-                return mToDayV;
+                return mToDateView;
             default:
                 throw new AssertionError("unexpected id: " + id);
         }
@@ -186,9 +187,9 @@ public class NewEventFragment extends UpdateEntryFragment<NPEvent> {
     private TimeButton findTimePicker(int id) {
         switch (id) {
             case R.id.spinner_start_time:
-                return mStartTimeV;
+                return mFromTimeView;
             case R.id.spinner_to_time:
-                return mToTimeV;
+                return mToTimeView;
             default:
                 throw new AssertionError("unexpected id: " + id);
         }
@@ -218,21 +219,21 @@ public class NewEventFragment extends UpdateEntryFragment<NPEvent> {
         super.updateUI();
         final NPEvent event = getEntry();
         if (event != null) {
-            mTitleV.setText(event.getTitle());
-            mLocationV.setLocation(event.getLocation());
+            mTitleView.setText(event.getTitle());
+            mLocationView.setLocation(event.getLocation());
 
             final Date startTime = event.getStartTime();
-            mStartTimeV.setTime(startTime);
-            mStartDayV.setTime(startTime);
+            mFromTimeView.setTime(startTime);
+            mFromDateView.setTime(startTime);
 
             final Date endTime = event.getEndTime();
-            mToTimeV.setTime(endTime);
-            mToDayV.setTime(endTime);
+            mToTimeView.setTime(endTime);
+            mToDateView.setTime(endTime);
 
-            mAllDayV.setChecked(event.isAllDayEvent());
+            mAllDayView.setChecked(event.isAllDayEvent());
 
             //TODO repeat
-            mTagsV.setText(event.getTags());
+            mTagsView.setText(event.getTags());
             mNoteV.setTag(event.getNote());
         }
     }
@@ -247,12 +248,12 @@ public class NewEventFragment extends UpdateEntryFragment<NPEvent> {
         final NPEvent entry = getEntry();
         NPEvent event = entry == null ? new NPEvent(getFolder()) : new NPEvent(entry);
 
-        event.setTitle(mTitleV.getText().toString());
-        event.setLocation(mLocationV.getLocation());
-        event.setStartTime(combineDateTime(mStartDayV.getTime(), mStartTimeV.getTime()));
-        event.setEndTime(combineDateTime(mToDayV.getTime(), mToTimeV.getTime()));
-        event.setAllDayEvent(mAllDayV.isChecked());
-        event.setTags(mTagsV.getText().toString());
+        event.setTitle(mTitleView.getText().toString());
+        event.setLocation(mLocationView.getLocation());
+        event.setStartTime(combineDateTime(mFromDateView.getTime(), mFromTimeView.getTime()));
+        event.setEndTime(combineDateTime(mToDateView.getTime(), mToTimeView.getTime()));
+        event.setAllDayEvent(mAllDayView.isChecked());
+        event.setTags(mTagsView.getText().toString());
         event.setNote(mNoteV.getText().toString());
 
         setEntry(event);

@@ -13,7 +13,7 @@ import com.nexuspad.common.fragment.EntriesFragment;
  * User: edmond
  */
 public class JournalsMonthActivity extends SinglePaneActivity implements
-        EntriesFragment.Callback,
+		EntriesFragment.ActivityCallback,
         JournalMonthFragment.Callback {
 
     /**

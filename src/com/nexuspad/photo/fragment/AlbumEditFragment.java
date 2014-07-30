@@ -14,11 +14,11 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.nexuspad.R;
+import com.nexuspad.common.activity.EntryEditActivity;
 import com.nexuspad.common.annotation.ModuleId;
-import com.nexuspad.common.activity.UpdateEntryActivity;
 import com.nexuspad.common.activity.UploadCenterActivity;
 import com.nexuspad.common.annotation.FragmentName;
-import com.nexuspad.common.fragment.UpdateEntryFragment;
+import com.nexuspad.common.fragment.EntryEditFragment;
 import com.nexuspad.common.utils.Lazy;
 import com.nexuspad.datamodel.EntryTemplate;
 import com.nexuspad.datamodel.NPAlbum;
@@ -33,28 +33,28 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-@FragmentName(NewAlbumFragment.TAG)
+@FragmentName(AlbumEditFragment.TAG)
 @ModuleId(moduleId = ServiceConstants.PHOTO_MODULE, template = EntryTemplate.ALBUM)
-public class NewAlbumFragment extends UpdateEntryFragment<NPAlbum> {
+public class AlbumEditFragment extends EntryEditFragment<NPAlbum> {
     public static final String TAG = "NewAlbumFragment";
     private static final String KEY_PATHS = "key_paths";
 
-    public static NewAlbumFragment of(NPFolder folder) {
-        return NewAlbumFragment.of(null, folder);
+    public static AlbumEditFragment of(NPFolder folder) {
+        return AlbumEditFragment.of(null, folder);
     }
 
-    public static NewAlbumFragment of(NPAlbum album, NPFolder folder) {
+    public static AlbumEditFragment of(NPAlbum album, NPFolder folder) {
         final Bundle bundle = new Bundle();
         bundle.putParcelable(KEY_ENTRY, album);
         bundle.putParcelable(KEY_FOLDER, folder);
 
-        final NewAlbumFragment fragment = new NewAlbumFragment();
+        final AlbumEditFragment fragment = new AlbumEditFragment();
         fragment.setArguments(bundle);
 
         return fragment;
     }
 
-    private static final int REQ_PICK_IMAGES = REQ_SUBCLASSES + 1;
+    private static final int IMAGE_SELECT_REQUEST = 2;
 
     private final Lazy<EntryUploadService> mUploadService = new Lazy<EntryUploadService>() {
         @Override
@@ -107,7 +107,7 @@ public class NewAlbumFragment extends UpdateEntryFragment<NPAlbum> {
 
         installFolderSelectorListener(mFolderV);
 
-        if (UpdateEntryActivity.Mode.EDIT.equals(getMode())) {
+        if (EntryEditActivity.Mode.EDIT.equals(getMode())) {
             final int size = mUris.size();
             mNumPhotosV.setText(getResources().getQuantityString(R.plurals.numberOfPhotos, size, size));
 
@@ -121,7 +121,7 @@ public class NewAlbumFragment extends UpdateEntryFragment<NPAlbum> {
 	            @Override
 	            public void onClick(View v) {
 		            final Intent intent = PhotosSelectActivity.of(getActivity());
-		            startActivityForResult(intent, REQ_PICK_IMAGES);
+		            startActivityForResult(intent, IMAGE_SELECT_REQUEST);
 	            }
             });
         }
@@ -147,7 +147,7 @@ public class NewAlbumFragment extends UpdateEntryFragment<NPAlbum> {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
-            case REQ_PICK_IMAGES:
+            case IMAGE_SELECT_REQUEST:
                 if (resultCode == Activity.RESULT_OK) {
                     final List<Uri> paths = data.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
                     addIfAbsent(paths);

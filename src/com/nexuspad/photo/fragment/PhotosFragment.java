@@ -135,7 +135,7 @@ public class PhotosFragment extends EntriesFragment implements OnItemClickListen
 		setQuickReturnListener(mGridView, new OnListEndListener() {
 			@Override
 			protected void onListEnd(int page) {
-				queryEntriesAsync(getCurrentPage() + 1);
+				queryEntriesInFolderByPage(getCurrentPage() + 1);
 			}
 		});
 

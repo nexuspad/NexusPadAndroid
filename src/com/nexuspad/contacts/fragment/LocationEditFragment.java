@@ -13,16 +13,16 @@ import com.nexuspad.datamodel.Location;
 /**
  * Author: edmond
  */
-@FragmentName(NewLocationFragment.TAG)
-public final class NewLocationFragment extends DialogFragment {
-    public static final String TAG = "NewLocationFragment";
+@FragmentName(LocationEditFragment.TAG)
+public final class LocationEditFragment extends DialogFragment {
+    public static final String TAG = "LocationEditFragment";
     public static final String KEY_LOCATION = "key_location";
 
-    public static NewLocationFragment of(Location location) {
+    public static LocationEditFragment of(Location location) {
         final Bundle bundle = new Bundle();
         bundle.putParcelable(KEY_LOCATION, location);
 
-        final NewLocationFragment fragment = new NewLocationFragment();
+        final LocationEditFragment fragment = new LocationEditFragment();
         fragment.setArguments(bundle);
         return fragment;
     }

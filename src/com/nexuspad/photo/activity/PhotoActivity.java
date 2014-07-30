@@ -23,7 +23,7 @@ import java.util.ArrayList;
  * @author Edmond
  */
 @ParentActivity(PhotosActivity.class)
-public class PhotoActivity extends SinglePaneActivity implements EntriesFragment.Callback {
+public class PhotoActivity extends SinglePaneActivity implements EntriesFragment.ActivityCallback {
 
     private static final String KEY_FOLDER = "key_folder";
     private static final String KEY_PHOTO = "key_photo";

@@ -58,8 +58,8 @@ public abstract class EntryFragment<T extends NPEntry> extends DialogFragment {
 
 		@Override
 		@SuppressWarnings("unchecked")
-		protected void onGot(Context context, Intent intent, NPEntry entry) {
-			super.onGot(context, intent, entry);
+		protected void onGet(Context context, Intent intent, NPEntry entry) {
+			super.onGet(context, intent, entry);
 			setEntry((T) entry);
 		}
 	};

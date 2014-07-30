@@ -18,7 +18,7 @@ import com.ipaulpro.afilechooser.utils.FileUtils;
 import com.nexuspad.R;
 import com.nexuspad.common.annotation.ModuleId;
 import com.nexuspad.app.App;
-import com.nexuspad.common.fragment.UpdateEntryFragment;
+import com.nexuspad.common.fragment.EntryEditFragment;
 import com.nexuspad.datamodel.NPDoc;
 import com.nexuspad.datamodel.EntryTemplate;
 import com.nexuspad.datamodel.NPFolder;
@@ -31,27 +31,27 @@ import java.util.List;
 /**
  * @author Edmond
  */
-@FragmentName(UpdateDocFragment.TAG)
+@FragmentName(DocUpdateFragment.TAG)
 @ModuleId(moduleId = ServiceConstants.DOC_MODULE, template = EntryTemplate.DOC)
-public class UpdateDocFragment extends UpdateEntryFragment<NPDoc> {
-    public static final String TAG = "UpdateDocFragment";
+public class DocUpdateFragment extends EntryEditFragment<NPDoc> {
+    public static final String TAG = "DocUpdateFragment";
 
-    protected static final int REQ_PICK_FILE = REQ_SUBCLASSES + 1;
+    protected static final int FILE_SELECT_REQUEST = 2;
 
-    public static interface Callback extends UpdateEntryFragment.Callback<NPDoc> {
+    public static interface Callback extends EntryEditFragment.Callback<NPDoc> {
         void onUpdateEntry(NPDoc entry);
     }
 
-    public static UpdateDocFragment of(NPFolder folder) {
+    public static DocUpdateFragment of(NPFolder folder) {
         return of(null, folder);
     }
 
-    public static UpdateDocFragment of(NPDoc doc, NPFolder f) {
+    public static DocUpdateFragment of(NPDoc doc, NPFolder f) {
         Bundle bundle = new Bundle();
         bundle.putParcelable(KEY_ENTRY, doc);
         bundle.putParcelable(KEY_FOLDER, f);
 
-        UpdateDocFragment fragment = new UpdateDocFragment();
+        DocUpdateFragment fragment = new DocUpdateFragment();
         fragment.setArguments(bundle);
 
         return fragment;
@@ -96,7 +96,7 @@ public class UpdateDocFragment extends UpdateEntryFragment<NPDoc> {
 	        @Override
 	        public void onClick(View v) {
 		        final Intent intent = FileUtils.createGetContentIntent();
-		        startActivityForResult(intent, REQ_PICK_FILE);
+		        startActivityForResult(intent, FILE_SELECT_REQUEST);
 	        }
         });
 
@@ -107,7 +107,7 @@ public class UpdateDocFragment extends UpdateEntryFragment<NPDoc> {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
-            case REQ_PICK_FILE:
+            case FILE_SELECT_REQUEST:
                 if (resultCode == Activity.RESULT_OK) {
                     final NPDoc doc = createEditedEntry();
 

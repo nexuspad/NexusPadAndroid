@@ -11,7 +11,7 @@ import com.nexuspad.common.annotation.FragmentName;
 import com.nexuspad.common.fragment.EntryFragment;
 import com.nexuspad.datamodel.*;
 import com.nexuspad.dataservice.EntryListService;
-import com.nexuspad.photo.activity.NewAlbumActivity;
+import com.nexuspad.photo.activity.AlbumEditActivity;
 import com.nexuspad.photo.activity.PhotoActivity;
 import com.nexuspad.photo.adapter.PhotosAdapter;
 
@@ -69,7 +69,7 @@ public class AlbumFragment extends EntryFragment<NPAlbum> implements AdapterView
 	}
 
 	private void onEdit() {
-		final Intent intent = NewAlbumActivity.of(getActivity(), getFolder(), getEntry());
+		final Intent intent = AlbumEditActivity.of(getActivity(), getFolder(), getEntry());
 		startActivity(intent);
 	}
 

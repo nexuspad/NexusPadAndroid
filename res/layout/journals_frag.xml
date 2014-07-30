@@ -6,7 +6,6 @@
     android:layout_height="match_parent">
 
     <include layout="@layout/include_frame_progress" />
-
     <include layout="@layout/include_frame_retry" />
 
     <FrameLayout
@@ -15,7 +14,7 @@
         android:layout_height="match_parent"
         android:visibility="gone">
 
-        <com.nexuspad.common.view.EndlessViewPager
+        <android.support.v4.view.ViewPager
             android:id="@+id/view_pager"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />

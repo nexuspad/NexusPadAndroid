@@ -11,9 +11,9 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import com.nexuspad.account.AccountManager;
+import com.nexuspad.common.activity.EntryEditActivity;
 import com.nexuspad.common.annotation.ModuleId;
 import com.nexuspad.common.activity.FoldersNavigatorActivity;
-import com.nexuspad.common.activity.UpdateEntryActivity;
 import com.nexuspad.datamodel.NPEntry;
 import com.nexuspad.datamodel.NPFolder;
 import com.nexuspad.dataservice.*;
@@ -23,15 +23,10 @@ import com.nexuspad.dataservice.*;
  *
  * @author Edmond
  */
-public abstract class UpdateEntryFragment<T extends NPEntry> extends EntryFragment<T> {
-    public static final String TAG = UpdateEntryFragment.class.getSimpleName();
+public abstract class EntryEditFragment<T extends NPEntry> extends EntryFragment<T> {
+    public static final String TAG = EntryEditFragment.class.getSimpleName();
 
     protected static final int REQ_FOLDER = 1;
-    /**
-     * the starting int request code for subclasses, you must use an int higher than this constant to prevent collision
-     * with the super class
-     */
-    protected static final int REQ_SUBCLASSES = 2;
 
     /**
      * @return if calling {@link #getEditedEntry()} would return a valid entry
@@ -50,9 +45,9 @@ public abstract class UpdateEntryFragment<T extends NPEntry> extends EntryFragme
     public abstract T getEditedEntry();
 
     private ModuleId mModuleId;
-    private UpdateEntryActivity.Mode mMode;
+    private EntryEditActivity.Mode mMode;
 
-    protected UpdateEntryActivity.Mode getMode() {
+    protected EntryEditActivity.Mode getMode() {
         return mMode;
     }
 
@@ -70,11 +65,11 @@ public abstract class UpdateEntryFragment<T extends NPEntry> extends EntryFragme
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mModuleId = ((Object) this).getClass().getAnnotation(ModuleId.class);
-        mMode = getEntry() == null ? UpdateEntryActivity.Mode.NEW : UpdateEntryActivity.Mode.EDIT;
+        mMode = getEntry() == null ? EntryEditActivity.Mode.NEW : EntryEditActivity.Mode.EDIT;
     }
 
     public final void addEntry() {
-        if (!UpdateEntryActivity.Mode.NEW.equals(mMode)) {
+        if (!EntryEditActivity.Mode.NEW.equals(mMode)) {
             throw new IllegalStateException("not in Mode.NEW");
         }
         if (isEditedEntryValid()) {
@@ -108,7 +103,7 @@ public abstract class UpdateEntryFragment<T extends NPEntry> extends EntryFragme
     }
 
     public final void updateEntry() {
-        if (!UpdateEntryActivity.Mode.EDIT.equals(mMode)) {
+        if (!EntryEditActivity.Mode.EDIT.equals(mMode)) {
             throw new IllegalStateException("not in Mode.EDIT");
         }
         if (isEditedEntryValid()) {

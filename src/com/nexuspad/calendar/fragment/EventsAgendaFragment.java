@@ -12,14 +12,12 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import com.nexuspad.R;
-import com.nexuspad.common.annotation.ModuleId;
 import com.nexuspad.common.adapters.EntriesAdapter;
 import com.nexuspad.common.adapters.ListViewHolder;
 import com.nexuspad.common.annotation.FragmentName;
+import com.nexuspad.common.annotation.ModuleId;
 import com.nexuspad.common.fragment.EntriesFragment;
 import com.nexuspad.datamodel.*;
-import com.nexuspad.dataservice.EntryListService;
-import com.nexuspad.dataservice.NPException;
 import com.nexuspad.dataservice.ServiceConstants;
 import com.nexuspad.util.DateUtil;
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
@@ -68,13 +66,13 @@ public class EventsAgendaFragment extends EntriesFragment {
         mStartTime = mStartTime >= 0 ? mStartTime : arguments.getLong(KEY_START_DAY, -1);
     }
 
-    @Override
-    protected void getEntriesInFolder(EntryListService service, NPFolder folder, int page) throws NPException {
-        final Date midPoint = mStartTime > 0 ? new Date(mStartTime) : new Date();
-        final Date startDate = getStartDate(midPoint);
-        final Date endDate = getEndDate(midPoint);
-        service.getEntriesBetweenDates(folder, getTemplate(), startDate, endDate, page, PAGE_COUNT);
-    }
+//    @Override
+//    protected void getEntriesInFolder(EntryListService service, NPFolder folder, int page) throws NPException {
+//        final Date midPoint = mStartTime > 0 ? new Date(mStartTime) : new Date();
+//        final Date startDate = getStartDate(midPoint);
+//        final Date endDate = getEndDate(midPoint);
+//        service.getEntriesBetweenDates(folder, getTemplate(), startDate, endDate, page);
+//    }
 
     private static Date getEndDate(Date midPoint) {
         return DateUtil.addDaysTo(midPoint, 60);

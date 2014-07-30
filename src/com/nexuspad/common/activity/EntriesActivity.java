@@ -18,7 +18,7 @@ import com.nexuspad.dataservice.ServiceConstants;
  *
  * @author Edmond
  */
-public abstract class EntriesActivity extends SinglePaneActivity implements EntriesFragment.Callback {
+public abstract class EntriesActivity extends SinglePaneActivity implements EntriesFragment.ActivityCallback {
     public static final String KEY_FOLDER = "key_folder";
 
     private NPFolder mFolder;

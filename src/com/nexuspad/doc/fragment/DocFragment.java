@@ -20,7 +20,7 @@ import com.nexuspad.R;
 import com.nexuspad.datamodel.NPDoc;
 import com.nexuspad.datamodel.NPFolder;
 import com.nexuspad.datamodel.NPUpload;
-import com.nexuspad.doc.activity.NewDocActivity;
+import com.nexuspad.doc.activity.DocEditActivity;
 import com.nexuspad.common.fragment.EntryFragment;
 
 import java.util.List;
@@ -78,7 +78,7 @@ public class DocFragment extends EntryFragment<NPDoc> {
         switch (item.getItemId()) {
             case R.id.edit:
                 NPDoc doc = getEntry();
-                NewDocActivity.startWithDoc(getActivity(), getFolder(), doc);
+                DocEditActivity.startWithDoc(getActivity(), getFolder(), doc);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

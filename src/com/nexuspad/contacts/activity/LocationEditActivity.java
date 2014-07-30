@@ -6,18 +6,18 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import com.nexuspad.common.activity.DoneDiscardActivity;
 import com.nexuspad.common.annotation.ParentActivity;
-import com.nexuspad.contacts.fragment.NewLocationFragment;
+import com.nexuspad.contacts.fragment.LocationEditFragment;
 import com.nexuspad.datamodel.Location;
 
 /**
  * Author: edmond
  */
-@ParentActivity(UpdateContactActivity.class)
-public class UpdateLocationActivity extends DoneDiscardActivity {
+@ParentActivity(ContactEditActivity.class)
+public class LocationEditActivity extends DoneDiscardActivity {
     public static final String KEY_LOCATION = "key_location";
 
     public static Intent of(Context context, Location location) {
-        final Intent intent = new Intent(context, UpdateLocationActivity.class);
+        final Intent intent = new Intent(context, LocationEditActivity.class);
         intent.putExtra(KEY_LOCATION, location);
         return intent;
     }
@@ -33,7 +33,7 @@ public class UpdateLocationActivity extends DoneDiscardActivity {
 
     @Override
     protected Fragment onCreateFragment() {
-        return NewLocationFragment.of(mLocation);
+        return LocationEditFragment.of(mLocation);
     }
 
     @Override
@@ -43,7 +43,7 @@ public class UpdateLocationActivity extends DoneDiscardActivity {
 
     @Override
     protected void onDonePressed() {
-        final Location location = ((NewLocationFragment) getFragment()).getEditedLocation();
+        final Location location = ((LocationEditFragment) getFragment()).getEditedLocation();
         final Intent data = new Intent();
         data.putExtra(KEY_LOCATION, location);
         setResult(RESULT_OK, data);

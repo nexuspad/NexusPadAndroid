@@ -107,7 +107,7 @@
             android:icon="@drawable/ic_ab"
             />
         <activity
-            android:name=".bookmark.activity.UpdateBookmarkActivity"
+            android:name=".bookmark.activity.BookmarkEditEditActivity"
             android:exported="true"
             android:label="@string/bookmark"
             >
@@ -129,7 +129,7 @@
             android:label="@string/docs"
             android:icon="@drawable/ic_ab"
             />
-        <activity android:name=".doc.activity.NewDocActivity" />
+        <activity android:name=".doc.activity.DocEditActivity" />
         <activity
             android:name=".journal.activity.JournalsActivity"
             android:label="@string/journal"
@@ -185,7 +185,7 @@
             android:label="@string/photos"
             android:icon="@drawable/ic_ab"
             />
-        <activity android:name=".photo.activity.NewAlbumActivity" />
+        <activity android:name=".photo.activity.AlbumEditActivity" />
         <activity
             android:name=".contacts.activity.ContactsActivity"
             android:label="@string/contacts"
@@ -194,8 +194,8 @@
             android:name=".contacts.activity.ContactActivity"
             android:label="@string/contacts"
             />
-        <activity android:name=".contacts.activity.UpdateContactActivity" />
-        <activity android:name=".contacts.activity.UpdateLocationActivity" />
+        <activity android:name=".contacts.activity.ContactEditActivity" />
+        <activity android:name=".contacts.activity.LocationEditActivity" />
         <activity
             android:name=".calendar.activity.EventActivity"
             android:label="@string/event"
@@ -204,7 +204,7 @@
             android:name=".calendar.activity.EventsActivity"
             android:label="@string/events"
             />
-        <activity android:name=".calendar.activity.NewEventActivity" />
+        <activity android:name=".calendar.activity.EventEditActivity" />
         <activity
             android:name=".common.activity.UpdateFolderActivity"
             android:label="@string/new_folder"

@@ -16,31 +16,31 @@ import android.widget.TextView;
 import com.nexuspad.R;
 import com.nexuspad.common.annotation.ModuleId;
 import com.nexuspad.common.annotation.FragmentName;
-import com.nexuspad.common.fragment.UpdateEntryFragment;
-import com.nexuspad.contacts.activity.UpdateLocationActivity;
+import com.nexuspad.common.fragment.EntryEditFragment;
+import com.nexuspad.contacts.activity.LocationEditActivity;
 import com.nexuspad.datamodel.*;
 import com.nexuspad.dataservice.ServiceConstants;
 
 /**
  * Author: edmond
  */
-@FragmentName(UpdateContactFragment.TAG)
+@FragmentName(ContactEditFragment.TAG)
 @ModuleId(moduleId = ServiceConstants.CONTACT_MODULE, template = EntryTemplate.CONTACT)
-public class UpdateContactFragment extends UpdateEntryFragment<NPPerson> {
-    public static final String TAG = "UpdateContactFragment";
+public class ContactEditFragment extends EntryEditFragment<NPPerson> {
+    public static final String TAG = "ContactEditFragment";
 
-    public static UpdateContactFragment of(NPPerson contact, NPFolder folder) {
+    public static ContactEditFragment of(NPPerson contact, NPFolder folder) {
         final Bundle bundle = new Bundle();
         bundle.putParcelable(KEY_ENTRY, contact);
         bundle.putParcelable(KEY_FOLDER, folder);
 
-        final UpdateContactFragment fragment = new UpdateContactFragment();
+        final ContactEditFragment fragment = new ContactEditFragment();
         fragment.setArguments(bundle);
 
         return fragment;
     }
 
-    private static final int REQ_LOCATION = REQ_SUBCLASSES + 1;
+    private static final int LOCATION_EDIT_REQUEST = 2;
 
     private LayoutInflater mInflater;
 
@@ -49,7 +49,7 @@ public class UpdateContactFragment extends UpdateEntryFragment<NPPerson> {
     private TextView mFirstNameV;
     private TextView mMiddleNameV;
     private TextView mLastNameV;
-    private TextView mBussinessNameV;
+    private TextView mBizNameV;
     private TextView mWebAddressV;
     private TextView mTagsV;
     private TextView mNoteV;
@@ -67,9 +67,9 @@ public class UpdateContactFragment extends UpdateEntryFragment<NPPerson> {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
-            case REQ_LOCATION:
+            case LOCATION_EDIT_REQUEST:
                 if (resultCode == Activity.RESULT_OK) {
-                    final Location location = data.getParcelableExtra(UpdateLocationActivity.KEY_LOCATION);
+                    final Location location = data.getParcelableExtra(LocationEditActivity.KEY_LOCATION);
                     updateAddressView(location);
                 }
                 break;
@@ -90,7 +90,7 @@ public class UpdateContactFragment extends UpdateEntryFragment<NPPerson> {
         mFirstNameV = (EditText)view.findViewById(R.id.txt_first_name);
         mMiddleNameV = (EditText)view.findViewById(R.id.txt_middle_name);
         mLastNameV = (EditText)view.findViewById(R.id.txt_last_name);
-        mBussinessNameV = (EditText)view.findViewById(R.id.txt_bussiness_name);
+        mBizNameV = (EditText)view.findViewById(R.id.txt_bussiness_name);
         mWebAddressV = (EditText)view.findViewById(R.id.txt_web_address);
         mTagsV = (EditText)view.findViewById(R.id.txt_tags);
         mNoteV = (EditText)view.findViewById(R.id.txt_note);
@@ -102,8 +102,8 @@ public class UpdateContactFragment extends UpdateEntryFragment<NPPerson> {
         mAddressV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final Intent intent = UpdateLocationActivity.of(getActivity(), (Location) mAddressV.getTag());
-                startActivityForResult(intent, REQ_LOCATION);
+                final Intent intent = LocationEditActivity.of(getActivity(), (Location) mAddressV.getTag());
+                startActivityForResult(intent, LOCATION_EDIT_REQUEST);
             }
         });
 
@@ -131,7 +131,7 @@ public class UpdateContactFragment extends UpdateEntryFragment<NPPerson> {
             mFirstNameV.setText(contact.getFirstName());
             mMiddleNameV.setText(contact.getMiddleName());
             mLastNameV.setText(contact.getLastName());
-            mBussinessNameV.setText(contact.getBusinessName());
+            mBizNameV.setText(contact.getBusinessName());
             mWebAddressV.setText(contact.getWebAddress());
             mTagsV.setText(contact.getTags());
             mNoteV.setText(contact.getNote());
@@ -275,7 +275,7 @@ public class UpdateContactFragment extends UpdateEntryFragment<NPPerson> {
         contact.setFirstName(mFirstNameV.getText().toString());
         contact.setMiddleName(mMiddleNameV.getText().toString());
         contact.setLastName(mLastNameV.getText().toString());
-        contact.setBusinessName(mBussinessNameV.getText().toString());
+        contact.setBusinessName(mBizNameV.getText().toString());
         contact.setWebAddress(mWebAddressV.getText().toString());
         contact.setTags(mTagsV.getText().toString());
         contact.setNote(mNoteV.getText().toString());

@@ -7,8 +7,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import com.nexuspad.R;
 import com.nexuspad.common.annotation.ModuleId;
+import com.nexuspad.common.fragment.EntryEditFragment;
 import com.nexuspad.common.fragment.EntryFragment;
-import com.nexuspad.common.fragment.UpdateEntryFragment;
 import com.nexuspad.datamodel.NPEntry;
 import com.nexuspad.datamodel.NPFolder;
 import com.nexuspad.dataservice.ServiceConstants;
@@ -20,7 +20,7 @@ import com.nexuspad.dataservice.ServiceConstants;
  *
  * @author Edmond
  */
-public abstract class UpdateEntryActivity<T extends NPEntry> extends DoneDiscardActivity implements EntryFragment.Callback<T> {
+public abstract class EntryEditActivity<T extends NPEntry> extends DoneDiscardActivity implements EntryFragment.Callback<T> {
     public static final String KEY_ENTRY = "com.nexuspad.ui.activity.NewEntryActivity.entry";
     public static final String KEY_FOLDER = "com.nexuspad.ui.activity.NewEntryActivity.folder";
 
@@ -95,13 +95,13 @@ public abstract class UpdateEntryActivity<T extends NPEntry> extends DoneDiscard
      * default implementation updates the entry and calls {@link #goUp()}.
      * <p/>
      * This method assumes {@link #getFragment()} returns a type of
-     * {@link com.nexuspad.common.fragment.UpdateEntryFragment}.
+     * {@link com.nexuspad.common.fragment.EntryEditFragment}.
      *
      * @throws ClassCastException if {@link #getFragment()} is not a type of
-     *                            {@link com.nexuspad.common.fragment.UpdateEntryFragment}
+     *                            {@link com.nexuspad.common.fragment.EntryEditFragment}
      */
     protected void onDoneEditing() {
-        UpdateEntryFragment<T> fragment = getFragment();
+        EntryEditFragment<T> fragment = getFragment();
         if (fragment.isEditedEntryValid()) {
             fragment.updateEntry();
             goUp();
@@ -113,13 +113,13 @@ public abstract class UpdateEntryActivity<T extends NPEntry> extends DoneDiscard
      * default implementation updates the entry and calls {@link #goUp()}.
      * <p/>
      * This method assumes {@link #getFragment()} returns a type of
-     * {@link com.nexuspad.common.fragment.UpdateEntryFragment}.
+     * {@link com.nexuspad.common.fragment.EntryEditFragment}.
      *
      * @throws ClassCastException if {@link #getFragment()} is not a type of
-     *                            {@link com.nexuspad.common.fragment.UpdateEntryFragment}
+     *                            {@link com.nexuspad.common.fragment.EntryEditFragment}
      */
     protected void onDoneAdding() {
-        UpdateEntryFragment<T> fragment = getFragment();
+        EntryEditFragment<T> fragment = getFragment();
         if (fragment.isEditedEntryValid()) {
             fragment.addEntry();
             goUp();
@@ -159,7 +159,7 @@ public abstract class UpdateEntryActivity<T extends NPEntry> extends DoneDiscard
 
     @Override
     @SuppressWarnings("unchecked")
-    protected UpdateEntryFragment<T> getFragment() {
-        return (UpdateEntryFragment<T>) super.getFragment();
+    protected EntryEditFragment<T> getFragment() {
+        return (EntryEditFragment<T>) super.getFragment();
     }
 }

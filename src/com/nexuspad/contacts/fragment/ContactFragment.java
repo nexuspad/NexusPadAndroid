@@ -15,7 +15,7 @@ import com.google.common.base.Strings;
 import com.nexuspad.R;
 import com.nexuspad.common.annotation.ModuleId;
 import com.nexuspad.app.App;
-import com.nexuspad.contacts.activity.UpdateContactActivity;
+import com.nexuspad.contacts.activity.ContactEditActivity;
 import com.nexuspad.datamodel.*;
 import com.nexuspad.dataservice.ServiceConstants;
 import com.nexuspad.common.fragment.EntryFragment;
@@ -85,7 +85,7 @@ public class ContactFragment extends EntryFragment<NPPerson> {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.edit:
-				UpdateContactActivity.startWithContact(getActivity(), getFolder(), getEntry());
+				ContactEditActivity.startWithContact(getActivity(), getFolder(), getEntry());
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);

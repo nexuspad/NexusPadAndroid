@@ -16,7 +16,6 @@ import com.nexuspad.common.adapters.FoldersAndEntriesAdapter;
 import com.nexuspad.common.adapters.ListFoldersAdapter;
 import com.nexuspad.common.adapters.ListViewHolder;
 import com.nexuspad.common.annotation.FragmentName;
-import com.nexuspad.common.fragment.EntriesFragment;
 import com.nexuspad.common.fragment.FoldersAndEntriesFragment;
 import com.nexuspad.common.listeners.OnEntryMenuClickListener;
 import com.nexuspad.datamodel.EntryList;
@@ -24,7 +23,7 @@ import com.nexuspad.datamodel.EntryTemplate;
 import com.nexuspad.datamodel.NPDoc;
 import com.nexuspad.datamodel.NPFolder;
 import com.nexuspad.dataservice.ServiceConstants;
-import com.nexuspad.doc.activity.NewDocActivity;
+import com.nexuspad.doc.activity.DocEditActivity;
 
 /**
  * @author Edmond
@@ -46,7 +45,7 @@ public class DocsFragment extends FoldersAndEntriesFragment {
 		return fragment;
 	}
 
-	public interface Callback extends EntriesFragment.Callback {
+	public interface Callback extends ActivityCallback {
 		void onFolderClick(DocsFragment f, NPFolder folder);
 		void onDocClick(DocsFragment f, NPDoc doc);
 	}
@@ -70,7 +69,7 @@ public class DocsFragment extends FoldersAndEntriesFragment {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.new_doc:
-				NewDocActivity.startWithFolder(getActivity(), getFolder());
+				DocEditActivity.startWithFolder(getActivity(), getFolder());
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
@@ -107,7 +106,7 @@ public class DocsFragment extends FoldersAndEntriesFragment {
 			protected boolean onEntryMenuClick(NPDoc entry, int pos, int menuId) {
 				switch (menuId) {
 					case R.id.edit:
-						NewDocActivity.startWithDoc(getActivity(), getFolder(), entry);
+						DocEditActivity.startWithDoc(getActivity(), getFolder(), entry);
 						return true;
 					default:
 						return super.onEntryMenuClick(entry, pos, menuId);

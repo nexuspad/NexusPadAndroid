@@ -116,6 +116,7 @@
     <string name="agenda">Agenda</string>
     <string name="undo">Undo</string>
 
+    <string name="cancel">CANCEL</string>
     <string name="done">DONE</string>
     <string name="discard">DISCARD</string>
 

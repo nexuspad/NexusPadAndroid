@@ -24,8 +24,8 @@ import com.nexuspad.common.fragment.EntriesFragment;
 import com.nexuspad.common.listeners.OnEntryMenuClickListener;
 import com.nexuspad.common.utils.EntriesLocalSearchFilter;
 import com.nexuspad.contacts.activity.ContactActivity;
+import com.nexuspad.contacts.activity.ContactEditActivity;
 import com.nexuspad.contacts.activity.ContactsActivity;
-import com.nexuspad.contacts.activity.UpdateContactActivity;
 import com.nexuspad.datamodel.*;
 import com.nexuspad.dataservice.EntryListService;
 import com.nexuspad.dataservice.ServiceConstants;
@@ -93,7 +93,7 @@ public final class ContactsFragment extends EntriesFragment {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.new_contact:
-				UpdateContactActivity.startWithFolder(getActivity(), getFolder());
+				ContactEditActivity.startWithFolder(getActivity(), getFolder());
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
@@ -187,7 +187,7 @@ public final class ContactsFragment extends EntriesFragment {
 			protected boolean onEntryMenuClick(NPPerson contact, int pos, int menuId) {
 				switch (menuId) {
 					case R.id.edit:
-						UpdateContactActivity.startWithContact(getActivity(), getFolder(), contact);
+						ContactEditActivity.startWithContact(getActivity(), getFolder(), contact);
 						return true;
 					default:
 						return super.onEntryMenuClick(contact, pos, menuId);

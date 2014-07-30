@@ -47,7 +47,7 @@ public class BookmarksActivity extends EntriesActivity implements BookmarksFragm
 
     @Override
     public void onEditBookmark(BookmarksFragment f, NPBookmark bookmark) {
-        UpdateBookmarkActivity.startWithBookmark(this, getFolder(), bookmark);
+        BookmarkEditEditActivity.startWithBookmark(this, getFolder(), bookmark);
     }
 
     @Override

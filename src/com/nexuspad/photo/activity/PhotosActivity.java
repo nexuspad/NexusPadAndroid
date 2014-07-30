@@ -80,7 +80,7 @@ public class PhotosActivity extends EntriesActivity implements ActionBar.OnNavig
                 startActivityForResult(intent, REQ_CHOOSE_FILE);
                 return true;
             case R.id.new_albums:
-                final Intent albumIntent = NewAlbumActivity.of(this, getFolder());
+                final Intent albumIntent = AlbumEditActivity.of(this, getFolder());
                 startActivity(albumIntent);
                 return true;
             default:

@@ -85,7 +85,7 @@ public class DashboardActivity extends SinglePaneActivity implements DashboardFr
 				ArrayList<Uri> uris = new ArrayList<Uri>();
 				uris.add(Uri.fromFile(new File("/storage/emulated/0/DCIM/Camera/IMG_20130630_140648.jpg")));
 				uris.add(Uri.fromFile(new File("/storage/emulated/0/DCIM/Camera/xxxxxxx.jpg")));
-				UploadCenterActivity.startWith(uris, NPFolder.rootFolderOf(NPModule.PHOTO_MODULE), this);
+				UploadCenterActivity.startWith(uris, NPFolder.rootFolderOf(NPModule.PHOTO), this);
 
 				break;
 

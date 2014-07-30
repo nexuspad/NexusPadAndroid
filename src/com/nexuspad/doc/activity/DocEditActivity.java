@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
+import com.nexuspad.common.activity.EntryEditActivity;
 import com.nexuspad.common.annotation.ParentActivity;
 import com.nexuspad.common.annotation.ModuleId;
 import com.nexuspad.datamodel.NPDoc;
@@ -14,8 +15,7 @@ import com.nexuspad.datamodel.EntryTemplate;
 import com.nexuspad.datamodel.NPFolder;
 import com.nexuspad.datamodel.NPUpload;
 import com.nexuspad.dataservice.ServiceConstants;
-import com.nexuspad.doc.fragment.UpdateDocFragment;
-import com.nexuspad.common.activity.UpdateEntryActivity;
+import com.nexuspad.doc.fragment.DocUpdateFragment;
 import com.nexuspad.common.activity.UploadCenterActivity;
 
 import java.util.ArrayList;
@@ -26,14 +26,14 @@ import java.util.List;
  */
 @ParentActivity(DocsActivity.class)
 @ModuleId(moduleId = ServiceConstants.DOC_MODULE, template = EntryTemplate.DOC)
-public class NewDocActivity extends UpdateEntryActivity<NPDoc> implements UpdateDocFragment.Callback {
+public class DocEditActivity extends EntryEditActivity<NPDoc> implements DocUpdateFragment.Callback {
 
     public static void startWithFolder(Context c, NPFolder f) {
-        NewDocActivity.startWithDoc(c, f, null);
+        DocEditActivity.startWithDoc(c, f, null);
     }
 
     public static void startWithDoc(Context c, NPFolder f, NPDoc doc) {
-        Intent intent = new Intent(c, NewDocActivity.class);
+        Intent intent = new Intent(c, DocEditActivity.class);
         intent.putExtra(KEY_ENTRY, doc);
         intent.putExtra(KEY_FOLDER, f);
         c.startActivity(intent);
@@ -41,7 +41,7 @@ public class NewDocActivity extends UpdateEntryActivity<NPDoc> implements Update
 
     @Override
     protected void onDoneEditing() {
-        UpdateDocFragment fragment = getFragment();
+        DocUpdateFragment fragment = getFragment();
         if (fragment.isEditedEntryValid()) {
             fragment.updateEntry();
             // don't go up, it is handled at onUpdateEntry(…)
@@ -67,7 +67,7 @@ public class NewDocActivity extends UpdateEntryActivity<NPDoc> implements Update
 
     @Override
     protected Fragment onCreateFragment() {
-        return UpdateDocFragment.of(getEntry(), getFolder());
+        return DocUpdateFragment.of(getEntry(), getFolder());
     }
 
     @Override
@@ -76,7 +76,7 @@ public class NewDocActivity extends UpdateEntryActivity<NPDoc> implements Update
     }
 
     @Override
-    protected UpdateDocFragment getFragment() {
-        return (UpdateDocFragment) super.getFragment();
+    protected DocUpdateFragment getFragment() {
+        return (DocUpdateFragment) super.getFragment();
     }
 }

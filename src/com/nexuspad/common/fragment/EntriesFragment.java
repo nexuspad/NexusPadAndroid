@@ -64,7 +64,7 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 
 	protected EntryList mEntryList;
 
-	private Callback mCallback;
+	private ActivityCallback mCallback;
 
 	private int mCurrentPage;
 
@@ -91,7 +91,7 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 		mEntriesAdapter = (T)adapter;
 	}
 
-	public interface Callback {
+	public interface ActivityCallback {
 		void onListLoaded(EntriesFragment f, EntryList list);
 	}
 
@@ -122,10 +122,15 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 					mEntryList.setPageId(entryList.getPageId());
 				}
 
-				if (mEntryList.getEntries().size() == 0) {
-					fadeInEmptyFolderView();
-				} else {
+				if (mModuleId.moduleId() == NPModule.JOURNAL) {
 					onListLoaded(mEntryList);
+
+				} else {
+					if (mEntryList.getEntries().size() == 0) {
+						fadeInEmptyFolderView();
+					} else {
+						onListLoaded(mEntryList);
+					}
 				}
 			}
 		}
@@ -157,6 +162,11 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 	 * Handles adding/updating/deleting entry
 	 */
 	private final EntryReceiver mEntryReceiver = new EntryReceiver() {
+		@Override
+		protected void onGet(Context context, Intent intent, NPEntry entry) {
+			onGetEntry(entry);
+		}
+
 		@Override
 		public void onDelete(Context context, Intent intent, NPEntry entry) {
 			onDeleteEntry(entry);
@@ -191,7 +201,7 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 	protected OnListEndListener mLoadMoreScrollListener = new OnListEndListener() {
 		@Override
 		protected void onListEnd(int page) {
-			queryEntriesAsync(getCurrentPage() + 1);
+			queryEntriesInFolderByPage(getCurrentPage() + 1);
 		}
 	};
 
@@ -220,7 +230,7 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 				@Override
 				public boolean onQueryTextChange(String newText) {
 					// For Contact module, enable the instant search feedback since the search is done locally.
-					if (mFolder.getModuleId() == NPModule.CONTACT_MODULE) {
+					if (mFolder.getModuleId() == NPModule.CONTACT) {
 						if (Strings.isNullOrEmpty(newText)) {
 							reDisplayListEntries();
 						} else {
@@ -305,6 +315,19 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 		}
 	}
 
+	/**
+	 * EntryReceiver get entry detail.
+	 *
+	 * @param entry
+	 */
+	protected void onGetEntry(NPEntry entry) {
+	}
+
+	/**
+	 * EntryReceiver delete entry action result.
+	 *
+	 * @param entry
+	 */
 	protected void onDeleteEntry(NPEntry entry) {
 		EntryList entryList = getEntryList();
 		if (entryList != null) {
@@ -317,6 +340,11 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 		}
 	}
 
+	/**
+	 * EntryReceiver create new entry action result.
+	 *
+	 * @param entry
+	 */
 	protected void onNewEntry(NPEntry entry) {
 		EntryList entryList = getEntryList();
 		if (entryList != null) {
@@ -335,6 +363,11 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 		}
 	}
 
+	/**
+	 * EntryReceiver update entry action result.
+	 *
+	 * @param updatedEntry
+	 */
 	protected void onUpdateEntry(NPEntry updatedEntry) {
 		if (mEntryList != null) {
 			final List<NPEntry> entries = mEntryList.getEntries();
@@ -364,7 +397,7 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-		mCallback = App.getCallbackOrThrow(activity, Callback.class);
+		mCallback = App.getCallbackOrThrow(activity, ActivityCallback.class);
 		mModuleId = ((Object) this).getClass().getAnnotation(ModuleId.class);
 	}
 
@@ -588,16 +621,20 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 		}
 	}
 
-	public void queryEntriesAsync() {
-		queryEntriesAsync(1);
+	/**
+	 * Query the entry list by folder.
+	 * Override in Fragments for different behavior.
+	 */
+	protected void queryEntriesAsync() {
+		queryEntriesInFolderByPage(1);
 	}
 
-	public void queryEntriesAsync(int page) {
+	public void queryEntriesInFolderByPage(int page) {
 		mCurrentPage = page;
 
 		try {
 			mFolder.setOwner(AccountManager.currentAccount());
-			getEntriesInFolder(getEntryListService(), mFolder, page);
+			getEntryListService().getEntriesInFolder(mFolder, getTemplate(), page, PAGE_COUNT);
 
 		} catch (NPException e) {
 			Log.e(TAG, e.toString());
@@ -632,18 +669,6 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		startActivity(intent);
 		activity.finish();
-	}
-
-	/**
-	 * Called when {@link #queryEntriesAsync(int)} is invoked. The default
-	 * implementation calls
-	 * {@link EntryListService#getEntriesInFolder(com.nexuspad.datamodel.NPFolder, EntryTemplate, int, int)}
-	 * .
-	 * <p/>
-	 * You may override this method to use other mechanisms, such as
-	 */
-	protected void getEntriesInFolder(EntryListService service, NPFolder folder, int page) throws NPException {
-		service.getEntriesInFolder(mFolder, getTemplate(), page, PAGE_COUNT);
 	}
 
 	/**

@@ -7,28 +7,28 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
+import com.nexuspad.bookmark.fragment.BookmarkEditFragment;
+import com.nexuspad.common.activity.EntryEditActivity;
 import com.nexuspad.common.annotation.ParentActivity;
 import com.nexuspad.common.annotation.ModuleId;
-import com.nexuspad.bookmark.fragment.NewBookmarkFragment;
 import com.nexuspad.datamodel.NPBookmark;
 import com.nexuspad.datamodel.EntryTemplate;
 import com.nexuspad.datamodel.NPFolder;
 import com.nexuspad.dataservice.ServiceConstants;
-import com.nexuspad.common.activity.UpdateEntryActivity;
 
 /**
  * @author Edmond
  */
 @ParentActivity(BookmarksActivity.class)
 @ModuleId(moduleId = ServiceConstants.BOOKMARK_MODULE, template = EntryTemplate.BOOKMARK)
-public class UpdateBookmarkActivity extends UpdateEntryActivity<NPBookmark> {
+public class BookmarkEditEditActivity extends EntryEditActivity<NPBookmark> {
 
     public static void startWithFolder(Context c, NPFolder f) {
-        UpdateBookmarkActivity.startWithBookmark(c, f, null);
+        BookmarkEditEditActivity.startWithBookmark(c, f, null);
     }
 
     public static void startWithBookmark(Context c, NPFolder f, NPBookmark b) {
-        Intent intent = new Intent(c, UpdateBookmarkActivity.class);
+        Intent intent = new Intent(c, BookmarkEditEditActivity.class);
         intent.putExtra(KEY_ENTRY, b);
         intent.putExtra(KEY_FOLDER, f);
         c.startActivity(intent);
@@ -36,7 +36,7 @@ public class UpdateBookmarkActivity extends UpdateEntryActivity<NPBookmark> {
 
     @Override
     protected Fragment onCreateFragment() {
-        return NewBookmarkFragment.of(getEntry(), getFolder());
+        return BookmarkEditFragment.of(getEntry(), getFolder());
     }
 
     @Override
@@ -65,7 +65,7 @@ public class UpdateBookmarkActivity extends UpdateEntryActivity<NPBookmark> {
     }
 
     @Override
-    protected NewBookmarkFragment getFragment() {
-        return (NewBookmarkFragment) super.getFragment();
+    protected BookmarkEditFragment getFragment() {
+        return (BookmarkEditFragment) super.getFragment();
     }
 }

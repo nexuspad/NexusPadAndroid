@@ -15,7 +15,7 @@
         android:drawableLeft="@drawable/ic_action_discard"
         android:drawablePadding="8dp"
         android:gravity="center_vertical"
-        android:text="@string/discard" >
+        android:text="@string/cancel" >
     </TextView>
 
 </FrameLayout>

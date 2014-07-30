@@ -17,26 +17,26 @@ import com.nexuspad.datamodel.NPBookmark;
 import com.nexuspad.datamodel.EntryTemplate;
 import com.nexuspad.datamodel.NPFolder;
 import com.nexuspad.dataservice.ServiceConstants;
-import com.nexuspad.common.fragment.UpdateEntryFragment;
+import com.nexuspad.common.fragment.EntryEditFragment;
 
 /**
  * @author Edmond
  */
-@FragmentName(NewBookmarkFragment.TAG)
+@FragmentName(BookmarkEditFragment.TAG)
 @ModuleId(moduleId = ServiceConstants.BOOKMARK_MODULE, template = EntryTemplate.BOOKMARK)
-public class NewBookmarkFragment extends UpdateEntryFragment<NPBookmark> {
-    public static final String TAG = "NewBookmarkFragment";
+public class BookmarkEditFragment extends EntryEditFragment<NPBookmark> {
+    public static final String TAG = "BookmarkEditFragment";
 
-    public static NewBookmarkFragment of(NPFolder folder) {
-        return NewBookmarkFragment.of(null, folder);
+    public static BookmarkEditFragment of(NPFolder folder) {
+        return BookmarkEditFragment.of(null, folder);
     }
 
-    public static NewBookmarkFragment of(NPBookmark b, NPFolder f) {
+    public static BookmarkEditFragment of(NPBookmark b, NPFolder f) {
         Bundle bundle = new Bundle();
         bundle.putParcelable(KEY_ENTRY, b);
         bundle.putParcelable(KEY_FOLDER, f);
 
-        NewBookmarkFragment fragment = new NewBookmarkFragment();
+        BookmarkEditFragment fragment = new BookmarkEditFragment();
         fragment.setArguments(bundle);
 
         return fragment;

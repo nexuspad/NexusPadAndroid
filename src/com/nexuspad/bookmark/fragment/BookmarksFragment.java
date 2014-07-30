@@ -9,15 +9,14 @@ import android.util.Log;
 import android.view.*;
 import android.widget.ListView;
 import com.nexuspad.R;
+import com.nexuspad.bookmark.activity.BookmarkEditEditActivity;
 import com.nexuspad.common.annotation.ModuleId;
 import com.nexuspad.app.App;
-import com.nexuspad.bookmark.activity.UpdateBookmarkActivity;
 import com.nexuspad.common.adapters.EntriesAdapter;
 import com.nexuspad.common.adapters.FoldersAndEntriesAdapter;
 import com.nexuspad.common.adapters.ListFoldersAdapter;
 import com.nexuspad.common.adapters.ListViewHolder;
 import com.nexuspad.common.annotation.FragmentName;
-import com.nexuspad.common.fragment.EntriesFragment;
 import com.nexuspad.common.fragment.FoldersAndEntriesFragment;
 import com.nexuspad.common.listeners.OnEntryMenuClickListener;
 import com.nexuspad.datamodel.EntryList;
@@ -49,7 +48,7 @@ public class BookmarksFragment extends FoldersAndEntriesFragment {
 	/**
 	 * Callback methods that the Activity must implement.
 	 */
-	public interface Callback extends EntriesFragment.Callback {
+	public interface Callback extends ActivityCallback {
 		void onBookmarkClick(BookmarksFragment f, NPBookmark bookmark);
 		void onEditBookmark(BookmarksFragment f, NPBookmark bookmark);
 		void onFolderClick(BookmarksFragment f, NPFolder folder);
@@ -74,7 +73,7 @@ public class BookmarksFragment extends FoldersAndEntriesFragment {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.new_bookmark:
-				UpdateBookmarkActivity.startWithFolder(getActivity(), getFolder());
+				BookmarkEditEditActivity.startWithFolder(getActivity(), getFolder());
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);

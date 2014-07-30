@@ -3,10 +3,10 @@ package com.nexuspad.calendar.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
-import com.nexuspad.common.activity.UpdateEntryActivity;
+import com.nexuspad.calendar.fragment.EventEditFragment;
+import com.nexuspad.common.activity.EntryEditActivity;
 import com.nexuspad.common.annotation.ParentActivity;
 import com.nexuspad.common.annotation.ModuleId;
-import com.nexuspad.calendar.fragment.NewEventFragment;
 import com.nexuspad.datamodel.EntryTemplate;
 import com.nexuspad.datamodel.NPEvent;
 import com.nexuspad.datamodel.NPFolder;
@@ -18,18 +18,18 @@ import static com.nexuspad.dataservice.ServiceConstants.CALENDAR_MODULE;
  */
 @ParentActivity(EventsActivity.class)
 @ModuleId(moduleId = CALENDAR_MODULE, template = EntryTemplate.EVENT)
-public class NewEventActivity extends UpdateEntryActivity<NPEvent> {
+public class EventEditActivity extends EntryEditActivity<NPEvent> {
 
     public static void startWithFolder(Context context, NPFolder folder) {
-        context.startActivity(NewEventActivity.of(context, folder, null));
+        context.startActivity(EventEditActivity.of(context, folder, null));
     }
 
     public static void startWithEvent(Context context, NPFolder folder, NPEvent event) {
-        context.startActivity(NewEventActivity.of(context, folder, event));
+        context.startActivity(EventEditActivity.of(context, folder, event));
     }
 
     public static Intent of(Context context, NPFolder folder, NPEvent event) {
-        final Intent intent = new Intent(context, NewEventActivity.class);
+        final Intent intent = new Intent(context, EventEditActivity.class);
         intent.putExtra(KEY_ENTRY, event);
         intent.putExtra(KEY_FOLDER, folder);
         return intent;
@@ -37,6 +37,6 @@ public class NewEventActivity extends UpdateEntryActivity<NPEvent> {
 
     @Override
     protected Fragment onCreateFragment() {
-        return NewEventFragment.of(getEntry(), getFolder());
+        return EventEditFragment.of(getEntry(), getFolder());
     }
 }

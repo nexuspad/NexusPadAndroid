@@ -8,7 +8,7 @@ import android.widget.TextView;
 import com.nexuspad.common.annotation.FragmentName;
 import com.nexuspad.R;
 import com.nexuspad.common.annotation.ModuleId;
-import com.nexuspad.common.fragment.UpdateEntryFragment;
+import com.nexuspad.common.fragment.EntryEditFragment;
 import com.nexuspad.datamodel.EntryTemplate;
 import com.nexuspad.datamodel.NPFolder;
 import com.nexuspad.datamodel.NPJournal;
@@ -18,22 +18,22 @@ import static com.nexuspad.dataservice.ServiceConstants.JOURNAL_MODULE;
 /**
  * User: edmond
  */
-@FragmentName(NewJournalFragment.TAG)
+@FragmentName(JournalEditFragment.TAG)
 @ModuleId(moduleId = JOURNAL_MODULE, template = EntryTemplate.JOURNAL)
-public class NewJournalFragment extends UpdateEntryFragment<NPJournal> {
-    public static final String TAG = "NewJournalFragment";
+public class JournalEditFragment extends EntryEditFragment<NPJournal> {
+    public static final String TAG = "JournalEditFragment";
 
-    public static NewJournalFragment of(NPJournal journal, NPFolder folder) {
+    public static JournalEditFragment of(NPJournal journal, NPFolder folder) {
         final Bundle argument = new Bundle();
         argument.putParcelable(KEY_ENTRY, journal);
         argument.putParcelable(KEY_FOLDER, folder);
 
-        final NewJournalFragment fragment = new NewJournalFragment();
+        final JournalEditFragment fragment = new JournalEditFragment();
         fragment.setArguments(argument);
         return fragment;
     }
 
-    public interface Callback extends UpdateEntryFragment.Callback<NPJournal> {
+    public interface Callback extends EntryEditFragment.Callback<NPJournal> {
     }
 
     private TextView mNoteView;
