@@ -212,7 +212,7 @@ public class FoldersFragment extends UndoBarFragment {
 
 		mQuickReturnV = view.findViewById(R.id.quick_return);
 
-		final View theView = view.findViewById(R.id.main_list_view);
+		final View theView = view.findViewById(R.id.list_view);
 
 		if (theView instanceof ListView) {
 			mListView = (ListView) theView;
@@ -260,17 +260,13 @@ public class FoldersFragment extends UndoBarFragment {
 		mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-				if (position != 0) {
-					return mFoldersAdapter.onItemLongClick(parent, view, position, id);
-				} else {
-					return false;
-				}
+				return position != 0 && mFoldersAdapter.onItemLongClick(parent, view, position, id);
 			}
 		});
 
 		mListView.setAdapter(mFoldersAdapter);
 
-		fadeInListFrame();
+		dismissProgressIndicator();
 	}
 
 

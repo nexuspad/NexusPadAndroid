@@ -216,7 +216,7 @@ public class AboutFragment extends Fragment {
 		if (shouldKickToLogin(errorCode)) {
 			kickToLoginScreen();
 		} else {
-			//fadeInRetryFrame();
+			//displayRetry();
 		}
 	}
 

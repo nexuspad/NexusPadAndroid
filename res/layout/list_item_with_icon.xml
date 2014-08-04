@@ -35,7 +35,6 @@
         android:layout_width="32dp"
         android:layout_height="match_parent"
         android:background="@android:color/transparent"
-        android:contentDescription="@string/more"
         android:duplicateParentState="false"
         android:scaleType="fitXY"
         android:src="@drawable/spinner_ab_holo_light" />

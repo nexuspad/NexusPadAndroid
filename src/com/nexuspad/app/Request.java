@@ -99,10 +99,7 @@ public class Request {
             @Override
             public boolean onProgress(long progress, long total) {
                 final FileUploadService.Callback callback = mCallback.get();
-                if (callback != null) {
-                    return callback.onProgress(progress, total);
-                }
-                return true;
+	            return callback == null || callback.onProgress(progress, total);
             }
 
             @Override

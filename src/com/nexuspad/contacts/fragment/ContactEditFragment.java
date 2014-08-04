@@ -93,7 +93,7 @@ public class ContactEditFragment extends EntryEditFragment<NPPerson> {
         mBizNameV = (EditText)view.findViewById(R.id.txt_bussiness_name);
         mWebAddressV = (EditText)view.findViewById(R.id.txt_web_address);
         mTagsV = (EditText)view.findViewById(R.id.txt_tags);
-        mNoteV = (EditText)view.findViewById(R.id.txt_note);
+        mNoteV = (EditText)view.findViewById(R.id.journal_text);
         mAddressV = (TextView)view.findViewById(R.id.txt_address);
 
         mPhoneFrameV = (ViewGroup)view.findViewById(R.id.phones_frame);
@@ -262,7 +262,7 @@ public class ContactEditFragment extends EntryEditFragment<NPPerson> {
     }
 
     @Override
-    public NPPerson getEditedEntry() {
+    public NPPerson getEntryFromEditor() {
         final NPPerson entry = getEntry();
         final NPPerson contact = entry == null ? new NPPerson(getFolder()) : new NPPerson(entry);
 

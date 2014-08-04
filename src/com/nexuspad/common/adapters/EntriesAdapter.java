@@ -29,7 +29,6 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter impl
 
 	public static final int TYPE_HEADER = 0;
 	public static final int TYPE_ENTRY = 1;
-	public static final int TYPE_EMPTY_ENTRY = 2;
 
 	private final LayoutInflater mInflater;
 	private final String mEntryHeaderText;
@@ -57,8 +56,6 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter impl
 	}
 
 	protected abstract View getEntryView(T entry, int position, View convertView, ViewGroup parent);
-
-	protected abstract View getEmptyEntryView(LayoutInflater inflater, View convertView, ViewGroup parent);
 
 	/**
 	 * Swap out the current entries with the specified one. The original entries passed in the constructor will
@@ -129,9 +126,6 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter impl
 
 	@Override
 	public int getItemViewType(int position) {
-		if (isEmpty()) {
-			return TYPE_EMPTY_ENTRY;
-		}
 		if (position == 0 && isHeaderEnabled()) {
 			return TYPE_HEADER;
 		}
@@ -140,7 +134,7 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter impl
 
 	@Override
 	public int getViewTypeCount() {
-		return 3; // header, entries, and empty view
+		return 2; // header and entry
 	}
 
 	@Override
@@ -154,7 +148,6 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter impl
 			case TYPE_ENTRY:
 				return true;
 			case TYPE_HEADER:
-			case TYPE_EMPTY_ENTRY:
 				return false;
 			default:
 				throw new AssertionError("unknown view type: " + getItemViewType(position) + " at position: " + position);
@@ -178,8 +171,6 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter impl
 				return getHeaderView(position, convertView, parent);
 			case TYPE_ENTRY:
 				return getEntryView(getItem(position), position, convertView, parent);
-			case TYPE_EMPTY_ENTRY:
-				return getEmptyEntryView(mInflater, convertView, parent);
 			default:
 				throw new AssertionError("unknown view type: " + getItemViewType(position) + " at position: " + position);
 		}

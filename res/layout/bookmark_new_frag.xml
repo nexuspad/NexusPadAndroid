@@ -34,7 +34,7 @@
             android:hint="@string/tags" />
 
         <EditText
-            android:id="@+id/txt_note"
+            android:id="@+id/journal_text"
             style="@style/formMargin"
             android:layout_width="match_parent"
             android:layout_height="0dp"

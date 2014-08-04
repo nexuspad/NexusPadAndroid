@@ -90,7 +90,7 @@ public class FoldersAndEntriesFragment extends EntriesFragment {
 
 	@Override
 	protected void doSearch(String keyword) {
-		fadeInProgressFrame();
+		displayProgressIndicator();
 		mCurrentSearchKeyword = keyword;
 		mFolderEntryCombinedAdapter.getEntriesAdapter().doSearch(keyword);
 	}
@@ -102,7 +102,7 @@ public class FoldersAndEntriesFragment extends EntriesFragment {
 
 	@Override
 	protected void reDisplayListEntries() {
-		fadeInListFrame();
+		dismissProgressIndicator();
 
 		// Need to reset the scroll listener.
 		mLoadMoreScrollListener.reset();

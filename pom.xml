@@ -101,6 +101,5 @@
             </plugins>
         </pluginManagement>
         <sourceDirectory>src</sourceDirectory>
-        <testSourceDirectory>test</testSourceDirectory>
     </build>
 </project>

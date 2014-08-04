@@ -173,11 +173,7 @@ public class FoldersAndEntriesAdapter<T extends EntriesAdapter<?>> extends BaseA
 	}
 
 	public boolean isPositionEntries(int position) {
-		if (mEntriesAdapter.getCount() == 0) {
-			return false;
-		} else {
-			return !isPositionFolder(position);
-		}
+		return mEntriesAdapter.getCount() != 0 && !isPositionFolder(position);
 	}
 
 	public void removeLoadMoreAdapter() {

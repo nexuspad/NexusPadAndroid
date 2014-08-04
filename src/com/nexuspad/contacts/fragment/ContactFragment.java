@@ -174,7 +174,7 @@ public class ContactFragment extends EntryFragment<NPPerson> {
 
 	private void addBasicItemView(NPItem item, ViewGroup target) {
 		final ViewGroup frame = (ViewGroup) mInflater.inflate(R.layout.layout_selectable_frame, null);
-		final ViewGroup view = (ViewGroup) mInflater.inflate(R.layout.list_item_icon, frame, false);
+		final ViewGroup view = (ViewGroup) mInflater.inflate(R.layout.list_item_with_icon, frame, false);
 
 		final TextView text = (TextView)view.findViewById(android.R.id.text1);
 		final View icon = view.findViewById(android.R.id.icon);

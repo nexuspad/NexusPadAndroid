@@ -168,7 +168,7 @@ public class EventEditFragment extends EntryEditFragment<NPEvent> {
         mAllDayView = (CheckBox)view.findViewById(R.id.chk_all_day);
         mRepeatV = (TextView)view.findViewById(R.id.spinner_repeat);
         mTagsView = (EditText)view.findViewById(R.id.txt_tags);
-        mNoteV = (EditText)view.findViewById(R.id.txt_note);
+        mNoteV = (EditText)view.findViewById(R.id.journal_text);
     }
 
     // only works after findViews(View)
@@ -244,7 +244,7 @@ public class EventEditFragment extends EntryEditFragment<NPEvent> {
 	}
 
 	@Override
-    public NPEvent getEditedEntry() {
+    public NPEvent getEntryFromEditor() {
         final NPEvent entry = getEntry();
         NPEvent event = entry == null ? new NPEvent(getFolder()) : new NPEvent(entry);
 

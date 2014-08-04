@@ -29,7 +29,7 @@ public abstract class EntryEditFragment<T extends NPEntry> extends EntryFragment
     protected static final int REQ_FOLDER = 1;
 
     /**
-     * @return if calling {@link #getEditedEntry()} would return a valid entry
+     * @return if calling {@link #getEntryFromEditor()} would return a valid entry
      */
     public abstract boolean isEditedEntryValid();
 
@@ -42,7 +42,7 @@ public abstract class EntryEditFragment<T extends NPEntry> extends EntryFragment
      *
      * @return an edited entry that reflects the user's changes
      */
-    public abstract T getEditedEntry();
+    public abstract T getEntryFromEditor();
 
     private ModuleId mModuleId;
     private EntryEditActivity.Mode mMode;
@@ -73,7 +73,7 @@ public abstract class EntryEditFragment<T extends NPEntry> extends EntryFragment
             throw new IllegalStateException("not in Mode.NEW");
         }
         if (isEditedEntryValid()) {
-            T entry = getEditedEntry();
+            T entry = getEntryFromEditor();
             try {
                 entry.setOwner(AccountManager.currentAccount());
             } catch (NPException e) {
@@ -92,7 +92,7 @@ public abstract class EntryEditFragment<T extends NPEntry> extends EntryFragment
      *
      * @param entry the edited entry
      * @see #isEditedEntryValid()
-     * @see #getEditedEntry()
+     * @see #getEntryFromEditor()
      */
     protected void onAddEntry(T entry) {
         try {
@@ -108,7 +108,7 @@ public abstract class EntryEditFragment<T extends NPEntry> extends EntryFragment
         }
         if (isEditedEntryValid()) {
             final T originalEntry = getEntry();
-            final T entry = getEditedEntry();
+            final T entry = getEntryFromEditor();
             if (!entry.equals(originalEntry)) {
                 try {
                     entry.setOwner(AccountManager.currentAccount());
@@ -129,7 +129,7 @@ public abstract class EntryEditFragment<T extends NPEntry> extends EntryFragment
      *
      * @param entry the edited entry
      * @see #isEditedEntryValid()
-     * @see #getEditedEntry()
+     * @see #getEntryFromEditor()
      */
     protected void onUpdateEntry(T entry) {
         try {

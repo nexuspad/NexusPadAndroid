@@ -176,7 +176,7 @@ public class AlbumEditFragment extends EntryEditFragment<NPAlbum> {
     }
 
     @Override
-    public NPAlbum getEditedEntry() {
+    public NPAlbum getEntryFromEditor() {
         final NPAlbum entry = getEntry();
         final NPAlbum album = entry == null ? new NPAlbum(getFolder()) : new NPAlbum(entry);
 

@@ -57,7 +57,7 @@ public class UploadCenterFragment extends NPBaseFragment {
 
 			mAdapter.notifyDataSetChanged();
 
-			fadeInListFrame();
+			dismissProgressIndicator();
 		}
 
 		@Override

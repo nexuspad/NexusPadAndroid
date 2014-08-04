@@ -56,11 +56,6 @@ public class PhotosAdapter extends EntriesAdapter<NPPhoto> {
     }
 
     @Override
-    protected View getEmptyEntryView(LayoutInflater i, View c, ViewGroup p) {
-        return getCaptionView(i, c, p, R.string.empty_photos, R.drawable.empty_folder);
-    }
-
-    @Override
     protected String getEntriesHeaderText() {
         return null;
     }

@@ -87,7 +87,7 @@ public class FoldersAdapter extends BaseAdapter implements OnItemLongClickListen
 
 	protected View getFolderView(NPFolder folder, int position, View c, ViewGroup p) {
 		if (c == null) {
-			int layout = mUseSubFolderButtons ? R.layout.list_item_icon_2 : R.layout.list_item_icon;
+			int layout = mUseSubFolderButtons ? R.layout.list_item_with_2_icon : R.layout.list_item_with_icon;
 			c = getLayoutInflater().inflate(layout, p, false);
 		}
 		FolderViewHolder holder = getHolder(c);

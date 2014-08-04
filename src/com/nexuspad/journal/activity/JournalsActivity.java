@@ -7,6 +7,7 @@ import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import com.nexuspad.common.annotation.ParentActivity;
@@ -32,7 +33,7 @@ import java.text.DateFormat;
 public class JournalsActivity extends EntriesActivity implements JournalsFragment.JournalsCallback, JournalEditFragment.Callback {
 	public static final String TAG = "JournalsActivity";
 
-	private static final int REQ_CODE_MONTH = 1;
+	private static final int DATE_SELECTOR_REQUEST = 1;
 	private static final String KEY_PENDING_DISPLAY_DATE = "key_pending_display_date";
 
 	private DateFormat mDateFormat;
@@ -50,7 +51,7 @@ public class JournalsActivity extends EntriesActivity implements JournalsFragmen
 		switch (item.getItemId()) {
 			case R.id.menu_month:
 				final Intent intent = new Intent(this, JournalsMonthActivity.class);
-				startActivityForResult(intent, REQ_CODE_MONTH);
+				startActivityForResult(intent, DATE_SELECTOR_REQUEST);
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
@@ -65,7 +66,7 @@ public class JournalsActivity extends EntriesActivity implements JournalsFragmen
 		}
 
 		switch (requestCode) {
-			case REQ_CODE_MONTH:
+			case DATE_SELECTOR_REQUEST:
 				mPendingDisplayDate = data.getLongExtra(JournalsMonthActivity.KEY_DATE, -1);
 				// cannot set display date right now, onResume() is not called yet
 				break;
@@ -127,8 +128,8 @@ public class JournalsActivity extends EntriesActivity implements JournalsFragmen
 	}
 
 	@Override
-	public void onJournalSelected(JournalsFragment f, NPJournal journal) {
-		final String dateString = mDateFormat.format(journal.getCreateTime());
+	public void onJournalSelected(JournalsFragment f, String dateString) {
+		Log.i(TAG, "Update action bar title to: " + dateString);
 
 		final ActionBar actionBar = getActionBar();
 		if (actionBar != null) {

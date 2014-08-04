@@ -67,7 +67,7 @@ public class PhotosFragment extends EntriesFragment implements OnItemClickListen
 		mGridView.setAdapter(a);
 		stableNotifyAdapter(a);
 
-		fadeInListFrame();
+		dismissProgressIndicator();
 	}
 
 	@Override

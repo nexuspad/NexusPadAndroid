@@ -145,7 +145,7 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 					fadeInEmptyFolderView();
 				} else {
 					onSearchLoaded(entryList);
-					fadeInListFrame();
+					dismissProgressIndicator();
 				}
 			}
 		}
@@ -269,13 +269,13 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 	}
 
 	protected void doSearch(String keyword) {
-		fadeInProgressFrame();
+		displayProgressIndicator();
 		mCurrentSearchKeyword = keyword;
 		mEntriesAdapter.doSearch(keyword);
 	}
 
 	protected void reDisplayListEntries() {
-		fadeInListFrame();
+		dismissProgressIndicator();
 
 		// Need to reset the scroll listener.
 		mLoadMoreScrollListener.reset();
@@ -500,7 +500,7 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 		/*
 		 * main list view
 		 */
-		final View theView = view.findViewById(R.id.main_list_view);
+		final View theView = view.findViewById(R.id.list_view);
 
 		if (theView instanceof ListView) {
 			mListView = (ListView) theView;
@@ -647,7 +647,7 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 		if (shouldKickToLogin(errorCode)) {
 			kickToLoginScreen();
 		} else {
-			fadeInRetryFrame();
+			displayRetry();
 		}
 	}
 
@@ -790,9 +790,6 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 
 	public ListView getListView() {
 		return mListView;
-	}
-
-	public void setListAdapter(BaseAdapter adapter) {
 	}
 
 	public NPFolder getFolder() {

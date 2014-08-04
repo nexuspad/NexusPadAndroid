@@ -127,7 +127,7 @@ public class DocFragment extends EntryFragment<NPDoc> {
             final LayoutInflater inflater = LayoutInflater.from(getActivity());
             for (final NPUpload attachment : attachments) {
                 final ViewGroup frame = (ViewGroup) inflater.inflate(R.layout.layout_selectable_frame, mAttachmentsFrameV, false);
-                final View view = inflater.inflate(R.layout.list_item_icon, frame, false);
+                final View view = inflater.inflate(R.layout.list_item_with_icon, frame, false);
 
                 final TextView title = (TextView)view.findViewById(android.R.id.text1);
                 final ImageView icon = (ImageView)view.findViewById(android.R.id.icon);

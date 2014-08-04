@@ -47,7 +47,8 @@ public abstract class EntryFragment<T extends NPEntry> extends DialogFragment {
 	private final EntryReceiver mEntryReceiver = new EntryReceiver() {
 		@Override
 		protected void onUpdate(Context context, Intent intent, NPEntry entry) {
-			onEntryUpdatedInternal(entry);
+			mEntry = (T)entry;
+			updateUI();
 		}
 
 		@Override
@@ -64,8 +65,8 @@ public abstract class EntryFragment<T extends NPEntry> extends DialogFragment {
 		}
 	};
 
-	private T mEntry;
-	private NPFolder mFolder;
+	protected T mEntry;
+	protected NPFolder mFolder;
 	private Callback<T> mCallback;
 
 	@Override
@@ -147,7 +148,7 @@ public abstract class EntryFragment<T extends NPEntry> extends DialogFragment {
 	public void setEntry(T entry) {
 		if (mEntry != entry) {
 			mEntry = entry;
-			onEntryUpdated(entry);
+			updateUI();
 		}
 	}
 
@@ -208,17 +209,6 @@ public abstract class EntryFragment<T extends NPEntry> extends DialogFragment {
 	}
 
 	/**
-	 * Called when the original entry is updated.
-	 * <p/>
-	 * Default implementation calls {@link #updateUI()}.
-	 *
-	 * @param entry the new entry
-	 */
-	protected void onEntryUpdated(T entry) {
-		updateUI();
-	}
-
-	/**
 	 * Called when the UI requires an update (entry/detail/folder entry updated)
 	 */
 	protected void updateUI() {
@@ -227,11 +217,4 @@ public abstract class EntryFragment<T extends NPEntry> extends DialogFragment {
 	protected void onEntryUpdateFailed(ServiceError error) {
 	}
 
-	@SuppressWarnings("unchecked")
-	private void onEntryUpdatedInternal(NPEntry e) {
-		T entry = (T) e;
-		mEntry = entry;
-
-		onEntryUpdated(entry);
-	}
 }

@@ -11,11 +11,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.CalendarView;
+import com.nexuspad.calendar.fragment.EventsListFragment;
 import com.nexuspad.common.annotation.ParentActivity;
 import com.google.common.collect.ImmutableList;
 import com.nexuspad.R;
 import com.nexuspad.common.annotation.ModuleId;
-import com.nexuspad.calendar.fragment.EventsAgendaFragment;
 import com.nexuspad.calendar.fragment.EventsMonthFragment;
 import com.nexuspad.datamodel.EntryList;
 import com.nexuspad.datamodel.EntryTemplate;
@@ -42,7 +42,7 @@ public class EventsActivity extends EntriesActivity implements EventsMonthFragme
     private static final int CALENDAR_DEFAULT_VIEW_MONTH = 0;
     private static final int CALENDAR_DEFAULT_VIEW_AGENDA = 1;
 
-    private EventsAgendaFragment mEventsAgendaFragment;
+    private EventsListFragment mEventsListFragment;
     private EventsMonthFragment mEventsMonthFragment;
     private long mStartTime = -1;
 
@@ -53,7 +53,7 @@ public class EventsActivity extends EntriesActivity implements EventsMonthFragme
         final NPFolder folder = NPFolder.rootFolderOf(getModule(), this);
 
         mEventsMonthFragment = new EventsMonthFragment();
-        mEventsAgendaFragment = EventsAgendaFragment.of(folder);
+        mEventsListFragment = EventsListFragment.of(folder);
 
         final ActionBar actionBar = getActionBar();
 
@@ -77,7 +77,7 @@ public class EventsActivity extends EntriesActivity implements EventsMonthFragme
     public boolean onCreateOptionsMenu(Menu menu) {
 	    super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.events_frag, menu);
-        mEventsAgendaFragment.setUpSearchView(menu.findItem(R.id.search));
+        mEventsListFragment.setUpSearchView(menu.findItem(R.id.search));
         return true;
     }
 
@@ -141,13 +141,13 @@ public class EventsActivity extends EntriesActivity implements EventsMonthFragme
                 oldFragment = mEventsMonthFragment;
                 oldFragmentTag = EventsMonthFragment.TAG;
 
-                mEventsAgendaFragment.setStartTime(mStartTime);
-                newFragment = mEventsAgendaFragment;
-                newFragmentTag = EventsAgendaFragment.TAG;
+                mEventsListFragment.setStartTime(mStartTime);
+                newFragment = mEventsListFragment;
+                newFragmentTag = EventsListFragment.TAG;
                 break;
             case CALENDAR_DEFAULT_VIEW_MONTH:
-                oldFragment = mEventsAgendaFragment;
-                oldFragmentTag = EventsAgendaFragment.TAG;
+                oldFragment = mEventsListFragment;
+                oldFragmentTag = EventsListFragment.TAG;
 
                 newFragment = mEventsMonthFragment;
                 newFragmentTag = EventsMonthFragment.TAG;

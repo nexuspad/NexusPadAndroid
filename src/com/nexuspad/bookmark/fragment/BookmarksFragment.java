@@ -126,7 +126,7 @@ public class BookmarksFragment extends FoldersAndEntriesFragment {
 		mListView.setAdapter(combinedAdapter);
 		mListView.setOnItemLongClickListener(combinedAdapter);
 
-		fadeInListFrame();
+		dismissProgressIndicator();
 	}
 
 	@Override
@@ -160,7 +160,7 @@ public class BookmarksFragment extends FoldersAndEntriesFragment {
 		@Override
 		protected View getEntryView(NPBookmark entry, int position, View convertView, ViewGroup parent) {
 			if (convertView == null || convertView.findViewById(android.R.id.icon) == null) {
-				convertView = getLayoutInflater().inflate(R.layout.list_item_icon, parent, false);
+				convertView = getLayoutInflater().inflate(R.layout.list_item_with_icon, parent, false);
 			}
 
 			ListViewHolder holder = getHolder(convertView);
@@ -175,11 +175,6 @@ public class BookmarksFragment extends FoldersAndEntriesFragment {
 		@Override
 		protected String getEntriesHeaderText() {
 			return getString(R.string.bookmarks);
-		}
-
-		@Override
-		protected View getEmptyEntryView(LayoutInflater i, View c, ViewGroup p) {
-			return getCaptionView(i, c, p, R.string.empty_bookmarks, R.drawable.empty_folder);
 		}
 	}
 }

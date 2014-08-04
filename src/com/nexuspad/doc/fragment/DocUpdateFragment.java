@@ -84,7 +84,7 @@ public class DocUpdateFragment extends EntryEditFragment<NPDoc> {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         mFolderV = (TextView)view.findViewById(R.id.lbl_folder);
-        mNoteV = (RichEditText)view.findViewById(R.id.txt_note);
+        mNoteV = (RichEditText)view.findViewById(R.id.journal_text);
         mTitleV = (EditText)view.findViewById(R.id.txt_title);
         mTagsV = (EditText)view.findViewById(R.id.txt_tags);
         mAttachmentsFrameV = (LinearLayout)view.findViewById(R.id.frame_attachment);
@@ -181,7 +181,7 @@ public class DocUpdateFragment extends EntryEditFragment<NPDoc> {
             final List<NPUpload> attachments = doc.getAttachments();
             final LayoutInflater inflater = LayoutInflater.from(getActivity());
             for (final NPUpload attachment : attachments) {
-                final View view = inflater.inflate(R.layout.list_item_icon, mAttachmentsFrameV, false);
+                final View view = inflater.inflate(R.layout.list_item_with_icon, mAttachmentsFrameV, false);
 
                 final TextView title = (TextView)view.findViewById(android.R.id.text1);
                 final ImageView icon = (ImageView)view.findViewById(android.R.id.icon);
@@ -210,7 +210,7 @@ public class DocUpdateFragment extends EntryEditFragment<NPDoc> {
     }
 
     @Override
-    public NPDoc getEditedEntry() {
+    public NPDoc getEntryFromEditor() {
         NPDoc doc = createEditedEntry();
         setEntry(doc);
         return doc;

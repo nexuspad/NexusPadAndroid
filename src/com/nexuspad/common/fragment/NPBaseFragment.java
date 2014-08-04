@@ -38,17 +38,17 @@ public class NPBaseFragment extends Fragment {
 	/**
 	 * Fade out the progress or retrying screen element.
 	 */
-	protected void fadeInListFrame() {
+	protected void dismissProgressIndicator() {
 		if (mLoadingUiManager != null)
 			mLoadingUiManager.fadeInListFrame();
 	}
 
-	protected void fadeInProgressFrame() {
+	protected void displayProgressIndicator() {
 		if (mLoadingUiManager != null)
 			mLoadingUiManager.fadeInProgressFrame();
 	}
 
-	protected void fadeInRetryFrame() {
+	protected void displayRetry() {
 		if (mLoadingUiManager != null)
 			mLoadingUiManager.fadeInRetryFrame();
 	}

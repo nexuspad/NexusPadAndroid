@@ -213,6 +213,7 @@
             android:name=".common.activity.FoldersNavigatorActivity"
             android:label="@string/folders"
             />
+        <activity android:name=".calendar.activity.RecurrenceEditActivity"/>
 
         <meta-data android:name="env" android:value="lab"/>
 

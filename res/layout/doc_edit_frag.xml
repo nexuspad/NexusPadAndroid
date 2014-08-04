@@ -30,7 +30,7 @@
             />
 
         <com.commonsware.cwac.richedit.RichEditText
-            android:id="@+id/txt_note"
+            android:id="@+id/journal_text"
             style="@style/formMargin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

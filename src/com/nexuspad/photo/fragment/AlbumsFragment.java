@@ -66,7 +66,7 @@ public class AlbumsFragment extends EntriesFragment {
 		}
 
 		albumsAdapter.notifyDataSetChanged();
-		fadeInListFrame();
+		dismissProgressIndicator();
 	}
 
 
@@ -148,11 +148,6 @@ public class AlbumsFragment extends EntriesFragment {
 			}
 
 			return convertView;
-		}
-
-		@Override
-		protected View getEmptyEntryView(LayoutInflater i, View c, ViewGroup p) {
-			return getCaptionView(i, c, p, R.string.empty_photos, R.drawable.empty_folder);
 		}
 
 		@Override

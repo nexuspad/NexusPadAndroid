@@ -56,4 +56,14 @@
             android:textColor="@android:color/darker_gray" />
 
     </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/menu"
+        android:layout_width="32dp"
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent"
+        android:duplicateParentState="false"
+        android:scaleType="fitXY"
+        android:src="@drawable/spinner_ab_holo_light" />
+
 </com.nexuspad.common.view.DuplicateParentStateAwareLinearLayout>

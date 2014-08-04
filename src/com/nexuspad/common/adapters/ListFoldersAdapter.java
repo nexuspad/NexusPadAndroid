@@ -195,7 +195,7 @@ public class ListFoldersAdapter extends BaseAdapter implements OnItemLongClickLi
 
 	protected View getFolderView(NPFolder folder, int position, View convertView, ViewGroup p) {
 		if (convertView == null || convertView.findViewById(R.drawable.ic_np_folder) == null) {
-			int layout = mUseSubFolderButtons ? R.layout.list_item_icon_2 : R.layout.list_item_icon;
+			int layout = mUseSubFolderButtons ? R.layout.list_item_with_2_icon : R.layout.list_item_with_icon;
 			convertView = getLayoutInflater().inflate(layout, p, false);
 		}
 

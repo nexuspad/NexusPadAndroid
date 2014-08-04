@@ -4,23 +4,21 @@
 package com.nexuspad.home.fragment;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.*;
-import android.widget.AdapterView;
-import android.widget.ListAdapter;
-import android.widget.ListView;
+import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
-import com.nexuspad.common.annotation.FragmentName;
 import com.nexuspad.R;
 import com.nexuspad.about.activity.AboutActivity;
 import com.nexuspad.account.AccountManager;
 import com.nexuspad.app.App;
+import com.nexuspad.common.annotation.FragmentName;
 import com.nexuspad.dataservice.ServiceConstants;
 import com.nexuspad.home.activity.LoginActivity;
-import com.nexuspad.common.adapters.IconListAdapter;
 
 import static com.nexuspad.dataservice.ServiceConstants.*;
 
@@ -118,7 +116,7 @@ public class DashboardFragment extends Fragment {
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 
-		mListView = (ListView)view.findViewById(R.id.main_list_view);
+		mListView = (ListView)view.findViewById(R.id.dashboard_menu_list_view);
 
 		mListAdapter = new IconListAdapter(getActivity(), sDrawables, sStrings);
 		mListView.setAdapter(mListAdapter);
@@ -133,5 +131,97 @@ public class DashboardFragment extends Fragment {
 
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		mCallback.onModuleClicked(this, sModules[position]);
+	}
+
+
+	private static class IconListAdapter extends BaseAdapter {
+
+		private final int[] mDrawableIds;
+		private final CharSequence[] mStrings;
+		private final LayoutInflater mLayoutInflater;
+
+		private boolean mHasMenu;
+
+		private final float scale;
+
+		public IconListAdapter(Activity activity, int[] drawableIds, int[] stringIds) {
+			this(activity, drawableIds, toStrings(activity, stringIds));
+		}
+
+		public IconListAdapter(Activity activity, int[] drawableIds, CharSequence[] strings) {
+			if (drawableIds.length != strings.length) {
+				throw new IllegalArgumentException("drawableIds and stringIds must have the same length");
+			}
+			mDrawableIds = drawableIds;
+			mStrings = strings;
+			mLayoutInflater = activity.getLayoutInflater();
+
+			scale = activity.getResources().getDisplayMetrics().density;
+		}
+
+		private static CharSequence[] toStrings(Context c, int[] stringIds) {
+			CharSequence[] out = new CharSequence[stringIds.length];
+			int i = 0;
+			for (int id : stringIds) {
+				out[i++] = c.getText(id);
+			}
+			return out;
+		}
+
+		public final boolean hasMenu() {
+			return mHasMenu;
+		}
+
+		public final void setHasMenu(boolean hasMenu) {
+			if (mHasMenu != hasMenu) {
+				mHasMenu = hasMenu;
+				notifyDataSetChanged();
+			}
+		}
+
+		@Override
+		public int getCount() {
+			return mDrawableIds.length;
+		}
+
+		@Override
+		public Object getItem(int position) {
+			return null;
+		}
+
+		@Override
+		public long getItemId(int position) {
+			return 0;
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			ViewHolder holder;
+			if (convertView == null) {
+				convertView = mLayoutInflater.inflate(R.layout.list_item_with_icon, parent, false);
+				holder = new ViewHolder();
+				holder.icon = (ImageView)convertView.findViewById(android.R.id.icon);
+				holder.icon.getLayoutParams().width = (int) (42*scale + 0.5);
+				holder.text1 = (TextView)convertView.findViewById(android.R.id.text1);
+				holder.menu = (ImageButton)convertView.findViewById(R.id.menu);
+
+				convertView.setTag(holder);
+			} else {
+				holder = (ViewHolder) convertView.getTag();
+			}
+
+			holder.icon.setImageResource(mDrawableIds[position]);
+			holder.text1.setText(mStrings[position]);
+
+			holder.menu.setVisibility(mHasMenu ? View.VISIBLE : View.GONE);
+
+			return convertView;
+		}
+
+		private static class ViewHolder {
+			ImageView icon;
+			TextView text1;
+			ImageButton menu;
+		}
 	}
 }

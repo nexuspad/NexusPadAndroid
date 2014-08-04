@@ -109,7 +109,7 @@ public final class ContactsFragment extends EntriesFragment {
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 
-		final View theView = view.findViewById(R.id.main_list_view);
+		final View theView = view.findViewById(R.id.list_view);
 
 		mStickyHeaderContactListView = (StickyListHeadersListView)theView;
 
@@ -136,14 +136,51 @@ public final class ContactsFragment extends EntriesFragment {
 	}
 
 	@Override
-	protected void onListLoaded(EntryList list) {
-		Log.i(TAG, "Receiving entry list.");
+	protected void onListLoaded(EntryList entryList) {
+		Log.i(TAG, "Receiving contact entry list.");
 
 		if (mSortTask != null) {
 			mSortTask.cancel(true);
+
+			ContactsAdapter adapter = (ContactsAdapter)getAdapter();
+
+			if (adapter == null) {
+				adapter = new ContactsAdapter(getActivity(), entryList, getFolder(), getEntryListService(), getTemplate(), mFilterDoneListener);
+
+				adapter.setOnMenuClickListener(new OnEntryMenuClickListener<NPPerson>(mStickyHeaderContactListView, getEntryService(), getUndoBarController()) {
+					@Override
+					public void onClick(View v) {
+						final int i = mStickyHeaderContactListView.getPositionForView(v);
+						final NPPerson contact = (NPPerson) getAdapter().getItem(i);
+						onEntryClick(contact, i, v);
+					}
+
+					@Override
+					protected boolean onEntryMenuClick(NPPerson contact, int pos, int menuId) {
+						switch (menuId) {
+							case R.id.edit:
+								ContactEditActivity.startWithContact(getActivity(), getFolder(), contact);
+								return true;
+							default:
+								return super.onEntryMenuClick(contact, pos, menuId);
+						}
+					}
+				});
+
+				mStickyHeaderContactListView.setAdapter(adapter);
+				mStickyHeaderContactListView.setOnItemLongClickListener(adapter);
+				setAdapter(adapter);
+
+			} else {
+				adapter.notifyDataSetChanged();
+			}
+
+			dismissProgressIndicator();
+
+		} else {
+			mSortTask = new SortTask(entryList, this);
+			mSortTask.execute((Void[]) null);
 		}
-		mSortTask = new SortTask(mEntryList, this);
-		mSortTask.execute((Void[]) null);
 	}
 
 	@Override
@@ -169,34 +206,6 @@ public final class ContactsFragment extends EntriesFragment {
 			mSortTask.cancel(true);
 		}
 		super.onDestroy();
-	}
-
-
-	private ContactsAdapter newContactsAdapter(EntryList entryList) {
-		final ContactsAdapter a = new ContactsAdapter(getActivity(), entryList, getFolder(), getEntryListService(), getTemplate(), mFilterDoneListener);
-
-		a.setOnMenuClickListener(new OnEntryMenuClickListener<NPPerson>(mStickyHeaderContactListView, getEntryService(), getUndoBarController()) {
-			@Override
-			public void onClick(View v) {
-				final int i = mStickyHeaderContactListView.getPositionForView(v);
-				final NPPerson contact = a.getItem(i);
-				onEntryClick(contact, i, v);
-			}
-
-			@Override
-			protected boolean onEntryMenuClick(NPPerson contact, int pos, int menuId) {
-				switch (menuId) {
-					case R.id.edit:
-						ContactEditActivity.startWithContact(getActivity(), getFolder(), contact);
-						return true;
-					default:
-						return super.onEntryMenuClick(contact, pos, menuId);
-				}
-			}
-		});
-
-		mStickyHeaderContactListView.setOnItemLongClickListener(a);
-		return a;
 	}
 
 
@@ -255,7 +264,7 @@ public final class ContactsFragment extends EntriesFragment {
 
 	@Override
 	protected void reDisplayListEntries() {
-		fadeInListFrame();
+		dismissProgressIndicator();
 		((ContactsAdapter)getAdapter()).setDisplayEntries(mEntryList);
 		getAdapter().notifyDataSetChanged();
 	}
@@ -278,7 +287,7 @@ public final class ContactsFragment extends EntriesFragment {
 		@Override
 		protected View getEntryView(NPPerson p, int position, View convertView, ViewGroup parent) {
 			if (convertView == null) {
-				convertView = getLayoutInflater().inflate(R.layout.list_item_icon, parent, false);
+				convertView = getLayoutInflater().inflate(R.layout.list_item_with_icon, parent, false);
 			}
 			final ListViewHolder holder = getHolder(convertView);
 
@@ -302,11 +311,6 @@ public final class ContactsFragment extends EntriesFragment {
 			holder.getMenu().setOnClickListener(getOnMenuClickListener());
 
 			return convertView;
-		}
-
-		@Override
-		protected View getEmptyEntryView(LayoutInflater i, View c, ViewGroup p) {
-			return getCaptionView(i, c, p, R.string.empty_contacts, R.drawable.empty_folder);
 		}
 
 		@Override
@@ -367,15 +371,7 @@ public final class ContactsFragment extends EntriesFragment {
 		@Override
 		protected void onPostExecute(Void aVoid) {
 			final ContactsFragment fragment = mFragment.get();
-			if (fragment != null && fragment.isAdded()) {
-				if (fragment.getAdapter() == null) {
-					fragment.setAdapter(fragment.newContactsAdapter(mContactList));
-					fragment.mStickyHeaderContactListView.setAdapter((ContactsAdapter)fragment.getAdapter());
-				}
-
-				fragment.fadeInListFrame();
-				fragment.getAdapter().notifyDataSetChanged();
-			}
+			fragment.onListLoaded(mContactList);
 		}
 	}
 }

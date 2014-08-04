@@ -56,7 +56,7 @@ public class BookmarkEditFragment extends EntryEditFragment<NPBookmark> {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         mFolderV = (TextView)view.findViewById(R.id.lbl_folder);
         mWebAddressV = (EditText)view.findViewById(R.id.txt_web_address);
-        mNoteV = (EditText)view.findViewById(R.id.txt_note);
+        mNoteV = (EditText)view.findViewById(R.id.journal_text);
         mTagsV = (EditText)view.findViewById(R.id.txt_tags);
 
         installFolderSelectorListener(mFolderV);
@@ -97,7 +97,7 @@ public class BookmarkEditFragment extends EntryEditFragment<NPBookmark> {
     }
 
     @Override
-    public NPBookmark getEditedEntry() {
+    public NPBookmark getEntryFromEditor() {
         final NPBookmark entry = getEntry();
         NPBookmark bookmark = entry == null ? new NPBookmark(getFolder()) : new NPBookmark(entry);
         bookmark.setWebAddress(mWebAddressV.getText().toString());

@@ -7,11 +7,9 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.text.format.DateUtils;
 import android.util.Log;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,28 +33,38 @@ import java.util.*;
 import static com.google.common.base.Strings.isNullOrEmpty;
 
 /**
- * @author Edmond
+ * @author Ren
  */
 @FragmentName(JournalsFragment.TAG)
 @ModuleId(moduleId = ServiceConstants.JOURNAL_MODULE, template = EntryTemplate.JOURNAL)
 public class JournalsFragment extends EntriesFragment {
 	public static final String TAG = "JournalsFragment";
 
-	public interface JournalsCallback {
-		void onListLoaded(EntriesFragment f, EntryList list);
-		void onJournalSelected(JournalsFragment f, NPJournal journal);
-	}
-
 	private ViewPager mViewPager;
 	private JournalsAdapter mPagerAdapter;
+
+	private int scrollToPage;
+
+	public static final int LEFT_PAGE = 0;
+	public static final int RIGHT_PAGE = 2;
+	public static final int CENTER_PAGE = 1;
 
 	private JournalsCallback mJournalsCallback;
 	private Date mStartDate;
 	private Date mEndDate;
 
-	private Map<String, NPJournal> mJournals = new HashMap<String, NPJournal>();
+	private TreeMap<String, NPJournal> mJournals = new TreeMap<String, NPJournal>();
 
 	private JournalService mJournalService;
+
+	private enum PagingDirection {
+		LEFT, RIGHT;
+	}
+
+	public interface JournalsCallback {
+		void onListLoaded(EntriesFragment f, EntryList list);
+		void onJournalSelected(JournalsFragment f, String dateString);
+	}
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -78,18 +86,32 @@ public class JournalsFragment extends EntriesFragment {
 	@Override
 	public void onPause() {
 		super.onPause();
+		saveJournalsInFragments();
+	}
 
-		updateJournalsFromUI();
+	/**
+	 * Save the journals in the fragments, get the edited text before saving.
+	 */
+	private void saveJournalsInFragments() {
 		final EntryService entryService = getEntryService();
 		final FragmentActivity activity = getActivity();
-		for (NPJournal journal : mJournals.values()) {
-			if (!isNullOrEmpty(journal.getNote())) {
-				entryService.safePutEntry(activity, journal);
+
+		if (mPagerAdapter != null) {
+			List<JournalEditFragment> frags = mPagerAdapter.getJournalEditFragments();
+			for (JournalEditFragment frag : frags) {
+				if (frag.journalEdited()) {
+					NPJournal updatedJournal = frag.getUpdatedJournal();
+					if (!isNullOrEmpty(updatedJournal.getNote())) {
+						Log.i(TAG, "Save journal for: " + updatedJournal.getJournalYmd());
+						entryService.safePutEntry(activity, updatedJournal);
+					}
+				}
 			}
 		}
 	}
 
 	public void setDisplayDate(long date) {
+		Log.i(TAG, "setDisplayDate is called...........");
 		final Date target = new Date(date);
 		if (mStartDate.compareTo(target) <= 0 && target.compareTo(mEndDate) <= 0) {
 			final int daysDiff = DateUtil.daysBetween(mStartDate, target);
@@ -99,22 +121,15 @@ public class JournalsFragment extends EntriesFragment {
 		}
 	}
 
-	private void updateJournalsFromUI() {
-		if (mViewPager != null) {
-			final SparseArray<JournalEditFragment> fragments = mPagerAdapter.getAliveFragments();
-			for (int i = 0, length = fragments.size(); i < length; ++i) {
-				final int position = fragments.keyAt(i);
-				final JournalEditFragment fragment = fragments.valueAt(i);
-				mPagerAdapter.updateJournalFromUI(position, fragment);
-			}
-		}
-	}
-
+	/**
+	 * Request the first 3 journals
+	 */
 	@Override
 	protected void queryEntriesAsync() {
-		final long now = System.currentTimeMillis();
-		mStartDate = DateUtil.getFirstDateOfTheMonth(now);
-		mEndDate = DateUtil.getEndDateOfTheMonth(now);
+		Date today = DateUtil.now();
+		mStartDate = DateUtil.addDaysTo(today, -1);
+		mEndDate = DateUtil.addDaysTo(today, 1);
+
 		try {
 			mFolder.setOwner(AccountManager.currentAccount());
 			getEntryListService().getEntriesBetweenDates(mFolder, EntryTemplate.JOURNAL, mStartDate, mEndDate, 1);
@@ -127,7 +142,7 @@ public class JournalsFragment extends EntriesFragment {
 	protected void onListLoaded(EntryList list) {
 		Log.i(TAG, "Receiving entry list.");
 
-		fadeInListFrame();
+		dismissProgressIndicator();
 
 		mJournals.clear();
 
@@ -153,59 +168,84 @@ public class JournalsFragment extends EntriesFragment {
 			mJournals.put(journal.getJournalYmd(), journal);
 		}
 
-		if (mPagerAdapter != null) {
-			mPagerAdapter.notifyDataSetChanged();
+		saveJournalsInFragments();
 
-		} else {
-			mPagerAdapter = new JournalsAdapter();
-			mViewPager.setAdapter(mPagerAdapter);
+		/*
+		 * Create adapter with initial journals.
+		 */
+		mPagerAdapter = new JournalsAdapter();
 
-			/*
-			 * Handles changing page.
-			 */
-			mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-				@Override
-				public void onPageSelected(int position) {
-					Log.i("TRACK POSITION: ", String.valueOf(position));
+		for (String ymd : mJournals.keySet()) {
+			NPJournal j = mJournals.get(ymd);
+			JournalEditFragment jef = JournalEditFragment.of(j);
+			mPagerAdapter.addPage(jef, PagingDirection.RIGHT);
+		}
 
-					// Request the next journal, shift the start/end dates
-					if (mPagerAdapter.beginningOfPager(position)) {
+		mViewPager.setAdapter(mPagerAdapter);
+		mViewPager.setCurrentItem(CENTER_PAGE);
+
+		/*
+		 * Handles changing page.
+		 */
+		mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+			@Override
+			public void onPageScrollStateChanged(int state) {
+
+				if (state == ViewPager.SCROLL_STATE_IDLE) {
+					String retrieveJournalYmd = null;
+
+					saveJournalsInFragments();
+
+					if (scrollToPage == LEFT_PAGE) {
 						mStartDate = DateUtil.addDaysTo(mStartDate, -1);
-						mEndDate = DateUtil.addDaysTo(mStartDate, 2);
+						mEndDate = DateUtil.addDaysTo(mEndDate, -1);
+						retrieveJournalYmd = DateUtil.convertToYYYYMMDD(mStartDate);
 
-						try {
-							getJournalService().getJournal(DateUtil.convertToYYYYMMDD(mStartDate));
-						} catch (NPException e) {
-						}
-
-					} else if (mPagerAdapter.endOfPager(position)) {
+					} else if (scrollToPage == RIGHT_PAGE) {
 						mStartDate = DateUtil.addDaysTo(mStartDate, 1);
 						mEndDate = DateUtil.addDaysTo(mEndDate, 1);
-
-						try {
-							getJournalService().getJournal(DateUtil.convertToYYYYMMDD(mEndDate));
-						} catch (NPException e) {
-						}
+						retrieveJournalYmd = DateUtil.convertToYYYYMMDD(mEndDate);
 					}
 
-					mJournalsCallback.onJournalSelected(JournalsFragment.this, mPagerAdapter.getJournal(position));
-				}
-			});
+					mPagerAdapter = new JournalsAdapter();
 
-			final int entriesSize = mJournals.size();
-			if (entriesSize > 0) {
-				int initialIndex = 0;
-				for (int i = 0; i < entriesSize; i++) {
-					final NPJournal journal = mJournals.get(i);
-					final long journalTime = journal.getCreateTime().getTime();
-					if (DateUtils.isToday(journalTime)) {
-						initialIndex = i;
-						break;
+					NPJournal j = getJournal(DateUtil.convertToYYYYMMDD(mStartDate));
+					JournalEditFragment newFrag = JournalEditFragment.of(j);
+					mPagerAdapter.addPage(newFrag, PagingDirection.RIGHT);
+
+					j = getJournal(DateUtil.convertToYYYYMMDD(DateUtil.addDaysTo(mStartDate, 1)));
+					newFrag = JournalEditFragment.of(j);
+					mPagerAdapter.addPage(newFrag, PagingDirection.RIGHT);
+
+					j = getJournal(DateUtil.convertToYYYYMMDD(mEndDate));
+					newFrag = JournalEditFragment.of(j);
+					mPagerAdapter.addPage(newFrag, PagingDirection.RIGHT);
+
+					mViewPager.setAdapter(null);
+					mViewPager.setAdapter(mPagerAdapter);
+					mViewPager.setCurrentItem(CENTER_PAGE, false);
+
+					try {
+						getJournalService().getJournal(retrieveJournalYmd);
+					} catch (NPException e) {
+						Log.e(TAG, "Error getting journal: " + e.toString());
 					}
+
+					// Update the date in action bar based on the current pager item.
+					JournalEditFragment currentFrag = mPagerAdapter.getJournalEditFragment(mViewPager.getCurrentItem());
+					mJournalsCallback.onJournalSelected(JournalsFragment.this, currentFrag.getJournalDateYmd());
 				}
-				mViewPager.setCurrentItem(initialIndex);  // onJournalSelected will get called (from the above OnPageChangeListener)
 			}
-		}
+
+			@Override
+			public void onPageSelected(int position) {
+				scrollToPage = position;
+			}
+		});
+
+		// Update the date in action bar based on the current pager item.
+		JournalEditFragment currentFrag = mPagerAdapter.getJournalEditFragment(mViewPager.getCurrentItem());
+		mJournalsCallback.onJournalSelected(JournalsFragment.this, currentFrag.getJournalDateYmd());
 	}
 
 	/**
@@ -221,6 +261,21 @@ public class JournalsFragment extends EntriesFragment {
 		mJournals.put(j.getJournalYmd(), j);
 	}
 
+	/**
+	 * Get entry from mJournals or create new NPJournal.
+	 *
+	 * @param ymd
+	 * @return
+	 */
+	private NPJournal getJournal(String ymd) {
+		NPJournal j = mJournals.get(ymd);
+		if (j == null) {
+			j = new NPJournal();
+			j.setJournalYmd(ymd);
+		}
+
+		return j;
+	}
 
 	private NPJournal createJournalForDate(Date date) {
 		final NPJournal emptyJournal = new NPJournal(NPFolder.rootFolderOf(NPModule.JOURNAL));
@@ -239,15 +294,25 @@ public class JournalsFragment extends EntriesFragment {
 	/**
 	 * JournalsAdapter.
 	 */
-	private class JournalsAdapter extends FragmentPagerAdapter {
-		private SparseArray<JournalEditFragment> mAliveFragments = new SparseArray<JournalEditFragment>();
+	private class JournalsAdapter extends FragmentStatePagerAdapter {
+		private TreeMap<String, JournalEditFragment> journalEditFrags = new TreeMap<String, JournalEditFragment>();
 
 		private JournalsAdapter() {
 			super(getChildFragmentManager());
 		}
 
-		private NPJournal getJournal(int pos) {
-			return mJournals.get(pos);
+		public JournalEditFragment getJournalEditFragment(int position) {
+			NavigableSet<String> orderedYmds = journalEditFrags.navigableKeySet();
+			int i = 0;
+			for (String ymd : orderedYmds) {
+				if (i == position) {
+					JournalEditFragment frag = journalEditFrags.get(ymd);
+					return frag;
+				}
+				i++;
+			}
+
+			return null;
 		}
 
 		public boolean beginningOfPager(int position) {
@@ -258,39 +323,37 @@ public class JournalsFragment extends EntriesFragment {
 		}
 
 		public boolean endOfPager(int position) {
-			if (position == mAliveFragments.size() - 1) {
+			if (position == 2) {
 				return true;
 			}
 			return false;
 		}
 
-		@Override
-		public Fragment getItem(int pos) {
-			return JournalEditFragment.of(getJournal(pos), NPFolder.rootFolderOf(NPModule.JOURNAL));
+		public void addPage(JournalEditFragment fragment, PagingDirection direction) {
+			Log.i(TAG, "Add journal fragment for " + fragment.getJournalDateYmd());
+			journalEditFrags.put(fragment.getJournalDateYmd(), fragment);
+
+			if (direction == PagingDirection.RIGHT) {
+				Date dropDate = DateUtil.addDaysTo(DateUtil.parseFromYYYYMMDD(fragment.getJournalDateYmd()), -3);
+				journalEditFrags.remove(DateUtil.convertToYYYYMMDD(dropDate));
+			}
 		}
 
 		@Override
-		public Object instantiateItem(ViewGroup container, int position) {
-			final JournalEditFragment fragment = (JournalEditFragment) super.instantiateItem(container, position);
-			mAliveFragments.put(position, fragment);
-			return fragment;
+		public Fragment getItem(int position) {
+			Log.i(TAG, "getItem called...." + String.valueOf(position));
+			return getJournalEditFragment(position);
 		}
 
 		@Override
 		public void destroyItem(ViewGroup container, int position, Object object) {
+			Log.i(TAG, "destroyItem called...." + String.valueOf(position));
 			super.destroyItem(container, position, object);
-			updateJournalFromUI(position, (JournalEditFragment) object);
-			mAliveFragments.remove(position);
-		}
-
-		public void updateJournalFromUI(int position, JournalEditFragment fragment) {
-			final NPJournal journal = fragment.getEditedEntry();
-			mJournals.put(journal.getJournalYmd(), journal);
 		}
 
 		@Override
 		public int getCount() {
-			return mJournals.size();
+			return 3;
 		}
 
 		@Override
@@ -298,9 +361,8 @@ public class JournalsFragment extends EntriesFragment {
 			return POSITION_NONE;
 		}
 
-		public SparseArray<JournalEditFragment> getAliveFragments() {
-			return mAliveFragments;
+		public List<JournalEditFragment> getJournalEditFragments() {
+			return new ArrayList<JournalEditFragment>(journalEditFrags.values());
 		}
-
 	}
 }
