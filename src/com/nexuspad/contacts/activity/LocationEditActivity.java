@@ -14,40 +14,40 @@ import com.nexuspad.datamodel.Location;
  */
 @ParentActivity(ContactEditActivity.class)
 public class LocationEditActivity extends DoneDiscardActivity {
-    public static final String KEY_LOCATION = "key_location";
+	public static final String KEY_LOCATION = "key_location";
 
-    public static Intent of(Context context, Location location) {
-        final Intent intent = new Intent(context, LocationEditActivity.class);
-        intent.putExtra(KEY_LOCATION, location);
-        return intent;
-    }
+	private Location mLocation;
 
-    private Location mLocation;
+	public static Intent of(Context context, Location location) {
+		final Intent intent = new Intent(context, LocationEditActivity.class);
+		intent.putExtra(KEY_LOCATION, location);
+		return intent;
+	}
 
-    @Override
-    protected void onCreate(Bundle savedState) {
-        setResult(RESULT_CANCELED);
-        mLocation = getIntent().getParcelableExtra(KEY_LOCATION);
-        super.onCreate(savedState);
-    }
+	@Override
+	protected void onCreate(Bundle savedState) {
+		setResult(RESULT_CANCELED);
+		mLocation = getIntent().getParcelableExtra(KEY_LOCATION);
+		super.onCreate(savedState);
+	}
 
-    @Override
-    protected Fragment onCreateFragment() {
-        return LocationEditFragment.of(mLocation);
-    }
+	@Override
+	protected Fragment onCreateFragment() {
+		return LocationEditFragment.of(mLocation);
+	}
 
-    @Override
-    public void onBackPressed() {
-        onDonePressed();
-    }
+	@Override
+	public void onBackPressed() {
+		onDonePressed();
+	}
 
-    @Override
-    protected void onDonePressed() {
-        final Location location = ((LocationEditFragment) getFragment()).getEditedLocation();
-        final Intent data = new Intent();
-        data.putExtra(KEY_LOCATION, location);
-        setResult(RESULT_OK, data);
-        finish();
-        super.onDonePressed();
-    }
+	@Override
+	protected void onDonePressed() {
+		final Intent data = new Intent();
+		final Location location = ((LocationEditFragment) getFragment()).getEditedLocation();
+		data.putExtra(KEY_LOCATION, location);
+		setResult(RESULT_OK, data);
+		finish();
+		super.onDonePressed();
+	}
 }

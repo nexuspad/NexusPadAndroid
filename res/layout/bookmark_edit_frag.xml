@@ -23,6 +23,7 @@
             style="@style/formMargin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:imeOptions="flagNoExtractUi"
             android:hint="@string/web_address"
             android:inputType="textUri" />
 
@@ -31,6 +32,7 @@
             style="@style/formMargin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:imeOptions="flagNoExtractUi"
             android:hint="@string/tags" />
 
         <EditText
@@ -39,6 +41,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
+            android:imeOptions="flagNoExtractUi"
             android:hint="@string/note"
             android:gravity="top"
             android:minLines="@integer/notes_min_lines" />

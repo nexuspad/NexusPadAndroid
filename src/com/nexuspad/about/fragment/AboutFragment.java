@@ -90,7 +90,7 @@ public class AboutFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.about_frag, container, false);
+        return inflater.inflate(R.layout.account_settings_frag, container, false);
     }
 
     @Override

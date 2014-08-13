@@ -110,10 +110,32 @@
     <string name="location">Location</string>
     <string name="from">FROM</string>
     <string name="to">TO</string>
+    <string name="start_date">Start date</string>
+    <string name="start_time">Start time</string>
+    <string name="end_date">End date</string>
+    <string name="end_time">End time</string>
     <string name="all_day">ALL DAY</string>
     <string name="month">Month</string>
     <string name="month_view">Month View</string>
     <string name="agenda">Agenda</string>
+
+    <string name="recurrence">Repeat</string>
+    <string name="no_recurrence">No repeat</string>
+    <string name="repeat_daily">Repeat daily</string>
+    <string name="repeat_weekly">Repeat weekly</string>
+    <string name="repeat_monthly">Repeat monthly</string>
+    <string name="repeat_yearly">Repeat yearly</string>
+
+    <string name="recurrence_interval_daily">Repeat every %1$d day(s)</string>
+    <string name="recurrence_interval_weekly">Repeat every %1$d week(s)</string>
+    <string name="recurrence_interval_monthly">Repeat every %1$d month(s)</string>
+    <string name="recurrence_interval_yearly">Repeat every %1$d year(s)</string>
+
+    <string name="repeat_n_times">Repeat %1$s times</string>
+    <string name="repeat_forever">Repeat forever</string>
+    <string name="select_date">Select date</string>
+    <string name="end_by">End by</string>
+
     <string name="undo">Undo</string>
 
     <string name="cancel">CANCEL</string>

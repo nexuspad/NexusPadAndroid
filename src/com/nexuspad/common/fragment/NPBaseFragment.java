@@ -54,82 +54,83 @@ public class NPBaseFragment extends Fragment {
 	}
 
 	protected static final class LoadingUiManager {
-		private final View mListV;
-		private final View mRetryV;
-		private final View mProgressV;
-		private final Animation mFadeOutA;
-		private final Animation mFadeInA;
+		private final View mMainListViewFrame;
+		private final View mRetryView;
+		private final View mProgressView;
+		private final Animation mFadeOutAnimation;
+		private final Animation mFadeInAnimation;
 
 		protected LoadingUiManager(View listV, View retryV, View progressV, View.OnClickListener onRetryListener) {
-			mListV = listV;
-			mRetryV = retryV;
-			mProgressV = progressV;
+			mMainListViewFrame = listV;
+			mRetryView = retryV;
+			mProgressView = progressV;
 
-			mProgressV.setVisibility(View.VISIBLE);
-			mRetryV.setVisibility(View.GONE);
-			mListV.setVisibility(View.GONE);
+			mProgressView.setVisibility(View.VISIBLE);
+			mRetryView.setVisibility(View.GONE);
+			mMainListViewFrame.setVisibility(View.GONE);
 
 			final Context context = listV.getContext();
-			mFadeOutA = loadAnimation(context, android.R.anim.fade_out);
-			mFadeInA = loadAnimation(context, android.R.anim.fade_in);
+			mFadeOutAnimation = loadAnimation(context, android.R.anim.fade_out);
+			mFadeInAnimation = loadAnimation(context, android.R.anim.fade_in);
 
-			mRetryV.findViewById(R.id.btn_retry).setOnClickListener(onRetryListener);
+			mRetryView.findViewById(R.id.btn_retry).setOnClickListener(onRetryListener);
 		}
 
 		protected void fadeInListFrame() {
-			boolean isRetryVisible = mRetryV.getVisibility() == View.VISIBLE;
-			boolean isProgressVisible = mProgressV.getVisibility() == View.VISIBLE;
+			boolean isRetryVisible = mRetryView.getVisibility() == View.VISIBLE;
+			boolean isProgressVisible = mProgressView.getVisibility() == View.VISIBLE;
 
 			if (isRetryVisible) {
-				fadeOut(mRetryV);
-			}
-			if (isProgressVisible) {
-				fadeOut(mProgressV);
+				fadeOut(mRetryView);
 			}
 
-			fadeIn(mListV);
+			if (isProgressVisible) {
+				fadeOut(mProgressView);
+			}
+
+			fadeIn(mMainListViewFrame);
 		}
 
 		protected void fadeInRetryFrame() {
-			boolean isListVisible = mListV.getVisibility() == View.VISIBLE;
-			boolean isProgressVisible = mProgressV.getVisibility() == View.VISIBLE;
+			boolean isListVisible = mMainListViewFrame.getVisibility() == View.VISIBLE;
+			boolean isProgressVisible = mProgressView.getVisibility() == View.VISIBLE;
 
 			if (isListVisible) {
-				fadeOut(mListV);
+				fadeOut(mMainListViewFrame);
 			}
 			if (isProgressVisible) {
-				fadeOut(mProgressV);
+				fadeOut(mProgressView);
 			}
 
-			fadeIn(mRetryV);
+			fadeIn(mRetryView);
 		}
 
 		protected void fadeInProgressFrame() {
-			boolean isListVisible = mListV.getVisibility() == View.VISIBLE;
-			boolean isRetryVisible = mRetryV.getVisibility() == View.VISIBLE;
+			boolean isListVisible = mMainListViewFrame.getVisibility() == View.VISIBLE;
+			boolean isRetryVisible = mRetryView.getVisibility() == View.VISIBLE;
 
 			if (isListVisible) {
-				fadeOut(mListV);
+				fadeOut(mMainListViewFrame);
 			}
 			if (isRetryVisible) {
-				fadeOut(mRetryV);
+				fadeOut(mRetryView);
 			}
 
-			fadeIn(mProgressV);
+			fadeIn(mProgressView);
 		}
 
 		protected void fadeOutProgressFrame() {
-			fadeOut(mProgressV);
+			fadeOut(mProgressView);
 		}
 
 		private void fadeOut(View view) {
-			view.startAnimation(mFadeOutA);
+			view.startAnimation(mFadeOutAnimation);
 			view.setVisibility(View.GONE);
 		}
 
 		private void fadeIn(View view) {
 			view.setVisibility(View.VISIBLE);
-			view.startAnimation(mFadeInA);
+			view.startAnimation(mFadeInAnimation);
 		}
 	}
 }

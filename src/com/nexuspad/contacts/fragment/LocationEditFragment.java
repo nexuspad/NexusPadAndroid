@@ -29,11 +29,11 @@ public final class LocationEditFragment extends DialogFragment {
 
     private Location mLocation;
 
-    private EditText mStreetAddressV;
-    private EditText mCityV;
-    private EditText mStateV;
-    private EditText mZipCodeV;
-    private EditText mCountryV;
+    private EditText mStreetAddressView;
+    private EditText mCityView;
+    private EditText mStateView;
+    private EditText mZipCodeView;
+    private EditText mCountryView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -46,16 +46,16 @@ public final class LocationEditFragment extends DialogFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.contact_location_edit_frag, container, false);
+        return inflater.inflate(R.layout.contact_address_edit_frag, container, false);
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        mStreetAddressV = (EditText)view.findViewById(R.id.txt_street_address);
-        mCityV = (EditText)view.findViewById(R.id.txt_city);
-        mStateV = (EditText)view.findViewById(R.id.txt_state);
-        mZipCodeV = (EditText)view.findViewById(R.id.txt_zip_code);
-        mCountryV = (EditText)view.findViewById(R.id.txt_country);
+        mStreetAddressView = (EditText)view.findViewById(R.id.txt_street_address);
+        mCityView = (EditText)view.findViewById(R.id.txt_city);
+        mStateView = (EditText)view.findViewById(R.id.txt_state);
+        mZipCodeView = (EditText)view.findViewById(R.id.txt_zip_code);
+        mCountryView = (EditText)view.findViewById(R.id.txt_country);
 
         updateUI();
         super.onViewCreated(view, savedInstanceState);
@@ -63,21 +63,21 @@ public final class LocationEditFragment extends DialogFragment {
 
     private void updateUI() {
         if (mLocation != null) {
-            mStreetAddressV.setText(mLocation.getStreetAddress());
-            mCityV.setText(mLocation.getCity());
-            mStateV.setText(mLocation.getProvince());
-            mZipCodeV.setText(mLocation.getPostalCode());
-            mCountryV.setText(mLocation.getCountry());
+            mStreetAddressView.setText(mLocation.getStreetAddress());
+            mCityView.setText(mLocation.getCity());
+            mStateView.setText(mLocation.getProvince());
+            mZipCodeView.setText(mLocation.getPostalCode());
+            mCountryView.setText(mLocation.getCountry());
         }
     }
 
-    public final Location getEditedLocation() {
+    public Location getEditedLocation() {
         final Location location = mLocation == null ? new Location() : new Location(mLocation);
-        location.setStreetAddress(mStreetAddressV.getText().toString());
-        location.setCity(mCityV.getText().toString());
-        location.setProvince(mStateV.getText().toString());
-        location.setPostalCode(mZipCodeV.getText().toString());
-        location.setCountry(mCountryV.getText().toString());
+        location.setStreetAddress(mStreetAddressView.getText().toString());
+        location.setCity(mCityView.getText().toString());
+        location.setProvince(mStateView.getText().toString());
+        location.setPostalCode(mZipCodeView.getText().toString());
+        location.setCountry(mCountryView.getText().toString());
         return location;
     }
 }

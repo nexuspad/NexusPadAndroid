@@ -6,7 +6,7 @@
         <item name="android:textColorPrimary">?android:textColorPrimaryInverse</item>
     </style>
 
-    <style name="ed__styleActivityMargin">
+    <style name="np_styleActivityMargin">
         <item name="android:paddingBottom">@dimen/np_activity_margin_vertical</item>
         <item name="android:paddingLeft">@dimen/np_activity_margin_horizontal</item>
         <item name="android:paddingRight">@dimen/np_activity_margin_horizontal</item>
@@ -47,7 +47,7 @@
         <item name="android:background">#DFDFDF</item>
     </style>
 
-    <style name="BlockTextTextView">
+    <style name="blockTextTextView">
         <item name="android:gravity">top</item>
         <item name="android:minHeight">48dp</item>
         <item name="android:padding">@dimen/np_padding_small</item>

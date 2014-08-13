@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+    >
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:orientation="vertical"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content">
+
+        <RadioGroup
+            android:id="@+id/rbg_recurrence_pattern"
+            style="@style/formMargin"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/no_recurrence"
+                android:id="@+id/rb_no_recurrence"
+                android:checked="false"/>
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/repeat_daily"
+                android:id="@+id/rb_repeat_daily"
+                android:checked="false"/>
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/repeat_weekly"
+                android:id="@+id/rb_repeat_weekly"
+                android:checked="false"/>
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/repeat_monthly"
+                android:id="@+id/rb_repeat_monthly"
+                android:checked="false"/>
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/repeat_yearly"
+                android:id="@+id/rb_repeat_yearly"
+                android:checked="false"/>
+        </RadioGroup>
+
+        <LinearLayout
+            android:id="@+id/layout_recurrence_interval"
+            style="@style/formMargin"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="83dp"
+            android:visibility="visible">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/blockTextTextView"
+                android:id="@+id/txt_recurrence_interval"/>
+
+            <Button
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:text="-"
+                android:id="@+id/btn_reduce_interval"/>
+
+            <Button
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:text="+"
+                android:id="@+id/btn_increase_interval"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_recurrence_times"
+            style="@style/formMargin"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/blockTextTextView"
+                    android:text="For 1 time"
+                    android:id="@+id/txt_repeat_times"/>
+
+                <Button
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:text="-"
+                    android:id="@+id/btn_reduce_repeat_times"/>
+
+                <Button
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:text="+"
+                    android:id="@+id/btn_increase_repeat_times"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/blockTextTextView"
+                    android:text="@string/end_by"
+                    android:id="@+id/txt_end_repeat_by"/>
+
+                <com.nexuspad.calendar.view.DateButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/select_date"
+                    android:id="@+id/btn_repeat_end_date"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+
+                <Switch
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/blockTextTextView"
+                    android:text="@string/repeat_forever"
+                    android:id="@+id/switch_repeat_forever"
+                    android:checked="false"/>
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
+</ScrollView>

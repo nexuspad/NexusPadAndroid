@@ -84,6 +84,7 @@ public class DocsFragment extends FoldersAndEntriesFragment {
 
 		if (a != null) {
 			a.notifyDataSetChanged();
+			dismissProgressIndicator();
 			return;
 		}
 

@@ -73,7 +73,7 @@ public class LoginFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.sign_in_frag, container, false);
+        return inflater.inflate(R.layout.account_signin_frag, container, false);
     }
 
     @Override

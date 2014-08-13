@@ -468,19 +468,23 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 		final View retryFrame = view.findViewById(R.id.frame_retry);
 
 		if (listFrame != null && progressFrame != null && retryFrame != null) {
-			mLoadingUiManager = new LoadingUiManager(listFrame, retryFrame, progressFrame, new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					mLoadingUiManager.fadeInProgressFrame();
-					onRetryClicked(v);
-				}
-			});
+			if (mLoadingUiManager == null) {
+				mLoadingUiManager = new LoadingUiManager(listFrame, retryFrame, progressFrame, new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						mLoadingUiManager.fadeInProgressFrame();
+						onRetryClicked(v);
+					}
+				});
+			}
 		}
 
 		/*
 		 * quick return
 		 */
-		mQuickReturnView = view.findViewById(R.id.quick_return);
+		if (mQuickReturnView == null) {
+			mQuickReturnView = view.findViewById(R.id.quick_return);
+		}
 
 		/*
 		 * empty folder
@@ -495,34 +499,40 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 		/*
 		 * folder selector
 		 */
-		mFolderSelectorView = (TextView)view.findViewById(R.id.lbl_folder);
+		if (mFolderSelectorView == null) {
+			mFolderSelectorView = (TextView) view.findViewById(R.id.lbl_folder);
+		}
 
 		/*
 		 * main list view
 		 */
-		final View theView = view.findViewById(R.id.list_view);
+		if (mListView == null) {
+			final View theView = view.findViewById(R.id.list_view);
 
-		if (theView instanceof ListView) {
-			mListView = (ListView) theView;
-		}
+			if (theView instanceof ListView) {
+				mListView = (ListView) theView;
 
-		if (mListView != null) {
-			mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-				@Override
-				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-					onListItemClick(mListView, view, position, id);
+				mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+					@Override
+					public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+						onListItemClick(mListView, view, position, id);
+					}
+				});
+
+				mListView.setItemsCanFocus(true);
+				mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+
+				if (isAutoLoadMoreEnabled()) {
+					mListView.setOnScrollListener(mLoadMoreScrollListener);
 				}
-			});
-
-			mListView.setItemsCanFocus(true);
-			mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-
-			if (isAutoLoadMoreEnabled()) {
-				mListView.setOnScrollListener(mLoadMoreScrollListener);
 			}
 		}
 
-		queryEntriesAsync();
+		if (mEntryList == null) {
+			queryEntriesAsync();
+		} else {
+			onListLoaded(mEntryList);
+		}
 	}
 
 	protected boolean isAutoLoadMoreEnabled() {

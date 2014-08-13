@@ -49,7 +49,7 @@ public class BookmarkEditFragment extends EntryEditFragment<NPBookmark> {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.bookmark_new_frag, container, false);
+        return inflater.inflate(R.layout.bookmark_edit_frag, container, false);
     }
 
     @Override
@@ -91,9 +91,10 @@ public class BookmarkEditFragment extends EntryEditFragment<NPBookmark> {
 	    if (isEmpty) {
 		    mWebAddressV.setError(mWebAddressV.getContext().getText(R.string.err_empty_field));
 		    mWebAddressV.requestFocus();
+		    return false;
 	    }
 
-	    return isEmpty;
+	    return true;
     }
 
     @Override

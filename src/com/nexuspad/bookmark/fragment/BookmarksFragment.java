@@ -82,12 +82,13 @@ public class BookmarksFragment extends FoldersAndEntriesFragment {
 
 	@Override
 	protected void onListLoaded(EntryList list) {
-		Log.i(TAG, "Receiving entry list.");
+		Log.i(TAG, "Receiving bookmark list.");
 
 		FoldersAndEntriesAdapter a = (FoldersAndEntriesAdapter)getAdapter();
 
 		if (a != null) {
 			a.notifyDataSetChanged();
+			dismissProgressIndicator();
 			return;
 		}
 

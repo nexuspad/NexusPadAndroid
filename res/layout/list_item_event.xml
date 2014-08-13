@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <com.nexuspad.common.view.DuplicateParentStateAwareLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:minHeight="48dp"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:descendantFocusability="blocksDescendants"> <!-- blocksDescendants so list item is clickable -->
 
     <LinearLayout
         android:id="@+id/date_frame"

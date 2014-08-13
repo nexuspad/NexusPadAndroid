@@ -59,6 +59,7 @@ public class PhotosFragment extends EntriesFragment implements OnItemClickListen
 		PhotosAdapter a = (PhotosAdapter)mGridView.getAdapter();
 		if (a != null) {
 			a.notifyDataSetChanged();
+			dismissProgressIndicator();
 			return;
 		}
 

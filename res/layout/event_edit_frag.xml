@@ -15,13 +15,14 @@
             style="@style/formMargin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:imeOptions="flagNoExtractUi"
             android:hint="@string/title" />
 
-        <TextView
-            style="?android:attr/listSeparatorTextViewStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/location" />
+        <!--<TextView-->
+            <!--style="?android:attr/listSeparatorTextViewStyle"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="@string/location" />-->
 
         <com.nexuspad.common.view.LocationTextView
             android:id="@+id/txt_location"
@@ -48,7 +49,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="5"
-                android:layout_marginTop="0dp" />
+                android:layout_marginTop="0dp"
+                android:hint="@string/start_date" />
 
             <com.nexuspad.calendar.view.TimeButton
                 android:id="@+id/spinner_start_time"
@@ -56,8 +58,16 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
-                android:layout_marginTop="0dp" />
+                android:layout_marginTop="0dp"
+                android:hint="@string/start_time" />
         </LinearLayout>
+
+        <CheckBox
+            android:id="@+id/chk_all_day"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/np_textsize_small"
+            android:text="@string/all_day" />
 
         <TextView
             style="?android:attr/listSeparatorTextViewStyle"
@@ -76,7 +86,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="5"
-                android:layout_marginTop="0dp" />
+                android:layout_marginTop="0dp"
+                android:hint="@string/end_date" />
 
             <com.nexuspad.calendar.view.TimeButton
                 android:id="@+id/spinner_to_time"
@@ -84,15 +95,23 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
-                android:layout_marginTop="0dp" />
+                android:layout_marginTop="0dp"
+                android:hint="@string/end_time" />
         </LinearLayout>
 
-        <CheckBox
-            android:id="@+id/chk_all_day"
+        <!--<TextView-->
+            <!--style="?android:attr/listSeparatorTextViewStyle"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="@string/recurrence" />-->
+
+        <com.nexuspad.calendar.view.RecurrenceTextView
+            android:id="@+id/txt_recurrence"
+            style="@style/selectableTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/np_textsize_small"
-            android:text="@string/all_day" />
+            android:hint="@string/recurrence"
+            android:drawableRight="@android:drawable/ic_menu_edit" />
 
         <TextView
             android:id="@+id/spinner_repeat"
@@ -106,6 +125,7 @@
             style="@style/formMargin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:imeOptions="flagNoExtractUi"
             android:hint="@string/tags" />
 
         <EditText
@@ -113,6 +133,7 @@
             style="@style/formMargin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:imeOptions="flagNoExtractUi"
             android:minLines="@integer/notes_min_lines"
             android:gravity="top"
             android:hint="@string/note" />

@@ -122,11 +122,12 @@ public class EventsListFragment extends EntriesFragment {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				if (getAdapter() != null) {
+					final NPEvent event = ((EventsListAdapter)getAdapter()).getItem(position);
+					EventActivity.startWith(getActivity(), event, getFolder());
 				}
 			}
 		});
 
-		//mStickyHeaderContactListView.setItemsCanFocus(true);
 		mStickyHeaderEventListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 	}
 
@@ -162,16 +163,6 @@ public class EventsListFragment extends EntriesFragment {
 				}
 			});
 
-			mStickyHeaderEventListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-				@Override
-				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-					if (getAdapter() != null) {
-						final NPEvent event = ((EventsListAdapter)getAdapter()).getItem(position);
-						EventActivity.startWith(getActivity(), event, getFolder());
-					}
-				}
-			});
-
 			mStickyHeaderEventListView.setAdapter(adapter);
 			mStickyHeaderEventListView.setOnItemLongClickListener(adapter);
 			setAdapter(adapter);
@@ -201,7 +192,6 @@ public class EventsListFragment extends EntriesFragment {
 		}
 	}
 
-
 	public void setStartTime(long startTime) {
 		final Date newStartTime = new Date(startTime);
 		final Date oldStartTime = new Date(mStartTime);
@@ -219,6 +209,9 @@ public class EventsListFragment extends EntriesFragment {
 	}
 
 
+	/**
+	 * View holder for event item.
+	 */
 	private static class EventViewHolder {
 		private ViewGroup mDateFrame;
 		private TextView mDayOfWeekV;
@@ -228,6 +221,10 @@ public class EventsListFragment extends EntriesFragment {
 		private ImageButton mMenu;
 	}
 
+
+	/**
+	 * Event list view adapter.
+	 */
 	private class EventsListAdapter extends EntriesAdapter<NPEvent> implements StickyListHeadersAdapter {
 		private final DateFormat mDayOfWeekFormat = new SimpleDateFormat("EEEE");
 		private final DateFormat mMonthFormat = new SimpleDateFormat("MMMM yyyy");
@@ -243,6 +240,7 @@ public class EventsListFragment extends EntriesFragment {
 		@Override
 		protected View getEntryView(NPEvent event, int position, View convertView, ViewGroup parent) {
 			final EventViewHolder viewHolder;
+
 			if (convertView == null) {
 				convertView = getLayoutInflater().inflate(R.layout.list_item_event, parent, false);
 
@@ -252,9 +250,11 @@ public class EventsListFragment extends EntriesFragment {
 				viewHolder.mTitleV = (TextView)convertView.findViewById(R.id.lbl_title);
 				viewHolder.mTimeV = (TextView)convertView.findViewById(R.id.lbl_time);
 				viewHolder.mDateFrame = (ViewGroup)convertView.findViewById(R.id.date_frame);
+
 				viewHolder.mMenu = (ImageButton)convertView.findViewById(R.id.menu);
 
 				convertView.setTag(viewHolder);
+
 			} else {
 				viewHolder = (EventViewHolder) convertView.getTag();
 			}
@@ -266,10 +266,13 @@ public class EventsListFragment extends EntriesFragment {
 			final String timeStr;
 			if (event.isAllDayEvent()) {
 				timeStr = getString(R.string.all_day);
+
 			} else if (startTime != null && endTime != null) {
 				timeStr = DateUtils.formatDateRange(getActivity(), startTime.getTime(), endTime.getTime(), 0);
+
 			} else if (startTime != null) {
 				timeStr = mTimeFormat.format(startTime);
+
 			} else {
 				timeStr = "";
 			}
@@ -287,7 +290,9 @@ public class EventsListFragment extends EntriesFragment {
 
 		@Override
 		public View getHeaderView(int position, View convertView, ViewGroup parent) {
-			if (isEmpty()) return new View(getLayoutInflater().getContext()); // empty view (no header)
+			if (isEmpty())
+				return new View(getLayoutInflater().getContext());
+
 			if (convertView == null) {
 				convertView = getLayoutInflater().inflate(R.layout.list_header, parent, false);
 			}

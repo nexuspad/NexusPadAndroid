@@ -175,12 +175,12 @@ public final class ContactsFragment extends EntriesFragment {
 				adapter.notifyDataSetChanged();
 			}
 
-			dismissProgressIndicator();
-
 		} else {
 			mSortTask = new SortTask(entryList, this);
 			mSortTask.execute((Void[]) null);
 		}
+
+		dismissProgressIndicator();
 	}
 
 	@Override
