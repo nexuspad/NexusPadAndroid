@@ -21,7 +21,7 @@ import com.nexuspad.dataservice.ServiceConstants;
 public abstract class EntriesActivity extends SinglePaneActivity implements EntriesFragment.ActivityCallback {
     public static final String KEY_FOLDER = "key_folder";
 
-    private NPFolder mFolder;
+    protected NPFolder mFolder;
 
     private ModuleId mModuleId;
 
@@ -62,9 +62,5 @@ public abstract class EntriesActivity extends SinglePaneActivity implements Entr
     @Override
     public void onListLoaded(EntriesFragment f, EntryList list) {
         // do nothing
-    }
-
-    public NPFolder getFolder() {
-        return mFolder;
     }
 }

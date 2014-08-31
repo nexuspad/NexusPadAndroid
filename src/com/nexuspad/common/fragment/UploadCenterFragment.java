@@ -14,10 +14,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import com.nexuspad.R;
-import com.nexuspad.app.Request;
-import com.nexuspad.app.service.UploadService;
+import com.nexuspad.app.UploadRequest;
+import com.nexuspad.app.service.UploadOperationUIHelper;
 import com.nexuspad.common.annotation.FragmentName;
-import com.nexuspad.dataservice.FileUploadService;
+import com.nexuspad.dataservice.NPUploadHelper;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -30,16 +30,16 @@ import java.util.List;
 public class UploadCenterFragment extends NPBaseFragment {
 	public static final String TAG = "UploadCenterFragment";
 
-	private final List<Request> mPendingRequests = new ArrayList<Request>();
+	private final List<UploadRequest> mPendingRequests = new ArrayList<UploadRequest>();
 
 	private ListView mListView;
 
 	private UploadRequestAdapter mAdapter;
-	private UploadService.UploadBinder mBinder;
+	private UploadOperationUIHelper.UploadBinder mBinder;
 
-	private final UploadService.OnNewRequestListener mOnNewRequestListener = new UploadService.OnNewRequestListener() {
+	private final UploadOperationUIHelper.OnNewRequestListener mOnNewRequestListener = new UploadOperationUIHelper.OnNewRequestListener() {
 		@Override
-		public void onNewRequest(Request request) {
+		public void onNewRequest(UploadRequest request) {
 			mPendingRequests.add(request);
 			mAdapter.notifyDataSetChanged();
 		}
@@ -48,7 +48,7 @@ public class UploadCenterFragment extends NPBaseFragment {
 	private ServiceConnection mConnection = new ServiceConnection() {
 		@Override
 		public void onServiceConnected(ComponentName name, IBinder service) {
-			mBinder = (UploadService.UploadBinder) service;
+			mBinder = (UploadOperationUIHelper.UploadBinder) service;
 
 			mBinder.addRequests(mPendingRequests);
 			mBinder.addCallback(mOnNewRequestListener);
@@ -82,7 +82,7 @@ public class UploadCenterFragment extends NPBaseFragment {
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 
-		mListView = (ListView)view.findViewById(android.R.id.list);
+		mListView = (ListView)view.findViewById(R.id.list_view);
 		mListView.setAdapter(mAdapter);
 
 		mAdapter.notifyDataSetChanged();
@@ -94,7 +94,7 @@ public class UploadCenterFragment extends NPBaseFragment {
 		super.onActivityCreated(savedInstanceState);
 
 		final FragmentActivity activity = getActivity();
-		final Intent service = new Intent(activity, UploadService.class);
+		final Intent service = new Intent(activity, UploadOperationUIHelper.class);
 		activity.startService(service);
 		activity.bindService(service, mConnection, Context.BIND_AUTO_CREATE);
 	}
@@ -109,7 +109,7 @@ public class UploadCenterFragment extends NPBaseFragment {
 		getActivity().unbindService(mConnection);
 	}
 
-	public void addRequest(Request request) {
+	public void addRequest(UploadRequest request) {
 		if (mBinder == null) {
 			mPendingRequests.add(request);
 		} else {
@@ -125,7 +125,7 @@ public class UploadCenterFragment extends NPBaseFragment {
 		private ImageButton menu;
 		private boolean cancelled;
 
-		private FileUploadService.Callback callback = new FileUploadService.Callback() {
+		private NPUploadHelper.Callback callback = new NPUploadHelper.Callback() {
 			@Override
 			public boolean onProgress(long progress, long total) {
 				progressbar.setMax((int) total);
@@ -151,10 +151,10 @@ public class UploadCenterFragment extends NPBaseFragment {
 		private static final int VIEW_TYPE_REQUEST = 1;
 
 		private final Context mContext;
-		private final List<Request> mRequests;
+		private final List<UploadRequest> mRequests;
 		private final int mHeaderRes;
 
-		public UploadRequestAdapter(Context context, List<Request> requests, int headerRes) {
+		public UploadRequestAdapter(Context context, List<UploadRequest> requests, int headerRes) {
 			mContext = context;
 			mRequests = requests;
 			mHeaderRes = headerRes;
@@ -181,7 +181,7 @@ public class UploadCenterFragment extends NPBaseFragment {
 		}
 
 		@Override
-		public Request getItem(int position) {
+		public UploadRequest getItem(int position) {
 			return mRequests.get(position);
 		}
 
@@ -217,16 +217,19 @@ public class UploadCenterFragment extends NPBaseFragment {
 				holder = (ViewHolder) convertView.getTag();
 			}
 
-			final Request request = getItem(position);
+			final UploadRequest request = getItem(position);
 			request.setCallback(holder.callback);
 
-			Picasso.with(mContext)
-					.load(request.getUri())
-					.placeholder(R.drawable.placeholder)
-					.error(R.drawable.ic_launcher)
-					.resizeDimen(R.dimen.photo_grid_width, R.dimen.photo_grid_height)
-					.centerCrop()
-					.into(holder.icon);
+			Picasso pic = Picasso.with(mContext);
+
+			pic.setIndicatorsEnabled(true);
+
+			pic.load(request.getUri())
+				.placeholder(R.drawable.placeholder)
+				.error(R.drawable.ic_launcher)
+				.resizeDimen(R.dimen.photo_grid_width, R.dimen.photo_grid_height)
+				.centerCrop()
+				.into(holder.icon);
 
 			holder.title.setText(request.getFile(mContext).getName());
 			holder.menu.setOnClickListener(new View.OnClickListener() {

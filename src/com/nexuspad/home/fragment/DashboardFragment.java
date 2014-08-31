@@ -152,6 +152,7 @@ public class DashboardFragment extends Fragment {
 			if (drawableIds.length != strings.length) {
 				throw new IllegalArgumentException("drawableIds and stringIds must have the same length");
 			}
+
 			mDrawableIds = drawableIds;
 			mStrings = strings;
 			mLayoutInflater = activity.getLayoutInflater();

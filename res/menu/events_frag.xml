@@ -2,10 +2,24 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/new_event"
+        android:id="@+id/menu_new"
         android:icon="@drawable/ic_action_new"
         android:showAsAction="ifRoom"
-        android:title="@string/new_event"/>
+        android:title="@string/new_">
+        <menu>
+            <group>
+                <item
+                    android:id="@+id/new_folder"
+                    android:showAsAction="ifRoom"
+                    android:title="@string/new_folder"/>
+                <item
+                    android:id="@+id/new_event"
+                    android:showAsAction="ifRoom"
+                    android:title="@string/new_event"/>
+            </group>
+        </menu>
+    </item>
+
     <item
         android:id="@+id/search"
         android:icon="@android:drawable/ic_menu_search"

@@ -15,11 +15,11 @@ import android.widget.ListView;
 import android.widget.SearchView;
 import com.google.common.base.Strings;
 import com.nexuspad.R;
-import com.nexuspad.common.annotation.ModuleId;
 import com.nexuspad.common.activity.FoldersNavigatorActivity;
 import com.nexuspad.common.adapters.EntriesAdapter;
 import com.nexuspad.common.adapters.ListViewHolder;
 import com.nexuspad.common.annotation.FragmentName;
+import com.nexuspad.common.annotation.ModuleId;
 import com.nexuspad.common.fragment.EntriesFragment;
 import com.nexuspad.common.listeners.OnEntryMenuClickListener;
 import com.nexuspad.common.utils.EntriesLocalSearchFilter;
@@ -45,16 +45,6 @@ public final class ContactsFragment extends EntriesFragment {
 
 	private StickyListHeadersListView mStickyHeaderContactListView;
 
-	public static ContactsFragment of(NPFolder folder) {
-		final Bundle bundle = new Bundle();
-		bundle.putParcelable(KEY_FOLDER, folder);
-
-		final ContactsFragment fragment = new ContactsFragment();
-		fragment.setArguments(bundle);
-
-		return fragment;
-	}
-
 	private final EntriesLocalSearchFilter.OnFilterDoneListener<NPPerson> mFilterDoneListener = new EntriesLocalSearchFilter.OnFilterDoneListener<NPPerson>() {
 		@Override
 		public void onFilterDone(List<NPPerson> persons) {
@@ -77,8 +67,8 @@ public final class ContactsFragment extends EntriesFragment {
 	}
 
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
 		setHasOptionsMenu(true);
 	}
 
@@ -133,6 +123,12 @@ public final class ContactsFragment extends EntriesFragment {
 
 		//mStickyHeaderContactListView.setItemsCanFocus(true);
 		mStickyHeaderContactListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+
+		if (mEntryList == null) {
+			queryEntriesAsync();
+		} else {
+			onListLoaded(mEntryList);
+		}
 	}
 
 	@Override
@@ -183,6 +179,14 @@ public final class ContactsFragment extends EntriesFragment {
 		dismissProgressIndicator();
 	}
 
+	/**
+	 * Handles activity result:
+	 *      - Folder navigator
+	 *
+	 * @param requestCode
+	 * @param resultCode
+	 * @param data
+	 */
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);

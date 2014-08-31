@@ -10,6 +10,8 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <include layout="@layout/include_folder_selector"/>
+
         <EditText
             android:id="@+id/txt_title"
             style="@style/formMargin"
@@ -17,12 +19,6 @@
             android:layout_height="wrap_content"
             android:imeOptions="flagNoExtractUi"
             android:hint="@string/title" />
-
-        <!--<TextView-->
-            <!--style="?android:attr/listSeparatorTextViewStyle"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="@string/location" />-->
 
         <com.nexuspad.common.view.LocationTextView
             android:id="@+id/txt_location"
@@ -39,6 +35,7 @@
             android:text="@string/from" />
 
         <LinearLayout
+            android:id="@+id/from_time_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -76,6 +73,7 @@
             android:text="@string/to" />
 
         <LinearLayout
+            android:id="@+id/to_time_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">

@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
 import com.android.datetimepicker.date.DatePickerDialog;
 import com.android.datetimepicker.time.RadialPickerLayout;
 import com.android.datetimepicker.time.TimePickerDialog;
@@ -55,8 +56,13 @@ public class EventEditFragment extends EntryEditFragment<NPEvent> {
 		return fragment;
 	}
 
+	private TextView mFolderView;
+
 	private EditText mTitleView;
 	private LocationTextView mLocationView;
+
+	private View mFromLayoutView;
+	private View mToLayoutView;
 
 	private DateButton mFromDateView;
 	private TimeButton mFromTimeView;
@@ -100,7 +106,24 @@ public class EventEditFragment extends EntryEditFragment<NPEvent> {
 
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
-		findViews(view);
+		mFolderView = (TextView)view.findViewById(R.id.lbl_folder);
+		installFolderSelectorListener(mFolderView);
+
+		mTitleView = (EditText)view.findViewById(R.id.txt_title);
+		mLocationView = (LocationTextView)view.findViewById(R.id.txt_location);
+
+		mFromDateView = (DateButton)view.findViewById(R.id.spinner_start_day);
+		mFromTimeView = (TimeButton)view.findViewById(R.id.spinner_start_time);
+		mToDateView = (DateButton)view.findViewById(R.id.spinner_to_day);
+		mToTimeView = (TimeButton)view.findViewById(R.id.spinner_to_time);
+
+		mFromLayoutView = view.findViewById(R.id.from_time_layout);
+		mToLayoutView = view.findViewById(R.id.to_time_layout);
+
+		mAllDayView = (CheckBox)view.findViewById(R.id.chk_all_day);
+		mRecurrenceView = (RecurrenceTextView)view.findViewById(R.id.txt_recurrence);
+		mTagsView = (EditText)view.findViewById(R.id.txt_tags);
+		mNoteView = (EditText)view.findViewById(R.id.journal_text);
 
 		final View.OnClickListener listener = new View.OnClickListener() {
 			@Override
@@ -142,6 +165,16 @@ public class EventEditFragment extends EntryEditFragment<NPEvent> {
 							}
 						});
 						timePickerDialog.show(getActivity().getFragmentManager(), String.valueOf(id));
+						break;
+
+					case R.id.chk_all_day:
+						if (mAllDayView.isChecked()) {
+							mFromTimeView.setVisibility(View.INVISIBLE);
+							mToLayoutView.setVisibility(View.GONE);
+						} else {
+							mFromTimeView.setVisibility(View.VISIBLE);
+							mToLayoutView.setVisibility(View.VISIBLE);
+						}
 						break;
 
 					case R.id.spinner_to_day:
@@ -191,6 +224,7 @@ public class EventEditFragment extends EntryEditFragment<NPEvent> {
 		mFromTimeView.setOnClickListener(listener);
 		mToDateView.setOnClickListener(listener);
 		mToTimeView.setOnClickListener(listener);
+		mAllDayView.setOnClickListener(listener);
 		mRecurrenceView.setOnClickListener(listener);
 
 		if (savedInstanceState != null) {
@@ -227,21 +261,6 @@ public class EventEditFragment extends EntryEditFragment<NPEvent> {
 		return (DatePickerDialog) fragment;
 	}
 
-	private void findViews(View view) {
-		mTitleView = (EditText)view.findViewById(R.id.txt_title);
-		mLocationView = (LocationTextView)view.findViewById(R.id.txt_location);
-
-		mFromDateView = (DateButton)view.findViewById(R.id.spinner_start_day);
-		mFromTimeView = (TimeButton)view.findViewById(R.id.spinner_start_time);
-		mToDateView = (DateButton)view.findViewById(R.id.spinner_to_day);
-		mToTimeView = (TimeButton)view.findViewById(R.id.spinner_to_time);
-
-		mAllDayView = (CheckBox)view.findViewById(R.id.chk_all_day);
-		mRecurrenceView = (RecurrenceTextView)view.findViewById(R.id.txt_recurrence);
-		mTagsView = (EditText)view.findViewById(R.id.txt_tags);
-		mNoteView = (EditText)view.findViewById(R.id.journal_text);
-	}
-
 	// only works after findViews(View)
 	private DateButton findDatePicker(int id) {
 		switch (id) {
@@ -273,10 +292,17 @@ public class EventEditFragment extends EntryEditFragment<NPEvent> {
 		return c;
 	}
 
+	@Override
+	protected void onFolderUpdated(NPFolder folder) {
+		super.onFolderUpdated(folder);
+		mFolderView.setText(getFolder().getFolderName());
+	}
 
 	@Override
 	protected void updateUI() {
 		super.updateUI();
+
+		mFolderView.setText(getFolder().getFolderName());
 
 		final NPEvent event = getEntry();
 		if (event != null) {

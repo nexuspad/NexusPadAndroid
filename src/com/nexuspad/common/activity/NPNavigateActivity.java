@@ -34,85 +34,69 @@ import com.nexuspad.common.annotation.ParentActivity;
  * {@code Serializable} extra with the key {@link #KEY_PARENT_ACTIVITY}. This
  * will take precedence over the annotation.
  * <p>
- * You may adjust these behaviours using {@link #onUpPressed()} and
- * {@link #getGoBackIntent(Class)}.
  *
  * @author Edmond
  *
  */
 public abstract class NPNavigateActivity extends FragmentActivity {
-    /**
-     * The key for passing a parent Activity with {@code Intent}.
-     *
-     * @see android.content.Intent#putExtra(String, java.io.Serializable)
-     * @see android.os.Bundle#putSerializable(String, java.io.Serializable)
-     */
-    public static final String KEY_PARENT_ACTIVITY = "parent_activity";
+	/**
+	 * The key for passing a parent Activity with {@code Intent}.
+	 *
+	 * @see android.content.Intent#putExtra(String, java.io.Serializable)
+	 * @see android.os.Bundle#putSerializable(String, java.io.Serializable)
+	 */
+	public static final String KEY_PARENT_ACTIVITY = "parent_activity";
 
-    private Class<?> mParentActivity;
+	protected Class<?> mParentActivity;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 
-        mParentActivity = (Class<?>)getIntent().getSerializableExtra(KEY_PARENT_ACTIVITY);
-        if (mParentActivity == null) {
-            ParentActivity upAnnotaion = getClass().getAnnotation(ParentActivity.class);
-            if (upAnnotaion != null) {
-                mParentActivity = upAnnotaion.value();
-            }
-        }
+		mParentActivity = (Class<?>)getIntent().getSerializableExtra(KEY_PARENT_ACTIVITY);
 
-        if (mParentActivity != null) {
-            ActionBar actionBar = getActionBar();
-            if (actionBar != null) {
-                actionBar.setDisplayHomeAsUpEnabled(true);
-            }
-        }
-    }
+		if (mParentActivity == null) {
+			ParentActivity upAnnotaion = getClass().getAnnotation(ParentActivity.class);
+			if (upAnnotaion != null) {
+				mParentActivity = upAnnotaion.value();
+			}
+		}
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                if (!onUpPressed()) {
-                    if (mParentActivity != null) {
-                        startActivity(getGoBackIntent(mParentActivity));
-                        finish();
-                        return true;
-                    }
-                }
-        }
-        return super.onOptionsItemSelected(item);
-    }
+		if (mParentActivity != null) {
+			ActionBar actionBar = getActionBar();
+			if (actionBar != null) {
+				actionBar.setDisplayHomeAsUpEnabled(true);
+			}
+		}
+	}
 
-    /**
-     * Called every time the "up" button is selected.<br/>
-     *
-     * @return true if this event is consumed
-     */
-    protected boolean onUpPressed() {
-        return false;
-    }
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case android.R.id.home:
+				if (mParentActivity != null) {
+					startActivity(getGoBackIntent(mParentActivity));
+					finish();
+					return true;
+				}
+		}
+		return super.onOptionsItemSelected(item);
+	}
 
-    /**
-     * Subclasses may override this method to return a custom {@link android.content.Intent}.
-     * This is called every time {@link #onUpPressed()} returns false.
-     *
-     * @param activity
-     * @return
-     *         a non-null {@code Activity} {@link android.content.Intent} which will be passed
-     *         to {@link #startActivity(android.content.Intent)}.
-     */
-    protected Intent getGoBackIntent(Class<?> activity) {
-        Intent intent = new Intent(this, activity);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
-                Intent.FLAG_ACTIVITY_SINGLE_TOP |
-                Intent.FLAG_ACTIVITY_NEW_TASK);
-        return intent;
-    }
 
-    protected Class<?> getGoBackActivity() {
-        return mParentActivity;
-    }
+	/**
+	 * Subclasses may override this method to return a custom {@link android.content.Intent}.
+	 *
+	 * @param activity
+	 * @return
+	 *         a non-null {@code Activity} {@link android.content.Intent} which will be passed
+	 *         to {@link #startActivity(android.content.Intent)}.
+	 */
+	protected Intent getGoBackIntent(Class<?> activity) {
+		Intent intent = new Intent(this, activity);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+				Intent.FLAG_ACTIVITY_SINGLE_TOP |
+				Intent.FLAG_ACTIVITY_NEW_TASK);
+		return intent;
+	}
 }

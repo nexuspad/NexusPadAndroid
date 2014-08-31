@@ -75,7 +75,6 @@ public class FoldersNavigatorActivity extends SinglePaneActivity implements Fold
         onUpPressed();
     }
 
-    @Override
     protected boolean onUpPressed() {
         final int moduleId = mParentFolder.getModuleId();
         final int folderId = mParentFolder.getFolderId();

@@ -7,16 +7,10 @@ import android.app.ActionBar;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.Window;
-import com.nexuspad.common.activity.SinglePaneActivity;
-import com.nexuspad.common.annotation.ParentActivity;
 import com.nexuspad.R;
 import com.nexuspad.about.fragment.AboutFragment;
-import com.nexuspad.home.activity.DashboardActivity;
+import com.nexuspad.common.activity.SinglePaneActivity;
 
-/**
- * @author Edmond
- */
-@ParentActivity(DashboardActivity.class)
 public class AboutActivity extends SinglePaneActivity {
     @Override
     protected int onCreateLayoutId() {

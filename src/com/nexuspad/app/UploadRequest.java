@@ -9,7 +9,7 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import com.nexuspad.datamodel.NPFolder;
 import com.nexuspad.datamodel.NPEntry;
-import com.nexuspad.dataservice.FileUploadService;
+import com.nexuspad.dataservice.NPUploadHelper;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -19,7 +19,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * @author Edmond
  */
-public class Request {
+public class UploadRequest {
     private static final String[] FILE_PATH_COLUMN = new String[]{MediaStore.Images.Media.DATA};
 
     /**
@@ -29,12 +29,12 @@ public class Request {
         FOLDER, ENTRY
     }
 
-    public static Request forFolder(Uri uri, NPFolder folder, FileUploadService.Callback callback) {
-        return new Request(uri, folder, Target.FOLDER, callback);
+    public static UploadRequest forFolder(Uri uri, NPFolder folder, NPUploadHelper.Callback callback) {
+        return new UploadRequest(uri, folder, Target.FOLDER, callback);
     }
 
-    public static Request forEntry(Uri uri, NPEntry entry, FileUploadService.Callback callback) {
-        return new Request(uri, entry, Target.ENTRY, callback);
+    public static UploadRequest forEntry(Uri uri, NPEntry entry, NPUploadHelper.Callback callback) {
+        return new UploadRequest(uri, entry, Target.ENTRY, callback);
     }
 
     private final long mTimeStamp;
@@ -44,23 +44,23 @@ public class Request {
     private final Target mTarget;
 
     private File mFile;
-    private WeakReference<FileUploadService.Callback> mCallback;
+    private WeakReference<NPUploadHelper.Callback> mCallback;
 
-    private Request(Uri uri, NPFolder folder, Target target, FileUploadService.Callback callback) {
+    private UploadRequest(Uri uri, NPFolder folder, Target target, NPUploadHelper.Callback callback) {
         mNPEntry = null;
         mUri = checkNotNull(uri);
         mFolder = checkNotNull(folder);
         mTarget = checkNotNull(target);
-        mCallback = new WeakReference<FileUploadService.Callback>(callback);
+        mCallback = new WeakReference<NPUploadHelper.Callback>(callback);
         mTimeStamp = System.nanoTime();
     }
 
-    private Request(Uri uri, NPEntry entry, Target target, FileUploadService.Callback callback) {
+    private UploadRequest(Uri uri, NPEntry entry, Target target, NPUploadHelper.Callback callback) {
         mFolder = null;
         mUri = checkNotNull(uri);
         mNPEntry = checkNotNull(entry);
         mTarget = checkNotNull(target);
-        mCallback = new WeakReference<FileUploadService.Callback>(callback);
+        mCallback = new WeakReference<NPUploadHelper.Callback>(callback);
         mTimeStamp = System.nanoTime();
     }
 
@@ -90,21 +90,21 @@ public class Request {
         return mFile;
     }
 
-    public void setCallback(FileUploadService.Callback callback) {
-        mCallback = new WeakReference<FileUploadService.Callback>(callback);
+    public void setCallback(NPUploadHelper.Callback callback) {
+        mCallback = new WeakReference<NPUploadHelper.Callback>(callback);
     }
 
-    public FileUploadService.Callback getCallback() {
-        return new FileUploadService.Callback() {
+    public NPUploadHelper.Callback getCallback() {
+        return new NPUploadHelper.Callback() {
             @Override
             public boolean onProgress(long progress, long total) {
-                final FileUploadService.Callback callback = mCallback.get();
+                final NPUploadHelper.Callback callback = mCallback.get();
 	            return callback == null || callback.onProgress(progress, total);
             }
 
             @Override
             public void onDone(boolean success) {
-                final FileUploadService.Callback callback = mCallback.get();
+                final NPUploadHelper.Callback callback = mCallback.get();
                 if (callback != null) {
                     callback.onDone(success);
                 }
@@ -158,7 +158,7 @@ public class Request {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        Request other = (Request) obj;
+        UploadRequest other = (UploadRequest) obj;
         if (mUri == null) {
             if (other.mUri != null) {
                 return false;
@@ -170,7 +170,7 @@ public class Request {
     }
 
     // XXX remove
-    public int compareTo(Request o) {
+    public int compareTo(UploadRequest o) {
         if (mTimeStamp == o.mTimeStamp) {
             return 0;
         } else if (mTimeStamp > o.mTimeStamp) {

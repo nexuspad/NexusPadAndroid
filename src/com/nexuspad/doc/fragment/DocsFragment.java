@@ -51,6 +51,18 @@ public class DocsFragment extends FoldersAndEntriesFragment {
 	}
 
 	@Override
+	public void onViewCreated(View view, Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+		mListView.setOnScrollListener(mLoadMoreScrollListener);
+
+		if (mEntryList == null) {
+			queryEntriesAsync();
+		} else {
+			onListLoaded(mEntryList);
+		}
+	}
+
+	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		mCallback = App.getCallbackOrThrow(activity, Callback.class);

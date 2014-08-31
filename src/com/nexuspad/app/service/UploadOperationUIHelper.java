@@ -5,9 +5,9 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 import com.google.common.collect.Lists;
-import com.nexuspad.app.Request;
+import com.nexuspad.app.UploadRequest;
 import com.nexuspad.dataservice.EntryUploadService;
-import com.nexuspad.dataservice.FileUploadService;
+import com.nexuspad.dataservice.NPUploadHelper;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -18,46 +18,46 @@ import java.util.List;
 /**
  * Author: Edmond
  */
-public final class UploadService extends Service {
+public final class UploadOperationUIHelper extends Service {
 
     public interface OnUploadCountChangeListener {
         void onUploadCountChanged(int uploadCount);
     }
 
     public interface OnNewRequestListener {
-        void onNewRequest(Request request);
+        void onNewRequest(UploadRequest request);
     }
 
     public static class UploadBinder extends Binder {
-        private final WeakReference<UploadService> mService;
+        private final WeakReference<UploadOperationUIHelper> mService;
         private final List<OnNewRequestListener> mOnNewRequestListeners = new ArrayList<OnNewRequestListener>();
 
-        private UploadBinder(UploadService service) {
-            mService = new WeakReference<UploadService>(service);
+        private UploadBinder(UploadOperationUIHelper service) {
+            mService = new WeakReference<UploadOperationUIHelper>(service);
         }
 
         /**
-         * Remember to call {@link #removeCallback(com.nexuspad.app.service.UploadService.OnNewRequestListener)}
+         * Remember to call {@link #removeCallback(UploadOperationUIHelper.OnNewRequestListener)}
          */
         public void addCallback(OnNewRequestListener onNewRequestListener) {
             mOnNewRequestListeners.add(onNewRequestListener);
         }
 
         /**
-         * @see #addCallback(com.nexuspad.app.service.UploadService.OnNewRequestListener)
+         * @see #addCallback(UploadOperationUIHelper.OnNewRequestListener)
          */
         public void removeCallback(OnNewRequestListener onNewRequestListener) {
             mOnNewRequestListeners.remove(onNewRequestListener);
         }
 
-        public void addRequests(Iterable<? extends Request> requests) {
-            for (Request request : requests) {
+        public void addRequests(Iterable<? extends UploadRequest> requests) {
+            for (UploadRequest request : requests) {
                 addRequest(request);
             }
         }
 
-        public void addRequest(Request request) {
-            final UploadService service = getService();
+        public void addRequest(UploadRequest request) {
+            final UploadOperationUIHelper service = getService();
             if (!service.mQueue.contains(request)) {
                 service.mQueue.add(request);
                 service.onNewRequest(request);
@@ -67,12 +67,12 @@ public final class UploadService extends Service {
             }
         }
 
-        public Collection<Request> peekRequests() {
+        public Collection<UploadRequest> peekRequests() {
             return Collections.unmodifiableCollection(getService().mQueue);
         }
 
-        private UploadService getService() {
-            final UploadService service = mService.get();
+        private UploadOperationUIHelper getService() {
+            final UploadOperationUIHelper service = mService.get();
             if (service != null) {
                 return service;
             }
@@ -92,7 +92,7 @@ public final class UploadService extends Service {
         sUploadCountChangeListeners.add(new WeakReference<OnUploadCountChangeListener>(listener));
     }
 
-    private final List<Request> mQueue = new ArrayList<Request>();
+    private final List<UploadRequest> mQueue = new ArrayList<UploadRequest>();
     private final UploadBinder mBinder = new UploadBinder(this);
     private final EntryUploadService mUploadService = new EntryUploadService(this);
 
@@ -119,28 +119,28 @@ public final class UploadService extends Service {
         }
     }
 
-    public void onNewRequest(Request r) {
+    public void onNewRequest(UploadRequest r) {
         updateUploadCount();
-//        switch (r.getTarget()) {
-//            case FOLDER:
-//                mUploadService.addUploadToFolder(r.getFile(this), r.getFolder(), new CallbackWrapper(r));
-//                break;
-//            case ENTRY:
-//                mUploadService.addUploadToEntry(r.getFile(this), r.getNPEntry(), new CallbackWrapper(r));
-//                break;
-//        }
+        switch (r.getTarget()) {
+            case FOLDER:
+                mUploadService.addUploadToFolder(r.getFile(this), r.getFolder(), new CallbackWrapper(r));
+                break;
+            case ENTRY:
+                mUploadService.addUploadToEntry(r.getFile(this), r.getNPEntry(), new CallbackWrapper(r));
+                break;
+        }
     }
 
-    private class CallbackWrapper implements FileUploadService.Callback {
-        private final Request mRequest;
+    private class CallbackWrapper implements NPUploadHelper.Callback {
+        private final UploadRequest mRequest;
 
-        private CallbackWrapper(Request request) {
+        private CallbackWrapper(UploadRequest request) {
             mRequest = request;
         }
 
         @Override
         public boolean onProgress(long progress, long total) {
-            final FileUploadService.Callback callback = mRequest.getCallback();
+            final NPUploadHelper.Callback callback = mRequest.getCallback();
             //noinspection SimplifiableIfStatement
             if (callback != null) {
                 return callback.onProgress(progress, total);
@@ -152,7 +152,7 @@ public final class UploadService extends Service {
         public void onDone(boolean success) {
             mQueue.remove(mRequest);
             updateUploadCount();
-            final FileUploadService.Callback callback = mRequest.getCallback();
+            final NPUploadHelper.Callback callback = mRequest.getCallback();
             if (callback != null) {
                 callback.onDone(success);
             }

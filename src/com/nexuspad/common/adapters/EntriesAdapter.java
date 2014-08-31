@@ -41,6 +41,7 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter impl
 
 	private OnClickListener mOnMenuClickListener;
 
+	/** The load more adapter handles displaying of the "loading more" text, or any other UI indicator. */
 	protected BaseAdapter mLoadMoreAdapter;
 
 	/**

@@ -74,8 +74,15 @@ public class AlbumsFragment extends EntriesFragment {
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 
-		setQuickReturnListener(getListView(), null);
+		getListView().setOnScrollListener(newDirectionalScrollListener(null));
+
 		initFolderSelector(ACTIVITY_REQ_CODE_FOLDER_SELECTOR);
+
+		if (mEntryList == null) {
+			queryEntriesAsync();
+		} else {
+			onListLoaded(mEntryList);
+		}
 	}
 
 

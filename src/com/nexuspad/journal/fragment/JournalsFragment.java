@@ -50,6 +50,7 @@ public class JournalsFragment extends EntriesFragment {
 	public static final int CENTER_PAGE = 1;
 
 	private JournalsCallback mJournalsCallback;
+
 	private Date mStartDate;
 	private Date mEndDate;
 
@@ -81,6 +82,8 @@ public class JournalsFragment extends EntriesFragment {
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		mViewPager = (ViewPager)view.findViewById(R.id.view_pager);
 		super.onViewCreated(view, savedInstanceState);
+
+		queryEntriesAsync();
 	}
 
 	@Override
@@ -132,7 +135,8 @@ public class JournalsFragment extends EntriesFragment {
 
 		try {
 			mFolder.setOwner(AccountManager.currentAccount());
-			getEntryListService().getEntriesBetweenDates(mFolder, EntryTemplate.JOURNAL, mStartDate, mEndDate, 1);
+			getEntryListService().getEntriesBetweenDates(mFolder, EntryTemplate.JOURNAL, DateUtil.convertToYYYYMMDD(mStartDate),
+					DateUtil.convertToYYYYMMDD(mEndDate), 1);
 		} catch (NPException e) {
 			e.printStackTrace();
 		}

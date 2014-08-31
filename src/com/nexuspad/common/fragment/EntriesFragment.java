@@ -198,9 +198,9 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 		}
 	};
 
-	protected OnListEndListener mLoadMoreScrollListener = new OnListEndListener() {
+	protected OnPagingListEndListener mLoadMoreScrollListener = new OnPagingListEndListener() {
 		@Override
-		protected void onListEnd(int page) {
+		protected void onListBottom(int page) {
 			queryEntriesInFolderByPage(getCurrentPage() + 1);
 		}
 	};
@@ -521,17 +521,7 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 
 				mListView.setItemsCanFocus(true);
 				mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-
-				if (isAutoLoadMoreEnabled()) {
-					mListView.setOnScrollListener(mLoadMoreScrollListener);
-				}
 			}
-		}
-
-		if (mEntryList == null) {
-			queryEntriesAsync();
-		} else {
-			onListLoaded(mEntryList);
 		}
 	}
 
@@ -703,22 +693,6 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 		getEntryService().safeDeleteEntry(getActivity(), entry);
 	}
 
-	protected void setQuickReturnListener(ListView view, AbsListView.OnScrollListener other) {
-		view.setOnScrollListener(newDirectionalScrollListener(other));
-	}
-
-	/**
-	 * set up the quick return listener (hiding when scroll down, and vice versa)
-	 * <p/>
-	 * This will replace the OnScrollListener in the {@code AbsListView}, use {@code other} if you want to include
-	 * another {@code OnScrollListener}.
-	 *
-	 * @param gridView the scrolling view (commonly ListView or GridView)
-	 * @param other    the other scroll listener; optional
-	 */
-	protected void setQuickReturnListener(GridView gridView, AbsListView.OnScrollListener other) {
-		gridView.setOnScrollListener(newDirectionalScrollListener(other));
-	}
 
 	/**
 	 * Decide to show the folder selector bar when list is scrolled to the bottom.
@@ -730,10 +704,9 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 		return new DirectionalScrollListener(0, other) {
 			@Override
 			public void onScrollDirectionChanged(final boolean showing) {
-				final View quickReturnV = getQuickReturnView();
-				final int height = showing ? 0 : quickReturnV.getHeight();
-				if (quickReturnV != null) {
-					quickReturnV.animate()
+				if (mQuickReturnView != null) {
+					final int height = showing ? 0 : mQuickReturnView.getHeight();
+					mQuickReturnView.animate()
 							.translationY(height)
 							.setDuration(200L)
 							.withEndAction(new Runnable() {
@@ -763,13 +736,6 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 				activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
 			}
 		});
-	}
-
-	protected View getQuickReturnView() {
-		if (mQuickReturnView == null) {
-			throw new IllegalStateException("that is no view with id R.id.quick_return");
-		}
-		return mQuickReturnView;
 	}
 
 	public TextView getFolderSelectorView() {

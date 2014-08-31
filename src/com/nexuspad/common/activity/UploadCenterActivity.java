@@ -9,7 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import com.nexuspad.R;
-import com.nexuspad.app.Request;
+import com.nexuspad.app.UploadRequest;
 import com.nexuspad.common.fragment.UploadCenterFragment;
 import com.nexuspad.datamodel.NPFolder;
 import com.nexuspad.datamodel.NPEntry;
@@ -124,11 +124,11 @@ public class UploadCenterActivity extends SinglePaneActivity {
                 folder = NPFolder.rootFolderOf(ServiceConstants.PHOTO_MODULE, this);
             }
             for (Uri uri : mUris) {
-                fragment.addRequest(Request.forFolder(uri, folder, null));
+                fragment.addRequest(UploadRequest.forFolder(uri, folder, null));
             }
         } else {
             for (Uri uri : mUris) {
-                fragment.addRequest(Request.forEntry(uri, entry, null));
+                fragment.addRequest(UploadRequest.forEntry(uri, entry, null));
             }
         }
         return fragment;

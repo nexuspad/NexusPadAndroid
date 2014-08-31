@@ -80,7 +80,7 @@ public class PhotosActivity extends EntriesActivity implements ActionBar.OnNavig
                 startActivityForResult(intent, REQ_CHOOSE_FILE);
                 return true;
             case R.id.new_albums:
-                final Intent albumIntent = AlbumEditActivity.of(this, getFolder());
+                final Intent albumIntent = AlbumEditActivity.of(this, mFolder);
                 startActivity(albumIntent);
                 return true;
             default:
@@ -106,8 +106,8 @@ public class PhotosActivity extends EntriesActivity implements ActionBar.OnNavig
         if (savedState == null) {
             final int spinnerIndex = getIntent().getIntExtra(KEY_SPINNER_INDEX, -1);
 
-            mPhotosFragment = PhotosFragment.of(getFolder());
-            mAlbumsFragment = AlbumsFragment.of(getFolder());
+            mPhotosFragment = PhotosFragment.of(mFolder);
+            mAlbumsFragment = AlbumsFragment.of(mFolder);
 
             final int containerViewId = getFragmentId();
             getSupportFragmentManager()
@@ -132,7 +132,7 @@ public class PhotosActivity extends EntriesActivity implements ActionBar.OnNavig
             case REQ_CHOOSE_FILE:
                 if (resultCode == Activity.RESULT_OK) {
                     final ArrayList<Uri> uris = data.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
-	                UploadCenterActivity.startWith(uris, getFolder(), this);
+	                UploadCenterActivity.startWith(uris, mFolder, this);
                 }
                 break;
             default:

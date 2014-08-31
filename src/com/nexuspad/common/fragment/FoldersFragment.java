@@ -31,9 +31,7 @@ import com.nexuspad.dataservice.ServiceError;
 import java.util.List;
 
 /**
- *
- * You must pass in a moduleId with {@link FoldersFragment#KEY_PARENT_FOLDER} as an argument or use
- * the static factory method {@link #of(com.nexuspad.datamodel.NPFolder)}.
+ * The Fragment for folder selector.
  *
  * @author Edmond
  */

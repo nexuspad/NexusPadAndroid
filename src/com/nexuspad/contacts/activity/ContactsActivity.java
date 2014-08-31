@@ -2,6 +2,7 @@ package com.nexuspad.contacts.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import com.nexuspad.common.annotation.ParentActivity;
 import com.nexuspad.common.annotation.ModuleId;
@@ -28,6 +29,12 @@ public class ContactsActivity extends EntriesActivity {
 
     @Override
     protected Fragment onCreateFragment() {
-        return ContactsFragment.of(getFolder());
+	    final Bundle bundle = new Bundle();
+	    bundle.putParcelable(KEY_FOLDER, mFolder);
+
+	    final ContactsFragment fragment = new ContactsFragment();
+	    fragment.setArguments(bundle);
+
+	    return fragment;
     }
 }

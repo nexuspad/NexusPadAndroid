@@ -137,7 +137,7 @@ public abstract class EntryEditActivity<T extends NPEntry> extends DoneDiscardAc
     }
 
     protected void goUp() {
-        startActivity(getGoBackIntent(getGoBackActivity()));
+        startActivity(getGoBackIntent(mParentActivity));
         finish();
     }
 

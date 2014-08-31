@@ -16,9 +16,9 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import com.nexuspad.R;
+import com.nexuspad.common.adapters.OnPagingListEndListener;
 import com.nexuspad.common.annotation.ModuleId;
 import com.nexuspad.common.activity.FoldersNavigatorActivity;
-import com.nexuspad.common.adapters.OnListEndListener;
 import com.nexuspad.common.annotation.FragmentName;
 import com.nexuspad.common.fragment.EntriesFragment;
 import com.nexuspad.datamodel.*;
@@ -58,7 +58,7 @@ public class PhotosFragment extends EntriesFragment implements OnItemClickListen
 
 		PhotosAdapter a = (PhotosAdapter)mGridView.getAdapter();
 		if (a != null) {
-			a.notifyDataSetChanged();
+			stableNotifyAdapter(a);
 			dismissProgressIndicator();
 			return;
 		}
@@ -86,7 +86,7 @@ public class PhotosFragment extends EntriesFragment implements OnItemClickListen
 	protected void onNewEntry(NPEntry entry) {
 		if (entry instanceof NPPhoto) {  // or album, which will be handled at AlbumsFragment
 			final NPPhoto photo = (NPPhoto) entry;
-//            mPhotos.add(photo);
+            mEntryList.getEntries().add(photo);
 		}
 		super.onNewEntry(entry);
 	}
@@ -133,18 +133,28 @@ public class PhotosFragment extends EntriesFragment implements OnItemClickListen
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		mGridView = (GridView)view.findViewById(R.id.grid_view);
 
-		setQuickReturnListener(mGridView, new OnListEndListener() {
-			@Override
-			protected void onListEnd(int page) {
-				queryEntriesInFolderByPage(getCurrentPage() + 1);
-			}
-		});
+		mGridView.setOnScrollListener(
+			newDirectionalScrollListener(
+				new OnPagingListEndListener() {
+					@Override
+					protected void onListBottom(int page) {
+						queryEntriesInFolderByPage(getCurrentPage() + 1);
+					}
+				}
+			)
+		);
 
 		mGridView.setOnItemClickListener(this);
 
 		super.onViewCreated(view, savedInstanceState);
 
 		initFolderSelector(REQ_FOLDER);
+
+		if (mEntryList == null) {
+			queryEntriesAsync();
+		} else {
+			onListLoaded(mEntryList);
+		}
 	}
 
 

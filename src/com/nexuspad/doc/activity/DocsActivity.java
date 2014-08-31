@@ -6,20 +6,17 @@ package com.nexuspad.doc.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
-import com.nexuspad.common.annotation.ParentActivity;
+import com.nexuspad.common.activity.EntriesActivity;
 import com.nexuspad.common.annotation.ModuleId;
-import com.nexuspad.datamodel.NPDoc;
 import com.nexuspad.datamodel.EntryTemplate;
+import com.nexuspad.datamodel.NPDoc;
 import com.nexuspad.datamodel.NPFolder;
 import com.nexuspad.dataservice.ServiceConstants;
 import com.nexuspad.doc.fragment.DocsFragment;
-import com.nexuspad.home.activity.DashboardActivity;
-import com.nexuspad.common.activity.EntriesActivity;
 
 /**
  * @author Edmond
  */
-@ParentActivity(DashboardActivity.class)
 @ModuleId(moduleId = ServiceConstants.DOC_MODULE, template = EntryTemplate.DOC)
 public class DocsActivity extends EntriesActivity implements DocsFragment.Callback {
 
@@ -36,7 +33,7 @@ public class DocsActivity extends EntriesActivity implements DocsFragment.Callba
 
     @Override
     protected Fragment onCreateFragment() {
-        return DocsFragment.of(getFolder());
+        return DocsFragment.of(mFolder);
     }
 
     @Override
@@ -46,6 +43,6 @@ public class DocsActivity extends EntriesActivity implements DocsFragment.Callba
 
     @Override
     public void onDocClick(DocsFragment f, NPDoc doc) {
-        startActivity(DocActivity.of(this, doc, getFolder()));
+        startActivity(DocActivity.of(this, doc, mFolder));
     }
 }

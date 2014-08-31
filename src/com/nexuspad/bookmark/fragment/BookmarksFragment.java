@@ -54,6 +54,17 @@ public class BookmarksFragment extends FoldersAndEntriesFragment {
 		void onFolderClick(BookmarksFragment f, NPFolder folder);
 	}
 
+	@Override
+	public void onViewCreated(View view, Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+		mListView.setOnScrollListener(mLoadMoreScrollListener);
+
+		if (mEntryList == null) {
+			queryEntriesAsync();
+		} else {
+			onListLoaded(mEntryList);
+		}
+	}
 
 	@Override
 	public void onAttach(Activity activity) {

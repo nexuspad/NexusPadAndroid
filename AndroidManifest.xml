@@ -44,7 +44,7 @@
         android:theme="@style/AppTheme">
 
         <service
-            android:name=".app.service.UploadService"
+            android:name=".app.service.UploadOperationUIHelper"
             android:exported="false"
             />
 
@@ -92,6 +92,7 @@
             android:name=".about.activity.AboutActivity"
             android:label="@string/app_name"
             android:icon="@drawable/ic_ab"
+            android:parentActivityName=".home.activity.DashboardActivity"
             />
         <activity
             android:name=".bookmark.activity.BookmarkActivity"
@@ -102,6 +103,7 @@
             android:name=".bookmark.activity.BookmarksActivity"
             android:label="@string/bookmarks"
             android:icon="@drawable/ic_ab"
+            android:parentActivityName=".home.activity.DashboardActivity"
             />
         <activity
             android:name=".bookmark.activity.BookmarkEditEditActivity"
@@ -125,6 +127,7 @@
             android:name=".doc.activity.DocsActivity"
             android:label="@string/docs"
             android:icon="@drawable/ic_ab"
+            android:parentActivityName=".home.activity.DashboardActivity"
             />
         <activity android:name=".doc.activity.DocEditActivity" />
         <activity
@@ -200,6 +203,8 @@
         <activity
             android:name=".calendar.activity.EventsActivity"
             android:label="@string/events"
+            android:icon="@drawable/ic_ab"
+            android:parentActivityName=".home.activity.DashboardActivity"
             />
         <activity android:name=".calendar.activity.EventEditActivity" />
         <activity
