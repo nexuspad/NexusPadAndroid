@@ -44,7 +44,7 @@
         android:theme="@style/AppTheme">
 
         <service
-            android:name=".app.service.UploadOperationUIHelper"
+            android:name=".app.service.UploadService"
             android:exported="false"
             />
 
@@ -162,6 +162,7 @@
             android:name=".common.activity.UploadCenterActivity"
             android:label="@string/photos_upload"
             android:icon="@drawable/ic_ab"
+            android:screenOrientation="portrait"
             >
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />

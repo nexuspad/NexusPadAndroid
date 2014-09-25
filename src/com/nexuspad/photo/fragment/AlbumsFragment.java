@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import com.nexuspad.R;
+import com.nexuspad.common.Constants;
 import com.nexuspad.common.annotation.ModuleId;
 import com.nexuspad.common.activity.FoldersNavigatorActivity;
 import com.nexuspad.common.adapters.EntriesAdapter;
@@ -41,7 +42,7 @@ public class AlbumsFragment extends EntriesFragment {
 
 	public static AlbumsFragment of(NPFolder folder) {
 		final Bundle bundle = new Bundle();
-		bundle.putParcelable(KEY_FOLDER, folder);
+		bundle.putParcelable(Constants.KEY_FOLDER, folder);
 
 		final AlbumsFragment fragment = new AlbumsFragment();
 		fragment.setArguments(bundle);

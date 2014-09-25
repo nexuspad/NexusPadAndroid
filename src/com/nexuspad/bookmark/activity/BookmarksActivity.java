@@ -7,8 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import com.nexuspad.bookmark.fragment.BookmarksFragment;
+import com.nexuspad.common.Constants;
 import com.nexuspad.common.activity.EntriesActivity;
-import com.nexuspad.common.activity.EntryActivity;
 import com.nexuspad.common.annotation.ModuleId;
 import com.nexuspad.datamodel.EntryTemplate;
 import com.nexuspad.datamodel.NPBookmark;
@@ -37,8 +37,8 @@ public class BookmarksActivity extends EntriesActivity implements BookmarksFragm
     @Override
     public void onBookmarkClick(BookmarksFragment f, NPBookmark bookmark) {
 	    Intent intent = new Intent(this, BookmarkActivity.class);
-	    intent.putExtra(EntryActivity.KEY_ENTRY, bookmark);
-	    intent.putExtra(EntryActivity.KEY_FOLDER, mFolder);
+	    intent.putExtra(Constants.KEY_ENTRY, bookmark);
+	    intent.putExtra(Constants.KEY_FOLDER, mFolder);
 	    this.startActivity(intent);
     }
 

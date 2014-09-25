@@ -21,11 +21,14 @@ import com.google.common.collect.Iterables;
 import com.nexuspad.Manifest;
 import com.nexuspad.R;
 import com.nexuspad.account.AccountManager;
-import com.nexuspad.common.annotation.ModuleId;
 import com.nexuspad.app.App;
+import com.nexuspad.common.Constants;
 import com.nexuspad.common.activity.FoldersNavigatorActivity;
 import com.nexuspad.common.activity.UpdateFolderActivity;
-import com.nexuspad.common.adapters.*;
+import com.nexuspad.common.adapters.EntriesAdapter;
+import com.nexuspad.common.adapters.OnPagingListEndListener;
+import com.nexuspad.common.adapters.SingleAdapter;
+import com.nexuspad.common.annotation.ModuleId;
 import com.nexuspad.common.listeners.DirectionalScrollListener;
 import com.nexuspad.common.utils.Lazy;
 import com.nexuspad.datamodel.*;
@@ -54,7 +57,6 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 
 	public static final int ACTIVITY_REQ_CODE_FOLDER_SELECTOR = 1;
 
-	public static final String KEY_FOLDER = "key_folder";
 	public static final String KEY_LIST_POS = "key_list_pos";
 
 	public static final int PAGE_COUNT = 20;
@@ -408,7 +410,7 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 		final Bundle arguments = getArguments();
 
 		if (arguments != null) {
-			mFolder = arguments.getParcelable(KEY_FOLDER);
+			mFolder = arguments.getParcelable(Constants.KEY_FOLDER);
 		}
 
 		if (mFolder == null) {
@@ -769,6 +771,9 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 	}
 
 	public NPFolder getFolder() {
+		if (mFolder == null) {
+			mFolder = NPFolder.rootFolderOf(mModuleId.moduleId());
+		}
 		return mFolder;
 	}
 

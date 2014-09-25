@@ -9,14 +9,15 @@ import android.util.Log;
 import android.view.*;
 import android.widget.ListView;
 import com.nexuspad.R;
-import com.nexuspad.bookmark.activity.BookmarkEditEditActivity;
-import com.nexuspad.common.annotation.ModuleId;
 import com.nexuspad.app.App;
+import com.nexuspad.bookmark.activity.BookmarkEditEditActivity;
+import com.nexuspad.common.Constants;
 import com.nexuspad.common.adapters.EntriesAdapter;
 import com.nexuspad.common.adapters.FoldersAndEntriesAdapter;
 import com.nexuspad.common.adapters.ListFoldersAdapter;
 import com.nexuspad.common.adapters.ListViewHolder;
 import com.nexuspad.common.annotation.FragmentName;
+import com.nexuspad.common.annotation.ModuleId;
 import com.nexuspad.common.fragment.FoldersAndEntriesFragment;
 import com.nexuspad.common.listeners.OnEntryMenuClickListener;
 import com.nexuspad.datamodel.EntryList;
@@ -37,7 +38,7 @@ public class BookmarksFragment extends FoldersAndEntriesFragment {
 
 	public static BookmarksFragment of(NPFolder f) {
 		Bundle bundle = new Bundle();
-		bundle.putParcelable(KEY_FOLDER, f);
+		bundle.putParcelable(Constants.KEY_FOLDER, f);
 
 		BookmarksFragment fragment = new BookmarksFragment();
 		fragment.setArguments(bundle);

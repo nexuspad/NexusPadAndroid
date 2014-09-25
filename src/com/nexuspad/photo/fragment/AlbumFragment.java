@@ -120,6 +120,15 @@ public class AlbumFragment extends EntryFragment<NPAlbum> implements AdapterView
 		for (NPEntry e : (List<? extends NPEntry>)mPhotosList.getEntries()) {
 			photos.add(NPPhoto.fromEntry(e));
 		}
-		PhotoActivity.startWithFolder(getFolder(), photo, photos, getActivity());
+
+		FragmentActivity activity = getActivity();
+
+		Intent intent = new Intent(activity, PhotoActivity.class);
+		intent.putExtra(KEY_FOLDER, getFolder());
+		intent.putExtra(PhotoActivity.KEY_PHOTO, photo);
+		intent.putParcelableArrayListExtra(PhotoActivity.KEY_PHOTOS, photos);
+
+		activity.startActivity(intent);
+		activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
 	}
 }
