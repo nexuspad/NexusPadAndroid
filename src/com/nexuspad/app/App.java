@@ -36,7 +36,7 @@ public class App extends Application {
         if (callbackClass.isInstance(activity)) {
             return callbackClass.cast(activity);
         } else {
-            throw new IllegalStateException(activity + " must implement Callback.");
+            throw new IllegalStateException(activity + " must implement EntryDetailCallback.");
         }
     }
 

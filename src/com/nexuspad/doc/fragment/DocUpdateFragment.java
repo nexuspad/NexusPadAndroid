@@ -38,7 +38,7 @@ public class DocUpdateFragment extends EntryEditFragment<NPDoc> {
 
     protected static final int FILE_SELECT_REQUEST = 2;
 
-    public static interface Callback extends EntryEditFragment.Callback<NPDoc> {
+    public static interface DocDetailCallback extends EntryDetailCallback<NPDoc> {
         void onUpdateEntry(NPDoc entry);
     }
 
@@ -63,12 +63,12 @@ public class DocUpdateFragment extends EntryEditFragment<NPDoc> {
     private RichEditText mNoteV;
     private LinearLayout mAttachmentsFrameV;
 
-    private Callback mCallback;
+    private DocDetailCallback mDocDetailCallback;
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        mCallback = App.getCallbackOrThrow(activity, Callback.class);
+        mDocDetailCallback = App.getCallbackOrThrow(activity, DocDetailCallback.class);
     }
 
     @Override
@@ -228,6 +228,6 @@ public class DocUpdateFragment extends EntryEditFragment<NPDoc> {
     @Override
     protected void onUpdateEntry(NPDoc entry) {
         super.onUpdateEntry(entry);
-        mCallback.onUpdateEntry(entry);
+        mDocDetailCallback.onUpdateEntry(entry);
     }
 }

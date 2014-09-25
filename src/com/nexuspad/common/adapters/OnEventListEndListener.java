@@ -2,9 +2,7 @@ package com.nexuspad.common.adapters;
 
 import android.util.Log;
 import android.widget.AbsListView;
-import com.nexuspad.util.DateUtil;
-
-import java.util.Date;
+import com.nexuspad.datamodel.NPDateRange;
 
 /**
  * Created by ren on 8/24/14.
@@ -13,11 +11,10 @@ public abstract class OnEventListEndListener implements AbsListView.OnScrollList
 	public static final int DEFAULT_VISIBLE_THRESHOLD = 5;
 	public static final int NUMBER_OF_DAYS_TO_LOAD = 30;
 
-	private int mPreviousTotal = 0;
 	private boolean mLoading = true;
 
-	private String mStartYmd;
-	private String mEndYmd;
+	private NPDateRange mCurrentDateRange;
+	private NPDateRange mNextDateRange;
 
 	public OnEventListEndListener() {
 	}
@@ -25,23 +22,23 @@ public abstract class OnEventListEndListener implements AbsListView.OnScrollList
 	@Override
 	public void onScroll(AbsListView v, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
 		Log.v("SCROLL LISTENER: ", String.valueOf(mLoading) + " total:" + String.valueOf(totalItemCount)
-				+ " previous total:" + String.valueOf(mPreviousTotal) + " visible:" + visibleItemCount + " first visible:" + firstVisibleItem
-				);
+				+ " visible:" + visibleItemCount + " first visible:" + firstVisibleItem);
 
 		if (mLoading) {
-			if (totalItemCount > mPreviousTotal) {
+			if (mCurrentDateRange.equals(mNextDateRange)) {
 				mLoading = false;
-				mPreviousTotal = totalItemCount;
 			}
 		}
 
 		/*
 		 * Based on the visible item position decide whether to trigger list bottom call.
 		 */
-		if (!mLoading && ((totalItemCount - visibleItemCount) <= (firstVisibleItem + DEFAULT_VISIBLE_THRESHOLD))) {
-			Date nextStartDate = DateUtil.addDaysTo(DateUtil.parseFromYYYYMMDD(mEndYmd), NUMBER_OF_DAYS_TO_LOAD);
-			onListBottom(DateUtil.convertToYYYYMMDD(nextStartDate));
-			mLoading = true;
+		if (!mLoading) {
+			if (totalItemCount != 0) {
+				if ((totalItemCount - visibleItemCount) <= (firstVisibleItem + DEFAULT_VISIBLE_THRESHOLD)) {
+
+				}
+			}
 		}
 	}
 
@@ -52,7 +49,9 @@ public abstract class OnEventListEndListener implements AbsListView.OnScrollList
 	/**
 	 * Called when the list has reached the end (or the threshold).
 	 */
-	protected abstract void onListBottom(String nextStartYmd);
+	protected abstract void onListBottom(String bottomYmd);
+
+	protected abstract void onListTop(String topYmd);
 
 	@Override
 	public void onScrollStateChanged(AbsListView view, int scrollState) {

@@ -46,7 +46,7 @@ public class BookmarksFragment extends FoldersAndEntriesFragment {
 	}
 
 	/**
-	 * Callback methods that the Activity must implement.
+	 * EntryDetailCallback methods that the Activity must implement.
 	 */
 	public interface Callback extends ActivityCallback {
 		void onBookmarkClick(BookmarksFragment f, NPBookmark bookmark);
@@ -94,6 +94,8 @@ public class BookmarksFragment extends FoldersAndEntriesFragment {
 	@Override
 	protected void onListLoaded(EntryList list) {
 		Log.i(TAG, "Receiving bookmark list.");
+
+		super.onListLoaded(list);
 
 		FoldersAndEntriesAdapter a = (FoldersAndEntriesAdapter)getAdapter();
 

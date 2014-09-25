@@ -46,7 +46,7 @@ public class JournalEditFragment extends EntryEditFragment<NPJournal> {
 		return fragment;
 	}
 
-	public interface Callback extends EntryEditFragment.Callback<NPJournal> {
+	public interface JournalDetailCallback extends EntryDetailCallback<NPJournal> {
 	}
 
 	@Override

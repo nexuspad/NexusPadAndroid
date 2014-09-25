@@ -30,7 +30,7 @@ import java.text.DateFormat;
  */
 @ParentActivity(DashboardActivity.class)
 @ModuleId(moduleId = ServiceConstants.JOURNAL_MODULE, template = EntryTemplate.JOURNAL)
-public class JournalsActivity extends EntriesActivity implements JournalsFragment.JournalsCallback, JournalEditFragment.Callback {
+public class JournalsActivity extends EntriesActivity implements JournalsFragment.JournalsCallback, JournalEditFragment.JournalDetailCallback {
 	public static final String TAG = "JournalsActivity";
 
 	private static final int DATE_SELECTOR_REQUEST = 1;

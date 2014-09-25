@@ -26,7 +26,7 @@ import java.util.List;
  */
 @ParentActivity(DocsActivity.class)
 @ModuleId(moduleId = ServiceConstants.DOC_MODULE, template = EntryTemplate.DOC)
-public class DocEditActivity extends EntryEditActivity<NPDoc> implements DocUpdateFragment.Callback {
+public class DocEditActivity extends EntryEditActivity<NPDoc> implements DocUpdateFragment.DocDetailCallback {
 
     public static void startWithFolder(Context c, NPFolder f) {
         DocEditActivity.startWithDoc(c, f, null);

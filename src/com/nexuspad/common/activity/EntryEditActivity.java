@@ -20,7 +20,7 @@ import com.nexuspad.dataservice.ServiceConstants;
  *
  * @author Edmond
  */
-public abstract class EntryEditActivity<T extends NPEntry> extends DoneDiscardActivity implements EntryFragment.Callback<T> {
+public abstract class EntryEditActivity<T extends NPEntry> extends DoneDiscardActivity implements EntryFragment.EntryDetailCallback<T> {
     public static final String KEY_ENTRY = "com.nexuspad.ui.activity.NewEntryActivity.entry";
     public static final String KEY_FOLDER = "com.nexuspad.ui.activity.NewEntryActivity.folder";
 

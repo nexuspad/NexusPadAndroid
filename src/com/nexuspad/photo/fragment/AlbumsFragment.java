@@ -57,6 +57,8 @@ public class AlbumsFragment extends EntriesFragment {
 	protected void onListLoaded(EntryList list) {
 		Log.i(TAG, "Receiving entry list.");
 
+		super.onListLoaded(list);
+
 		BaseAdapter albumsAdapter = getAdapter();
 
 		if (albumsAdapter == null) {

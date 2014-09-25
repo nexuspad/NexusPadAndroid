@@ -15,35 +15,44 @@ import android.widget.AbsListView.OnScrollListener;
 public abstract class OnPagingListEndListener implements OnScrollListener {
 	public static final int DEFAULT_VISIBLE_THRESHOLD = 5;
 
-	private int mCurrentPage = 0;
-	private int mPreviousTotal = 0;
-	private boolean mLoading = true;
+	private int mCurrentPage = 1;       // Always the first page to start with
+	private int mNextPage = 0;
+
+	private boolean mLoading = false;
 
 	public OnPagingListEndListener() {
+		mLoading = false;
 	}
 
 	@Override
 	public void onScroll(AbsListView v, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
 		Log.v("SCROLL LISTENER: ", String.valueOf(mLoading) + " total:" + String.valueOf(totalItemCount)
-				+ " previous total:" + String.valueOf(mPreviousTotal) + " visible:" + visibleItemCount + " first visible:" + firstVisibleItem
+				+ " visible:" + visibleItemCount + " first visible:" + firstVisibleItem
 				+ " current page:" + mCurrentPage);
 
 		if (mLoading) {
-			if (totalItemCount > mPreviousTotal) {
+			if (mCurrentPage == mNextPage) {
 				mLoading = false;
-				mPreviousTotal = totalItemCount;
-				mCurrentPage++;
 			}
 		}
 
-		if (!mLoading && ((totalItemCount - visibleItemCount) <= (firstVisibleItem + DEFAULT_VISIBLE_THRESHOLD))) {
-			onListBottom(mCurrentPage + 1);
-			mLoading = true;
+		if (!mLoading) {
+			if (totalItemCount != 0) {
+				if ((totalItemCount - visibleItemCount) <= (firstVisibleItem + DEFAULT_VISIBLE_THRESHOLD)) {
+					mNextPage = mCurrentPage + 1;
+					onListBottom(mNextPage);
+					mLoading = true;
+				}
+			}
 		}
 	}
 
 	public void reset() {
 		mLoading = false;
+	}
+
+	public void setCurrentPage(int page) {
+		mCurrentPage = page;
 	}
 
 	/**

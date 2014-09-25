@@ -56,6 +56,8 @@ public class PhotosFragment extends EntriesFragment implements OnItemClickListen
 	protected void onListLoaded(EntryList list) {
 		Log.i(TAG, "Receiving photo list.");
 
+		super.onListLoaded(list);
+
 		PhotosAdapter a = (PhotosAdapter)mGridView.getAdapter();
 		if (a != null) {
 			stableNotifyAdapter(a);

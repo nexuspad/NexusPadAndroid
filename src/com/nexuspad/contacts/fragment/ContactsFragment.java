@@ -135,6 +135,8 @@ public final class ContactsFragment extends EntriesFragment {
 	protected void onListLoaded(EntryList entryList) {
 		Log.i(TAG, "Receiving contact entry list.");
 
+		super.onListLoaded(entryList);
+
 		if (mSortTask != null) {
 			mSortTask.cancel(true);
 

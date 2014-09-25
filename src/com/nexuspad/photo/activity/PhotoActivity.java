@@ -20,14 +20,25 @@ import com.nexuspad.photo.fragment.PhotoFragment;
 import java.util.ArrayList;
 
 /**
- * @author Edmond
+ * @author Ren
  */
 @ParentActivity(PhotosActivity.class)
-public class PhotoActivity extends SinglePaneActivity implements EntriesFragment.ActivityCallback {
+public class PhotoActivity extends SinglePaneActivity implements EntriesFragment.ActivityCallback, PhotoFragment.PhotoDisplayCallback {
 
     private static final String KEY_FOLDER = "key_folder";
     private static final String KEY_PHOTO = "key_photo";
     private static final String KEY_PHOTOS = "key_photos";
+
+	/**
+	 * Implement the callback when photo is deleted.
+	 *
+	 * @param f
+	 * @param photo
+	 */
+	@Override
+	public void onDeleting(PhotoFragment f, NPPhoto photo) {
+		finish();
+	}
 
     public static void startWithFolder(NPFolder f, NPPhoto photo, ArrayList<NPPhoto> photos, Activity c) {
         c.startActivity(PhotoActivity.of(f, photo, photos, c));

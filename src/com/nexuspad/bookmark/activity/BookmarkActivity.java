@@ -13,7 +13,7 @@ import com.nexuspad.common.annotation.ParentActivity;
  * @author Edmond
  */
 @ParentActivity(BookmarksActivity.class)
-public class BookmarkActivity extends EntryActivity<NPBookmark> implements BookmarkFragment.Callback {
+public class BookmarkActivity extends EntryActivity<NPBookmark> implements BookmarkFragment.BookmarkDetailCallback {
 
     @Override
     protected Fragment onCreateFragment() {

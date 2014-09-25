@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -21,11 +22,13 @@ import com.google.common.collect.Iterables;
 import com.nexuspad.Manifest;
 import com.nexuspad.R;
 import com.nexuspad.account.AccountManager;
-import com.nexuspad.common.annotation.ModuleId;
 import com.nexuspad.app.App;
 import com.nexuspad.common.activity.FoldersNavigatorActivity;
 import com.nexuspad.common.activity.UpdateFolderActivity;
-import com.nexuspad.common.adapters.*;
+import com.nexuspad.common.adapters.EntriesAdapter;
+import com.nexuspad.common.adapters.OnPagingListEndListener;
+import com.nexuspad.common.adapters.SingleAdapter;
+import com.nexuspad.common.annotation.ModuleId;
 import com.nexuspad.common.listeners.DirectionalScrollListener;
 import com.nexuspad.common.utils.Lazy;
 import com.nexuspad.datamodel.*;
@@ -49,7 +52,8 @@ import static com.nexuspad.dataservice.EntryListService.EntryListReceiver;
  *
  * @author Edmond
  */
-public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBarFragment {
+public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBarFragment
+		implements SwipeRefreshLayout.OnRefreshListener {
 	private static final String TAG = EntriesFragment.class.getSimpleName();
 
 	public static final int ACTIVITY_REQ_CODE_FOLDER_SELECTOR = 1;
@@ -461,6 +465,15 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 		 */
 		final View listFrame = view.findViewById(R.id.main_list_frame);
 
+		if (listFrame instanceof android.support.v4.widget.SwipeRefreshLayout) {
+			SwipeRefreshLayout swipeLayout = (SwipeRefreshLayout)listFrame;
+			swipeLayout.setOnRefreshListener(this);
+			swipeLayout.setColorSchemeColors(android.R.color.holo_blue_bright,
+					android.R.color.holo_green_light,
+					android.R.color.holo_orange_light,
+					android.R.color.holo_red_light);
+		}
+
 		/*
 		 * progress frame and retry button
 		 */
@@ -533,6 +546,14 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 	protected void onRetryClicked(View button) {
 		super.onRetryClicked(button);
 		queryEntriesAsync();
+	}
+
+	/**
+	 * SwipeRefresh handler.
+	 */
+	@Override
+	public void onRefresh() {
+		Log.i(TAG, "Implement swipe refresh....");
 	}
 
 	@Override
@@ -677,6 +698,9 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 	 * @param list
 	 */
 	protected void onListLoaded(EntryList list) {
+		// Update the listener state
+		Log.i(TAG, "Set the load more listener's page Id to: " + list.getPageId());
+		mLoadMoreScrollListener.setCurrentPage(list.getPageId());
 	}
 
 

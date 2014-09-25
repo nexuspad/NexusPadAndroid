@@ -36,11 +36,11 @@ public class BookmarkFragment extends EntryFragment<NPBookmark> {
         return fragment;
     }
 
-    public interface Callback extends EntryFragment.Callback<NPBookmark> {
+    public interface BookmarkDetailCallback extends EntryDetailCallback<NPBookmark> {
         void onEdit(BookmarkFragment f, NPBookmark b);
     }
 
-    private Callback mCallback;
+    private BookmarkDetailCallback mBookmarkDetailCallback;
 
     private TextView mNameV;
     private TextView mWebAddressV;
@@ -53,7 +53,7 @@ public class BookmarkFragment extends EntryFragment<NPBookmark> {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        mCallback = App.getCallbackOrThrow(activity, Callback.class);
+        mBookmarkDetailCallback = App.getCallbackOrThrow(activity, BookmarkDetailCallback.class);
         setHasOptionsMenu(true);
     }
 
@@ -68,7 +68,7 @@ public class BookmarkFragment extends EntryFragment<NPBookmark> {
         NPBookmark entry = getEntry();
         switch (item.getItemId()) {
             case R.id.edit:
-                mCallback.onEdit(this, entry);
+                mBookmarkDetailCallback.onEdit(this, entry);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

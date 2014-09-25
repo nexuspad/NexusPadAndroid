@@ -92,6 +92,8 @@ public class DocsFragment extends FoldersAndEntriesFragment {
 	protected void onListLoaded(EntryList list) {
 		Log.i(TAG, "Receiving entry list.");
 
+		super.onListLoaded(list);
+
 		FoldersAndEntriesAdapter a = (FoldersAndEntriesAdapter)getAdapter();
 
 		if (a != null) {

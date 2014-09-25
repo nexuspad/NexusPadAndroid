@@ -21,7 +21,7 @@ import com.nexuspad.calendar.activity.EventsActivity;
 import com.nexuspad.common.activity.FoldersNavigatorActivity;
 import com.nexuspad.common.adapters.EntriesAdapter;
 import com.nexuspad.common.adapters.ListViewHolder;
-import com.nexuspad.common.adapters.OnPagingListEndListener;
+import com.nexuspad.common.adapters.OnEventListEndListener;
 import com.nexuspad.common.annotation.FragmentName;
 import com.nexuspad.common.annotation.ModuleId;
 import com.nexuspad.common.fragment.EntriesFragment;
@@ -59,9 +59,25 @@ public class EventsListFragment extends EntriesFragment {
 	private String mStartYmd;
 	private String mEndYmd;
 
-	protected OnPagingListEndListener mLoadMoreScrollListener = new OnPagingListEndListener() {
+	protected OnEventListEndListener mLoadMoreScrollListener = new OnEventListEndListener() {
+		/**
+		 * Load older events at the beginning of the page.
+		 *
+		 * @param topYmd
+		 */
 		@Override
-		protected void onListBottom(int page) {
+		protected void onListTop(String topYmd) {
+			queryEntriesAsync();
+		}
+
+		/**
+		 * Load more events at the end of the page.
+		 *
+		 * @param bottomYmd
+		 */
+		@Override
+		protected void onListBottom(String bottomYmd) {
+			queryEntriesAsync();
 		}
 	};
 
@@ -142,6 +158,8 @@ public class EventsListFragment extends EntriesFragment {
 	@Override
 	protected void onListLoaded(EntryList entryList) {
 		Log.i(TAG, "Receive event list: " + String.valueOf(entryList.getEntries().size()));
+
+		super.onListLoaded(entryList);
 
 		mEventList = entryList;
 
@@ -226,6 +244,38 @@ public class EventsListFragment extends EntriesFragment {
 		try {
 			mFolder.setOwner(AccountManager.currentAccount());
 			getEntryListService().getEntriesBetweenDates(mFolder, getTemplate(), mStartYmd, mEndYmd, 0);
+
+		} catch (NPException e) {
+			Log.e(TAG, e.toString());
+			handleServiceError(e.getServiceError());
+		}
+	}
+
+	/**
+	 * Extend mEndYmd by 30 days and load more events
+	 */
+	protected void loadMoreFutureEvents() {
+		String startYmd = mEndYmd;
+		mEndYmd = DateUtil.convertToYYYYMMDD(DateUtil.addDaysTo(DateUtil.parseFromYYYYMMDD(mEndYmd), 30));
+
+		try {
+			getEntryListService().getEntriesBetweenDates(mFolder, getTemplate(), startYmd, mEndYmd, 0);
+
+		} catch (NPException e) {
+			Log.e(TAG, e.toString());
+			handleServiceError(e.getServiceError());
+		}
+	}
+
+	/**
+	 * Extend the mStartYmd back by 30 days and load events
+	 */
+	protected void loadMorePreviousEvents() {
+		String endYmd = mStartYmd;
+		mStartYmd = DateUtil.convertToYYYYMMDD(DateUtil.addDaysTo(DateUtil.parseFromYYYYMMDD(mStartYmd), -30));
+
+		try {
+			getEntryListService().getEntriesBetweenDates(mFolder, getTemplate(), mStartYmd, endYmd, 0);
 
 		} catch (NPException e) {
 			Log.e(TAG, e.toString());

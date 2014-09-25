@@ -19,7 +19,7 @@ import com.nexuspad.common.fragment.EntryFragment;
  * @author Edmond
  */
 @ParentActivity(PhotosActivity.class)
-public class AlbumActivity extends SinglePaneActivity implements EntryFragment.Callback<NPAlbum> {
+public class AlbumActivity extends SinglePaneActivity implements EntryFragment.EntryDetailCallback<NPAlbum> {
 
     private static final String KEY_FOLDER = "key_folder";
     private static final String KEY_ALBUM = "key_album";

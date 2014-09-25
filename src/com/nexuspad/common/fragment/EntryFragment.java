@@ -33,7 +33,7 @@ public abstract class EntryFragment<T extends NPEntry> extends DialogFragment {
 
 	private static final String TAG = "EntryFragment";
 
-	public interface Callback<T extends NPEntry> {
+	public interface EntryDetailCallback<T extends NPEntry> {
 		void onDeleting(EntryFragment<T> f, T entry);
 	}
 
@@ -67,13 +67,13 @@ public abstract class EntryFragment<T extends NPEntry> extends DialogFragment {
 
 	protected T mEntry;
 	protected NPFolder mFolder;
-	private Callback<T> mCallback;
+	private EntryDetailCallback<T> mCallback;
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-		mCallback = App.getCallbackOrThrow(activity, Callback.class);
+		mCallback = App.getCallbackOrThrow(activity, EntryDetailCallback.class);
 	}
 
 	@Override

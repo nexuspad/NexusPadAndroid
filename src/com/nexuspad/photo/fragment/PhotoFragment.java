@@ -12,18 +12,19 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.*;
 import android.widget.ImageView;
-import com.nexuspad.common.annotation.FragmentName;
 import com.google.common.collect.Iterables;
 import com.nexuspad.R;
+import com.nexuspad.app.App;
+import com.nexuspad.common.annotation.FragmentName;
 import com.nexuspad.common.annotation.ModuleId;
+import com.nexuspad.common.fragment.EntriesFragment;
+import com.nexuspad.common.view.ZoomableImageView;
 import com.nexuspad.datamodel.EntryTemplate;
 import com.nexuspad.datamodel.NPFolder;
 import com.nexuspad.datamodel.NPPhoto;
 import com.nexuspad.dataservice.NPException;
 import com.nexuspad.dataservice.NPWebServiceUtil;
 import com.nexuspad.dataservice.ServiceConstants;
-import com.nexuspad.common.fragment.EntriesFragment;
-import com.nexuspad.common.view.ZoomableImageView;
 import com.squareup.picasso.Picasso;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
@@ -48,6 +49,16 @@ public class PhotoFragment extends EntriesFragment {
     private ViewPager mViewPager;
     private Picasso mPicasso;
     private int mInitialPhotoIndex = -1;
+
+	private PhotoDisplayCallback mCallback;
+
+	/**
+	 * EntryDetailCallback interface for Photo.
+	 * This is similar to the EntryDetailCallback in EntryFragment
+	 */
+	public interface PhotoDisplayCallback {
+		void onDeleting(PhotoFragment f, NPPhoto photo);
+	}
 
     public static PhotoFragment of(NPFolder f, NPPhoto photo, List<? extends NPPhoto> photos) {
         final Bundle bundle = new Bundle();
@@ -78,6 +89,7 @@ public class PhotoFragment extends EntriesFragment {
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		setHasOptionsMenu(true);
+		mCallback = App.getCallbackOrThrow(activity, PhotoDisplayCallback.class);
 	}
 
     @Override
@@ -94,7 +106,8 @@ public class PhotoFragment extends EntriesFragment {
                 deleteEntry(photo);
                 sPhotos.remove(photo);
                 stableNotifyAdapter();
-                return true;
+	            mCallback.onDeleting(this, photo);
+	            return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
