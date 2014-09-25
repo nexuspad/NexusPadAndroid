@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import com.nexuspad.bookmark.fragment.BookmarkEditFragment;
+import com.nexuspad.common.Constants;
 import com.nexuspad.common.activity.EntryEditActivity;
 import com.nexuspad.common.annotation.ParentActivity;
 import com.nexuspad.common.annotation.ModuleId;
@@ -61,7 +62,7 @@ public class BookmarkEditEditActivity extends EntryEditActivity<NPBookmark> {
 
     @Override
     protected Intent getGoBackIntent(Class<?> activity) {
-        return super.getGoBackIntent(activity).putExtra(BookmarkActivity.KEY_FOLDER, getFolder());
+        return super.getGoBackIntent(activity).putExtra(Constants.KEY_FOLDER, getFolder());
     }
 
     @Override

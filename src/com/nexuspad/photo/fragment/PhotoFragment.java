@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import com.google.common.collect.Iterables;
 import com.nexuspad.R;
 import com.nexuspad.app.App;
+import com.nexuspad.common.Constants;
 import com.nexuspad.common.annotation.FragmentName;
 import com.nexuspad.common.annotation.ModuleId;
 import com.nexuspad.common.fragment.EntriesFragment;
@@ -62,7 +63,7 @@ public class PhotoFragment extends EntriesFragment {
 
     public static PhotoFragment of(NPFolder f, NPPhoto photo, List<? extends NPPhoto> photos) {
         final Bundle bundle = new Bundle();
-        bundle.putParcelable(KEY_FOLDER, f);
+        bundle.putParcelable(Constants.KEY_FOLDER, f);
         bundle.putParcelable(KEY_PHOTO, photo);
 
         sPhotos = new ArrayList<NPPhoto>(photos); // parceling is too slow

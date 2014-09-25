@@ -16,10 +16,11 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import com.nexuspad.R;
-import com.nexuspad.common.adapters.OnPagingListEndListener;
-import com.nexuspad.common.annotation.ModuleId;
+import com.nexuspad.common.Constants;
 import com.nexuspad.common.activity.FoldersNavigatorActivity;
+import com.nexuspad.common.adapters.OnPagingListEndListener;
 import com.nexuspad.common.annotation.FragmentName;
+import com.nexuspad.common.annotation.ModuleId;
 import com.nexuspad.common.fragment.EntriesFragment;
 import com.nexuspad.datamodel.*;
 import com.nexuspad.photo.activity.PhotoActivity;
@@ -45,7 +46,7 @@ public class PhotosFragment extends EntriesFragment implements OnItemClickListen
 
 	public static PhotosFragment of(NPFolder f) {
 		Bundle bundle = new Bundle();
-		bundle.putParcelable(KEY_FOLDER, f);
+		bundle.putParcelable(Constants.KEY_FOLDER, f);
 
 		PhotosFragment fragment = new PhotosFragment();
 		fragment.setArguments(bundle);
@@ -77,11 +78,21 @@ public class PhotosFragment extends EntriesFragment implements OnItemClickListen
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		PhotosAdapter adapter = (PhotosAdapter) mGridView.getAdapter();
 		NPPhoto photo = adapter.getItem(position);
+
 		ArrayList<NPPhoto> photos = new ArrayList<NPPhoto>();
 		for (NPEntry e : (List<? extends NPEntry>)mEntryList.getEntries()) {
 			photos.add(NPPhoto.fromEntry(e));
 		}
-		PhotoActivity.startWithFolder(getFolder(), photo, photos, getActivity());
+
+		FragmentActivity activity = getActivity();
+
+		Intent intent = new Intent(activity, PhotoActivity.class);
+		intent.putExtra(Constants.KEY_FOLDER, getFolder());
+		intent.putExtra(PhotoActivity.KEY_PHOTO, photo);
+		intent.putParcelableArrayListExtra(PhotoActivity.KEY_PHOTOS, photos);
+
+		activity.startActivity(intent);
+		activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
 	}
 
 	@Override

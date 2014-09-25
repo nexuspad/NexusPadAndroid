@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * Author: Edmond
  */
-public final class UploadOperationUIHelper extends Service {
+public final class UploadService extends Service {
 
     public interface OnUploadCountChangeListener {
         void onUploadCountChanged(int uploadCount);
@@ -29,22 +29,22 @@ public final class UploadOperationUIHelper extends Service {
     }
 
     public static class UploadBinder extends Binder {
-        private final WeakReference<UploadOperationUIHelper> mService;
+        private final WeakReference<UploadService> mService;
         private final List<OnNewRequestListener> mOnNewRequestListeners = new ArrayList<OnNewRequestListener>();
 
-        private UploadBinder(UploadOperationUIHelper service) {
-            mService = new WeakReference<UploadOperationUIHelper>(service);
+        private UploadBinder(UploadService service) {
+            mService = new WeakReference<UploadService>(service);
         }
 
         /**
-         * Remember to call {@link #removeCallback(UploadOperationUIHelper.OnNewRequestListener)}
+         * Remember to call {@link #removeCallback(UploadService.OnNewRequestListener)}
          */
         public void addCallback(OnNewRequestListener onNewRequestListener) {
             mOnNewRequestListeners.add(onNewRequestListener);
         }
 
         /**
-         * @see #addCallback(UploadOperationUIHelper.OnNewRequestListener)
+         * @see #addCallback(UploadService.OnNewRequestListener)
          */
         public void removeCallback(OnNewRequestListener onNewRequestListener) {
             mOnNewRequestListeners.remove(onNewRequestListener);
@@ -57,7 +57,7 @@ public final class UploadOperationUIHelper extends Service {
         }
 
         public void addRequest(UploadRequest request) {
-            final UploadOperationUIHelper service = getService();
+            final UploadService service = getService();
             if (!service.mQueue.contains(request)) {
                 service.mQueue.add(request);
                 service.onNewRequest(request);
@@ -71,8 +71,8 @@ public final class UploadOperationUIHelper extends Service {
             return Collections.unmodifiableCollection(getService().mQueue);
         }
 
-        private UploadOperationUIHelper getService() {
-            final UploadOperationUIHelper service = mService.get();
+        private UploadService getService() {
+            final UploadService service = mService.get();
             if (service != null) {
                 return service;
             }

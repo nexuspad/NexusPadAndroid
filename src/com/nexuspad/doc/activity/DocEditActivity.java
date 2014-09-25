@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
+import com.nexuspad.common.Constants;
 import com.nexuspad.common.activity.EntryEditActivity;
 import com.nexuspad.common.annotation.ParentActivity;
 import com.nexuspad.common.annotation.ModuleId;
@@ -72,7 +73,7 @@ public class DocEditActivity extends EntryEditActivity<NPDoc> implements DocUpda
 
     @Override
     protected Intent getGoBackIntent(Class<?> activity) {
-        return super.getGoBackIntent(activity).putExtra(DocActivity.KEY_FOLDER, getFolder());
+        return super.getGoBackIntent(activity).putExtra(Constants.KEY_FOLDER, getFolder());
     }
 
     @Override

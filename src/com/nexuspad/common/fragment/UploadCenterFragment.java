@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.FragmentActivity;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,7 +16,7 @@ import android.view.ViewGroup;
 import android.widget.*;
 import com.nexuspad.R;
 import com.nexuspad.app.UploadRequest;
-import com.nexuspad.app.service.UploadOperationUIHelper;
+import com.nexuspad.app.service.UploadService;
 import com.nexuspad.common.annotation.FragmentName;
 import com.nexuspad.dataservice.NPUploadHelper;
 import com.squareup.picasso.Picasso;
@@ -35,9 +36,9 @@ public class UploadCenterFragment extends NPBaseFragment {
 	private ListView mListView;
 
 	private UploadRequestAdapter mAdapter;
-	private UploadOperationUIHelper.UploadBinder mBinder;
+	private UploadService.UploadBinder mBinder;
 
-	private final UploadOperationUIHelper.OnNewRequestListener mOnNewRequestListener = new UploadOperationUIHelper.OnNewRequestListener() {
+	private final UploadService.OnNewRequestListener mOnNewRequestListener = new UploadService.OnNewRequestListener() {
 		@Override
 		public void onNewRequest(UploadRequest request) {
 			mPendingRequests.add(request);
@@ -48,7 +49,7 @@ public class UploadCenterFragment extends NPBaseFragment {
 	private ServiceConnection mConnection = new ServiceConnection() {
 		@Override
 		public void onServiceConnected(ComponentName name, IBinder service) {
-			mBinder = (UploadOperationUIHelper.UploadBinder) service;
+			mBinder = (UploadService.UploadBinder) service;
 
 			mBinder.addRequests(mPendingRequests);
 			mBinder.addCallback(mOnNewRequestListener);
@@ -94,7 +95,7 @@ public class UploadCenterFragment extends NPBaseFragment {
 		super.onActivityCreated(savedInstanceState);
 
 		final FragmentActivity activity = getActivity();
-		final Intent service = new Intent(activity, UploadOperationUIHelper.class);
+		final Intent service = new Intent(activity, UploadService.class);
 		activity.startService(service);
 		activity.bindService(service, mConnection, Context.BIND_AUTO_CREATE);
 	}
@@ -197,11 +198,8 @@ public class UploadCenterFragment extends NPBaseFragment {
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			return getPhotoRequestView(position, convertView, parent);
-		}
-
-		private View getPhotoRequestView(int position, View convertView, ViewGroup parent) {
 			final ViewHolder holder;
+
 			if (convertView == null) {
 				convertView = LayoutInflater.from(mContext).inflate(R.layout.list_item_upload_photo, parent, false);
 
@@ -222,9 +220,9 @@ public class UploadCenterFragment extends NPBaseFragment {
 
 			Picasso pic = Picasso.with(mContext);
 
-			pic.setIndicatorsEnabled(true);
+			Log.i(TAG, request.getUri().toString());
 
-			pic.load(request.getUri())
+			pic.load(request.getUri().toString())
 				.placeholder(R.drawable.placeholder)
 				.error(R.drawable.ic_launcher)
 				.resizeDimen(R.dimen.photo_grid_width, R.dimen.photo_grid_height)

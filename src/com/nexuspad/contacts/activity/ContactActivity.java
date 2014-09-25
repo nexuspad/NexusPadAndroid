@@ -4,11 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import com.nexuspad.common.Constants;
+import com.nexuspad.common.activity.EntryActivity;
 import com.nexuspad.common.annotation.ParentActivity;
 import com.nexuspad.contacts.fragment.ContactFragment;
 import com.nexuspad.datamodel.NPFolder;
 import com.nexuspad.datamodel.NPPerson;
-import com.nexuspad.common.activity.EntryActivity;
 
 /**
  * Author: edmond
@@ -22,8 +23,8 @@ public class ContactActivity extends EntryActivity<NPPerson> {
 
     public static Intent of(Context context, NPPerson contact, NPFolder folder) {
         final Intent intent = new Intent(context, ContactActivity.class);
-        intent.putExtra(KEY_ENTRY, contact);
-        intent.putExtra(KEY_FOLDER, folder);
+        intent.putExtra(Constants.KEY_ENTRY, contact);
+        intent.putExtra(Constants.KEY_FOLDER, folder);
         return intent;
     }
 
@@ -31,7 +32,7 @@ public class ContactActivity extends EntryActivity<NPPerson> {
 
     @Override
     protected void onCreate(Bundle savedState) {
-        mContact = getIntent().getParcelableExtra(KEY_ENTRY);
+        mContact = getIntent().getParcelableExtra(Constants.KEY_ENTRY);
 
         super.onCreate(savedState);
     }

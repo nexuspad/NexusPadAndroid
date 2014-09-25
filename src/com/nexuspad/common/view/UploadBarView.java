@@ -9,10 +9,10 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import com.nexuspad.R;
-import com.nexuspad.app.service.UploadOperationUIHelper;
+import com.nexuspad.app.service.UploadService;
 import com.nexuspad.common.activity.UploadCenterActivity;
 
-import static com.nexuspad.app.service.UploadOperationUIHelper.OnUploadCountChangeListener;
+import static com.nexuspad.app.service.UploadService.OnUploadCountChangeListener;
 
 /**
  * Author: edmond
@@ -20,7 +20,7 @@ import static com.nexuspad.app.service.UploadOperationUIHelper.OnUploadCountChan
 public class UploadBarView extends FrameLayout {
 
     /**
-     * Maintain a reference since {@link com.nexuspad.app.service.UploadOperationUIHelper#addOnUploadCountChangeListener(OnUploadCountChangeListener) addOnUploadCountChangeListener}
+     * Maintain a reference since {@link com.nexuspad.app.service.UploadService#addOnUploadCountChangeListener(OnUploadCountChangeListener) addOnUploadCountChangeListener}
      * holds a {@code WeakReference} to the listener.<p>
      * Anonymous inner class will cause the listener to be
      * garbage collected, thus a field reference is needed. (The listener holds a reference to the {@code UploadBarView},
@@ -52,7 +52,7 @@ public class UploadBarView extends FrameLayout {
         array.recycle();
 	    setBackground(background);
 
-        UploadOperationUIHelper.addOnUploadCountChangeListener(mListener);
+        UploadService.addOnUploadCountChangeListener(mListener);
 
         super.setOnClickListener(new OnClickListener() {
             @Override

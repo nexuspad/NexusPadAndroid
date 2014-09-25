@@ -33,7 +33,9 @@ public class PhotosAdapter extends EntriesAdapter<NPPhoto> {
 		super(a, entryList, folder, service, template);
 		mActivity = a;
 		mPicasso = Picasso.with(a);
-		mPicasso.setIndicatorsEnabled(true);
+//		mPicasso.setIndicatorsEnabled(true);
+
+		mPicasso.setLoggingEnabled(true);
 	}
 
 	@Override
