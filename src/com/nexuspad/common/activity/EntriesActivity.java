@@ -7,6 +7,7 @@ import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 import com.nexuspad.R;
+import com.nexuspad.common.Constants;
 import com.nexuspad.common.annotation.ModuleId;
 import com.nexuspad.common.fragment.EntriesFragment;
 import com.nexuspad.datamodel.EntryList;
@@ -19,8 +20,6 @@ import com.nexuspad.dataservice.ServiceConstants;
  * @author Edmond
  */
 public abstract class EntriesActivity extends SinglePaneActivity implements EntriesFragment.ActivityCallback {
-    public static final String KEY_FOLDER = "key_folder";
-
     protected NPFolder mFolder;
 
     private ModuleId mModuleId;
@@ -45,7 +44,7 @@ public abstract class EntriesActivity extends SinglePaneActivity implements Entr
         mModuleId = ((Object) this).getClass().getAnnotation(ModuleId.class);
 
         Intent intent = getIntent();
-        NPFolder folder = intent.getParcelableExtra(KEY_FOLDER);
+        NPFolder folder = intent.getParcelableExtra(Constants.KEY_FOLDER);
         if (folder != null) {
             mFolder = folder;
         } else {

@@ -24,7 +24,7 @@ public class BookmarksActivity extends EntriesActivity implements BookmarksFragm
 
     public static void startWithFolder(NPFolder f, Context c) {
         Intent intent = new Intent(c, BookmarksActivity.class);
-        intent.putExtra(KEY_FOLDER, f);
+        intent.putExtra(Constants.KEY_FOLDER, f);
         intent.putExtra(KEY_PARENT_ACTIVITY, c.getClass());
         c.startActivity(intent);
     }

@@ -6,6 +6,7 @@ package com.nexuspad.doc.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
+import com.nexuspad.common.Constants;
 import com.nexuspad.common.activity.EntriesActivity;
 import com.nexuspad.common.annotation.ModuleId;
 import com.nexuspad.datamodel.EntryTemplate;
@@ -26,7 +27,7 @@ public class DocsActivity extends EntriesActivity implements DocsFragment.Callba
      */
     public static Intent of(Activity a, NPFolder parent) {
         Intent intent = new Intent(a, DocsActivity.class);
-        intent.putExtra(KEY_FOLDER, parent);
+        intent.putExtra(Constants.KEY_FOLDER, parent);
         intent.putExtra(KEY_PARENT_ACTIVITY, a.getClass());
         return intent;
     }

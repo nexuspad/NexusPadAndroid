@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import com.nexuspad.common.Constants;
 import com.nexuspad.common.annotation.ParentActivity;
 import com.nexuspad.R;
 import com.nexuspad.common.annotation.ModuleId;
@@ -110,7 +111,7 @@ public class JournalsActivity extends EntriesActivity implements JournalsFragmen
 	@Override
 	protected Fragment onCreateFragment() {
 		final Bundle bundle = new Bundle();
-		bundle.putParcelable(KEY_FOLDER, NPFolder.rootFolderOf(ServiceConstants.JOURNAL_MODULE));
+		bundle.putParcelable(Constants.KEY_FOLDER, NPFolder.rootFolderOf(ServiceConstants.JOURNAL_MODULE));
 
 		final JournalsFragment fragment = new JournalsFragment();
 		fragment.setArguments(bundle);

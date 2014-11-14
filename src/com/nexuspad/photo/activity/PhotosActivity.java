@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import com.google.common.collect.ImmutableList;
 import com.nexuspad.R;
+import com.nexuspad.common.Constants;
 import com.nexuspad.common.annotation.ModuleId;
 import com.nexuspad.common.activity.EntriesActivity;
 import com.nexuspad.common.activity.UploadCenterActivity;
@@ -56,7 +57,7 @@ public class PhotosActivity extends EntriesActivity implements ActionBar.OnNavig
 
     public static Intent of(NPFolder f, Context c, int initialSpinnerIndex) {
         Intent intent = new Intent(c, PhotosActivity.class);
-        intent.putExtra(KEY_FOLDER, f);
+        intent.putExtra(Constants.KEY_FOLDER, f);
         intent.putExtra(KEY_SPINNER_INDEX, initialSpinnerIndex);
         return intent;
     }

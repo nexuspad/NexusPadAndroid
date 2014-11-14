@@ -56,27 +56,26 @@ public class EventsListFragment extends EntriesFragment {
 
 	private EntryList mEventList;
 
-	private String mStartYmd;
-	private String mEndYmd;
+	private NPDateRange mDateRange;
 
 	protected OnEventListEndListener mLoadMoreScrollListener = new OnEventListEndListener() {
 		/**
-		 * Load older events at the beginning of the page.
-		 *
-		 * @param topYmd
+		 * List more events going backward.
+		 * @param dateRange
 		 */
 		@Override
-		protected void onListTop(String topYmd) {
+		protected void onListTop(NPDateRange dateRange) {
 			queryEntriesAsync();
 		}
 
 		/**
-		 * Load more events at the end of the page.
+		 * List more events going forward.
 		 *
-		 * @param bottomYmd
+		 * @param dateRange
 		 */
 		@Override
-		protected void onListBottom(String bottomYmd) {
+		protected void onListBottom(NPDateRange dateRange) {
+			mDateRange = new NPDateRange(dateRange);
 			queryEntriesAsync();
 		}
 	};
@@ -85,8 +84,7 @@ public class EventsListFragment extends EntriesFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		final Bundle arguments = getArguments();
-		mStartYmd = (String)arguments.get(KEY_START_YMD);
-		mEndYmd = (String)arguments.get(KEY_END_YMD);
+		mDateRange = new NPDateRange((String)arguments.get(KEY_START_YMD), (String)arguments.get(KEY_END_YMD));
 	}
 
 	@Override
@@ -115,7 +113,9 @@ public class EventsListFragment extends EntriesFragment {
 
 		mStickyHeaderEventListView.setFastScrollEnabled(false);     // not ready for the first release
 
-		// set the folder selector view bar
+		// Set the scroll listener for loading more
+		Log.i(TAG, "The initial date range is: " + mDateRange);
+		mLoadMoreScrollListener.setCurrentDateRange(mDateRange);
 		mStickyHeaderEventListView.setOnScrollListener(newDirectionalScrollListener(mLoadMoreScrollListener));
 
 		// set the listener for folder selector
@@ -198,7 +198,9 @@ public class EventsListFragment extends EntriesFragment {
 
 		dismissProgressIndicator();
 
-		scrollToStartTime(mEventList);
+//		scrollToStartTime(mEventList);
+
+		mLoadMoreScrollListener.reset();
 	}
 
 
@@ -225,7 +227,7 @@ public class EventsListFragment extends EntriesFragment {
 			NPEvent event = NPEvent.fromEntry(entry);
 
 			int i = 0;
-			if (event.getStartTime().after(DateUtil.parseFromYYYYMMDD(mStartYmd))) {
+			if (event.getStartTime().after(DateUtil.parseFromYYYYMMDD(mDateRange.getStartYmd()))) {
 				mStickyHeaderEventListView.smoothScrollToPosition(i);
 				break;
 			}
@@ -235,15 +237,14 @@ public class EventsListFragment extends EntriesFragment {
 	}
 
 	public void setStartEndTime(String startYmd, String endYmd) {
-		mStartYmd = startYmd;
-		mEndYmd = endYmd;
+		mDateRange = new NPDateRange(startYmd, endYmd);
 	}
 
 	@Override
 	protected void queryEntriesAsync() {
 		try {
 			mFolder.setOwner(AccountManager.currentAccount());
-			getEntryListService().getEntriesBetweenDates(mFolder, getTemplate(), mStartYmd, mEndYmd, 0);
+			getEntryListService().getEntriesBetweenDates(mFolder, getTemplate(), mDateRange.getStartYmd(), mDateRange.getEndYmd(), 0);
 
 		} catch (NPException e) {
 			Log.e(TAG, e.toString());
@@ -255,11 +256,11 @@ public class EventsListFragment extends EntriesFragment {
 	 * Extend mEndYmd by 30 days and load more events
 	 */
 	protected void loadMoreFutureEvents() {
-		String startYmd = mEndYmd;
-		mEndYmd = DateUtil.convertToYYYYMMDD(DateUtil.addDaysTo(DateUtil.parseFromYYYYMMDD(mEndYmd), 30));
+		mDateRange.setStartYmd(mDateRange.getEndYmd());
+		mDateRange.setEndYmd(DateUtil.convertToYYYYMMDD(DateUtil.addDaysTo(DateUtil.parseFromYYYYMMDD(mDateRange.getEndYmd()), 30)));
 
 		try {
-			getEntryListService().getEntriesBetweenDates(mFolder, getTemplate(), startYmd, mEndYmd, 0);
+			getEntryListService().getEntriesBetweenDates(mFolder, getTemplate(), mDateRange.getStartYmd(), mDateRange.getEndYmd(), 0);
 
 		} catch (NPException e) {
 			Log.e(TAG, e.toString());
@@ -271,11 +272,11 @@ public class EventsListFragment extends EntriesFragment {
 	 * Extend the mStartYmd back by 30 days and load events
 	 */
 	protected void loadMorePreviousEvents() {
-		String endYmd = mStartYmd;
-		mStartYmd = DateUtil.convertToYYYYMMDD(DateUtil.addDaysTo(DateUtil.parseFromYYYYMMDD(mStartYmd), -30));
+		mDateRange.setEndYmd( mDateRange.getStartYmd());
+		mDateRange.setStartYmd(DateUtil.convertToYYYYMMDD(DateUtil.addDaysTo(DateUtil.parseFromYYYYMMDD(mDateRange.getStartYmd()), -30)));
 
 		try {
-			getEntryListService().getEntriesBetweenDates(mFolder, getTemplate(), mStartYmd, endYmd, 0);
+			getEntryListService().getEntriesBetweenDates(mFolder, getTemplate(), mDateRange.getStartYmd(), mDateRange.getEndYmd(), 0);
 
 		} catch (NPException e) {
 			Log.e(TAG, e.toString());

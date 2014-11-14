@@ -15,6 +15,7 @@ import com.google.common.collect.ImmutableList;
 import com.nexuspad.R;
 import com.nexuspad.calendar.fragment.EventsListFragment;
 import com.nexuspad.calendar.fragment.EventsMonthFragment;
+import com.nexuspad.common.Constants;
 import com.nexuspad.common.activity.EntriesActivity;
 import com.nexuspad.common.annotation.ModuleId;
 import com.nexuspad.common.fragment.EntriesFragment;
@@ -44,7 +45,7 @@ public class EventsActivity extends EntriesActivity implements EventsMonthFragme
 
 	public static void startWithFolder(NPFolder f, Context c) {
 		Intent intent = new Intent(c, EventsActivity.class);
-		intent.putExtra(KEY_FOLDER, f);
+		intent.putExtra(Constants.KEY_FOLDER, f);
 		c.startActivity(intent);
 	}
 
@@ -71,7 +72,7 @@ public class EventsActivity extends EntriesActivity implements EventsMonthFragme
 	@Override
 	protected Fragment onCreateFragment() {
 		final Bundle bundle = new Bundle();
-		bundle.putParcelable(KEY_FOLDER, mFolder);
+		bundle.putParcelable(Constants.KEY_FOLDER, mFolder);
 
 		Date today = DateUtil.now();
 		String startYmd = DateUtil.convertToYYYYMMDD(DateUtil.addDaysTo(today, -30));
