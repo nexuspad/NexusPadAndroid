@@ -9,8 +9,8 @@ import android.widget.*;
 import com.android.datetimepicker.date.DatePickerDialog;
 import com.nexuspad.R;
 import com.nexuspad.calendar.view.DateButton;
-import com.nexuspad.datamodel.Recurrence;
-import com.nexuspad.util.DateUtil;
+import com.nexuspad.service.datamodel.Recurrence;
+import com.nexuspad.service.util.DateUtil;
 
 import java.util.Calendar;
 import java.util.Date;

@@ -19,11 +19,11 @@ import com.nexuspad.common.annotation.FragmentName;
 import com.nexuspad.common.annotation.ModuleId;
 import com.nexuspad.common.fragment.FoldersAndEntriesFragment;
 import com.nexuspad.common.listeners.OnEntryMenuClickListener;
-import com.nexuspad.datamodel.EntryList;
-import com.nexuspad.datamodel.EntryTemplate;
-import com.nexuspad.datamodel.NPDoc;
-import com.nexuspad.datamodel.NPFolder;
-import com.nexuspad.dataservice.ServiceConstants;
+import com.nexuspad.service.datamodel.EntryList;
+import com.nexuspad.service.datamodel.EntryTemplate;
+import com.nexuspad.service.datamodel.NPDoc;
+import com.nexuspad.service.datamodel.NPFolder;
+import com.nexuspad.service.dataservice.ServiceConstants;
 import com.nexuspad.doc.activity.DocEditActivity;
 
 /**

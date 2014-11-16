@@ -11,11 +11,11 @@ import com.nexuspad.common.Constants;
 import com.nexuspad.common.activity.EntryEditActivity;
 import com.nexuspad.common.annotation.ParentActivity;
 import com.nexuspad.common.annotation.ModuleId;
-import com.nexuspad.datamodel.NPDoc;
-import com.nexuspad.datamodel.EntryTemplate;
-import com.nexuspad.datamodel.NPFolder;
-import com.nexuspad.datamodel.NPUpload;
-import com.nexuspad.dataservice.ServiceConstants;
+import com.nexuspad.service.datamodel.NPDoc;
+import com.nexuspad.service.datamodel.EntryTemplate;
+import com.nexuspad.service.datamodel.NPFolder;
+import com.nexuspad.service.datamodel.NPUpload;
+import com.nexuspad.service.dataservice.ServiceConstants;
 import com.nexuspad.doc.fragment.DocUpdateFragment;
 import com.nexuspad.common.activity.UploadCenterActivity;
 

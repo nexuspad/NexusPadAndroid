@@ -74,6 +74,12 @@
     <string name="tags">Tags</string>
     <string name="root">ROOT</string>
 
+    <string name="my_contacts">MY CONTACTS</string>
+    <string name="my_activities">MY CALENDAR</string>
+    <string name="my_bookmarks">MY BOOKMARKS</string>
+    <string name="my_docs">MY DOCS</string>
+    <string name="my_photos">MY PHOTOS</string>
+
     <!-- account settings -->
     <string name="account_settings">Account Settings</string>
     <string name="account_email">Email</string>
@@ -149,6 +155,9 @@
     <string name="no_connection">No connection</string>
     <string name="retry">Retry</string>
     <string name="add_attachment">Add attachment…</string>
+
+    <string name="formatted_err_delete_failed">Failed to delete \"%s\". Please try again later.</string>
+    <string name="formatted_err_update_failed">Failed to update \"%s\". Please try again later.</string>
 
     <plurals name="numberOfPhotos">
         <item quantity="one">1 photo</item>

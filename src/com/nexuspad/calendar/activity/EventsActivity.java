@@ -9,25 +9,22 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.widget.ArrayAdapter;
 import android.widget.CalendarView;
-import com.google.common.collect.ImmutableList;
-import com.nexuspad.R;
 import com.nexuspad.calendar.fragment.EventsListFragment;
 import com.nexuspad.calendar.fragment.EventsMonthFragment;
 import com.nexuspad.common.Constants;
 import com.nexuspad.common.activity.EntriesActivity;
 import com.nexuspad.common.annotation.ModuleId;
 import com.nexuspad.common.fragment.EntriesFragment;
-import com.nexuspad.datamodel.EntryList;
-import com.nexuspad.datamodel.EntryTemplate;
-import com.nexuspad.datamodel.NPFolder;
-import com.nexuspad.util.DateUtil;
+import com.nexuspad.service.datamodel.EntryList;
+import com.nexuspad.service.datamodel.EntryTemplate;
+import com.nexuspad.service.datamodel.NPFolder;
+import com.nexuspad.service.util.DateUtil;
 
 import java.util.Date;
-import java.util.List;
 
-import static com.nexuspad.dataservice.ServiceConstants.CALENDAR_MODULE;
+import static com.nexuspad.service.dataservice.ServiceConstants.CALENDAR_MODULE;
+
 
 /**
  * Author: edmond
@@ -57,14 +54,14 @@ public class EventsActivity extends EntriesActivity implements EventsMonthFragme
 
 		final ActionBar actionBar = getActionBar();
 
-		final List<String> list = ImmutableList.of(getString(R.string.month), getString(R.string.agenda));
+//		final List<String> list = ImmutableList.of(getString(R.string.month), getString(R.string.agenda));
+//		final ArrayAdapter<?> adapter = new ArrayAdapter<String>(actionBar.getThemedContext(), R.layout.list_item_spinner, android.R.id.text1, list);
 
-		final ArrayAdapter<?> adapter = new ArrayAdapter<String>(actionBar.getThemedContext(), R.layout.list_item_spinner, android.R.id.text1, list);
+//		actionBar.setDisplayShowTitleEnabled(false);
+//		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 
-		actionBar.setDisplayShowTitleEnabled(false);
-		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-		actionBar.setListNavigationCallbacks(adapter, this);
-		actionBar.setSelectedNavigationItem(readDefaultView());
+//		actionBar.setListNavigationCallbacks(adapter, this);
+//		actionBar.setSelectedNavigationItem(readDefaultView());
 
 		actionBar.setDisplayHomeAsUpEnabled(true);
 	}

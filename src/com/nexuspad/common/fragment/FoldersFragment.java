@@ -16,17 +16,17 @@ import android.widget.Toast;
 import com.google.common.collect.Iterables;
 import com.nexuspad.Manifest;
 import com.nexuspad.R;
-import com.nexuspad.account.AccountManager;
+import com.nexuspad.service.account.AccountManager;
 import com.nexuspad.app.App;
 import com.nexuspad.common.activity.UpdateFolderActivity;
 import com.nexuspad.common.adapters.FolderNavigatorAdapter;
 import com.nexuspad.common.adapters.OnFolderMenuClickListener;
 import com.nexuspad.common.annotation.FragmentName;
-import com.nexuspad.datamodel.NPFolder;
-import com.nexuspad.dataservice.FolderService;
-import com.nexuspad.dataservice.FolderService.FolderReceiver;
-import com.nexuspad.dataservice.NPException;
-import com.nexuspad.dataservice.ServiceError;
+import com.nexuspad.service.datamodel.NPFolder;
+import com.nexuspad.service.dataservice.FolderService;
+import com.nexuspad.service.dataservice.FolderService.FolderReceiver;
+import com.nexuspad.service.dataservice.NPException;
+import com.nexuspad.service.dataservice.ServiceError;
 
 import java.util.List;
 

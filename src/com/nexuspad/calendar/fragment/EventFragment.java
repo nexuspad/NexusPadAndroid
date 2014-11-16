@@ -9,8 +9,8 @@ import com.nexuspad.calendar.activity.EventEditActivity;
 import com.nexuspad.common.annotation.FragmentName;
 import com.nexuspad.R;
 import com.nexuspad.app.App;
-import com.nexuspad.datamodel.NPEvent;
-import com.nexuspad.datamodel.NPFolder;
+import com.nexuspad.service.datamodel.NPEvent;
+import com.nexuspad.service.datamodel.NPFolder;
 import com.nexuspad.common.fragment.EntryFragment;
 
 import java.util.Date;

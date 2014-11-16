@@ -19,11 +19,11 @@ import com.nexuspad.R;
 import com.nexuspad.common.annotation.ModuleId;
 import com.nexuspad.app.App;
 import com.nexuspad.common.fragment.EntryEditFragment;
-import com.nexuspad.datamodel.NPDoc;
-import com.nexuspad.datamodel.EntryTemplate;
-import com.nexuspad.datamodel.NPFolder;
-import com.nexuspad.datamodel.NPUpload;
-import com.nexuspad.dataservice.ServiceConstants;
+import com.nexuspad.service.datamodel.NPDoc;
+import com.nexuspad.service.datamodel.EntryTemplate;
+import com.nexuspad.service.datamodel.NPFolder;
+import com.nexuspad.service.datamodel.NPUpload;
+import com.nexuspad.service.dataservice.ServiceConstants;
 
 import java.io.File;
 import java.util.List;

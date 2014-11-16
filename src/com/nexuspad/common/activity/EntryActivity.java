@@ -9,8 +9,8 @@ import android.view.Window;
 import com.nexuspad.R;
 import com.nexuspad.common.Constants;
 import com.nexuspad.common.fragment.EntryFragment;
-import com.nexuspad.datamodel.NPEntry;
-import com.nexuspad.datamodel.NPFolder;
+import com.nexuspad.service.datamodel.NPEntry;
+import com.nexuspad.service.datamodel.NPFolder;
 
 /**
  * @author Ren

@@ -11,9 +11,9 @@ import android.support.v4.app.Fragment;
 import com.nexuspad.R;
 import com.nexuspad.app.UploadRequest;
 import com.nexuspad.common.fragment.UploadCenterFragment;
-import com.nexuspad.datamodel.NPFolder;
-import com.nexuspad.datamodel.NPEntry;
-import com.nexuspad.dataservice.ServiceConstants;
+import com.nexuspad.service.datamodel.NPFolder;
+import com.nexuspad.service.datamodel.NPEntry;
+import com.nexuspad.service.dataservice.ServiceConstants;
 
 import java.util.ArrayList;
 import java.util.List;

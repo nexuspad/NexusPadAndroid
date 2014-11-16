@@ -13,10 +13,10 @@ import android.widget.TextView;
 import com.nexuspad.common.annotation.FragmentName;
 import com.nexuspad.R;
 import com.nexuspad.common.annotation.ModuleId;
-import com.nexuspad.datamodel.NPBookmark;
-import com.nexuspad.datamodel.EntryTemplate;
-import com.nexuspad.datamodel.NPFolder;
-import com.nexuspad.dataservice.ServiceConstants;
+import com.nexuspad.service.datamodel.NPBookmark;
+import com.nexuspad.service.datamodel.EntryTemplate;
+import com.nexuspad.service.datamodel.NPFolder;
+import com.nexuspad.service.dataservice.ServiceConstants;
 import com.nexuspad.common.fragment.EntryEditFragment;
 
 /**

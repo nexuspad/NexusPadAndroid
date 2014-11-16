@@ -18,7 +18,7 @@ import com.nexuspad.R;
 import com.nexuspad.app.UploadRequest;
 import com.nexuspad.app.service.UploadService;
 import com.nexuspad.common.annotation.FragmentName;
-import com.nexuspad.dataservice.NPUploadHelper;
+import com.nexuspad.service.dataservice.NPUploadHelper;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;

@@ -1,9 +1,9 @@
-package com.nexuspad.common.adapters;
+package com.nexuspad.common.listeners;
 
 import android.util.Log;
 import android.widget.AbsListView;
-import com.nexuspad.datamodel.NPDateRange;
-import com.nexuspad.util.DateUtil;
+import com.nexuspad.service.datamodel.NPDateRange;
+import com.nexuspad.service.util.DateUtil;
 
 /**
  * Created by ren on 8/24/14.
@@ -14,6 +14,8 @@ public abstract class OnEventListEndListener implements AbsListView.OnScrollList
 
 	private boolean mLoading = true;
 
+	private boolean mLoadingDisabled = false;
+
 	private NPDateRange mCurrentDateRange;
 	private NPDateRange mNextDateRange;
 
@@ -22,8 +24,15 @@ public abstract class OnEventListEndListener implements AbsListView.OnScrollList
 
 	@Override
 	public void onScroll(AbsListView v, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-		Log.v("EVENT SCROLL LISTENER: ", String.valueOf(mLoading) + " total:" + String.valueOf(totalItemCount)
+		Log.i("EVENT SCROLL LISTENER: ", String.valueOf(mLoading) + " total:" + String.valueOf(totalItemCount)
 				+ " visible:" + visibleItemCount + " first visible:" + firstVisibleItem);
+
+		if (mLoadingDisabled) {
+			Log.i("-------->", "no more loading....");
+			return;
+		} else {
+			Log.i("<--------", "load more....");
+		}
 
 		if (mLoading) {
 			if (mCurrentDateRange != null && mCurrentDateRange.equals(mNextDateRange)) {
@@ -59,6 +68,10 @@ public abstract class OnEventListEndListener implements AbsListView.OnScrollList
 
 	public void setCurrentDateRange(NPDateRange dateRange) {
 		mCurrentDateRange = dateRange;
+	}
+
+	public void setLoadingDisabled(boolean isDisabled) {
+		mLoadingDisabled = isDisabled;
 	}
 
 	/**

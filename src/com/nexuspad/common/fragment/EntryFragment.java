@@ -14,13 +14,13 @@ import android.view.View;
 import com.nexuspad.R;
 import com.nexuspad.app.App;
 import com.nexuspad.common.utils.Lazy;
-import com.nexuspad.core.Manifest;
-import com.nexuspad.datamodel.NPEntry;
-import com.nexuspad.datamodel.NPFolder;
-import com.nexuspad.dataservice.EntryService;
-import com.nexuspad.dataservice.EntryService.EntryReceiver;
-import com.nexuspad.dataservice.NPException;
-import com.nexuspad.dataservice.ServiceError;
+import com.nexuspad.Manifest;
+import com.nexuspad.service.datamodel.NPEntry;
+import com.nexuspad.service.datamodel.NPFolder;
+import com.nexuspad.service.dataservice.EntryService;
+import com.nexuspad.service.dataservice.EntryService.EntryReceiver;
+import com.nexuspad.service.dataservice.NPException;
+import com.nexuspad.service.dataservice.ServiceError;
 
 /**
  * You must pass in a {@code Folder} with the key {@link EntryFragment#KEY_FOLDER}
@@ -153,7 +153,7 @@ public abstract class EntryFragment<T extends NPEntry> extends DialogFragment {
 	}
 
 	/**
-	 * Calling this method will also invoke {@link NPEntry#setFolder(com.nexuspad.datamodel.NPFolder)}
+	 * Calling this method will also invoke {@link NPEntry#setFolder(com.nexuspad.service.datamodel.NPFolder)}
 	 * for the simple entry and the detail entry.
 	 */
 	public void setFolder(NPFolder folder) {
@@ -201,7 +201,7 @@ public abstract class EntryFragment<T extends NPEntry> extends DialogFragment {
 	 * <p/>
 	 * Default implementation calls {@link #updateUI()}.
 	 *
-	 * @param folder the new {@link com.nexuspad.datamodel.NPFolder}
+	 * @param folder the new {@link com.nexuspad.service.datamodel.NPFolder}
 	 * @see com.nexuspad.common.activity.FoldersNavigatorActivity
 	 */
 	protected void onFolderUpdated(NPFolder folder) {

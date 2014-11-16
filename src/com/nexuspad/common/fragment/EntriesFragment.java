@@ -21,27 +21,27 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
 import com.nexuspad.Manifest;
 import com.nexuspad.R;
-import com.nexuspad.account.AccountManager;
+import com.nexuspad.service.account.AccountManager;
 import com.nexuspad.app.App;
 import com.nexuspad.common.Constants;
 import com.nexuspad.common.activity.FoldersNavigatorActivity;
 import com.nexuspad.common.activity.UpdateFolderActivity;
 import com.nexuspad.common.adapters.EntriesAdapter;
-import com.nexuspad.common.adapters.OnPagingListEndListener;
+import com.nexuspad.common.listeners.OnPagingListEndListener;
 import com.nexuspad.common.adapters.SingleAdapter;
 import com.nexuspad.common.annotation.ModuleId;
 import com.nexuspad.common.listeners.DirectionalScrollListener;
 import com.nexuspad.common.utils.Lazy;
-import com.nexuspad.datamodel.*;
-import com.nexuspad.dataservice.*;
-import com.nexuspad.dataservice.EntryService.EntryReceiver;
+import com.nexuspad.service.datamodel.*;
+import com.nexuspad.service.dataservice.*;
+import com.nexuspad.service.dataservice.EntryService.EntryReceiver;
 import com.nexuspad.home.activity.LoginActivity;
 
 import java.util.Iterator;
 import java.util.List;
 
 import static com.google.common.base.Strings.nullToEmpty;
-import static com.nexuspad.dataservice.EntryListService.EntryListReceiver;
+import static com.nexuspad.service.dataservice.EntryListService.EntryListReceiver;
 
 /**
  * The base class for EntryList Fragments.
@@ -111,19 +111,30 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 
 				if (mEntryList == null) {
 					mEntryList = entryList;
+
+					mEntryList.setEntryUpdated(true);
+
 				} else {
 					final List<NPEntry> oldEntries = mEntryList.getEntries();
 					final List<NPEntry> newEntries = entryList.getEntries();
 
+					int sameEntryCount = 0;
 					for (NPEntry newEntry : newEntries) {
 						if (!Iterables.tryFind(oldEntries, newEntry.filterById()).isPresent()) {
 							oldEntries.add(newEntry);
 						} else {
-							Log.i("ENTRIES FRAG: ", "entry is already in the list........");
+							// entry is already in the list
+							sameEntryCount++;
 						}
 					}
 
 					mEntryList.setPageId(entryList.getPageId());
+
+					if (sameEntryCount == oldEntries.size()) {
+						mEntryList.setEntryUpdated(true);
+					} else {
+						mEntryList.setEntryUpdated(false);
+					}
 				}
 
 				if (mModuleId.moduleId() == NPModule.JOURNAL) {

@@ -7,8 +7,8 @@ import com.nexuspad.calendar.fragment.EventFragment;
 import com.nexuspad.common.Constants;
 import com.nexuspad.common.activity.EntryActivity;
 import com.nexuspad.common.annotation.ParentActivity;
-import com.nexuspad.datamodel.NPEvent;
-import com.nexuspad.datamodel.NPFolder;
+import com.nexuspad.service.datamodel.NPEvent;
+import com.nexuspad.service.datamodel.NPFolder;
 
 /**
  * Author: edmond

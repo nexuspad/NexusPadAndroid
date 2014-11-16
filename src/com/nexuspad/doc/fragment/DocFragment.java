@@ -17,9 +17,9 @@ import android.widget.TextView;
 import com.nexuspad.common.annotation.FragmentName;
 import com.nexuspad.common.utils.Lazy;
 import com.nexuspad.R;
-import com.nexuspad.datamodel.NPDoc;
-import com.nexuspad.datamodel.NPFolder;
-import com.nexuspad.datamodel.NPUpload;
+import com.nexuspad.service.datamodel.NPDoc;
+import com.nexuspad.service.datamodel.NPFolder;
+import com.nexuspad.service.datamodel.NPUpload;
 import com.nexuspad.doc.activity.DocEditActivity;
 import com.nexuspad.common.fragment.EntryFragment;
 

@@ -18,11 +18,11 @@ import android.widget.GridView;
 import com.nexuspad.R;
 import com.nexuspad.common.Constants;
 import com.nexuspad.common.activity.FoldersNavigatorActivity;
-import com.nexuspad.common.adapters.OnPagingListEndListener;
+import com.nexuspad.common.listeners.OnPagingListEndListener;
 import com.nexuspad.common.annotation.FragmentName;
 import com.nexuspad.common.annotation.ModuleId;
 import com.nexuspad.common.fragment.EntriesFragment;
-import com.nexuspad.datamodel.*;
+import com.nexuspad.service.datamodel.*;
 import com.nexuspad.photo.activity.PhotoActivity;
 import com.nexuspad.photo.activity.PhotosActivity;
 import com.nexuspad.photo.adapter.PhotosAdapter;
@@ -30,7 +30,7 @@ import com.nexuspad.photo.adapter.PhotosAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.nexuspad.dataservice.ServiceConstants.PHOTO_MODULE;
+import static com.nexuspad.service.dataservice.ServiceConstants.PHOTO_MODULE;
 
 /**
  * @author Edmond

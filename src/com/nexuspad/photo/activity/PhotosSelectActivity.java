@@ -9,7 +9,7 @@ import com.nexuspad.common.activity.SinglePaneActivity;
 import com.nexuspad.common.annotation.ParentActivity;
 import com.nexuspad.R;
 import com.nexuspad.photo.fragment.PhotoSelectFragment;
-import com.nexuspad.util.Logs;
+import com.nexuspad.service.util.Logs;
 
 import java.util.ArrayList;
 

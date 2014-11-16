@@ -25,15 +25,15 @@ import com.nexuspad.common.annotation.ModuleId;
 import com.nexuspad.common.fragment.EntryEditFragment;
 import com.nexuspad.common.view.LocationTextView;
 import com.nexuspad.contacts.activity.LocationEditActivity;
-import com.nexuspad.datamodel.*;
-import com.nexuspad.util.DateUtil;
+import com.nexuspad.service.datamodel.*;
+import com.nexuspad.service.util.DateUtil;
 
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
-import static com.nexuspad.dataservice.ServiceConstants.CALENDAR_MODULE;
+import static com.nexuspad.service.dataservice.ServiceConstants.CALENDAR_MODULE;
 
 /**
  * Author: edmond

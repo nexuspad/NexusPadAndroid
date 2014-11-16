@@ -6,7 +6,7 @@ package com.nexuspad.home.activity;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import com.nexuspad.common.activity.SinglePaneActivity;
-import com.nexuspad.datamodel.NPUser;
+import com.nexuspad.service.datamodel.NPUser;
 import com.nexuspad.home.fragment.LoginFragment;
 
 /**

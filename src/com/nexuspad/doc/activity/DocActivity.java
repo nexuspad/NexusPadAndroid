@@ -9,8 +9,8 @@ import android.support.v4.app.Fragment;
 import com.nexuspad.common.Constants;
 import com.nexuspad.common.activity.EntryActivity;
 import com.nexuspad.common.annotation.ParentActivity;
-import com.nexuspad.datamodel.NPDoc;
-import com.nexuspad.datamodel.NPFolder;
+import com.nexuspad.service.datamodel.NPDoc;
+import com.nexuspad.service.datamodel.NPFolder;
 import com.nexuspad.doc.fragment.DocFragment;
 
 /**

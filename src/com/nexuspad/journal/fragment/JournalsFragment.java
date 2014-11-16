@@ -16,17 +16,17 @@ import android.view.ViewGroup;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.nexuspad.R;
-import com.nexuspad.account.AccountManager;
+import com.nexuspad.service.account.AccountManager;
 import com.nexuspad.app.App;
 import com.nexuspad.common.annotation.FragmentName;
 import com.nexuspad.common.annotation.ModuleId;
 import com.nexuspad.common.fragment.EntriesFragment;
-import com.nexuspad.datamodel.*;
-import com.nexuspad.dataservice.EntryService;
-import com.nexuspad.dataservice.JournalService;
-import com.nexuspad.dataservice.NPException;
-import com.nexuspad.dataservice.ServiceConstants;
-import com.nexuspad.util.DateUtil;
+import com.nexuspad.service.datamodel.*;
+import com.nexuspad.service.dataservice.EntryService;
+import com.nexuspad.service.dataservice.JournalService;
+import com.nexuspad.service.dataservice.NPException;
+import com.nexuspad.service.dataservice.ServiceConstants;
+import com.nexuspad.service.util.DateUtil;
 
 import java.util.*;
 
@@ -115,13 +115,10 @@ public class JournalsFragment extends EntriesFragment {
 
 	public void setDisplayDate(long date) {
 		Log.i(TAG, "setDisplayDate is called...........");
-		final Date target = new Date(date);
-		if (mStartDate.compareTo(target) <= 0 && target.compareTo(mEndDate) <= 0) {
-			final int daysDiff = DateUtil.daysBetween(mStartDate, target);
-			if (mViewPager != null) {
-				mViewPager.setCurrentItem(daysDiff, false);  // mStartDate is at 0, daysDiff is the index
-			}
-		}
+		Date selectedDate = new Date(date);
+		mStartDate = DateUtil.addDaysTo(selectedDate, -1);
+		mEndDate = DateUtil.addDaysTo(selectedDate, 1);
+		queryEntriesAsync();
 	}
 
 	/**
@@ -129,9 +126,11 @@ public class JournalsFragment extends EntriesFragment {
 	 */
 	@Override
 	protected void queryEntriesAsync() {
-		Date today = DateUtil.now();
-		mStartDate = DateUtil.addDaysTo(today, -1);
-		mEndDate = DateUtil.addDaysTo(today, 1);
+		if (mStartDate == null) {
+			Date today = DateUtil.now();
+			mStartDate = DateUtil.addDaysTo(today, -1);
+			mEndDate = DateUtil.addDaysTo(today, 1);
+		}
 
 		try {
 			mFolder.setOwner(AccountManager.currentAccount());

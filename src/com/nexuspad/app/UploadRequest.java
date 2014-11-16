@@ -7,9 +7,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
-import com.nexuspad.datamodel.NPFolder;
-import com.nexuspad.datamodel.NPEntry;
-import com.nexuspad.dataservice.NPUploadHelper;
+import com.nexuspad.service.datamodel.NPFolder;
+import com.nexuspad.service.datamodel.NPEntry;
+import com.nexuspad.service.dataservice.NPUploadHelper;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -113,7 +113,7 @@ public class UploadRequest {
     }
 
     /**
-     * @return a {@link com.nexuspad.datamodel.NPFolder} if {@link #getTarget()} is {@link Target#FOLDER}; null otherwise
+     * @return a {@link com.nexuspad.service.datamodel.NPFolder} if {@link #getTarget()} is {@link Target#FOLDER}; null otherwise
      */
     public NPFolder getFolder() {
         return mFolder;

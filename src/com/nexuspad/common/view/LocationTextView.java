@@ -5,7 +5,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.widget.TextView;
-import com.nexuspad.datamodel.Location;
+import com.nexuspad.service.datamodel.Location;
 
 public class LocationTextView extends TextView {
 	/**

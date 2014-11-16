@@ -16,8 +16,8 @@ import com.nexuspad.R;
 import com.nexuspad.common.annotation.ModuleId;
 import com.nexuspad.app.App;
 import com.nexuspad.contacts.activity.ContactEditActivity;
-import com.nexuspad.datamodel.*;
-import com.nexuspad.dataservice.ServiceConstants;
+import com.nexuspad.service.datamodel.*;
+import com.nexuspad.service.dataservice.ServiceConstants;
 import com.nexuspad.common.fragment.EntryFragment;
 
 import java.util.List;

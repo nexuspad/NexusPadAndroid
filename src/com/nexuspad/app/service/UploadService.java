@@ -6,8 +6,8 @@ import android.os.Binder;
 import android.os.IBinder;
 import com.google.common.collect.Lists;
 import com.nexuspad.app.UploadRequest;
-import com.nexuspad.dataservice.EntryUploadService;
-import com.nexuspad.dataservice.NPUploadHelper;
+import com.nexuspad.service.dataservice.EntryUploadService;
+import com.nexuspad.service.dataservice.NPUploadHelper;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;

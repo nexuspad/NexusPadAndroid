@@ -12,15 +12,15 @@ import android.widget.TextView;
 import com.nexuspad.R;
 import com.nexuspad.common.annotation.ModuleId;
 import com.nexuspad.common.fragment.EntryEditFragment;
-import com.nexuspad.datamodel.EntryTemplate;
-import com.nexuspad.datamodel.NPFolder;
-import com.nexuspad.datamodel.NPJournal;
-import com.nexuspad.datamodel.NPModule;
-import com.nexuspad.util.DateUtil;
+import com.nexuspad.service.datamodel.EntryTemplate;
+import com.nexuspad.service.datamodel.NPFolder;
+import com.nexuspad.service.datamodel.NPJournal;
+import com.nexuspad.service.datamodel.NPModule;
+import com.nexuspad.service.util.DateUtil;
 
 import java.util.Date;
 
-import static com.nexuspad.dataservice.ServiceConstants.JOURNAL_MODULE;
+import static com.nexuspad.service.dataservice.ServiceConstants.JOURNAL_MODULE;
 
 /**
  * User: edmond

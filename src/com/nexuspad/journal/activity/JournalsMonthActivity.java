@@ -5,12 +5,12 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.widget.CalendarView;
 import com.nexuspad.common.activity.SinglePaneActivity;
-import com.nexuspad.datamodel.EntryList;
+import com.nexuspad.service.datamodel.EntryList;
 import com.nexuspad.journal.fragment.JournalMonthFragment;
 import com.nexuspad.common.fragment.EntriesFragment;
 
 /**
- * User: edmond
+ * Deprecated.
  */
 public class JournalsMonthActivity extends SinglePaneActivity implements
 		EntriesFragment.ActivityCallback,

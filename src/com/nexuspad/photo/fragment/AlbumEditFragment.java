@@ -20,12 +20,12 @@ import com.nexuspad.common.activity.UploadCenterActivity;
 import com.nexuspad.common.annotation.FragmentName;
 import com.nexuspad.common.fragment.EntryEditFragment;
 import com.nexuspad.common.utils.Lazy;
-import com.nexuspad.datamodel.EntryTemplate;
-import com.nexuspad.datamodel.NPAlbum;
-import com.nexuspad.datamodel.NPFolder;
-import com.nexuspad.datamodel.NPUpload;
-import com.nexuspad.dataservice.EntryUploadService;
-import com.nexuspad.dataservice.ServiceConstants;
+import com.nexuspad.service.datamodel.EntryTemplate;
+import com.nexuspad.service.datamodel.NPAlbum;
+import com.nexuspad.service.datamodel.NPFolder;
+import com.nexuspad.service.datamodel.NPUpload;
+import com.nexuspad.service.dataservice.EntryUploadService;
+import com.nexuspad.service.dataservice.ServiceConstants;
 import com.nexuspad.photo.activity.PhotosSelectActivity;
 import com.squareup.picasso.Picasso;
 

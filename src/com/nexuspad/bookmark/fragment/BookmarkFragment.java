@@ -16,8 +16,8 @@ import android.widget.Toast;
 import com.nexuspad.R;
 import com.nexuspad.app.App;
 import com.nexuspad.common.fragment.EntryFragment;
-import com.nexuspad.datamodel.NPBookmark;
-import com.nexuspad.datamodel.NPFolder;
+import com.nexuspad.service.datamodel.NPBookmark;
+import com.nexuspad.service.datamodel.NPFolder;
 
 /**
  * @author Edmond

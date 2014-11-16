@@ -10,8 +10,8 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import com.nexuspad.R;
 import com.nexuspad.common.fragment.FoldersFragment;
-import com.nexuspad.datamodel.NPFolder;
-import com.nexuspad.dataservice.FolderService;
+import com.nexuspad.service.datamodel.NPFolder;
+import com.nexuspad.service.dataservice.FolderService;
 
 /**
  * @author Edmond

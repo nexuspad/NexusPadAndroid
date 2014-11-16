@@ -7,7 +7,7 @@ import android.support.v4.app.Fragment;
 import com.nexuspad.calendar.fragment.RecurrenceEditFragment;
 import com.nexuspad.common.activity.DoneDiscardActivity;
 import com.nexuspad.common.annotation.ParentActivity;
-import com.nexuspad.datamodel.Recurrence;
+import com.nexuspad.service.datamodel.Recurrence;
 
 /**
  * Created by ren on 8/3/14.

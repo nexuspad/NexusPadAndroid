@@ -9,15 +9,15 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import com.nexuspad.R;
-import com.nexuspad.account.AccountManager;
+import com.nexuspad.service.account.AccountManager;
 import com.nexuspad.bookmark.activity.BookmarksActivity;
 import com.nexuspad.calendar.activity.EventsActivity;
 import com.nexuspad.common.activity.SinglePaneActivity;
 import com.nexuspad.common.activity.UploadCenterActivity;
 import com.nexuspad.contacts.activity.ContactsActivity;
-import com.nexuspad.datamodel.NPFolder;
-import com.nexuspad.datamodel.NPModule;
-import com.nexuspad.dataservice.NPException;
+import com.nexuspad.service.datamodel.NPFolder;
+import com.nexuspad.service.datamodel.NPModule;
+import com.nexuspad.service.dataservice.NPException;
 import com.nexuspad.doc.activity.DocsActivity;
 import com.nexuspad.home.fragment.DashboardFragment;
 import com.nexuspad.journal.activity.JournalsActivity;
@@ -26,7 +26,7 @@ import com.nexuspad.photo.activity.PhotosActivity;
 import java.io.File;
 import java.util.ArrayList;
 
-import static com.nexuspad.dataservice.ServiceConstants.*;
+import static com.nexuspad.service.dataservice.ServiceConstants.*;
 
 /**
  * @author Edmond

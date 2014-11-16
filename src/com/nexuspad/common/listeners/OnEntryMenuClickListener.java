@@ -10,8 +10,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.PopupMenu;
 import com.nexuspad.R;
-import com.nexuspad.datamodel.NPEntry;
-import com.nexuspad.dataservice.EntryService;
+import com.nexuspad.service.datamodel.NPEntry;
+import com.nexuspad.service.dataservice.EntryService;
 import com.nexuspad.common.utils.UndoBarController;
 
 /**

@@ -18,8 +18,8 @@ import com.nexuspad.common.annotation.ModuleId;
 import com.nexuspad.common.annotation.FragmentName;
 import com.nexuspad.common.fragment.EntryEditFragment;
 import com.nexuspad.contacts.activity.LocationEditActivity;
-import com.nexuspad.datamodel.*;
-import com.nexuspad.dataservice.ServiceConstants;
+import com.nexuspad.service.datamodel.*;
+import com.nexuspad.service.dataservice.ServiceConstants;
 
 /**
  * Author: edmond

@@ -21,8 +21,8 @@ import com.nexuspad.common.annotation.ModuleId;
 import com.nexuspad.common.activity.EntriesActivity;
 import com.nexuspad.common.activity.UploadCenterActivity;
 import com.nexuspad.common.annotation.ParentActivity;
-import com.nexuspad.datamodel.EntryTemplate;
-import com.nexuspad.datamodel.NPFolder;
+import com.nexuspad.service.datamodel.EntryTemplate;
+import com.nexuspad.service.datamodel.NPFolder;
 import com.nexuspad.home.activity.DashboardActivity;
 import com.nexuspad.photo.fragment.AlbumsFragment;
 import com.nexuspad.photo.fragment.PhotosFragment;
@@ -30,7 +30,7 @@ import com.nexuspad.photo.fragment.PhotosFragment;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.nexuspad.dataservice.ServiceConstants.PHOTO_MODULE;
+import static com.nexuspad.service.dataservice.ServiceConstants.PHOTO_MODULE;
 
 /**
  * @author Edmond

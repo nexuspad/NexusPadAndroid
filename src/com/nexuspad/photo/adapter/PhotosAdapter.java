@@ -8,11 +8,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import com.nexuspad.R;
 import com.nexuspad.common.adapters.EntriesAdapter;
-import com.nexuspad.datamodel.EntryList;
-import com.nexuspad.datamodel.EntryTemplate;
-import com.nexuspad.datamodel.NPFolder;
-import com.nexuspad.datamodel.NPPhoto;
-import com.nexuspad.dataservice.EntryListService;
+import com.nexuspad.service.datamodel.EntryList;
+import com.nexuspad.service.datamodel.EntryTemplate;
+import com.nexuspad.service.datamodel.NPFolder;
+import com.nexuspad.service.datamodel.NPPhoto;
+import com.nexuspad.service.dataservice.EntryListService;
 import com.squareup.picasso.Picasso;
 
 public class PhotosAdapter extends EntriesAdapter<NPPhoto> {

@@ -1,7 +1,7 @@
 /*
  * Copyright (C), NexusPad LLC
  */
-package com.nexuspad.common.adapters;
+package com.nexuspad.common.listeners;
 
 import android.util.Log;
 import android.widget.AbsListView;

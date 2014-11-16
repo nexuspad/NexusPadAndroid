@@ -13,8 +13,8 @@ import android.widget.PopupMenu;
 import com.nexuspad.R;
 import com.nexuspad.common.activity.UpdateFolderActivity;
 import com.nexuspad.common.utils.UndoBarController;
-import com.nexuspad.datamodel.NPFolder;
-import com.nexuspad.dataservice.FolderService;
+import com.nexuspad.service.datamodel.NPFolder;
+import com.nexuspad.service.dataservice.FolderService;
 
 
 public class OnFolderMenuClickListener implements OnClickListener {
@@ -44,7 +44,7 @@ public class OnFolderMenuClickListener implements OnClickListener {
     }
 
     /**
-     * You must call {@link #onFolderClick(com.nexuspad.datamodel.NPFolder, int, View)} if you are using
+     * You must call {@link #onFolderClick(com.nexuspad.service.datamodel.NPFolder, int, View)} if you are using
      * your own implementation.
      */
     @Override

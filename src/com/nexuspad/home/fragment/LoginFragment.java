@@ -17,9 +17,9 @@ import com.nexuspad.common.annotation.FragmentName;
 import com.nexuspad.common.view.LoadingViews;
 import com.nexuspad.common.utils.Lazy;
 import com.nexuspad.R;
-import com.nexuspad.account.AccountManager;
+import com.nexuspad.service.account.AccountManager;
 import com.nexuspad.app.App;
-import com.nexuspad.datamodel.NPUser;
+import com.nexuspad.service.datamodel.NPUser;
 
 /**
  * A {@code Fragment} that handles both login and signup.

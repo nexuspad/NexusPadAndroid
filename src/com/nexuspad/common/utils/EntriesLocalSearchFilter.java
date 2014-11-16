@@ -3,8 +3,8 @@ package com.nexuspad.common.utils;
 import android.text.TextUtils;
 import android.widget.Filter;
 import com.nexuspad.app.App;
-import com.nexuspad.datamodel.EntryList;
-import com.nexuspad.datamodel.NPEntry;
+import com.nexuspad.service.datamodel.EntryList;
+import com.nexuspad.service.datamodel.NPEntry;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;

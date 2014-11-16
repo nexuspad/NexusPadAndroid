@@ -20,12 +20,12 @@ import com.nexuspad.common.annotation.FragmentName;
 import com.nexuspad.common.annotation.ModuleId;
 import com.nexuspad.common.fragment.EntriesFragment;
 import com.nexuspad.common.view.ZoomableImageView;
-import com.nexuspad.datamodel.EntryTemplate;
-import com.nexuspad.datamodel.NPFolder;
-import com.nexuspad.datamodel.NPPhoto;
-import com.nexuspad.dataservice.NPException;
-import com.nexuspad.dataservice.NPWebServiceUtil;
-import com.nexuspad.dataservice.ServiceConstants;
+import com.nexuspad.service.datamodel.EntryTemplate;
+import com.nexuspad.service.datamodel.NPFolder;
+import com.nexuspad.service.datamodel.NPPhoto;
+import com.nexuspad.service.dataservice.NPException;
+import com.nexuspad.service.dataservice.NPWebServiceUtil;
+import com.nexuspad.service.dataservice.ServiceConstants;
 import com.squareup.picasso.Picasso;
 import uk.co.senab.photoview.PhotoViewAttacher;
 

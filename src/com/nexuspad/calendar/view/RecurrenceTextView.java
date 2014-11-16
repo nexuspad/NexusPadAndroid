@@ -5,7 +5,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.widget.TextView;
-import com.nexuspad.datamodel.Recurrence;
+import com.nexuspad.service.datamodel.Recurrence;
 
 /**
  * Created by ren on 8/5/14.

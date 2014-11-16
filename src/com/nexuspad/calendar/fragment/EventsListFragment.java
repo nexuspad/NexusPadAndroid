@@ -14,23 +14,23 @@ import android.widget.ListView;
 import android.widget.TextView;
 import com.google.common.base.Strings;
 import com.nexuspad.R;
-import com.nexuspad.account.AccountManager;
+import com.nexuspad.service.account.AccountManager;
 import com.nexuspad.calendar.activity.EventActivity;
 import com.nexuspad.calendar.activity.EventEditActivity;
 import com.nexuspad.calendar.activity.EventsActivity;
 import com.nexuspad.common.activity.FoldersNavigatorActivity;
 import com.nexuspad.common.adapters.EntriesAdapter;
 import com.nexuspad.common.adapters.ListViewHolder;
-import com.nexuspad.common.adapters.OnEventListEndListener;
+import com.nexuspad.common.listeners.OnEventListEndListener;
 import com.nexuspad.common.annotation.FragmentName;
 import com.nexuspad.common.annotation.ModuleId;
 import com.nexuspad.common.fragment.EntriesFragment;
 import com.nexuspad.common.listeners.OnEntryMenuClickListener;
-import com.nexuspad.datamodel.*;
-import com.nexuspad.dataservice.EntryListService;
-import com.nexuspad.dataservice.NPException;
-import com.nexuspad.dataservice.ServiceConstants;
-import com.nexuspad.util.DateUtil;
+import com.nexuspad.service.datamodel.*;
+import com.nexuspad.service.dataservice.EntryListService;
+import com.nexuspad.service.dataservice.NPException;
+import com.nexuspad.service.dataservice.ServiceConstants;
+import com.nexuspad.service.util.DateUtil;
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
@@ -115,6 +115,7 @@ public class EventsListFragment extends EntriesFragment {
 
 		// Set the scroll listener for loading more
 		Log.i(TAG, "The initial date range is: " + mDateRange);
+
 		mLoadMoreScrollListener.setCurrentDateRange(mDateRange);
 		mStickyHeaderEventListView.setOnScrollListener(newDirectionalScrollListener(mLoadMoreScrollListener));
 
@@ -134,6 +135,8 @@ public class EventsListFragment extends EntriesFragment {
 		mStickyHeaderEventListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
 		queryEntriesAsync();
+
+		mLoadMoreScrollListener.setLoadingDisabled(false);
 	}
 
 	@Override
@@ -201,6 +204,10 @@ public class EventsListFragment extends EntriesFragment {
 //		scrollToStartTime(mEventList);
 
 		mLoadMoreScrollListener.reset();
+
+		if (!entryList.isEntryUpdated()) {
+			mLoadMoreScrollListener.setLoadingDisabled(true);
+		}
 	}
 
 

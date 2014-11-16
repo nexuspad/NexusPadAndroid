@@ -14,13 +14,13 @@ import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
 import com.nexuspad.R;
 import com.nexuspad.about.activity.AboutActivity;
-import com.nexuspad.account.AccountManager;
+import com.nexuspad.service.account.AccountManager;
 import com.nexuspad.app.App;
 import com.nexuspad.common.annotation.FragmentName;
-import com.nexuspad.dataservice.ServiceConstants;
+import com.nexuspad.service.dataservice.ServiceConstants;
 import com.nexuspad.home.activity.LoginActivity;
 
-import static com.nexuspad.dataservice.ServiceConstants.*;
+import static com.nexuspad.service.dataservice.ServiceConstants.*;
 
 /**
  * @author Edmond

@@ -26,9 +26,9 @@ import com.nexuspad.common.utils.EntriesLocalSearchFilter;
 import com.nexuspad.contacts.activity.ContactActivity;
 import com.nexuspad.contacts.activity.ContactEditActivity;
 import com.nexuspad.contacts.activity.ContactsActivity;
-import com.nexuspad.datamodel.*;
-import com.nexuspad.dataservice.EntryListService;
-import com.nexuspad.dataservice.ServiceConstants;
+import com.nexuspad.service.datamodel.*;
+import com.nexuspad.service.dataservice.EntryListService;
+import com.nexuspad.service.dataservice.ServiceConstants;
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 

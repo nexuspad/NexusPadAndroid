@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.*;
 import android.widget.AdapterView.OnItemLongClickListener;
 import com.nexuspad.R;
-import com.nexuspad.datamodel.NPFolder;
+import com.nexuspad.service.datamodel.NPFolder;
 
 import java.util.List;
 

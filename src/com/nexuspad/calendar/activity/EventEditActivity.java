@@ -7,11 +7,11 @@ import com.nexuspad.calendar.fragment.EventEditFragment;
 import com.nexuspad.common.activity.EntryEditActivity;
 import com.nexuspad.common.annotation.ParentActivity;
 import com.nexuspad.common.annotation.ModuleId;
-import com.nexuspad.datamodel.EntryTemplate;
-import com.nexuspad.datamodel.NPEvent;
-import com.nexuspad.datamodel.NPFolder;
+import com.nexuspad.service.datamodel.EntryTemplate;
+import com.nexuspad.service.datamodel.NPEvent;
+import com.nexuspad.service.datamodel.NPFolder;
 
-import static com.nexuspad.dataservice.ServiceConstants.CALENDAR_MODULE;
+import static com.nexuspad.service.dataservice.ServiceConstants.CALENDAR_MODULE;
 
 /**
  * Author: edmond

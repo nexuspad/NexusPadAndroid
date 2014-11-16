@@ -8,7 +8,7 @@ import android.support.v4.app.Fragment;
 import android.widget.Toast;
 import com.nexuspad.common.activity.SinglePaneActivity;
 import com.nexuspad.R;
-import com.nexuspad.datamodel.NPUser;
+import com.nexuspad.service.datamodel.NPUser;
 import com.nexuspad.home.fragment.MainFragment;
 
 /**

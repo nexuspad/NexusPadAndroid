@@ -10,10 +10,10 @@ import com.nexuspad.bookmark.fragment.BookmarksFragment;
 import com.nexuspad.common.Constants;
 import com.nexuspad.common.activity.EntriesActivity;
 import com.nexuspad.common.annotation.ModuleId;
-import com.nexuspad.datamodel.EntryTemplate;
-import com.nexuspad.datamodel.NPBookmark;
-import com.nexuspad.datamodel.NPFolder;
-import com.nexuspad.dataservice.ServiceConstants;
+import com.nexuspad.service.datamodel.EntryTemplate;
+import com.nexuspad.service.datamodel.NPBookmark;
+import com.nexuspad.service.datamodel.NPFolder;
+import com.nexuspad.service.dataservice.ServiceConstants;
 
 /**
  * @author Edmond

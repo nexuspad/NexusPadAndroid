@@ -11,9 +11,9 @@ import com.nexuspad.common.Constants;
 import com.nexuspad.common.activity.SinglePaneActivity;
 import com.nexuspad.common.annotation.ParentActivity;
 import com.nexuspad.common.fragment.EntriesFragment;
-import com.nexuspad.datamodel.EntryList;
-import com.nexuspad.datamodel.NPFolder;
-import com.nexuspad.datamodel.NPPhoto;
+import com.nexuspad.service.datamodel.EntryList;
+import com.nexuspad.service.datamodel.NPFolder;
+import com.nexuspad.service.datamodel.NPPhoto;
 import com.nexuspad.photo.fragment.PhotoFragment;
 
 import java.util.ArrayList;

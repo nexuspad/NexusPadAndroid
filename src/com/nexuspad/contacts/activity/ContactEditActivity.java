@@ -7,10 +7,10 @@ import com.nexuspad.common.activity.EntryEditActivity;
 import com.nexuspad.common.annotation.ParentActivity;
 import com.nexuspad.common.annotation.ModuleId;
 import com.nexuspad.contacts.fragment.ContactEditFragment;
-import com.nexuspad.datamodel.NPFolder;
-import com.nexuspad.datamodel.NPPerson;
-import com.nexuspad.datamodel.EntryTemplate;
-import com.nexuspad.dataservice.ServiceConstants;
+import com.nexuspad.service.datamodel.NPFolder;
+import com.nexuspad.service.datamodel.NPPerson;
+import com.nexuspad.service.datamodel.EntryTemplate;
+import com.nexuspad.service.dataservice.ServiceConstants;
 
 /**
  * Author: edmond

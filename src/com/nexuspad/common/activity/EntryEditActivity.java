@@ -9,9 +9,9 @@ import com.nexuspad.R;
 import com.nexuspad.common.annotation.ModuleId;
 import com.nexuspad.common.fragment.EntryEditFragment;
 import com.nexuspad.common.fragment.EntryFragment;
-import com.nexuspad.datamodel.NPEntry;
-import com.nexuspad.datamodel.NPFolder;
-import com.nexuspad.dataservice.ServiceConstants;
+import com.nexuspad.service.datamodel.NPEntry;
+import com.nexuspad.service.datamodel.NPFolder;
+import com.nexuspad.service.dataservice.ServiceConstants;
 
 /**
  * An {@code Activity} with done/discard {@code ActionBar} enabled.

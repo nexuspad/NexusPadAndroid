@@ -7,7 +7,7 @@ import android.support.v4.app.Fragment;
 import com.nexuspad.common.activity.DoneDiscardActivity;
 import com.nexuspad.common.annotation.ParentActivity;
 import com.nexuspad.contacts.fragment.LocationEditFragment;
-import com.nexuspad.datamodel.Location;
+import com.nexuspad.service.datamodel.Location;
 
 /**
  * Author: edmond

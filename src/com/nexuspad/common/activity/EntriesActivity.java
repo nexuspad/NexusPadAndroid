@@ -10,9 +10,9 @@ import com.nexuspad.R;
 import com.nexuspad.common.Constants;
 import com.nexuspad.common.annotation.ModuleId;
 import com.nexuspad.common.fragment.EntriesFragment;
-import com.nexuspad.datamodel.EntryList;
-import com.nexuspad.datamodel.NPFolder;
-import com.nexuspad.dataservice.ServiceConstants;
+import com.nexuspad.service.datamodel.EntryList;
+import com.nexuspad.service.datamodel.NPFolder;
+import com.nexuspad.service.dataservice.ServiceConstants;
 
 /**
  * You must annotate the class with {@link ModuleId}.

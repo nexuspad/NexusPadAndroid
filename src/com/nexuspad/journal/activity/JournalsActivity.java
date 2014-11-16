@@ -4,27 +4,34 @@
 package com.nexuspad.journal.activity;
 
 import android.app.ActionBar;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import com.nexuspad.common.Constants;
-import com.nexuspad.common.annotation.ParentActivity;
+import android.widget.DatePicker;
 import com.nexuspad.R;
+import com.nexuspad.common.Constants;
+import com.nexuspad.common.activity.EntriesActivity;
 import com.nexuspad.common.annotation.ModuleId;
-import com.nexuspad.datamodel.EntryTemplate;
-import com.nexuspad.datamodel.NPFolder;
-import com.nexuspad.datamodel.NPJournal;
-import com.nexuspad.dataservice.ServiceConstants;
+import com.nexuspad.common.annotation.ParentActivity;
+import com.nexuspad.common.fragment.EntryFragment;
 import com.nexuspad.home.activity.DashboardActivity;
 import com.nexuspad.journal.fragment.JournalEditFragment;
 import com.nexuspad.journal.fragment.JournalsFragment;
-import com.nexuspad.common.activity.EntriesActivity;
-import com.nexuspad.common.fragment.EntryFragment;
+import com.nexuspad.service.datamodel.EntryTemplate;
+import com.nexuspad.service.datamodel.NPFolder;
+import com.nexuspad.service.datamodel.NPJournal;
+import com.nexuspad.service.dataservice.ServiceConstants;
+import com.nexuspad.service.util.DateUtil;
 
 import java.text.DateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * @author Edmond
@@ -40,10 +47,39 @@ public class JournalsActivity extends EntriesActivity implements JournalsFragmen
 	private DateFormat mDateFormat;
 	private long mPendingDisplayDate = -1;
 
+	public class DatePickerFragment extends DialogFragment
+			implements DatePickerDialog.OnDateSetListener {
+
+		@Override
+		public Dialog onCreateDialog(Bundle savedInstanceState) {
+			// Use the current date as the default date in the picker
+			final Calendar c = Calendar.getInstance();
+			int year = c.get(Calendar.YEAR);
+			int month = c.get(Calendar.MONTH);
+			int day = c.get(Calendar.DAY_OF_MONTH);
+
+			// Create a new instance of DatePickerDialog and return it
+			return new DatePickerDialog(getActivity(), this, year, month, day);
+		}
+
+		/**
+		 * Handles date selected.
+		 *
+		 * @param view
+		 * @param year
+		 * @param month
+		 * @param day
+		 */
+		public void onDateSet(DatePicker view, int year, int month, int day) {
+			Date selectedDate = DateUtil.getDate(year, month, day);
+			getFragment().setDisplayDate(selectedDate.getTime());
+		}
+	}
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
-		getMenuInflater().inflate(R.menu.journals_activity, menu);
+		getMenuInflater().inflate(R.menu.journals_topmenu, menu);
 		return true;
 	}
 
@@ -51,8 +87,12 @@ public class JournalsActivity extends EntriesActivity implements JournalsFragmen
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.menu_month:
-				final Intent intent = new Intent(this, JournalsMonthActivity.class);
-				startActivityForResult(intent, DATE_SELECTOR_REQUEST);
+//				final Intent intent = new Intent(this, JournalsMonthActivity.class);
+//				startActivityForResult(intent, DATE_SELECTOR_REQUEST);
+
+				DialogFragment datePickerFragment = new DatePickerFragment();
+				datePickerFragment.show(getSupportFragmentManager(), "datePicker");
+
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
@@ -129,12 +169,14 @@ public class JournalsActivity extends EntriesActivity implements JournalsFragmen
 	}
 
 	@Override
-	public void onJournalSelected(JournalsFragment f, String dateString) {
-		Log.i(TAG, "Update action bar title to: " + dateString);
+	public void onJournalSelected(JournalsFragment f, String ymd) {
+		Log.i(TAG, "Update action bar title to: " + ymd);
+
+		Date d = DateUtil.parseFromYYYYMMDD(ymd);
 
 		final ActionBar actionBar = getActionBar();
 		if (actionBar != null) {
-			actionBar.setSubtitle(dateString);
+			actionBar.setSubtitle(android.text.format.DateFormat.getDateFormat(this).format(d));
 		}
 	}
 }

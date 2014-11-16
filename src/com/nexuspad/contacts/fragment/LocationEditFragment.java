@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import com.nexuspad.R;
 import com.nexuspad.common.annotation.FragmentName;
-import com.nexuspad.datamodel.Location;
+import com.nexuspad.service.datamodel.Location;
 
 /**
  * Author: edmond

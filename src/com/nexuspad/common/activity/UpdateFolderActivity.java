@@ -9,11 +9,11 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import com.nexuspad.R;
-import com.nexuspad.account.AccountManager;
+import com.nexuspad.service.account.AccountManager;
 import com.nexuspad.common.fragment.UpdateFolderFragment;
-import com.nexuspad.datamodel.NPFolder;
-import com.nexuspad.dataservice.FolderService;
-import com.nexuspad.dataservice.NPException;
+import com.nexuspad.service.datamodel.NPFolder;
+import com.nexuspad.service.dataservice.FolderService;
+import com.nexuspad.service.dataservice.NPException;
 
 /**
  * @author Edmond

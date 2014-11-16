@@ -36,6 +36,7 @@
     <uses-permission android:name="com.nexuspad.core.permission.RECEIVE_ENTRY_LIST" />
     <uses-permission android:name="com.nexuspad.core.permission.RECEIVE_ACCOUNT_INFO" />
 
+
     <application
         android:name=".app.App"
         android:allowBackup="true"

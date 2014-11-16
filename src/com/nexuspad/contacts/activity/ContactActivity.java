@@ -8,8 +8,8 @@ import com.nexuspad.common.Constants;
 import com.nexuspad.common.activity.EntryActivity;
 import com.nexuspad.common.annotation.ParentActivity;
 import com.nexuspad.contacts.fragment.ContactFragment;
-import com.nexuspad.datamodel.NPFolder;
-import com.nexuspad.datamodel.NPPerson;
+import com.nexuspad.service.datamodel.NPFolder;
+import com.nexuspad.service.datamodel.NPPerson;
 
 /**
  * Author: edmond

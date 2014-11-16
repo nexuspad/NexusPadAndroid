@@ -12,12 +12,12 @@ import android.widget.*;
 import android.widget.AdapterView.OnItemLongClickListener;
 import com.google.common.base.Strings;
 import com.nexuspad.R;
-import com.nexuspad.datamodel.EntryList;
-import com.nexuspad.datamodel.EntryTemplate;
-import com.nexuspad.datamodel.NPEntry;
-import com.nexuspad.datamodel.NPFolder;
-import com.nexuspad.dataservice.EntryListService;
-import com.nexuspad.dataservice.NPException;
+import com.nexuspad.service.datamodel.EntryList;
+import com.nexuspad.service.datamodel.EntryTemplate;
+import com.nexuspad.service.datamodel.NPEntry;
+import com.nexuspad.service.datamodel.NPFolder;
+import com.nexuspad.service.dataservice.EntryListService;
+import com.nexuspad.service.dataservice.NPException;
 
 /**
  * Common Adapter to be used in entries list view.
