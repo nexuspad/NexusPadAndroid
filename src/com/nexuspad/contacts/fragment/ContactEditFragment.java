@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.nexuspad.R;
+import com.nexuspad.common.Constants;
 import com.nexuspad.common.annotation.ModuleId;
 import com.nexuspad.common.annotation.FragmentName;
 import com.nexuspad.common.fragment.EntryEditFragment;
@@ -31,8 +32,8 @@ public class ContactEditFragment extends EntryEditFragment<NPPerson> {
 
 	public static ContactEditFragment of(NPPerson contact, NPFolder folder) {
 		final Bundle bundle = new Bundle();
-		bundle.putParcelable(KEY_ENTRY, contact);
-		bundle.putParcelable(KEY_FOLDER, folder);
+		bundle.putParcelable(Constants.KEY_ENTRY, contact);
+		bundle.putParcelable(Constants.KEY_FOLDER, folder);
 
 		final ContactEditFragment fragment = new ContactEditFragment();
 		fragment.setArguments(bundle);

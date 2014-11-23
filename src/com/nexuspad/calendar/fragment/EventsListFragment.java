@@ -142,7 +142,7 @@ public class EventsListFragment extends EntriesFragment {
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
-		inflater.inflate(R.menu.events_frag, menu);
+		inflater.inflate(R.menu.events_topmenu, menu);
 		setUpSearchView(menu.findItem(R.id.search));
 	}
 

@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.nexuspad.R;
 import com.nexuspad.app.App;
+import com.nexuspad.common.Constants;
 import com.nexuspad.common.fragment.EntryFragment;
 import com.nexuspad.service.datamodel.NPBookmark;
 import com.nexuspad.service.datamodel.NPFolder;
@@ -27,8 +28,8 @@ public class BookmarkFragment extends EntryFragment<NPBookmark> {
 
     public static BookmarkFragment of(NPBookmark bookmark, NPFolder f) {
         Bundle bundle = new Bundle();
-        bundle.putParcelable(KEY_ENTRY, bookmark);
-        bundle.putParcelable(KEY_FOLDER, f);
+        bundle.putParcelable(Constants.KEY_ENTRY, bookmark);
+        bundle.putParcelable(Constants.KEY_FOLDER, f);
 
         BookmarkFragment fragment = new BookmarkFragment();
         fragment.setArguments(bundle);
@@ -60,7 +61,7 @@ public class BookmarkFragment extends EntryFragment<NPBookmark> {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.bookmark_frag, menu);
+        inflater.inflate(R.menu.bookmark_topmenu, menu);
     }
 
     @Override

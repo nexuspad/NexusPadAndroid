@@ -128,7 +128,7 @@ public class FoldersFragment extends UndoBarFragment {
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
-		inflater.inflate(R.menu.folders_frag, menu);
+		inflater.inflate(R.menu.folders_topmenu, menu);
 	}
 
 	@Override

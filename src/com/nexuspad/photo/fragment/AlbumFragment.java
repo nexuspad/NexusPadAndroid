@@ -7,6 +7,7 @@ import android.view.*;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import com.nexuspad.R;
+import com.nexuspad.common.Constants;
 import com.nexuspad.common.annotation.FragmentName;
 import com.nexuspad.common.fragment.EntryFragment;
 import com.nexuspad.service.datamodel.*;
@@ -29,8 +30,8 @@ public class AlbumFragment extends EntryFragment<NPAlbum> implements AdapterView
 
 	public static AlbumFragment of(NPAlbum album, NPFolder folder) {
 		final Bundle bundle = new Bundle();
-		bundle.putParcelable(KEY_ENTRY, album);
-		bundle.putParcelable(KEY_FOLDER, folder);
+		bundle.putParcelable(Constants.KEY_ENTRY, album);
+		bundle.putParcelable(Constants.KEY_FOLDER, folder);
 
 		final AlbumFragment fragment = new AlbumFragment();
 		fragment.setArguments(bundle);
@@ -49,7 +50,7 @@ public class AlbumFragment extends EntryFragment<NPAlbum> implements AdapterView
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
-		inflater.inflate(R.menu.album_frag, menu);
+		inflater.inflate(R.menu.album_topmenu, menu);
 	}
 
 	@Override
@@ -108,6 +109,7 @@ public class AlbumFragment extends EntryFragment<NPAlbum> implements AdapterView
 			final FragmentActivity a = getActivity();
 			mPhotosAdapter = new PhotosAdapter(a, mPhotosList, getFolder(), EntryListService.getInstance(a), EntryTemplate.PHOTO);
 			mGridView.setAdapter(mPhotosAdapter);
+
 		} else {
 			mPhotosAdapter.notifyDataSetChanged();
 		}
@@ -124,9 +126,9 @@ public class AlbumFragment extends EntryFragment<NPAlbum> implements AdapterView
 		FragmentActivity activity = getActivity();
 
 		Intent intent = new Intent(activity, PhotoActivity.class);
-		intent.putExtra(KEY_FOLDER, getFolder());
-		intent.putExtra(PhotoActivity.KEY_PHOTO, photo);
-		intent.putParcelableArrayListExtra(PhotoActivity.KEY_PHOTOS, photos);
+		intent.putExtra(Constants.KEY_FOLDER, getFolder());
+		intent.putExtra(Constants.KEY_PHOTO, photo);
+		intent.putParcelableArrayListExtra(Constants.KEY_PHOTOS, photos);
 
 		activity.startActivity(intent);
 		activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);

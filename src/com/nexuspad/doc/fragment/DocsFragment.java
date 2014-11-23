@@ -5,6 +5,7 @@ package com.nexuspad.doc.fragment;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.*;
 import android.widget.ListView;
@@ -73,7 +74,7 @@ public class DocsFragment extends FoldersAndEntriesFragment {
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
-		inflater.inflate(R.menu.docs_frag, menu);
+		inflater.inflate(R.menu.docs_topmanu, menu);
 
 		setUpSearchView(menu.findItem(R.id.search));
 	}
@@ -99,7 +100,7 @@ public class DocsFragment extends FoldersAndEntriesFragment {
 
 		if (a != null) {
 			a.notifyDataSetChanged();
-			dismissProgressIndicator();
+			clearVisualIndicator();
 			return;
 		}
 
@@ -137,7 +138,18 @@ public class DocsFragment extends FoldersAndEntriesFragment {
 		mListView.setAdapter(combinedAdapter);
 		mListView.setOnItemLongClickListener(combinedAdapter);
 
-		dismissProgressIndicator();
+		clearVisualIndicator();
+	}
+
+	/**
+	 * SwipeRefresh handler.
+	 */
+	@Override
+	public void onRefresh() {
+		if (mListFrame instanceof SwipeRefreshLayout) {
+			((SwipeRefreshLayout)mListFrame).setRefreshing(true);
+			queryEntriesAsync();
+		}
 	}
 
 	@Override

@@ -20,6 +20,7 @@ import com.nexuspad.calendar.activity.RecurrenceEditActivity;
 import com.nexuspad.calendar.view.DateButton;
 import com.nexuspad.calendar.view.RecurrenceTextView;
 import com.nexuspad.calendar.view.TimeButton;
+import com.nexuspad.common.Constants;
 import com.nexuspad.common.annotation.FragmentName;
 import com.nexuspad.common.annotation.ModuleId;
 import com.nexuspad.common.fragment.EntryEditFragment;
@@ -48,8 +49,8 @@ public class EventEditFragment extends EntryEditFragment<NPEvent> {
 
 	public static EventEditFragment of(NPEvent event, NPFolder folder) {
 		final Bundle bundle = new Bundle();
-		bundle.putParcelable(KEY_ENTRY, event);
-		bundle.putParcelable(KEY_FOLDER, folder);
+		bundle.putParcelable(Constants.KEY_ENTRY, event);
+		bundle.putParcelable(Constants.KEY_FOLDER, folder);
 
 		final EventEditFragment fragment = new EventEditFragment();
 		fragment.setArguments(bundle);

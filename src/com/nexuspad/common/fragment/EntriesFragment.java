@@ -76,6 +76,7 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 
 	private ModuleId mModuleId;
 
+	protected View mListFrame;
 	protected View mQuickReturnView;
 	protected TextView mFolderSelectorView;
 	protected ListView mListView;
@@ -474,10 +475,10 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 		/*
 		 * main list frame
 		 */
-		final View listFrame = view.findViewById(R.id.main_list_frame);
+		mListFrame = view.findViewById(R.id.main_list_frame);
 
-		if (listFrame instanceof android.support.v4.widget.SwipeRefreshLayout) {
-			SwipeRefreshLayout swipeLayout = (SwipeRefreshLayout)listFrame;
+		if (mListFrame instanceof android.support.v4.widget.SwipeRefreshLayout) {
+			SwipeRefreshLayout swipeLayout = (SwipeRefreshLayout)mListFrame;
 			swipeLayout.setOnRefreshListener(this);
 			swipeLayout.setColorSchemeColors(android.R.color.holo_blue_bright,
 					android.R.color.holo_green_light,
@@ -491,9 +492,9 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 		final View progressFrame = view.findViewById(R.id.frame_progress);
 		final View retryFrame = view.findViewById(R.id.frame_retry);
 
-		if (listFrame != null && progressFrame != null && retryFrame != null) {
+		if (mListFrame != null && progressFrame != null && retryFrame != null) {
 			if (mLoadingUiManager == null) {
-				mLoadingUiManager = new LoadingUiManager(listFrame, retryFrame, progressFrame, new View.OnClickListener() {
+				mLoadingUiManager = new LoadingUiManager(mListFrame, retryFrame, progressFrame, new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
 						mLoadingUiManager.fadeInProgressFrame();
@@ -546,6 +547,14 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 				mListView.setItemsCanFocus(true);
 				mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 			}
+		}
+	}
+
+	protected void clearVisualIndicator() {
+		dismissProgressIndicator();
+
+		if (mListFrame instanceof SwipeRefreshLayout) {
+			((SwipeRefreshLayout)mListFrame).setRefreshing(false);
 		}
 	}
 

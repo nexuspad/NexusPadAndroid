@@ -7,7 +7,7 @@
 
     <include layout="@layout/include_frame_retry" />
 
-    <include layout="@layout/include_grid_view" />
+    <include layout="@layout/photo_grid_view" />
 
     <LinearLayout
         android:id="@+id/quick_return"

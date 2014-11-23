@@ -13,23 +13,23 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.koushikdutta.ion.Ion;
 import com.nexuspad.R;
+import com.nexuspad.common.Constants;
 import com.nexuspad.common.activity.EntryEditActivity;
-import com.nexuspad.common.annotation.ModuleId;
 import com.nexuspad.common.activity.UploadCenterActivity;
 import com.nexuspad.common.annotation.FragmentName;
+import com.nexuspad.common.annotation.ModuleId;
 import com.nexuspad.common.fragment.EntryEditFragment;
 import com.nexuspad.common.utils.Lazy;
+import com.nexuspad.photo.activity.PhotosSelectActivity;
 import com.nexuspad.service.datamodel.EntryTemplate;
 import com.nexuspad.service.datamodel.NPAlbum;
 import com.nexuspad.service.datamodel.NPFolder;
 import com.nexuspad.service.datamodel.NPUpload;
 import com.nexuspad.service.dataservice.EntryUploadService;
 import com.nexuspad.service.dataservice.ServiceConstants;
-import com.nexuspad.photo.activity.PhotosSelectActivity;
-import com.squareup.picasso.Picasso;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,8 +45,8 @@ public class AlbumEditFragment extends EntryEditFragment<NPAlbum> {
 
     public static AlbumEditFragment of(NPAlbum album, NPFolder folder) {
         final Bundle bundle = new Bundle();
-        bundle.putParcelable(KEY_ENTRY, album);
-        bundle.putParcelable(KEY_FOLDER, folder);
+        bundle.putParcelable(Constants.KEY_ENTRY, album);
+        bundle.putParcelable(Constants.KEY_FOLDER, folder);
 
         final AlbumEditFragment fragment = new AlbumEditFragment();
         fragment.setArguments(bundle);
@@ -214,7 +214,7 @@ public class AlbumEditFragment extends EntryEditFragment<NPAlbum> {
     private static class PhotosAdapter extends BaseAdapter {
 
         private final LayoutInflater mInflater;
-        private final Picasso mPicasso;
+	    private final Context mContext;
 
         private static class ViewHolder {
             public ImageView imageView;
@@ -225,7 +225,7 @@ public class AlbumEditFragment extends EntryEditFragment<NPAlbum> {
         private PhotosAdapter(List<? extends Uri> uris, Context context) {
             mUris = uris;
             mInflater = LayoutInflater.from(context);
-            mPicasso = Picasso.with(context);
+	        mContext = context;
         }
 
         @Override
@@ -257,12 +257,12 @@ public class AlbumEditFragment extends EntryEditFragment<NPAlbum> {
                 holder = (ViewHolder) convertView.getTag();
             }
 
-            mPicasso.load(new File(getItem(position).getPath()))
-                    .resizeDimen(R.dimen.photo_grid_width, R.dimen.photo_grid_height)
-                    .centerCrop()
-                    .placeholder(R.drawable.placeholder)
-                    .error(R.drawable.ic_launcher)
-                    .into(holder.imageView);
+	        Ion.with(mContext)
+			        .load(getItem(position).getPath())
+			        .withBitmap()
+			        .placeholder(R.drawable.placeholder)
+			        .error(R.drawable.ic_launcher)
+			        .intoImageView(holder.imageView);
 
             return convertView;
         }

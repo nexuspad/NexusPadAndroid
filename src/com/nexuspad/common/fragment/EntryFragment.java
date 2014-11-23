@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import com.nexuspad.R;
 import com.nexuspad.app.App;
+import com.nexuspad.common.Constants;
 import com.nexuspad.common.utils.Lazy;
 import com.nexuspad.Manifest;
 import com.nexuspad.service.datamodel.NPEntry;
@@ -23,14 +24,11 @@ import com.nexuspad.service.dataservice.NPException;
 import com.nexuspad.service.dataservice.ServiceError;
 
 /**
- * You must pass in a {@code Folder} with the key {@link EntryFragment#KEY_FOLDER}
+ * You must pass in a {@code Folder} with the key
  *
  * @author Edmond
  */
 public abstract class EntryFragment<T extends NPEntry> extends DialogFragment {
-	public static final String KEY_ENTRY = "com.nexuspad.ui.fragment.EntryFragment.entry";
-	public static final String KEY_FOLDER = "com.nexuspad.ui.fragment.EntryFragment.folder";
-
 	private static final String TAG = "EntryFragment";
 
 	public interface EntryDetailCallback<T extends NPEntry> {
@@ -82,8 +80,8 @@ public abstract class EntryFragment<T extends NPEntry> extends DialogFragment {
 
 		final Bundle bundle = savedInstanceState == null ? getArguments() : savedInstanceState;
 		if (bundle != null) {
-			mEntry = bundle.getParcelable(KEY_ENTRY);
-			mFolder = bundle.getParcelable(KEY_FOLDER);
+			mEntry = bundle.getParcelable(Constants.KEY_ENTRY);
+			mFolder = bundle.getParcelable(Constants.KEY_FOLDER);
 		}
 
 		if (mFolder == null) {
@@ -94,9 +92,11 @@ public abstract class EntryFragment<T extends NPEntry> extends DialogFragment {
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
+
 		if (savedInstanceState == null) {
 			updateUI();
 		}
+
 		if (shouldGetDetailEntry()) {
 			try {
 				final T entry = getEntry();
@@ -112,8 +112,8 @@ public abstract class EntryFragment<T extends NPEntry> extends DialogFragment {
 	@Override
 	public void onSaveInstanceState(Bundle b) {
 		super.onSaveInstanceState(b);
-		b.putParcelable(KEY_ENTRY, mEntry);
-		b.putParcelable(KEY_FOLDER, mFolder);
+		b.putParcelable(Constants.KEY_ENTRY, mEntry);
+		b.putParcelable(Constants.KEY_FOLDER, mFolder);
 	}
 
 	@Override
@@ -170,9 +170,10 @@ public abstract class EntryFragment<T extends NPEntry> extends DialogFragment {
 		onFolderUpdated(folder);
 	}
 
+
 	/**
-	 * @return the original entry passed in by {@link #KEY_ENTRY} or
-	 * {@link #setEntry(T)}
+	 *
+	 * @return
 	 */
 	public T getEntry() {
 		return mEntry;

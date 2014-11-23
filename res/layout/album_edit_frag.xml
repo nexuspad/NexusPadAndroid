@@ -7,7 +7,7 @@
     android:padding="@dimen/np_padding_small"
     android:orientation="vertical">
 
-    <include layout="@layout/include_album_new" />
+    <include layout="@layout/album_new" />
 
     <TextView
         style="?android:attr/listSeparatorTextViewStyle"
@@ -41,7 +41,7 @@
     </LinearLayout>
 
     <include
-        layout="@layout/include_grid_view"
+        layout="@layout/photo_grid_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />

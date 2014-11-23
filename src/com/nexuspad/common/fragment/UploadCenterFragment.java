@@ -4,11 +4,12 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.FragmentActivity;
 import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,7 +20,6 @@ import com.nexuspad.app.UploadRequest;
 import com.nexuspad.app.service.UploadService;
 import com.nexuspad.common.annotation.FragmentName;
 import com.nexuspad.service.dataservice.NPUploadHelper;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -218,23 +218,15 @@ public class UploadCenterFragment extends NPBaseFragment {
 			final UploadRequest request = getItem(position);
 			request.setCallback(holder.callback);
 
-			Picasso pic = Picasso.with(mContext);
-
-			Log.i(TAG, request.getUri().toString());
-
-			pic.load(request.getUri().toString())
-				.placeholder(R.drawable.placeholder)
-				.error(R.drawable.ic_launcher)
-				.resizeDimen(R.dimen.photo_grid_width, R.dimen.photo_grid_height)
-				.centerCrop()
-				.into(holder.icon);
+			Bitmap imgBitmap = BitmapFactory.decodeFile(request.getUri().toString());
+			holder.icon.setImageBitmap(imgBitmap);
 
 			holder.title.setText(request.getFile(mContext).getName());
 			holder.menu.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					final PopupMenu popupMenu = new PopupMenu(mContext, v);
-					popupMenu.inflate(R.menu.photos_upload);
+					popupMenu.inflate(R.menu.uploadcenter_topmenu);
 					popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
 						@Override
 						public boolean onMenuItemClick(MenuItem menuItem) {

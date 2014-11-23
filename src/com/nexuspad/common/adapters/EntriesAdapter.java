@@ -157,6 +157,9 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter impl
 
 	@Override
 	public T getItem(int position) {
+		if (mDisplayEntryList == null || mDisplayEntryList.getEntries().isEmpty()) {
+			return null;
+		}
 		return (T)mDisplayEntryList.getEntries().get(isHeaderEnabled() ? position - 1 : position);
 	}
 

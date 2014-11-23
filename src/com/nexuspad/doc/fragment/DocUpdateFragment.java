@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import com.commonsware.cwac.richedit.RichEditText;
+import com.nexuspad.common.Constants;
 import com.nexuspad.common.annotation.FragmentName;
 import com.ipaulpro.afilechooser.utils.FileUtils;
 import com.nexuspad.R;
@@ -48,8 +49,8 @@ public class DocUpdateFragment extends EntryEditFragment<NPDoc> {
 
     public static DocUpdateFragment of(NPDoc doc, NPFolder f) {
         Bundle bundle = new Bundle();
-        bundle.putParcelable(KEY_ENTRY, doc);
-        bundle.putParcelable(KEY_FOLDER, f);
+        bundle.putParcelable(Constants.KEY_ENTRY, doc);
+        bundle.putParcelable(Constants.KEY_FOLDER, f);
 
         DocUpdateFragment fragment = new DocUpdateFragment();
         fragment.setArguments(bundle);

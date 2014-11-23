@@ -6,5 +6,5 @@
     android:padding="@dimen/np_padding_small"
     android:orientation="vertical">
 
-    <include layout="@layout/include_album_new" />
+    <include layout="@layout/album_new" />
 </FrameLayout>

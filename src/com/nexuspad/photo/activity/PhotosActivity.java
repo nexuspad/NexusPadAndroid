@@ -69,7 +69,7 @@ public class PhotosActivity extends EntriesActivity implements ActionBar.OnNavig
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.photos_frag, menu);
+        getMenuInflater().inflate(R.menu.photos_topmenu, menu);
         return true;
     }
 

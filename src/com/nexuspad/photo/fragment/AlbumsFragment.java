@@ -16,21 +16,21 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import com.koushikdutta.ion.Ion;
 import com.nexuspad.R;
 import com.nexuspad.common.Constants;
-import com.nexuspad.common.annotation.ModuleId;
 import com.nexuspad.common.activity.FoldersNavigatorActivity;
 import com.nexuspad.common.adapters.EntriesAdapter;
 import com.nexuspad.common.annotation.FragmentName;
+import com.nexuspad.common.annotation.ModuleId;
 import com.nexuspad.common.fragment.EntriesFragment;
+import com.nexuspad.photo.activity.AlbumActivity;
+import com.nexuspad.photo.activity.PhotosActivity;
 import com.nexuspad.service.datamodel.EntryList;
 import com.nexuspad.service.datamodel.EntryTemplate;
 import com.nexuspad.service.datamodel.NPAlbum;
 import com.nexuspad.service.datamodel.NPFolder;
 import com.nexuspad.service.dataservice.ServiceConstants;
-import com.nexuspad.photo.activity.AlbumActivity;
-import com.nexuspad.photo.activity.PhotosActivity;
-import com.squareup.picasso.Picasso;
 
 /**
  * @author Edmond
@@ -145,14 +145,14 @@ public class AlbumsFragment extends EntriesFragment {
 			holder.title.setText(album.getTitle());
 			final String tnUrl = album.getTnUrl();
 			if (!TextUtils.isEmpty(tnUrl)) {
-
-				Picasso.with(getActivity())
+				Ion.with(getActivity())
 						.load(tnUrl)
-						.resizeDimen(R.dimen.photo_grid_width, R.dimen.photo_grid_height)
-						.centerCrop()
+						.withBitmap()
 						.placeholder(R.drawable.placeholder)
 						.error(R.drawable.ic_launcher)
-						.into(holder.thumbnail);
+//				.animateLoad(spinAnimation)
+//				.animateIn(fadeInAnimation)
+						.intoImageView(holder.thumbnail);
 			} else {
 				holder.thumbnail.setImageResource(R.drawable.placeholder);
 			}

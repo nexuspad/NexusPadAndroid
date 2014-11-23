@@ -96,7 +96,7 @@ public abstract class OnEntryMenuClickListener<T extends NPEntry> implements OnC
 		PopupMenu menu = (PopupMenu) view.getTag();
 		if (menu == null) {
 			menu = new PopupMenu(view.getContext(), view);
-			menu.inflate(R.menu.entry);
+			menu.inflate(R.menu.entry_list_popupmenu);
 
 			view.setTag(menu);
 		}

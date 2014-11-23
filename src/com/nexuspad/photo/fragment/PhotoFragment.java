@@ -48,10 +48,11 @@ public class PhotoFragment extends EntriesFragment {
     private static List<? extends NPPhoto> sPhotos;
 
     private ViewPager mViewPager;
-    private Picasso mPicasso;
     private int mInitialPhotoIndex = -1;
 
 	private PhotoDisplayCallback mCallback;
+
+	private Picasso mPicasso;
 
 	/**
 	 * EntryDetailCallback interface for Photo.
@@ -81,9 +82,10 @@ public class PhotoFragment extends EntriesFragment {
         super.onCreate(savedState);
         final Bundle arguments = getArguments();
 
-        mPicasso = Picasso.with(getActivity());
         final NPPhoto photo = arguments.getParcelable(KEY_PHOTO);
         mInitialPhotoIndex = Iterables.indexOf(sPhotos, photo.filterById());
+
+	    mPicasso = Picasso.with(getActivity());
     }
 
 	@Override
@@ -96,7 +98,7 @@ public class PhotoFragment extends EntriesFragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.photo_frag, menu);
+        inflater.inflate(R.menu.photo_topmenu, menu);
     }
 
     @Override
@@ -165,26 +167,51 @@ public class PhotoFragment extends EntriesFragment {
                     }
                 });
 
-                try {
-                    final String url = NPWebServiceUtil.fullUrlWithAuthenticationTokens(photo.getPhotoUrl(), getActivity());
+//                try {
+//                    final String url = NPWebServiceUtil.fullUrlWithAuthenticationTokens(photo.getPhotoUrl(), getActivity());
+//
+//	                // Option 1
+////	                Ion.with(getActivity())
+////			                .load(url)
+////			                .setLogging("ION logs", Log.VERBOSE)
+////			                .withBitmap()
+////			                .placeholder(R.drawable.placeholder)
+////			                .error(R.drawable.ic_launcher)
+////			                .intoImageView(imageView);
+//
+//	                Bitmap bitmap =
+//			                Ion.with(getActivity())
+//					                .load(url).setLogging("ION Test", Log.VERBOSE).asBitmap().get();
+//
+//	                imageView.setImageBitmap(bitmap);
+//
+//                } catch (NPException e) {
+//                    // TODO handle error
+//                } catch (InterruptedException e) {
+//	                e.printStackTrace();
+//                } catch (ExecutionException e) {
+//	                e.printStackTrace();
+//                }
 
-                    mPicasso.load(url)
-                            .placeholder(R.drawable.placeholder)
-                            .error(R.drawable.ic_launcher)
-                            .into(imageView, new ZoomableImageViewCallback(imageView));
+	            try {
+		            final String url = NPWebServiceUtil.fullUrlWithAuthenticationTokens(photo.getPhotoUrl(), getActivity());
 
-                } catch (NPException e) {
-                    // TODO handle error
-                }
+		            mPicasso.load(url)
+				            .placeholder(R.drawable.placeholder)
+				            .error(R.drawable.ic_launcher)
+				            .into(imageView, new ZoomableImageViewCallback(imageView));
 
-                container.addView(frame, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+	            } catch (NPException e) {
+		            // TODO handle error
+	            }
+
+	            container.addView(frame, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
                 return frame;
             }
 
             @Override
             public void destroyItem(ViewGroup container, int position, Object object) {
                 final ImageView imageView = (ImageView) ((ViewGroup) object).getChildAt(0);
-                mPicasso.cancelRequest(imageView);
                 container.removeView(imageView);
             }
 
@@ -210,29 +237,32 @@ public class PhotoFragment extends EntriesFragment {
         };
     }
 
-    private static class ZoomableImageViewCallback implements com.squareup.picasso.Callback {
 
-        private WeakReference<ZoomableImageView> mReference;
 
-        private ZoomableImageViewCallback(ZoomableImageView imageView) {
-            mReference = new WeakReference<ZoomableImageView>(imageView);
-        }
+	private static class ZoomableImageViewCallback implements com.squareup.picasso.Callback {
 
-        @Override
-        public void onSuccess() {
-            update();
-        }
+		private WeakReference<ZoomableImageView> mReference;
 
-        @Override
-        public void onError() {
-            update();
-        }
+		private ZoomableImageViewCallback(ZoomableImageView imageView) {
+			mReference = new WeakReference<ZoomableImageView>(imageView);
+		}
 
-        private void update() {
-            final ZoomableImageView view = mReference.get();
-            if (view != null) {
-                view.update();
-            }
-        }
-    }
+		@Override
+		public void onSuccess() {
+			update();
+		}
+
+		@Override
+		public void onError() {
+			update();
+		}
+
+		private void update() {
+			final ZoomableImageView view = mReference.get();
+			if (view != null) {
+				view.update();
+			}
+		}
+	}
+
 }

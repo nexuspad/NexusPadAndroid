@@ -41,7 +41,6 @@ import java.util.Date;
 public class JournalsActivity extends EntriesActivity implements JournalsFragment.JournalsCallback, JournalEditFragment.JournalDetailCallback {
 	public static final String TAG = "JournalsActivity";
 
-	private static final int DATE_SELECTOR_REQUEST = 1;
 	private static final String KEY_PENDING_DISPLAY_DATE = "key_pending_display_date";
 
 	private DateFormat mDateFormat;
@@ -107,10 +106,6 @@ public class JournalsActivity extends EntriesActivity implements JournalsFragmen
 		}
 
 		switch (requestCode) {
-			case DATE_SELECTOR_REQUEST:
-				mPendingDisplayDate = data.getLongExtra(JournalsMonthActivity.KEY_DATE, -1);
-				// cannot set display date right now, onResume() is not called yet
-				break;
 			default:
 				break;
 		}

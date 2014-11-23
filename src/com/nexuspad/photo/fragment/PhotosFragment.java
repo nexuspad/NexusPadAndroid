@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -62,7 +63,7 @@ public class PhotosFragment extends EntriesFragment implements OnItemClickListen
 		PhotosAdapter a = (PhotosAdapter)mGridView.getAdapter();
 		if (a != null) {
 			stableNotifyAdapter(a);
-			dismissProgressIndicator();
+			clearVisualIndicator();
 			return;
 		}
 
@@ -71,7 +72,7 @@ public class PhotosFragment extends EntriesFragment implements OnItemClickListen
 		mGridView.setAdapter(a);
 		stableNotifyAdapter(a);
 
-		dismissProgressIndicator();
+		clearVisualIndicator();
 	}
 
 	@Override
@@ -88,8 +89,8 @@ public class PhotosFragment extends EntriesFragment implements OnItemClickListen
 
 		Intent intent = new Intent(activity, PhotoActivity.class);
 		intent.putExtra(Constants.KEY_FOLDER, getFolder());
-		intent.putExtra(PhotoActivity.KEY_PHOTO, photo);
-		intent.putParcelableArrayListExtra(PhotoActivity.KEY_PHOTOS, photos);
+		intent.putExtra(Constants.KEY_PHOTO, photo);
+		intent.putParcelableArrayListExtra(Constants.KEY_PHOTOS, photos);
 
 		activity.startActivity(intent);
 		activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
@@ -119,6 +120,19 @@ public class PhotosFragment extends EntriesFragment implements OnItemClickListen
 		BaseAdapter adapter = (BaseAdapter) mGridView.getAdapter();
 		stableNotifyAdapter(adapter);
 	}
+
+
+	/**
+	 * SwipeRefresh handler.
+	 */
+	@Override
+	public void onRefresh() {
+		if (mListFrame instanceof SwipeRefreshLayout) {
+			((SwipeRefreshLayout)mListFrame).setRefreshing(true);
+			queryEntriesAsync();
+		}
+	}
+
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {

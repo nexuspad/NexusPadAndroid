@@ -24,9 +24,6 @@ import java.util.ArrayList;
 @ParentActivity(PhotosActivity.class)
 public class PhotoActivity extends SinglePaneActivity implements EntriesFragment.ActivityCallback, PhotoFragment.PhotoDisplayCallback {
 
-    public static final String KEY_PHOTO = "key_photo";
-    public static final String KEY_PHOTOS = "key_photos";
-
 	/**
 	 * Implement the callback when photo is deleted.
 	 *
@@ -56,8 +53,8 @@ public class PhotoActivity extends SinglePaneActivity implements EntriesFragment
             throw new IllegalStateException("you must pass in a Folder with KEY_FOLDER");
         }
 
-        mPhoto = intent.getParcelableExtra(KEY_PHOTO);
-        mPhotos = intent.getParcelableArrayListExtra(KEY_PHOTOS);
+        mPhoto = intent.getParcelableExtra(Constants.KEY_PHOTO);
+        mPhotos = intent.getParcelableArrayListExtra(Constants.KEY_PHOTOS);
 
         super.onCreate(savedState);
     }

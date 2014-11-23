@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.*;
@@ -75,7 +76,7 @@ public final class ContactsFragment extends EntriesFragment {
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
-		inflater.inflate(R.menu.contacts_frag, menu);
+		inflater.inflate(R.menu.contacts_topmenu, menu);
 		setUpSearchView(menu.findItem(R.id.search));
 	}
 
@@ -178,7 +179,18 @@ public final class ContactsFragment extends EntriesFragment {
 			mSortTask.execute((Void[]) null);
 		}
 
-		dismissProgressIndicator();
+		clearVisualIndicator();
+	}
+
+	/**
+	 * SwipeRefresh handler.
+	 */
+	@Override
+	public void onRefresh() {
+		if (mListFrame instanceof SwipeRefreshLayout) {
+			((SwipeRefreshLayout)mListFrame).setRefreshing(true);
+			queryEntriesAsync();
+		}
 	}
 
 	/**
@@ -270,7 +282,7 @@ public final class ContactsFragment extends EntriesFragment {
 
 	@Override
 	protected void reDisplayListEntries() {
-		dismissProgressIndicator();
+		clearVisualIndicator();
 		((ContactsAdapter)getAdapter()).setDisplayEntries(mEntryList);
 		getAdapter().notifyDataSetChanged();
 	}

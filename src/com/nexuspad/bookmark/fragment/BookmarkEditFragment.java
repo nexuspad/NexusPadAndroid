@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
+import com.nexuspad.common.Constants;
 import com.nexuspad.common.annotation.FragmentName;
 import com.nexuspad.R;
 import com.nexuspad.common.annotation.ModuleId;
@@ -33,8 +34,8 @@ public class BookmarkEditFragment extends EntryEditFragment<NPBookmark> {
 
     public static BookmarkEditFragment of(NPBookmark b, NPFolder f) {
         Bundle bundle = new Bundle();
-        bundle.putParcelable(KEY_ENTRY, b);
-        bundle.putParcelable(KEY_FOLDER, f);
+        bundle.putParcelable(Constants.KEY_ENTRY, b);
+        bundle.putParcelable(Constants.KEY_FOLDER, f);
 
         BookmarkEditFragment fragment = new BookmarkEditFragment();
         fragment.setArguments(bundle);

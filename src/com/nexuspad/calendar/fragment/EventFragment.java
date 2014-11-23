@@ -6,6 +6,7 @@ import android.text.format.DateUtils;
 import android.view.*;
 import android.widget.TextView;
 import com.nexuspad.calendar.activity.EventEditActivity;
+import com.nexuspad.common.Constants;
 import com.nexuspad.common.annotation.FragmentName;
 import com.nexuspad.R;
 import com.nexuspad.app.App;
@@ -24,8 +25,8 @@ public class EventFragment extends EntryFragment<NPEvent> {
 
     public static EventFragment of(NPEvent event, NPFolder folder) {
         final Bundle bundle = new Bundle();
-        bundle.putParcelable(KEY_ENTRY, event);
-        bundle.putParcelable(KEY_FOLDER, folder);
+        bundle.putParcelable(Constants.KEY_ENTRY, event);
+        bundle.putParcelable(Constants.KEY_FOLDER, folder);
 
         final EventFragment fragment = new EventFragment();
         fragment.setArguments(bundle);
@@ -51,7 +52,7 @@ public class EventFragment extends EntryFragment<NPEvent> {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.event_frag, menu);
+        inflater.inflate(R.menu.event_topmenu, menu);
     }
 
     @Override

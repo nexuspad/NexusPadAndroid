@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 import com.nexuspad.R;
+import com.nexuspad.common.Constants;
 import com.nexuspad.common.annotation.ModuleId;
 import com.nexuspad.common.fragment.EntryEditFragment;
 import com.nexuspad.service.datamodel.EntryTemplate;
@@ -35,8 +36,8 @@ public class JournalEditFragment extends EntryEditFragment<NPJournal> {
 
 	public static JournalEditFragment of(NPJournal journal) {
 		final Bundle argument = new Bundle();
-		argument.putParcelable(KEY_ENTRY, journal);
-		argument.putParcelable(KEY_FOLDER, NPFolder.rootFolderOf(NPModule.JOURNAL));
+		argument.putParcelable(Constants.KEY_ENTRY, journal);
+		argument.putParcelable(Constants.KEY_FOLDER, NPFolder.rootFolderOf(NPModule.JOURNAL));
 
 		final JournalEditFragment fragment = new JournalEditFragment();
 		fragment.setArguments(argument);

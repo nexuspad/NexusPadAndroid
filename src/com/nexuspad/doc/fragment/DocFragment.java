@@ -14,6 +14,7 @@ import android.view.*;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import com.nexuspad.common.Constants;
 import com.nexuspad.common.annotation.FragmentName;
 import com.nexuspad.common.utils.Lazy;
 import com.nexuspad.R;
@@ -36,8 +37,8 @@ public class DocFragment extends EntryFragment<NPDoc> {
 
     public static DocFragment of(NPDoc doc, NPFolder folder) {
         Bundle bundle = new Bundle();
-        bundle.putParcelable(KEY_ENTRY, doc);
-        bundle.putParcelable(KEY_FOLDER, folder);
+        bundle.putParcelable(Constants.KEY_ENTRY, doc);
+        bundle.putParcelable(Constants.KEY_FOLDER, folder);
 
         DocFragment fragment = new DocFragment();
         fragment.setArguments(bundle);
@@ -70,7 +71,7 @@ public class DocFragment extends EntryFragment<NPDoc> {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.doc_frag, menu);
+        inflater.inflate(R.menu.doc_topmenu, menu);
     }
 
     @Override

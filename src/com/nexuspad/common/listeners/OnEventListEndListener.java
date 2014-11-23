@@ -24,15 +24,15 @@ public abstract class OnEventListEndListener implements AbsListView.OnScrollList
 
 	@Override
 	public void onScroll(AbsListView v, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-		Log.i("EVENT SCROLL LISTENER: ", String.valueOf(mLoading) + " total:" + String.valueOf(totalItemCount)
-				+ " visible:" + visibleItemCount + " first visible:" + firstVisibleItem);
+//		Log.i("EVENT SCROLL LISTENER: ", String.valueOf(mLoading) + " total:" + String.valueOf(totalItemCount)
+//				+ " visible:" + visibleItemCount + " first visible:" + firstVisibleItem);
 
-		if (mLoadingDisabled) {
-			Log.i("-------->", "no more loading....");
-			return;
-		} else {
-			Log.i("<--------", "load more....");
-		}
+//		if (mLoadingDisabled) {
+//			Log.i("-------->", "no more loading....");
+//			return;
+//		} else {
+//			Log.i("<--------", "load more....");
+//		}
 
 		if (mLoading) {
 			if (mCurrentDateRange != null && mCurrentDateRange.equals(mNextDateRange)) {

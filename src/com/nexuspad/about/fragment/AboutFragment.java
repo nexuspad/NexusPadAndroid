@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.koushikdutta.ion.Ion;
 import com.nexuspad.Manifest;
 import com.nexuspad.R;
 import com.nexuspad.service.account.AccountManager;
@@ -31,7 +32,6 @@ import com.nexuspad.service.dataservice.ErrorCode;
 import com.nexuspad.service.dataservice.NPException;
 import com.nexuspad.service.dataservice.ServiceError;
 import com.nexuspad.home.activity.LoginActivity;
-import com.squareup.picasso.Picasso;
 
 /**
  * @author Edmond
@@ -198,7 +198,12 @@ public class AboutFragment extends Fragment {
     private void updateProfileImage(NPUser user) {
         String imageUrl = user.getProfileImageUrl();
         if (imageUrl != null) {
-            Picasso.with(getActivity()).load(imageUrl).into(mProfileImageV);
+	        Ion.with(getActivity())
+			        .load(imageUrl)
+			        .withBitmap()
+			        .placeholder(R.drawable.placeholder)
+			        .error(R.drawable.ic_launcher)
+			        .intoImageView(mProfileImageV);
         }
     }
 

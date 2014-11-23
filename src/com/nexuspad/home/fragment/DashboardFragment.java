@@ -33,7 +33,7 @@ public class DashboardFragment extends Fragment {
 	 * All 3 arrays must be consistent when re-ordering them
 	 */
 	private static final int[] sModules = {
-			0,
+//			0,
 			CONTACT_MODULE,
 			CALENDAR_MODULE,
 			JOURNAL_MODULE,
@@ -43,7 +43,7 @@ public class DashboardFragment extends Fragment {
 	};
 
 	private static final int[] sDrawables = {
-			R.drawable.avatar,
+//			R.drawable.avatar,
 			R.drawable.contact,
 			R.drawable.event,
 			R.drawable.journal,
@@ -53,7 +53,7 @@ public class DashboardFragment extends Fragment {
 	};
 
 	private static final int[] sStrings = {
-			R.string.file,
+//			R.string.file,
 			R.string.contacts,
 			R.string.events,
 			R.string.journal,

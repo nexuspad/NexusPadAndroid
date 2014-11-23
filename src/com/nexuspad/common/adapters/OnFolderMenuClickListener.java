@@ -24,7 +24,7 @@ public class OnFolderMenuClickListener implements OnClickListener {
         PopupMenu menu = (PopupMenu) view.getTag();
         if (menu == null) {
             menu = new PopupMenu(view.getContext(), view);
-            menu.inflate(R.menu.folder);
+            menu.inflate(R.menu.folder_list_popupmenu);
 
             view.setTag(menu);
         }

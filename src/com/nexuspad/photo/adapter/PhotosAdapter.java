@@ -1,11 +1,11 @@
 package com.nexuspad.photo.adapter;
 
 import android.app.Activity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import com.koushikdutta.ion.Ion;
 import com.nexuspad.R;
 import com.nexuspad.common.adapters.EntriesAdapter;
 import com.nexuspad.service.datamodel.EntryList;
@@ -13,12 +13,12 @@ import com.nexuspad.service.datamodel.EntryTemplate;
 import com.nexuspad.service.datamodel.NPFolder;
 import com.nexuspad.service.datamodel.NPPhoto;
 import com.nexuspad.service.dataservice.EntryListService;
-import com.squareup.picasso.Picasso;
+import com.nexuspad.service.dataservice.NPException;
+import com.nexuspad.service.dataservice.NPWebServiceUtil;
 
 public class PhotosAdapter extends EntriesAdapter<NPPhoto> {
 
 	private final Activity mActivity;
-	private final Picasso mPicasso;
 
 	/**
 	 * use this constructor if you want filtering abilities
@@ -32,10 +32,6 @@ public class PhotosAdapter extends EntriesAdapter<NPPhoto> {
 	public PhotosAdapter(Activity a, EntryList entryList, NPFolder folder, EntryListService service, EntryTemplate template) {
 		super(a, entryList, folder, service, template);
 		mActivity = a;
-		mPicasso = Picasso.with(a);
-//		mPicasso.setIndicatorsEnabled(true);
-
-		mPicasso.setLoggingEnabled(true);
 	}
 
 	@Override
@@ -49,14 +45,43 @@ public class PhotosAdapter extends EntriesAdapter<NPPhoto> {
 			view = (ImageView) convertView;
 		}
 
-		Log.i(TAG, getItem(position).getTnUrl());
+		String tnUrl = null;
 
-		mPicasso.load(getItem(position).getTnUrl())
-				.placeholder(R.drawable.placeholder)
-				.error(R.drawable.ic_launcher)
-				.resizeDimen(R.dimen.photo_grid_width, R.dimen.photo_grid_height)
-				.centerCrop()
-				.into(view);
+		if (getItem(position) != null) {
+			try {
+				tnUrl = NPWebServiceUtil.fullUrlWithAuthenticationTokens(getItem(position).getTnUrl(), mActivity);
+			} catch (NPException e) {
+				e.printStackTrace();
+			}
+
+//		Log.i(TAG, tnUrl);
+//
+//		mPicasso.setLoggingEnabled(true);
+//		mPicasso.setIndicatorsEnabled(true);
+//
+//		mPicasso.with(mActivity)
+//				.load(tnUrl)
+//				.placeholder(R.drawable.placeholder)
+//				.error(R.drawable.ic_launcher)
+//				.resizeDimen(R.dimen.photo_grid_width, R.dimen.photo_grid_height)
+//				.centerCrop()
+//				.into(view, new Callback.EmptyCallback() {
+//					@Override
+//					public void onSuccess() {
+//					}
+//					@Override
+//					public void onError() {
+//					}
+//				});
+
+			Ion.with(mActivity)
+					.load(tnUrl)
+					.withBitmap()
+					.placeholder(R.drawable.placeholder)
+					.error(R.drawable.ic_launcher)
+					.intoImageView(view);
+
+		}
 
 		return view;
 	}

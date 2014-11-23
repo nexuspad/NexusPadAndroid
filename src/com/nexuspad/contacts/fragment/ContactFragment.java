@@ -10,6 +10,7 @@ import android.text.util.Linkify;
 import android.view.*;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.nexuspad.common.Constants;
 import com.nexuspad.common.annotation.FragmentName;
 import com.google.common.base.Strings;
 import com.nexuspad.R;
@@ -32,8 +33,8 @@ public class ContactFragment extends EntryFragment<NPPerson> {
 
 	public static ContactFragment of(NPPerson contact, NPFolder folder) {
 		final Bundle bundle = new Bundle();
-		bundle.putParcelable(KEY_ENTRY, contact);
-		bundle.putParcelable(KEY_FOLDER, folder);
+		bundle.putParcelable(Constants.KEY_ENTRY, contact);
+		bundle.putParcelable(Constants.KEY_FOLDER, folder);
 
 		final ContactFragment fragment = new ContactFragment();
 		fragment.setArguments(bundle);
@@ -78,7 +79,7 @@ public class ContactFragment extends EntryFragment<NPPerson> {
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
-		inflater.inflate(R.menu.contact_frag, menu);
+		inflater.inflate(R.menu.contact_topmenu, menu);
 	}
 
 	@Override

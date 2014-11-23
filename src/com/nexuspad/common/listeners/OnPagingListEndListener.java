@@ -3,7 +3,6 @@
  */
 package com.nexuspad.common.listeners;
 
-import android.util.Log;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 
@@ -26,9 +25,9 @@ public abstract class OnPagingListEndListener implements OnScrollListener {
 
 	@Override
 	public void onScroll(AbsListView v, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-		Log.v("SCROLL LISTENER: ", String.valueOf(mLoading) + " total:" + String.valueOf(totalItemCount)
-				+ " visible:" + visibleItemCount + " first visible:" + firstVisibleItem
-				+ " current page:" + mCurrentPage);
+//		Log.v("SCROLL LISTENER: ", String.valueOf(mLoading) + " total:" + String.valueOf(totalItemCount)
+//				+ " visible:" + visibleItemCount + " first visible:" + firstVisibleItem
+//				+ " current page:" + mCurrentPage);
 
 		if (mLoading) {
 			if (mCurrentPage == mNextPage) {
