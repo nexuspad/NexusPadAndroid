@@ -37,12 +37,9 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter impl
 	private final EntryListService mService;
 	private final EntryTemplate mTemplate;
 
-	private EntryList mDisplayEntryList;
+	protected EntryList mDisplayEntryList;
 
 	private OnClickListener mOnMenuClickListener;
-
-	/** The load more adapter handles displaying of the "loading more" text, or any other UI indicator. */
-	protected BaseAdapter mLoadMoreAdapter;
 
 	/**
 	 * use this constructor if you want filtering abilities
@@ -64,9 +61,13 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter impl
 	 *
 	 * @param entryList the new entries to be displayed
 	 */
-	public void setDisplayEntries(EntryList entryList) {
+	public void setDisplayEntryList(EntryList entryList) {
 		mDisplayEntryList = entryList;
 		notifyDataSetChanged();
+	}
+
+	public EntryList getDisplayEntryList() {
+		return mDisplayEntryList;
 	}
 
 	/**
@@ -223,14 +224,6 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter impl
 			return true;
 		}
 		return false;
-	}
-
-	public BaseAdapter getLoadMoreAdapter() {
-		return mLoadMoreAdapter;
-	}
-
-	public void setLoadMoreAdapter(BaseAdapter loadMoreAdapter) {
-		mLoadMoreAdapter = loadMoreAdapter;
 	}
 
 	/**

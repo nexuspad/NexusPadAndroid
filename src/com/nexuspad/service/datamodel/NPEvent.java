@@ -229,29 +229,60 @@ public class NPEvent extends NPEntry {
 		super(in);
 
 		Calendar calendar = Calendar.getInstance();
-		calendar.setTimeInMillis(in.readLong());
-		startTime = calendar.getTime();
-		calendar.setTimeInMillis(in.readLong());
-		endTime = calendar.getTime();
+
+		long startTimeInMillis = in.readLong();
+
+		if (startTimeInMillis != -1) {
+			calendar.setTimeInMillis(startTimeInMillis);
+			startTime = calendar.getTime();
+		} else {
+			startTime = null;
+		}
+
+		long endTimeInMillis = in.readLong();
+
+		if (endTimeInMillis != -1) {
+			calendar.setTimeInMillis(endTimeInMillis);
+			endTime = calendar.getTime();
+		} else {
+			endTime = null;
+		}
+
 		timeZone = (TimeZone) in.readSerializable();
 		lastChangeTime = in.readLong();
+
 		singleTimeEvent = in.readByte() != 0x00;
 		allDayEvent = in.readByte() != 0x00;
 		noStartingTime = in.readByte() != 0x00;
 		multiDayEvent = in.readByte() != 0x00;
+
 		recurrence = in.readParcelable(Recurrence.class.getClassLoader());
 		recurId = in.readString();
+
 		reminders = new ArrayList<Reminder>();
 		in.readList(reminders, Reminder.class.getClassLoader());
+
 		attendees = new ArrayList<Attendee>();
 		in.readList(attendees, Attendee.class.getClassLoader());
 	}
 
+
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		super.writeToParcel(dest, flags);
-		dest.writeLong(startTime == null ? 0 : startTime.getTime());
-		dest.writeLong(endTime == null ? 0 : endTime.getTime());
+
+		if (startTime != null) {
+			dest.writeLong(startTime.getTime());
+		} else {
+			dest.writeLong(-1);
+		}
+
+		if (endTime != null) {
+			dest.writeLong(endTime.getTime());
+		} else {
+			dest.writeLong(-1);
+		}
+
 		dest.writeSerializable(timeZone);
 		dest.writeLong(lastChangeTime);
 		dest.writeByte((byte) (singleTimeEvent ? 0x01 : 0x00));

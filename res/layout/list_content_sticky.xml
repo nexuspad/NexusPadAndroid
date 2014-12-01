@@ -19,6 +19,7 @@
             class="se.emilsjolander.stickylistheaders.StickyListHeadersListView"
             android:id="@+id/list_view"
             android:listSelector="?android:attr/selectableItemBackground"
+            android:background="#eeeeee"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingBottom="@dimen/np_padding_small"

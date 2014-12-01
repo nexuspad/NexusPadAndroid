@@ -16,10 +16,10 @@ import android.view.ViewGroup;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.nexuspad.R;
+import com.nexuspad.common.annotation.ModuleInfo;
 import com.nexuspad.service.account.AccountManager;
 import com.nexuspad.app.App;
 import com.nexuspad.common.annotation.FragmentName;
-import com.nexuspad.common.annotation.ModuleId;
 import com.nexuspad.common.fragment.EntriesFragment;
 import com.nexuspad.service.datamodel.*;
 import com.nexuspad.service.dataservice.EntryService;
@@ -36,7 +36,7 @@ import static com.google.common.base.Strings.isNullOrEmpty;
  * @author Ren
  */
 @FragmentName(JournalsFragment.TAG)
-@ModuleId(moduleId = ServiceConstants.JOURNAL_MODULE, template = EntryTemplate.JOURNAL)
+@ModuleInfo(moduleId = ServiceConstants.JOURNAL_MODULE, template = EntryTemplate.JOURNAL)
 public class JournalsFragment extends EntriesFragment {
 	public static final String TAG = "JournalsFragment";
 
@@ -142,7 +142,7 @@ public class JournalsFragment extends EntriesFragment {
 	}
 
 	@Override
-	protected void onListLoaded(EntryList list) {
+	protected void onListLoaded(EntryList newListToDisplay) {
 		Log.i(TAG, "Receiving entry list.");
 
 		dismissProgressIndicator();
@@ -150,7 +150,7 @@ public class JournalsFragment extends EntriesFragment {
 		mJournals.clear();
 
 		List<NPJournal> journals = new ArrayList<NPJournal>();
-		for (NPEntry e : (List<? extends NPEntry>)list.getEntries()) {
+		for (NPEntry e : (List<? extends NPEntry>) newListToDisplay.getEntries()) {
 			journals.add(NPJournal.fromEntry(e));
 		}
 

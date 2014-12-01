@@ -136,7 +136,7 @@ public abstract class ServiceConstants {
     // Contact
     public static final String FIRST_NAME = "first_name";
     public static final String LAST_NAME = "last_name";
-    public static final String MIDDLE_NAME = "middle_name";
+    public static final String MIDDLE_NAME = "mi";
 	public static final String FULL_NAME = "full_name";
     public static final String BUSINESS_NAME = "business";
     public static final String ADDRESS = "address";

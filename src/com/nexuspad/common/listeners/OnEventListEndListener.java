@@ -27,12 +27,9 @@ public abstract class OnEventListEndListener implements AbsListView.OnScrollList
 //		Log.i("EVENT SCROLL LISTENER: ", String.valueOf(mLoading) + " total:" + String.valueOf(totalItemCount)
 //				+ " visible:" + visibleItemCount + " first visible:" + firstVisibleItem);
 
-//		if (mLoadingDisabled) {
-//			Log.i("-------->", "no more loading....");
-//			return;
-//		} else {
-//			Log.i("<--------", "load more....");
-//		}
+		if (mLoadingDisabled) {
+			return;
+		}
 
 		if (mLoading) {
 			if (mCurrentDateRange != null && mCurrentDateRange.equals(mNextDateRange)) {

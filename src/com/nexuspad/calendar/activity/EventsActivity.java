@@ -14,7 +14,7 @@ import com.nexuspad.calendar.fragment.EventsListFragment;
 import com.nexuspad.calendar.fragment.EventsMonthFragment;
 import com.nexuspad.common.Constants;
 import com.nexuspad.common.activity.EntriesActivity;
-import com.nexuspad.common.annotation.ModuleId;
+import com.nexuspad.common.annotation.ModuleInfo;
 import com.nexuspad.common.fragment.EntriesFragment;
 import com.nexuspad.service.datamodel.EntryList;
 import com.nexuspad.service.datamodel.EntryTemplate;
@@ -29,7 +29,7 @@ import static com.nexuspad.service.dataservice.ServiceConstants.CALENDAR_MODULE;
 /**
  * Author: edmond
  */
-@ModuleId(moduleId = CALENDAR_MODULE, template = EntryTemplate.EVENT)
+@ModuleInfo(moduleId = CALENDAR_MODULE, template = EntryTemplate.EVENT)
 public class EventsActivity extends EntriesActivity implements EventsMonthFragment.Callback, ActionBar.OnNavigationListener {
 	private static final String KEY_CALENDAR_DEFAULT_VIEW = "calendar_default_view";
 

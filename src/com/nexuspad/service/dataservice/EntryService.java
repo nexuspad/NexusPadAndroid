@@ -18,6 +18,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.RequestFuture;
 import com.android.volley.toolbox.StringRequest;
 import com.google.common.base.Joiner;
+import com.nexuspad.common.Constants;
 import com.nexuspad.service.account.AccountManager;
 import com.nexuspad.Manifest;
 import com.nexuspad.R;
@@ -54,7 +55,6 @@ public class EntryService {
 	public static final String ACTION_GET = "action_entry_get";
 	public static final String ACTION_ERROR = "action_entry_error";
 
-	public static final String KEY_ENTRY = "key_entry";
 	public static final String KEY_ERROR = "key_error";
 
 	private static EntryService mInstance;
@@ -93,7 +93,7 @@ public class EntryService {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			final String action = intent.getAction();
-			final NPEntry entry = intent.getParcelableExtra(KEY_ENTRY);
+			final NPEntry entry = intent.getParcelableExtra(Constants.KEY_ENTRY);
 
 			if (ACTION_DELETE.equals(action)) {
 				onDelete(context, intent, entry);
@@ -253,6 +253,8 @@ public class EntryService {
 	 * @throws NPException
 	 */
 	public void updateEntry(NPEntry entry) throws NPException {
+		Log.i("EntryService - [UPDATE]", entry.getEntryId());
+
 		/*
 		 * Update local store
 		 */
@@ -298,6 +300,8 @@ public class EntryService {
 	 * @throws NPException
 	 */
 	private void updateEntry(NPEntry entry, Map<String, String> actionDetail) throws NPException {
+		Log.i("EntryService - [UPDATE]", entry.getEntryId());
+
 		Map<String, String> params = new HashMap<String, String>();
 		NPWebServiceUtil.addOwnerParam(params, entry.getAccessInfo());
 
@@ -333,6 +337,8 @@ public class EntryService {
 	 * @throws NPException
 	 */
 	public void deleteEntry(NPEntry entry) throws NPException {
+		Log.i("EntryService - [DELETE]", entry.getEntryId());
+
 		/*
 		 * Update local store
 		 */
@@ -480,7 +486,7 @@ public class EntryService {
 				Logs.d(TAG, entry.toString());
 
 				Intent intent = new Intent(ACTION_GET);
-				intent.putExtra(KEY_ENTRY, entry);
+				intent.putExtra(Constants.KEY_ENTRY, entry);
 				mContext.sendBroadcast(intent, Manifest.permission.LISTEN_ENTRY_CHANGES);
 
 			} catch (JSONException e) {
@@ -513,17 +519,15 @@ public class EntryService {
 
 				final String actionName = actionResult.getActionName();
 				Intent intent = new Intent();
-				intent.putExtra(KEY_ENTRY, actionResult.getUpdatedEntry());
+				intent.putExtra(Constants.KEY_ENTRY, actionResult.getUpdatedEntry());
 
 				if (ServiceConstants.ACTION_ENTRY_DELETE.equals(actionName)) {
-					Logs.i(TAG, "action: delete");
 					intent.setAction(ACTION_DELETE);
 
 					// Delete entry from the local data store
 					EntryStore.delete(actionResult.getUpdatedEntry());
 
 				} else if (ServiceConstants.ACTION_ENTRY_UPDATE.equals(actionName)) {
-					Logs.i(TAG, "action: update");
 					intent.setAction(ACTION_UPDATE);
 
 					// Update the entry record in data store
@@ -532,7 +536,6 @@ public class EntryService {
 					EntryStore.update(updatedEntry);
 
 				} else if (ServiceConstants.ACTION_ENTRY_ADD.equals(actionName)) {
-					Logs.i(TAG, "action: add");
 					intent.setAction(ACTION_NEW);
 
 					// Update the entry record in data store

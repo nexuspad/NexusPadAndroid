@@ -4,8 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import com.nexuspad.common.activity.EntryEditActivity;
+import com.nexuspad.common.annotation.ModuleInfo;
 import com.nexuspad.common.annotation.ParentActivity;
-import com.nexuspad.common.annotation.ModuleId;
 import com.nexuspad.service.datamodel.NPAlbum;
 import com.nexuspad.service.datamodel.EntryTemplate;
 import com.nexuspad.service.datamodel.NPFolder;
@@ -13,7 +13,7 @@ import com.nexuspad.service.dataservice.ServiceConstants;
 import com.nexuspad.photo.fragment.AlbumEditFragment;
 import com.nexuspad.common.fragment.EntryEditFragment;
 
-@ModuleId(moduleId = ServiceConstants.PHOTO_MODULE, template = EntryTemplate.ALBUM)
+@ModuleInfo(moduleId = ServiceConstants.PHOTO_MODULE, template = EntryTemplate.ALBUM)
 @ParentActivity(PhotosActivity.class)
 public class AlbumEditActivity extends EntryEditActivity<NPAlbum> {
 

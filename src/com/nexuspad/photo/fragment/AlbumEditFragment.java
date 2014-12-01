@@ -19,7 +19,7 @@ import com.nexuspad.common.Constants;
 import com.nexuspad.common.activity.EntryEditActivity;
 import com.nexuspad.common.activity.UploadCenterActivity;
 import com.nexuspad.common.annotation.FragmentName;
-import com.nexuspad.common.annotation.ModuleId;
+import com.nexuspad.common.annotation.ModuleInfo;
 import com.nexuspad.common.fragment.EntryEditFragment;
 import com.nexuspad.common.utils.Lazy;
 import com.nexuspad.photo.activity.PhotosSelectActivity;
@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @FragmentName(AlbumEditFragment.TAG)
-@ModuleId(moduleId = ServiceConstants.PHOTO_MODULE, template = EntryTemplate.ALBUM)
+@ModuleInfo(moduleId = ServiceConstants.PHOTO_MODULE, template = EntryTemplate.ALBUM)
 public class AlbumEditFragment extends EntryEditFragment<NPAlbum> {
     public static final String TAG = "NewAlbumFragment";
     private static final String KEY_PATHS = "key_paths";

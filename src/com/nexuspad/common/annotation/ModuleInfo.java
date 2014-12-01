@@ -18,7 +18,7 @@ import java.lang.annotation.Target;
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ModuleId {
+public @interface ModuleInfo {
     /**
      * @return one of the {@code *_MODULE} constants in {@link com.nexuspad.service.dataservice.ServiceConstants}
      */

@@ -107,7 +107,7 @@
             android:parentActivityName=".home.activity.DashboardActivity"
             />
         <activity
-            android:name=".bookmark.activity.BookmarkEditEditActivity"
+            android:name=".bookmark.activity.BookmarkEditActivity"
             android:exported="true"
             android:label="@string/bookmark"
             >

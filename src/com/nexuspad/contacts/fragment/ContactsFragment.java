@@ -3,9 +3,7 @@ package com.nexuspad.contacts.fragment;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
@@ -16,33 +14,31 @@ import android.widget.ListView;
 import android.widget.SearchView;
 import com.google.common.base.Strings;
 import com.nexuspad.R;
-import com.nexuspad.common.activity.FoldersNavigatorActivity;
+import com.nexuspad.common.Constants;
 import com.nexuspad.common.adapters.EntriesAdapter;
 import com.nexuspad.common.adapters.ListViewHolder;
 import com.nexuspad.common.annotation.FragmentName;
-import com.nexuspad.common.annotation.ModuleId;
+import com.nexuspad.common.annotation.ModuleInfo;
 import com.nexuspad.common.fragment.EntriesFragment;
 import com.nexuspad.common.listeners.OnEntryMenuClickListener;
 import com.nexuspad.common.utils.EntriesLocalSearchFilter;
 import com.nexuspad.contacts.activity.ContactActivity;
 import com.nexuspad.contacts.activity.ContactEditActivity;
-import com.nexuspad.contacts.activity.ContactsActivity;
-import com.nexuspad.service.datamodel.*;
+import com.nexuspad.service.datamodel.EntryList;
+import com.nexuspad.service.datamodel.EntryTemplate;
+import com.nexuspad.service.datamodel.NPFolder;
+import com.nexuspad.service.datamodel.NPPerson;
 import com.nexuspad.service.dataservice.EntryListService;
 import com.nexuspad.service.dataservice.ServiceConstants;
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
-import java.lang.ref.WeakReference;
-import java.util.Collections;
 import java.util.List;
 
 @FragmentName(ContactsFragment.TAG)
-@ModuleId(moduleId = ServiceConstants.CONTACT_MODULE, template = EntryTemplate.CONTACT)
+@ModuleInfo(moduleId = ServiceConstants.CONTACT_MODULE, template = EntryTemplate.CONTACT)
 public final class ContactsFragment extends EntriesFragment {
 	public static final String TAG = "ContactsFragment";
-
-	private SortTask mSortTask;
 
 	private StickyListHeadersListView mStickyHeaderContactListView;
 
@@ -55,7 +51,7 @@ public final class ContactsFragment extends EntriesFragment {
 				filteredResult.getEntries().add(p);
 			}
 
-			((ContactsAdapter)getAdapter()).setDisplayEntries(filteredResult);
+			((ContactsAdapter)getAdapter()).setDisplayEntryList(filteredResult);
 			getAdapter().notifyDataSetChanged();
 		}
 	};
@@ -100,6 +96,9 @@ public final class ContactsFragment extends EntriesFragment {
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 
+		// set the listener for folder selector
+		initFolderSelector(ACTIVITY_REQ_CODE_FOLDER_SELECTOR);
+
 		final View theView = view.findViewById(R.id.list_view);
 
 		mStickyHeaderContactListView = (StickyListHeadersListView)theView;
@@ -108,9 +107,6 @@ public final class ContactsFragment extends EntriesFragment {
 
 		// set the folder selector view bar
 		mStickyHeaderContactListView.setOnScrollListener(newDirectionalScrollListener(null));
-
-		// set the listener for folder selector
-		initFolderSelector(ACTIVITY_REQ_CODE_FOLDER_SELECTOR);
 
 		mStickyHeaderContactListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
@@ -133,50 +129,42 @@ public final class ContactsFragment extends EntriesFragment {
 	}
 
 	@Override
-	protected void onListLoaded(EntryList entryList) {
+	protected void onListLoaded(EntryList newListToDisplay) {
 		Log.i(TAG, "Receiving contact entry list.");
 
-		super.onListLoaded(entryList);
+		super.onListLoaded(newListToDisplay);
 
-		if (mSortTask != null) {
-			mSortTask.cancel(true);
+		ContactsAdapter adapter = (ContactsAdapter)getAdapter();
 
-			ContactsAdapter adapter = (ContactsAdapter)getAdapter();
+		if (adapter == null) {
+			adapter = new ContactsAdapter(getActivity(), newListToDisplay, getFolder(), getEntryListService(), getTemplate(), mFilterDoneListener);
 
-			if (adapter == null) {
-				adapter = new ContactsAdapter(getActivity(), entryList, getFolder(), getEntryListService(), getTemplate(), mFilterDoneListener);
+			adapter.setOnMenuClickListener(new OnEntryMenuClickListener<NPPerson>(mStickyHeaderContactListView, getEntryService(), getUndoBarController()) {
+				@Override
+				public void onClick(View v) {
+					final int i = mStickyHeaderContactListView.getPositionForView(v);
+					final NPPerson contact = (NPPerson) getAdapter().getItem(i);
+					onEntryClick(contact, i, v);
+				}
 
-				adapter.setOnMenuClickListener(new OnEntryMenuClickListener<NPPerson>(mStickyHeaderContactListView, getEntryService(), getUndoBarController()) {
-					@Override
-					public void onClick(View v) {
-						final int i = mStickyHeaderContactListView.getPositionForView(v);
-						final NPPerson contact = (NPPerson) getAdapter().getItem(i);
-						onEntryClick(contact, i, v);
+				@Override
+				protected boolean onEntryMenuClick(NPPerson contact, int pos, int menuId) {
+					switch (menuId) {
+						case R.id.edit:
+							ContactEditActivity.startWithContact(getActivity(), getFolder(), contact);
+							return true;
+						default:
+							return super.onEntryMenuClick(contact, pos, menuId);
 					}
+				}
+			});
 
-					@Override
-					protected boolean onEntryMenuClick(NPPerson contact, int pos, int menuId) {
-						switch (menuId) {
-							case R.id.edit:
-								ContactEditActivity.startWithContact(getActivity(), getFolder(), contact);
-								return true;
-							default:
-								return super.onEntryMenuClick(contact, pos, menuId);
-						}
-					}
-				});
-
-				mStickyHeaderContactListView.setAdapter(adapter);
-				mStickyHeaderContactListView.setOnItemLongClickListener(adapter);
-				setAdapter(adapter);
-
-			} else {
-				adapter.notifyDataSetChanged();
-			}
+			mStickyHeaderContactListView.setAdapter(adapter);
+			mStickyHeaderContactListView.setOnItemLongClickListener(adapter);
+			setAdapter(adapter);
 
 		} else {
-			mSortTask = new SortTask(entryList, this);
-			mSortTask.execute((Void[]) null);
+			adapter.setDisplayEntryList(newListToDisplay);
 		}
 
 		clearVisualIndicator();
@@ -207,10 +195,13 @@ public final class ContactsFragment extends EntriesFragment {
 		switch (requestCode) {
 			case ACTIVITY_REQ_CODE_FOLDER_SELECTOR:
 				if (resultCode == Activity.RESULT_OK) {
-					final FragmentActivity activity = getActivity();
-					final NPFolder folder = data.getParcelableExtra(FoldersNavigatorActivity.KEY_FOLDER);
-					ContactsActivity.startWithFolder(folder, activity);
-					activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+//					final FragmentActivity activity = getActivity();
+//					final NPFolder folder = data.getParcelableExtra(Constants.KEY_FOLDER);
+//					ContactsActivity.startWithFolder(folder, activity);
+//					activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+
+					mFolder = data.getParcelableExtra(Constants.KEY_FOLDER);
+					queryEntriesAsync();
 				}
 				break;
 			default:
@@ -220,9 +211,6 @@ public final class ContactsFragment extends EntriesFragment {
 
 	@Override
 	public void onDestroy() {
-		if (mSortTask != null) {
-			mSortTask.cancel(true);
-		}
 		super.onDestroy();
 	}
 
@@ -283,7 +271,7 @@ public final class ContactsFragment extends EntriesFragment {
 	@Override
 	protected void reDisplayListEntries() {
 		clearVisualIndicator();
-		((ContactsAdapter)getAdapter()).setDisplayEntries(mEntryList);
+		((ContactsAdapter)getAdapter()).setDisplayEntryList(mEntryList);
 		getAdapter().notifyDataSetChanged();
 	}
 
@@ -298,8 +286,24 @@ public final class ContactsFragment extends EntriesFragment {
 			mFilter = new EntriesLocalSearchFilter(entryList, onFilterDoneListener);
 		}
 
-		private String getDisplayString(int position) {
-			return getItem(position).getTitle();
+		private String getDisplayTitle(int position) {
+			if (getItem(position) != null) {
+				return getItem(position).getTitle();
+			}
+
+			return "";
+		}
+
+		private String getSortKey(int position) {
+			if (getItem(position) != null) {
+				if (!Strings.isNullOrEmpty(getItem(position).getLastName())) {
+					return getItem(position).getLastName();
+				} else {
+					return getItem(position).getTitle();
+				}
+			} else {
+				return "";
+			}
 		}
 
 		@Override
@@ -325,7 +329,7 @@ public final class ContactsFragment extends EntriesFragment {
 //                }
 //            }
 
-			holder.getText1().setText(getDisplayString(position));
+			holder.getText1().setText(getDisplayTitle(position));
 			holder.getMenu().setOnClickListener(getOnMenuClickListener());
 
 			return convertView;
@@ -340,9 +344,10 @@ public final class ContactsFragment extends EntriesFragment {
 			}
 			final ListViewHolder holder = getHolder(convertView);
 
-			final String string = getDisplayString(position);
-			if (!TextUtils.isEmpty(string) && string.length() > 1) {
-				holder.getText1().setText(string.substring(0, 1));
+			final String sortKey = getSortKey(position);
+
+			if (!TextUtils.isEmpty(sortKey) && sortKey.length() > 1) {
+				holder.getText1().setText(sortKey.substring(0, 1));
 			} else {
 				holder.getText1().setText(R.string.others);
 			}
@@ -350,13 +355,17 @@ public final class ContactsFragment extends EntriesFragment {
 			return convertView;
 		}
 
+
 		@Override
 		public long getHeaderId(int position) {
 			if (isEmpty()) return -1;
-			final String string = getDisplayString(position);
-			if (!TextUtils.isEmpty(string) && string.length() > 1) {
-				return string.substring(0, 1).toUpperCase().charAt(0);
+
+			final String sortKey = getSortKey(position);
+
+			if (!TextUtils.isEmpty(sortKey) && sortKey.length() > 1) {
+				return sortKey.substring(0, 1).toUpperCase().charAt(0);
 			}
+
 			return 0;
 		}
 
@@ -366,30 +375,27 @@ public final class ContactsFragment extends EntriesFragment {
 		}
 
 		@Override
+		public int getCount() {
+			return mDisplayEntryList.getEntries().size();
+		}
+
+		@Override
+		public NPPerson getItem(int position) {
+			if (mDisplayEntryList.isEmpty()) {
+				return null;
+			}
+			return (NPPerson)mDisplayEntryList.getEntries().get(position);
+		}
+
+		@Override
+		public long getItemId(int position) {
+			return position;
+		}
+
+		@Override
 		public void doSearch(String string) {
 			mFilter.filter(string);
 		}
 	}
 
-	private static class SortTask extends AsyncTask<Void, Void, Void> {
-		private final EntryList mContactList;
-		private final WeakReference<ContactsFragment> mFragment;
-
-		private SortTask(EntryList contactList, ContactsFragment fragment) {
-			mContactList = contactList;
-			mFragment = new WeakReference<ContactsFragment>(fragment);
-		}
-
-		@Override
-		protected Void doInBackground(Void... params) {
-			Collections.sort(mContactList.getEntries(), NPEntry.ORDERING_BY_TITLE);
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Void aVoid) {
-			final ContactsFragment fragment = mFragment.get();
-			fragment.onListLoaded(mContactList);
-		}
-	}
 }

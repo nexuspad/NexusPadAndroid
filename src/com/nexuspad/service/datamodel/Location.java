@@ -135,11 +135,12 @@ public class Location implements Parcelable {
      */
     public String getFullAddress() {
         final StringBuilder builder = new StringBuilder();
-        appendIfNotEmpty(builder, getStreetAddress());
-        appendIfNotEmpty(builder, getCity());
-        appendIfNotEmpty(builder, getProvince());
-        appendIfNotEmpty(builder, getCountry());
-        appendIfNotEmpty(builder, getPostalCode());
+	    appendIfNotEmpty(builder, place);
+        appendIfNotEmpty(builder, streetAddress);
+        appendIfNotEmpty(builder, city);
+        appendIfNotEmpty(builder, province);
+        appendIfNotEmpty(builder, country);
+        appendIfNotEmpty(builder, postalCode);
         return builder.toString();
     }
 

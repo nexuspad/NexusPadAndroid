@@ -61,6 +61,11 @@
             <artifactId>picasso</artifactId>
             <version>2.4.0</version>
         </dependency>
+        <dependency>
+            <groupId>se.emilsjolander</groupId>
+            <artifactId>stickylistheaders</artifactId>
+            <version>2.5.2</version>
+        </dependency>
     </dependencies>
 
     <dependencyManagement>

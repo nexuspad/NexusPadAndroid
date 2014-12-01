@@ -22,7 +22,7 @@ import com.nexuspad.calendar.view.RecurrenceTextView;
 import com.nexuspad.calendar.view.TimeButton;
 import com.nexuspad.common.Constants;
 import com.nexuspad.common.annotation.FragmentName;
-import com.nexuspad.common.annotation.ModuleId;
+import com.nexuspad.common.annotation.ModuleInfo;
 import com.nexuspad.common.fragment.EntryEditFragment;
 import com.nexuspad.common.view.LocationTextView;
 import com.nexuspad.contacts.activity.LocationEditActivity;
@@ -40,7 +40,7 @@ import static com.nexuspad.service.dataservice.ServiceConstants.CALENDAR_MODULE;
  * Author: edmond
  */
 @FragmentName(EventEditFragment.TAG)
-@ModuleId(moduleId = CALENDAR_MODULE, template = EntryTemplate.EVENT)
+@ModuleInfo(moduleId = CALENDAR_MODULE, template = EntryTemplate.EVENT)
 public class EventEditFragment extends EntryEditFragment<NPEvent> {
 	public static final String TAG = "EventEditFragment";
 
@@ -92,6 +92,7 @@ public class EventEditFragment extends EntryEditFragment<NPEvent> {
 				if (resultCode == Activity.RESULT_OK) {
 					final Location location = data.getParcelableExtra(LocationEditActivity.KEY_LOCATION);
 					updateLocationView(location);
+					getEntry().setLocation(location);
 				}
 				break;
 
@@ -99,6 +100,7 @@ public class EventEditFragment extends EntryEditFragment<NPEvent> {
 				if (resultCode == Activity.RESULT_OK) {
 					Recurrence recurrence = data.getParcelableExtra(RecurrenceEditActivity.KEY_RECURRENCE);
 					updateRecurrenceView(recurrence);
+					getEntry().setRecurrence(recurrence);
 				}
 			default:
 				super.onActivityResult(requestCode, resultCode, data);
@@ -315,10 +317,19 @@ public class EventEditFragment extends EntryEditFragment<NPEvent> {
 			mFromDateView.setTime(startTime);
 			mFromTimeView.setTime(startTime);
 
-			final Date endTime = event.getEndTime();
-			if (endTime != null) {
-				mToDateView.setTime(endTime);
-				mToTimeView.setTime(endTime);
+			if (event.isAllDayEvent()) {
+				mFromTimeView.setVisibility(View.INVISIBLE);
+				mToLayoutView.setVisibility(View.GONE);
+
+			} else {
+				mFromTimeView.setVisibility(View.VISIBLE);
+				mToLayoutView.setVisibility(View.VISIBLE);
+
+				final Date endTime = event.getEndTime();
+				if (endTime != null) {
+					mToDateView.setTime(endTime);
+					mToTimeView.setTime(endTime);
+				}
 			}
 
 			mAllDayView.setChecked(event.isAllDayEvent());
@@ -392,21 +403,22 @@ public class EventEditFragment extends EntryEditFragment<NPEvent> {
 			}
 		}
 
-		// End time
-		if (mEndYmd != null) {
-			try {
-				event.setEndTime(DateUtil.parseEventDateStringAndTimeString(mEndYmd, mEndHourMin, TimeZone.getDefault()));
-			} catch (ParseException e) {
-				Log.e(TAG, "Error parsing end time: " + mEndYmd + " " + String.valueOf(mEndHourMin));
-			}
-		}
-
-		// Set the flags
-
 		if (mAllDayView.isChecked()) {
+			// Set the flags
 			event.setAllDayEvent(mAllDayView.isChecked());
 			event.setSingleTimeEvent(false);
 			event.setNoStartingTime(true);
+			event.setEndTime(null);
+
+		} else {
+			// End time
+			if (mEndYmd != null) {
+				try {
+					event.setEndTime(DateUtil.parseEventDateStringAndTimeString(mEndYmd, mEndHourMin, TimeZone.getDefault()));
+				} catch (ParseException e) {
+					Log.e(TAG, "Error parsing end time: " + mEndYmd + " " + String.valueOf(mEndHourMin));
+				}
+			}
 		}
 
 		event.setTags(mTagsView.getText().toString());

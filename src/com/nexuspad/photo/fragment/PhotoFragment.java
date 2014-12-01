@@ -17,7 +17,7 @@ import com.nexuspad.R;
 import com.nexuspad.app.App;
 import com.nexuspad.common.Constants;
 import com.nexuspad.common.annotation.FragmentName;
-import com.nexuspad.common.annotation.ModuleId;
+import com.nexuspad.common.annotation.ModuleInfo;
 import com.nexuspad.common.fragment.EntriesFragment;
 import com.nexuspad.common.view.ZoomableImageView;
 import com.nexuspad.service.datamodel.EntryTemplate;
@@ -39,16 +39,14 @@ import static android.view.ViewGroup.LayoutParams;
  * @author Edmond
  */
 @FragmentName(PhotoFragment.TAG)
-@ModuleId(moduleId = ServiceConstants.PHOTO_MODULE, template = EntryTemplate.PHOTO)
+@ModuleInfo(moduleId = ServiceConstants.PHOTO_MODULE, template = EntryTemplate.PHOTO)
 public class PhotoFragment extends EntriesFragment {
-    public static final String TAG = "PhotoFragment";
+	public static final String TAG = "PhotoFragment";
 
-    public static final String KEY_PHOTO = "key_photo";
+	private static List<? extends NPPhoto> sPhotos;
 
-    private static List<? extends NPPhoto> sPhotos;
-
-    private ViewPager mViewPager;
-    private int mInitialPhotoIndex = -1;
+	private ViewPager mViewPager;
+	private int mInitialPhotoIndex = -1;
 
 	private PhotoDisplayCallback mCallback;
 
@@ -62,31 +60,31 @@ public class PhotoFragment extends EntriesFragment {
 		void onDeleting(PhotoFragment f, NPPhoto photo);
 	}
 
-    public static PhotoFragment of(NPFolder f, NPPhoto photo, List<? extends NPPhoto> photos) {
-        final Bundle bundle = new Bundle();
-        bundle.putParcelable(Constants.KEY_FOLDER, f);
-        bundle.putParcelable(KEY_PHOTO, photo);
+	public static PhotoFragment of(NPFolder f, NPPhoto photo, List<? extends NPPhoto> photos) {
+		final Bundle bundle = new Bundle();
+		bundle.putParcelable(Constants.KEY_FOLDER, f);
+		bundle.putParcelable(Constants.KEY_PHOTO, photo);
 
-        sPhotos = new ArrayList<NPPhoto>(photos); // parceling is too slow
+		sPhotos = new ArrayList<NPPhoto>(photos); // parceling is too slow
 
-        final PhotoFragment fragment = new PhotoFragment();
-        fragment.setArguments(bundle);
+		final PhotoFragment fragment = new PhotoFragment();
+		fragment.setArguments(bundle);
 
-        return fragment;
-    }
+		return fragment;
+	}
 
-    @Override
-    public void onCreate(Bundle savedState) {
-        setHasOptionsMenu(true);
+	@Override
+	public void onCreate(Bundle savedState) {
+		setHasOptionsMenu(true);
 
-        super.onCreate(savedState);
-        final Bundle arguments = getArguments();
+		super.onCreate(savedState);
+		final Bundle arguments = getArguments();
 
-        final NPPhoto photo = arguments.getParcelable(KEY_PHOTO);
-        mInitialPhotoIndex = Iterables.indexOf(sPhotos, photo.filterById());
+		final NPPhoto photo = arguments.getParcelable(Constants.KEY_PHOTO);
+		mInitialPhotoIndex = Iterables.indexOf(sPhotos, photo.filterById());
 
-	    mPicasso = Picasso.with(getActivity());
-    }
+		mPicasso = Picasso.with(getActivity());
+	}
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -95,77 +93,78 @@ public class PhotoFragment extends EntriesFragment {
 		mCallback = App.getCallbackOrThrow(activity, PhotoDisplayCallback.class);
 	}
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.photo_topmenu, menu);
-    }
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		super.onCreateOptionsMenu(menu, inflater);
+		inflater.inflate(R.menu.photo_topmenu, menu);
+	}
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.delete:
-                final NPPhoto photo = sPhotos.get(mViewPager.getCurrentItem());
-                deleteEntry(photo);
-                sPhotos.remove(photo);
-                stableNotifyAdapter();
-	            mCallback.onDeleting(this, photo);
-	            return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case R.id.delete:
+				final NPPhoto photo = sPhotos.get(mViewPager.getCurrentItem());
+				deleteEntry(photo);
+				sPhotos.remove(photo);
+				stableNotifyAdapter();
+				mCallback.onDeleting(this, photo);
+				return true;
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.photo_frag, container, false);
-    }
+			default:
+				return super.onOptionsItemSelected(item);
+		}
+	}
 
-    @Override
-    public void onViewCreated(View view, Bundle savedState) {
-        super.onViewCreated(view, savedState);
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		return inflater.inflate(R.layout.photo_frag, container, false);
+	}
 
-        mViewPager = (ViewPager)view.findViewById(R.id.view_pager);
+	@Override
+	public void onViewCreated(View view, Bundle savedState) {
+		super.onViewCreated(view, savedState);
 
-        mViewPager.setAdapter(newPagerAdapter());
-        mViewPager.setCurrentItem(mInitialPhotoIndex, false);
+		mViewPager = (ViewPager)view.findViewById(R.id.view_pager);
 
-        final Resources resources = getResources();
-        mViewPager.setBackgroundColor(resources.getColor(android.R.color.background_dark));
-        mViewPager.setPageMargin(resources.getDimensionPixelSize(R.dimen.np_padding_medium));
-    }
+		mViewPager.setAdapter(newPagerAdapter());
+		mViewPager.setCurrentItem(mInitialPhotoIndex, false);
 
-    private void stableNotifyAdapter() {
-        final int prevPos = mViewPager.getCurrentItem();
-        mViewPager.getAdapter().notifyDataSetChanged();
-        mViewPager.setCurrentItem(prevPos);
-    }
+		final Resources resources = getResources();
+		mViewPager.setBackgroundColor(resources.getColor(android.R.color.background_dark));
+		mViewPager.setPageMargin(resources.getDimensionPixelSize(R.dimen.np_padding_medium));
+	}
 
-    private PagerAdapter newPagerAdapter() {
-        return new PagerAdapter() {
-            @Override
-            public Object instantiateItem(ViewGroup container, int position) {
-                final NPPhoto photo = sPhotos.get(position);
+	private void stableNotifyAdapter() {
+		final int prevPos = mViewPager.getCurrentItem();
+		mViewPager.getAdapter().notifyDataSetChanged();
+		mViewPager.setCurrentItem(prevPos);
+	}
 
-                final FragmentActivity activity = getActivity();
-                final ActionBar actionBar = activity.getActionBar();
-                final LayoutInflater inflater = LayoutInflater.from(activity);
+	private PagerAdapter newPagerAdapter() {
+		return new PagerAdapter() {
+			@Override
+			public Object instantiateItem(ViewGroup container, int position) {
+				final NPPhoto photo = sPhotos.get(position);
 
-                final View frame = inflater.inflate(R.layout.photo_layout, container, false);
+				final FragmentActivity activity = getActivity();
+				final ActionBar actionBar = activity.getActionBar();
+				final LayoutInflater inflater = LayoutInflater.from(activity);
 
-                final ZoomableImageView imageView = (ZoomableImageView)frame.findViewById(android.R.id.icon);
-                imageView.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
-                    @Override
-                    public void onViewTap(View view, float x, float y) {
-                        if (actionBar != null) {
-                            if (actionBar.isShowing()) {
-                                actionBar.hide();
-                            } else {
-                                actionBar.show();
-                            }
-                        }
-                    }
-                });
+				final View frame = inflater.inflate(R.layout.photo_layout, container, false);
+
+				final ZoomableImageView imageView = (ZoomableImageView)frame.findViewById(android.R.id.icon);
+				imageView.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
+					@Override
+					public void onViewTap(View view, float x, float y) {
+						if (actionBar != null) {
+							if (actionBar.isShowing()) {
+								actionBar.hide();
+							} else {
+								actionBar.show();
+							}
+						}
+					}
+				});
 
 //                try {
 //                    final String url = NPWebServiceUtil.fullUrlWithAuthenticationTokens(photo.getPhotoUrl(), getActivity());
@@ -193,49 +192,49 @@ public class PhotoFragment extends EntriesFragment {
 //	                e.printStackTrace();
 //                }
 
-	            try {
-		            final String url = NPWebServiceUtil.fullUrlWithAuthenticationTokens(photo.getPhotoUrl(), getActivity());
+				try {
+					final String url = NPWebServiceUtil.fullUrlWithAuthenticationTokens(photo.getPhotoUrl(), getActivity());
 
-		            mPicasso.load(url)
-				            .placeholder(R.drawable.placeholder)
-				            .error(R.drawable.ic_launcher)
-				            .into(imageView, new ZoomableImageViewCallback(imageView));
+					mPicasso.load(url)
+							.placeholder(R.drawable.placeholder)
+							.error(R.drawable.ic_launcher)
+							.into(imageView, new ZoomableImageViewCallback(imageView));
 
-	            } catch (NPException e) {
-		            // TODO handle error
-	            }
+				} catch (NPException e) {
+					// TODO handle error
+				}
 
-	            container.addView(frame, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-                return frame;
-            }
+				container.addView(frame, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+				return frame;
+			}
 
-            @Override
-            public void destroyItem(ViewGroup container, int position, Object object) {
-                final ImageView imageView = (ImageView) ((ViewGroup) object).getChildAt(0);
-                container.removeView(imageView);
-            }
+			@Override
+			public void destroyItem(ViewGroup container, int position, Object object) {
+				final ImageView imageView = (ImageView) ((ViewGroup) object).getChildAt(0);
+				container.removeView(imageView);
+			}
 
-            @Override
-            public void setPrimaryItem(ViewGroup container, int position, Object object) {
-                super.setPrimaryItem(container, position, object);
-                final NPPhoto photo = sPhotos.get(position);
-                final ActionBar actionBar = getActivity().getActionBar();
-                if (actionBar != null) {
-                    actionBar.setTitle(photo.getTitle());
-                }
-            }
+			@Override
+			public void setPrimaryItem(ViewGroup container, int position, Object object) {
+				super.setPrimaryItem(container, position, object);
+				final NPPhoto photo = sPhotos.get(position);
+				final ActionBar actionBar = getActivity().getActionBar();
+				if (actionBar != null) {
+					actionBar.setTitle(photo.getTitle());
+				}
+			}
 
-            @Override
-            public boolean isViewFromObject(View v, Object o) {
-                return v == o;
-            }
+			@Override
+			public boolean isViewFromObject(View v, Object o) {
+				return v == o;
+			}
 
-            @Override
-            public int getCount() {
-                return sPhotos.size();
-            }
-        };
-    }
+			@Override
+			public int getCount() {
+				return sPhotos.size();
+			}
+		};
+	}
 
 
 

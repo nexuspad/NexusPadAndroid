@@ -14,7 +14,7 @@ import com.nexuspad.common.Constants;
 import com.nexuspad.common.annotation.FragmentName;
 import com.google.common.base.Strings;
 import com.nexuspad.R;
-import com.nexuspad.common.annotation.ModuleId;
+import com.nexuspad.common.annotation.ModuleInfo;
 import com.nexuspad.app.App;
 import com.nexuspad.contacts.activity.ContactEditActivity;
 import com.nexuspad.service.datamodel.*;
@@ -27,7 +27,7 @@ import java.util.List;
  * Author: Edmond
  */
 @FragmentName(ContactFragment.TAG)
-@ModuleId(moduleId = ServiceConstants.CONTACT_MODULE, template = EntryTemplate.CONTACT)
+@ModuleInfo(moduleId = ServiceConstants.CONTACT_MODULE, template = EntryTemplate.CONTACT)
 public class ContactFragment extends EntryFragment<NPPerson> {
 	public static final String TAG = "ContactFragment";
 

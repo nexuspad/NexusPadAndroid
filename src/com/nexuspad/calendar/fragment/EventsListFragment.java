@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.*;
@@ -14,18 +13,17 @@ import android.widget.ListView;
 import android.widget.TextView;
 import com.google.common.base.Strings;
 import com.nexuspad.R;
-import com.nexuspad.service.account.AccountManager;
 import com.nexuspad.calendar.activity.EventActivity;
 import com.nexuspad.calendar.activity.EventEditActivity;
-import com.nexuspad.calendar.activity.EventsActivity;
-import com.nexuspad.common.activity.FoldersNavigatorActivity;
+import com.nexuspad.common.Constants;
 import com.nexuspad.common.adapters.EntriesAdapter;
 import com.nexuspad.common.adapters.ListViewHolder;
-import com.nexuspad.common.listeners.OnEventListEndListener;
 import com.nexuspad.common.annotation.FragmentName;
-import com.nexuspad.common.annotation.ModuleId;
+import com.nexuspad.common.annotation.ModuleInfo;
 import com.nexuspad.common.fragment.EntriesFragment;
 import com.nexuspad.common.listeners.OnEntryMenuClickListener;
+import com.nexuspad.common.listeners.OnEventListEndListener;
+import com.nexuspad.service.account.AccountManager;
 import com.nexuspad.service.datamodel.*;
 import com.nexuspad.service.dataservice.EntryListService;
 import com.nexuspad.service.dataservice.NPException;
@@ -44,7 +42,7 @@ import java.util.List;
  * User: ren
  */
 @FragmentName(EventsListFragment.TAG)
-@ModuleId(moduleId = ServiceConstants.CALENDAR_MODULE, template = EntryTemplate.EVENT)
+@ModuleInfo(moduleId = ServiceConstants.CALENDAR_MODULE, template = EntryTemplate.EVENT)
 public class EventsListFragment extends EntriesFragment {
 
 	public static final String TAG = "EventsListFragment";
@@ -111,17 +109,16 @@ public class EventsListFragment extends EntriesFragment {
 
 		mStickyHeaderEventListView = (StickyListHeadersListView)theView;
 
-		mStickyHeaderEventListView.setFastScrollEnabled(false);     // not ready for the first release
-
 		// Set the scroll listener for loading more
 		Log.i(TAG, "The initial date range is: " + mDateRange);
 
 		mLoadMoreScrollListener.setCurrentDateRange(mDateRange);
 		mStickyHeaderEventListView.setOnScrollListener(newDirectionalScrollListener(mLoadMoreScrollListener));
 
-		// set the listener for folder selector
+		// Set the listener for folder selector
 		initFolderSelector(ACTIVITY_REQ_CODE_FOLDER_SELECTOR);
 
+		// Set the listener for each item
 		mStickyHeaderEventListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -159,17 +156,17 @@ public class EventsListFragment extends EntriesFragment {
 
 
 	@Override
-	protected void onListLoaded(EntryList entryList) {
-		Log.i(TAG, "Receive event list: " + String.valueOf(entryList.getEntries().size()));
+	protected void onListLoaded(EntryList newListToDisplay) {
+		Log.i(TAG, "Receive event list: " + String.valueOf(newListToDisplay.getEntries().size()));
 
-		super.onListLoaded(entryList);
+		super.onListLoaded(newListToDisplay);
 
-		mEventList = entryList;
+		mEventList = newListToDisplay;
 
 		EventsListAdapter adapter = (EventsListAdapter)getAdapter();
 
 		if (adapter == null) {
-			adapter = new EventsListAdapter(getActivity(), entryList, getFolder(), getEntryListService());
+			adapter = new EventsListAdapter(getActivity(), newListToDisplay, getFolder(), getEntryListService());
 
 			adapter.setOnMenuClickListener(new OnEntryMenuClickListener<NPEvent>(mStickyHeaderEventListView, getEntryService(), getUndoBarController()) {
 				@Override
@@ -195,17 +192,17 @@ public class EventsListFragment extends EntriesFragment {
 			mStickyHeaderEventListView.setOnItemLongClickListener(adapter);
 			setAdapter(adapter);
 
+			scrollToToday(mEventList);
+
 		} else {
-			adapter.notifyDataSetChanged();
+			adapter.setDisplayEntryList(newListToDisplay);
 		}
 
 		dismissProgressIndicator();
 
-//		scrollToStartTime(mEventList);
-
 		mLoadMoreScrollListener.reset();
 
-		if (!entryList.isEntryUpdated()) {
+		if (!newListToDisplay.isEntryUpdated()) {
 			mLoadMoreScrollListener.setLoadingDisabled(true);
 		}
 	}
@@ -217,10 +214,8 @@ public class EventsListFragment extends EntriesFragment {
 		switch (requestCode) {
 			case ACTIVITY_REQ_CODE_FOLDER_SELECTOR:
 				if (resultCode == Activity.RESULT_OK) {
-					final FragmentActivity activity = getActivity();
-					final NPFolder folder = data.getParcelableExtra(FoldersNavigatorActivity.KEY_FOLDER);
-					EventsActivity.startWithFolder(folder, activity);
-					activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+					mFolder = data.getParcelableExtra(Constants.KEY_FOLDER);
+					queryEntriesAsync();
 				}
 				break;
 			default:
@@ -228,17 +223,16 @@ public class EventsListFragment extends EntriesFragment {
 		}
 	}
 
+	private void scrollToToday(EntryList eventList) {
+		Date today = Calendar.getInstance().getTime();
 
-	private void scrollToStartTime(EntryList eventList) {
+		int i = 0;
 		for (NPEntry entry : (List<? extends NPEntry>)eventList.getEntries()) {
 			NPEvent event = NPEvent.fromEntry(entry);
-
-			int i = 0;
-			if (event.getStartTime().after(DateUtil.parseFromYYYYMMDD(mDateRange.getStartYmd()))) {
+			if (event.getStartTime().after(today)) {
 				mStickyHeaderEventListView.smoothScrollToPosition(i);
 				break;
 			}
-
 			i++;
 		}
 	}
@@ -295,9 +289,7 @@ public class EventsListFragment extends EntriesFragment {
 	 * View holder for event item.
 	 */
 	private static class EventViewHolder {
-		private ViewGroup mDateFrame;
-		private TextView mDayOfWeekV;
-		private TextView mDateV;
+		private ViewGroup mColorLabelFrame;
 		private TextView mTitleV;
 		private TextView mTimeV;
 		private ImageButton mMenu;
@@ -327,11 +319,9 @@ public class EventsListFragment extends EntriesFragment {
 				convertView = getLayoutInflater().inflate(R.layout.list_item_event, parent, false);
 
 				viewHolder = new EventViewHolder();
-				viewHolder.mDayOfWeekV = (TextView)convertView.findViewById(R.id.lbl_day_of_week);
-				viewHolder.mDateV = (TextView)convertView.findViewById(R.id.lbl_date);
 				viewHolder.mTitleV = (TextView)convertView.findViewById(R.id.lbl_title);
 				viewHolder.mTimeV = (TextView)convertView.findViewById(R.id.lbl_time);
-				viewHolder.mDateFrame = (ViewGroup)convertView.findViewById(R.id.date_frame);
+				viewHolder.mColorLabelFrame = (ViewGroup)convertView.findViewById(R.id.color_label_frame);
 
 				viewHolder.mMenu = (ImageButton)convertView.findViewById(R.id.menu);
 
@@ -344,7 +334,8 @@ public class EventsListFragment extends EntriesFragment {
 			final Date startTime = event.getStartTime();
 			final Date endTime = event.getEndTime();
 
-			final String timeStr;
+			String timeStr = "";
+
 			if (event.isAllDayEvent()) {
 				timeStr = getString(R.string.all_day);
 
@@ -358,14 +349,14 @@ public class EventsListFragment extends EntriesFragment {
 				timeStr = "";
 			}
 
+			timeStr = mDayOfWeekFormat.format(startTime) + ", " + timeStr;
+
 			viewHolder.mTimeV.setText(timeStr);
-			viewHolder.mDayOfWeekV.setText(mDayOfWeekFormat.format(startTime));
-			viewHolder.mDateV.setText(mDateFormat.format(startTime));
 			viewHolder.mTitleV.setText(event.getTitle());
 
 			if (!Strings.isNullOrEmpty(event.getColorLabel())) {
 				final int color = Color.parseColor(event.getColorLabel());
-				viewHolder.mDateFrame.setBackgroundColor(color);
+				viewHolder.mColorLabelFrame.setBackgroundColor(color);
 			}
 
 			viewHolder.mMenu.setOnClickListener(getOnMenuClickListener());
@@ -402,5 +393,24 @@ public class EventsListFragment extends EntriesFragment {
 			calendar.setTime(time);
 			return calendar.get(Calendar.MONTH);
 		}
+
+		@Override
+		public int getCount() {
+			return mDisplayEntryList.getEntries().size();
+		}
+
+		@Override
+		public NPEvent getItem(int position) {
+			if (mDisplayEntryList.isEmpty()) {
+				return null;
+			}
+			return (NPEvent)mDisplayEntryList.getEntries().get(position);
+		}
+
+		@Override
+		public long getItemId(int position) {
+			return position;
+		}
+
 	}
 }

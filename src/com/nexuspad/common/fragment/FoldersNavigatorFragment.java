@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.*;
 import android.view.View.OnClickListener;
@@ -16,12 +17,13 @@ import android.widget.Toast;
 import com.google.common.collect.Iterables;
 import com.nexuspad.Manifest;
 import com.nexuspad.R;
-import com.nexuspad.service.account.AccountManager;
 import com.nexuspad.app.App;
+import com.nexuspad.common.Constants;
 import com.nexuspad.common.activity.UpdateFolderActivity;
 import com.nexuspad.common.adapters.FolderNavigatorAdapter;
 import com.nexuspad.common.adapters.OnFolderMenuClickListener;
 import com.nexuspad.common.annotation.FragmentName;
+import com.nexuspad.service.account.AccountManager;
 import com.nexuspad.service.datamodel.NPFolder;
 import com.nexuspad.service.dataservice.FolderService;
 import com.nexuspad.service.dataservice.FolderService.FolderReceiver;
@@ -35,10 +37,9 @@ import java.util.List;
  *
  * @author Edmond
  */
-@FragmentName(FoldersFragment.TAG)
-public class FoldersFragment extends UndoBarFragment {
+@FragmentName(FoldersNavigatorFragment.TAG)
+public class FoldersNavigatorFragment extends UndoBarFragment implements SwipeRefreshLayout.OnRefreshListener {
 	public static final String TAG = "FoldersFragment";
-	public static final String KEY_PARENT_FOLDER = "com.nexuspad.ui.fragment.FoldersFragment.parent_folder";
 	private static final String KEY_LIST_POS = "key_list_pos";
 
 	private NavigationCallback mCallback;
@@ -46,24 +47,10 @@ public class FoldersFragment extends UndoBarFragment {
 	private NPFolder mParentFolder;
 	private List<NPFolder> mSubFolders;
 
+	protected View mListFrame;
 	private View mQuickReturnV;
 	private ListView mListView;
 	private FolderNavigatorAdapter mFoldersAdapter;
-
-
-	/**
-	 * @param folder the parent folder of the folders list
-	 */
-	public static FoldersFragment of(NPFolder folder) {
-		Bundle bundle = new Bundle();
-		bundle.putParcelable(KEY_PARENT_FOLDER, folder);
-
-		FoldersFragment fragment = new FoldersFragment();
-		fragment.setArguments(bundle);
-
-		return fragment;
-	}
-
 
 	public interface NavigationCallback {
 		void onFolderClicked(NPFolder folder);
@@ -148,7 +135,7 @@ public class FoldersFragment extends UndoBarFragment {
 
 		Bundle arguments = getArguments();
 		if (arguments != null) {
-			mParentFolder = arguments.getParcelable(KEY_PARENT_FOLDER);
+			mParentFolder = arguments.getParcelable(Constants.KEY_PARENT_FOLDER);
 		}
 
 		mFolderService = FolderService.getInstance(getActivity());
@@ -194,18 +181,23 @@ public class FoldersFragment extends UndoBarFragment {
 		/*
 		 * Init the loading UI manager.
 		 */
-		final View listFrame = view.findViewById(R.id.main_list_frame);
+		mListFrame = view.findViewById(R.id.main_list_frame);
 		final View progressFrame = view.findViewById(R.id.frame_progress);
 		final View retryFrame = view.findViewById(R.id.frame_retry);
 
-		if (listFrame != null && progressFrame != null && retryFrame != null) {
-			mLoadingUiManager = new LoadingUiManager(listFrame, retryFrame, progressFrame, new View.OnClickListener() {
+		if (mListFrame != null && progressFrame != null && retryFrame != null) {
+			mLoadingUiManager = new LoadingUiManager(mListFrame, retryFrame, progressFrame, new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					mLoadingUiManager.fadeInProgressFrame();
 					onRetryClicked(v);
 				}
 			});
+		}
+
+		if (mListFrame instanceof android.support.v4.widget.SwipeRefreshLayout) {
+			SwipeRefreshLayout swipeLayout = (SwipeRefreshLayout)mListFrame;
+			swipeLayout.setOnRefreshListener(this);
 		}
 
 		mQuickReturnV = view.findViewById(R.id.quick_return);
@@ -217,6 +209,9 @@ public class FoldersFragment extends UndoBarFragment {
 		}
 
 		if (mListView != null) {
+			/*
+			 * click on folder to open entries.
+			 */
 			mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 				@Override
 				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -265,6 +260,7 @@ public class FoldersFragment extends UndoBarFragment {
 		mListView.setAdapter(mFoldersAdapter);
 
 		dismissProgressIndicator();
+		((SwipeRefreshLayout)mListFrame).setRefreshing(false);
 	}
 
 
@@ -323,6 +319,20 @@ public class FoldersFragment extends UndoBarFragment {
 		}
 	}
 
+
+	/**
+	 * SwipeRefresh handler.
+	 */
+	@Override
+	public void onRefresh() {
+		if (mListFrame instanceof SwipeRefreshLayout) {
+			((SwipeRefreshLayout)mListFrame).setRefreshing(true);
+			try {
+				mFolderService.getSubFolders(mParentFolder);
+			} catch (NPException e) {
+			}
+		}
+	}
 
 	protected FolderService getFolderService() {
 		return mFolderService;

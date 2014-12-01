@@ -10,16 +10,17 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import com.nexuspad.service.account.AccountManager;
+import com.nexuspad.common.Constants;
 import com.nexuspad.common.activity.EntryEditActivity;
-import com.nexuspad.common.annotation.ModuleId;
 import com.nexuspad.common.activity.FoldersNavigatorActivity;
+import com.nexuspad.common.annotation.ModuleInfo;
+import com.nexuspad.service.account.AccountManager;
 import com.nexuspad.service.datamodel.NPEntry;
 import com.nexuspad.service.datamodel.NPFolder;
 import com.nexuspad.service.dataservice.*;
 
 /**
- * Annotate it with {@link ModuleId}.
+ * Annotate it with {@link com.nexuspad.common.annotation.ModuleInfo}.
  *
  * @author Edmond
  */
@@ -44,7 +45,7 @@ public abstract class EntryEditFragment<T extends NPEntry> extends EntryFragment
 	 */
 	public abstract T getEntryFromEditor();
 
-	private ModuleId mModuleId;
+	private ModuleInfo mModuleId;
 	private EntryEditActivity.Mode mMode;
 
 	protected EntryEditActivity.Mode getMode() {
@@ -64,7 +65,7 @@ public abstract class EntryEditFragment<T extends NPEntry> extends EntryFragment
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mModuleId = ((Object) this).getClass().getAnnotation(ModuleId.class);
+		mModuleId = ((Object) this).getClass().getAnnotation(ModuleInfo.class);
 		mMode = getEntry() == null ? EntryEditActivity.Mode.NEW : EntryEditActivity.Mode.EDIT;
 	}
 
@@ -96,11 +97,12 @@ public abstract class EntryEditFragment<T extends NPEntry> extends EntryFragment
 	 */
 	protected void onAddEntry(T entry) {
 		Log.i(TAG, entry.toString());
-//		try {
-//			getEntryService().addEntry(entry);
-//		} catch (NPException e) {
-//			throw new RuntimeException(e);
-//		}
+
+		try {
+			getEntryService().addEntry(entry);
+		} catch (NPException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	public final void updateEntry() {
@@ -159,7 +161,7 @@ public abstract class EntryEditFragment<T extends NPEntry> extends EntryFragment
 		switch (requestCode) {
 			case REQ_FOLDER:
 				if (resultCode == Activity.RESULT_OK) {
-					final NPFolder folder = data.getParcelableExtra(FoldersNavigatorActivity.KEY_FOLDER);
+					final NPFolder folder = data.getParcelableExtra(Constants.KEY_FOLDER);
 					setFolder(folder);
 				}
 				break;

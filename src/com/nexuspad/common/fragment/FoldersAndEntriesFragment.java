@@ -42,7 +42,7 @@ public class FoldersAndEntriesFragment extends EntriesFragment {
 					} else {
 						subFolders.add(0, f);
 					}
-					onEntryListUpdated();
+					refreshUIAfterUpdatingEntryList();
 				} else {
 					Log.w(TAG, "folder created on the server, but ID already exists in the list, updating instead: " + f);
 					onUpdate(c, i, f);
@@ -62,7 +62,7 @@ public class FoldersAndEntriesFragment extends EntriesFragment {
 				if (index >= 0) {
 					subFolders.remove(index);
 					subFolders.add(index, folder);
-					onEntryListUpdated();
+					refreshUIAfterUpdatingEntryList();
 				} else {
 					Log.w(TAG, "cannot find the updated entry in the list; folder: " + folder);
 				}
@@ -97,7 +97,7 @@ public class FoldersAndEntriesFragment extends EntriesFragment {
 
 	@Override
 	protected void onSearchLoaded(EntryList list) {
-		mFolderEntryCombinedAdapter.getEntriesAdapter().setDisplayEntries(list);
+		mFolderEntryCombinedAdapter.getEntriesAdapter().setDisplayEntryList(list);
 	}
 
 	@Override
@@ -107,7 +107,7 @@ public class FoldersAndEntriesFragment extends EntriesFragment {
 		// Need to reset the scroll listener.
 		mLoadMoreScrollListener.reset();
 
-		mFolderEntryCombinedAdapter.getEntriesAdapter().setDisplayEntries(mEntryList);
+		mFolderEntryCombinedAdapter.getEntriesAdapter().setDisplayEntryList(mEntryList);
 		mFolderEntryCombinedAdapter.notifyDataSetChanged();
 	}
 

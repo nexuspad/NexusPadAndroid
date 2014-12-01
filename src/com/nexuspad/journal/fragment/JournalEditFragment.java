@@ -11,7 +11,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import com.nexuspad.R;
 import com.nexuspad.common.Constants;
-import com.nexuspad.common.annotation.ModuleId;
+import com.nexuspad.common.annotation.ModuleInfo;
 import com.nexuspad.common.fragment.EntryEditFragment;
 import com.nexuspad.service.datamodel.EntryTemplate;
 import com.nexuspad.service.datamodel.NPFolder;
@@ -26,7 +26,7 @@ import static com.nexuspad.service.dataservice.ServiceConstants.JOURNAL_MODULE;
 /**
  * User: edmond
  */
-@ModuleId(moduleId = JOURNAL_MODULE, template = EntryTemplate.JOURNAL)
+@ModuleInfo(moduleId = JOURNAL_MODULE, template = EntryTemplate.JOURNAL)
 public class JournalEditFragment extends EntryEditFragment<NPJournal> {
 	public static final String TAG = "JournalEditFragment";
 
@@ -61,6 +61,11 @@ public class JournalEditFragment extends EntryEditFragment<NPJournal> {
 
 	public boolean journalEdited() {
 		NPJournal j = NPJournal.fromEntry(mEntry);
+
+		if (j.getLastModifiedTime() == null) {
+			return true;
+		}
+
 		if (lastModifiedTime != null && lastModifiedTime.after(j.getLastModifiedTime())) {
 			return true;
 		}

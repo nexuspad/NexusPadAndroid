@@ -15,9 +15,10 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
+import com.nexuspad.R;
+import com.nexuspad.common.Constants;
 import com.nexuspad.common.activity.FoldersNavigatorActivity;
 import com.nexuspad.common.annotation.FragmentName;
-import com.nexuspad.R;
 import com.nexuspad.service.datamodel.NPFolder;
 
 /**
@@ -118,7 +119,7 @@ public class UpdateFolderFragment extends DialogFragment {
 
 		switch (requestCode) {
 			case REQ_FOLDER:
-				mParentFolder = data.getParcelableExtra(FoldersNavigatorActivity.KEY_FOLDER);
+				mParentFolder = data.getParcelableExtra(Constants.KEY_FOLDER);
 				mFolderV.setText(mParentFolder.getFolderName());
 				break;
 			default:

@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.PopupMenu;
 import com.nexuspad.R;
+import com.nexuspad.common.Constants;
 import com.nexuspad.service.datamodel.NPEntry;
 import com.nexuspad.service.dataservice.EntryService;
 import com.nexuspad.common.utils.UndoBarController;
@@ -86,7 +87,7 @@ public abstract class OnEntryMenuClickListener<T extends NPEntry> implements OnC
 		    String string = resources.getString(R.string.format_deleted_entry, getEntryString(entry, resources), entry.getTitle());
 
 		    final Intent undoToken = new Intent(EntryService.ACTION_DELETE);
-		    undoToken.putExtra(EntryService.KEY_ENTRY, entry);
+		    undoToken.putExtra(Constants.KEY_ENTRY, entry);
 
 		    mController.showUndoBar(false, string, undoToken);
 	    }

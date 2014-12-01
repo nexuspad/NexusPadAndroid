@@ -18,15 +18,13 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import com.nexuspad.R;
 import com.nexuspad.common.Constants;
-import com.nexuspad.common.activity.FoldersNavigatorActivity;
-import com.nexuspad.common.listeners.OnPagingListEndListener;
 import com.nexuspad.common.annotation.FragmentName;
-import com.nexuspad.common.annotation.ModuleId;
+import com.nexuspad.common.annotation.ModuleInfo;
 import com.nexuspad.common.fragment.EntriesFragment;
-import com.nexuspad.service.datamodel.*;
+import com.nexuspad.common.listeners.OnPagingListEndListener;
 import com.nexuspad.photo.activity.PhotoActivity;
-import com.nexuspad.photo.activity.PhotosActivity;
 import com.nexuspad.photo.adapter.PhotosAdapter;
+import com.nexuspad.service.datamodel.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +35,7 @@ import static com.nexuspad.service.dataservice.ServiceConstants.PHOTO_MODULE;
  * @author Edmond
  */
 @FragmentName(PhotosFragment.TAG)
-@ModuleId(moduleId = PHOTO_MODULE, template = EntryTemplate.PHOTO)
+@ModuleInfo(moduleId = PHOTO_MODULE, template = EntryTemplate.PHOTO)
 public class PhotosFragment extends EntriesFragment implements OnItemClickListener {
 	public static final String TAG = "PhotosFragment";
 
@@ -55,22 +53,23 @@ public class PhotosFragment extends EntriesFragment implements OnItemClickListen
 	}
 
 	@Override
-	protected void onListLoaded(EntryList list) {
+	protected void onListLoaded(EntryList newListToDisplay) {
 		Log.i(TAG, "Receiving photo list.");
 
-		super.onListLoaded(list);
+		super.onListLoaded(newListToDisplay);
 
 		PhotosAdapter a = (PhotosAdapter)mGridView.getAdapter();
-		if (a != null) {
+
+		if (a == null) {
+			a = new PhotosAdapter(getActivity(), newListToDisplay, getFolder(), getEntryListService(), getTemplate());
+
+			mGridView.setAdapter(a);
 			stableNotifyAdapter(a);
-			clearVisualIndicator();
-			return;
+
+		} else {
+			a.setDisplayEntryList(newListToDisplay);
+			stableNotifyAdapter(a);
 		}
-
-		a = new PhotosAdapter(getActivity(), mEntryList, getFolder(), getEntryListService(), getTemplate());
-
-		mGridView.setAdapter(a);
-		stableNotifyAdapter(a);
 
 		clearVisualIndicator();
 	}
@@ -97,12 +96,12 @@ public class PhotosFragment extends EntriesFragment implements OnItemClickListen
 	}
 
 	@Override
-	protected void onNewEntry(NPEntry entry) {
+	protected void onUpdateEntry(NPEntry entry) {
 		if (entry instanceof NPPhoto) {  // or album, which will be handled at AlbumsFragment
 			final NPPhoto photo = (NPPhoto) entry;
             mEntryList.getEntries().add(photo);
 		}
-		super.onNewEntry(entry);
+		super.onUpdateEntry(entry);
 	}
 
 	@Override
@@ -115,8 +114,8 @@ public class PhotosFragment extends EntriesFragment implements OnItemClickListen
 	}
 
 	@Override
-	protected void onEntryListUpdated() {
-		super.onEntryListUpdated();
+	protected void refreshUIAfterUpdatingEntryList() {
+		super.refreshUIAfterUpdatingEntryList();
 		BaseAdapter adapter = (BaseAdapter) mGridView.getAdapter();
 		stableNotifyAdapter(adapter);
 	}
@@ -140,10 +139,13 @@ public class PhotosFragment extends EntriesFragment implements OnItemClickListen
 		switch (requestCode) {
 			case REQ_FOLDER:
 				if (resultCode == Activity.RESULT_OK) {
-					final FragmentActivity activity = getActivity();
-					final NPFolder folder = data.getParcelableExtra(FoldersNavigatorActivity.KEY_FOLDER);
-					PhotosActivity.startWithFolder(folder, activity);
-					activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+//					final FragmentActivity activity = getActivity();
+//					final NPFolder folder = data.getParcelableExtra(Constants.KEY_FOLDER);
+//					PhotosActivity.startWithFolder(folder, activity);
+//					activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+
+					mFolder = data.getParcelableExtra(Constants.KEY_FOLDER);
+					queryEntriesAsync();
 				}
 				break;
 			default:

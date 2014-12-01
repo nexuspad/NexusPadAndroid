@@ -123,7 +123,7 @@ public final class UploadService extends Service {
         updateUploadCount();
         switch (r.getTarget()) {
             case FOLDER:
-//                mUploadService.addUploadToFolder(r.getFile(this), r.getFolder(), new CallbackWrapper(r));
+                mUploadService.addUploadToFolder(r.getFile(this), r.getFolder(), new CallbackWrapper(r));
                 break;
             case ENTRY:
                 mUploadService.addUploadToEntry(r.getFile(this), r.getNPEntry(), new CallbackWrapper(r));

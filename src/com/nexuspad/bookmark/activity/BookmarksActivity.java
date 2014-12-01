@@ -9,7 +9,7 @@ import android.support.v4.app.Fragment;
 import com.nexuspad.bookmark.fragment.BookmarksFragment;
 import com.nexuspad.common.Constants;
 import com.nexuspad.common.activity.EntriesActivity;
-import com.nexuspad.common.annotation.ModuleId;
+import com.nexuspad.common.annotation.ModuleInfo;
 import com.nexuspad.service.datamodel.EntryTemplate;
 import com.nexuspad.service.datamodel.NPBookmark;
 import com.nexuspad.service.datamodel.NPFolder;
@@ -18,7 +18,7 @@ import com.nexuspad.service.dataservice.ServiceConstants;
 /**
  * @author Edmond
  */
-@ModuleId(moduleId = ServiceConstants.BOOKMARK_MODULE, template = EntryTemplate.BOOKMARK)
+@ModuleInfo(moduleId = ServiceConstants.BOOKMARK_MODULE, template = EntryTemplate.BOOKMARK)
 public class BookmarksActivity extends EntriesActivity implements BookmarksFragment.Callback {
     public static final String TAG = BookmarksActivity.class.getSimpleName();
 
@@ -44,7 +44,7 @@ public class BookmarksActivity extends EntriesActivity implements BookmarksFragm
 
     @Override
     public void onEditBookmark(BookmarksFragment f, NPBookmark bookmark) {
-        BookmarkEditEditActivity.startWithBookmark(this, mFolder, bookmark);
+        BookmarkEditActivity.startWithBookmark(this, mFolder, bookmark);
     }
 
     @Override

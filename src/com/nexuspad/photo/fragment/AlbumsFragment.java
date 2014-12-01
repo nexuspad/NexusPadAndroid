@@ -6,26 +6,22 @@ package com.nexuspad.photo.fragment;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import com.koushikdutta.ion.Ion;
 import com.nexuspad.R;
 import com.nexuspad.common.Constants;
-import com.nexuspad.common.activity.FoldersNavigatorActivity;
 import com.nexuspad.common.adapters.EntriesAdapter;
 import com.nexuspad.common.annotation.FragmentName;
-import com.nexuspad.common.annotation.ModuleId;
+import com.nexuspad.common.annotation.ModuleInfo;
 import com.nexuspad.common.fragment.EntriesFragment;
 import com.nexuspad.photo.activity.AlbumActivity;
-import com.nexuspad.photo.activity.PhotosActivity;
 import com.nexuspad.service.datamodel.EntryList;
 import com.nexuspad.service.datamodel.EntryTemplate;
 import com.nexuspad.service.datamodel.NPAlbum;
@@ -36,7 +32,7 @@ import com.nexuspad.service.dataservice.ServiceConstants;
  * @author Edmond
  */
 @FragmentName(AlbumsFragment.TAG)
-@ModuleId(moduleId = ServiceConstants.PHOTO_MODULE, template = EntryTemplate.ALBUM)
+@ModuleInfo(moduleId = ServiceConstants.PHOTO_MODULE, template = EntryTemplate.ALBUM)
 public class AlbumsFragment extends EntriesFragment {
 	public static final String TAG = "AlbumsFragment";
 
@@ -55,21 +51,23 @@ public class AlbumsFragment extends EntriesFragment {
 	}
 
 	@Override
-	protected void onListLoaded(EntryList list) {
+	protected void onListLoaded(EntryList newListToDisplay) {
 		Log.i(TAG, "Receiving entry list.");
 
-		super.onListLoaded(list);
+		super.onListLoaded(newListToDisplay);
 
-		BaseAdapter albumsAdapter = getAdapter();
+		AlbumsAdapter a = (AlbumsAdapter)getAdapter();
 
-		if (albumsAdapter == null) {
-			albumsAdapter = new AlbumsAdapter();
-			setAdapter(albumsAdapter);
-			mListView.setAdapter(albumsAdapter);
+		if (a == null) {
+			a = new AlbumsAdapter();
+			setAdapter(a);
+			mListView.setAdapter(a);
+
+		} else {
+			a.setDisplayEntryList(newListToDisplay);
 		}
 
-		albumsAdapter.notifyDataSetChanged();
-		dismissProgressIndicator();
+		clearVisualIndicator();
 	}
 
 
@@ -95,11 +93,8 @@ public class AlbumsFragment extends EntriesFragment {
 		switch (requestCode) {
 			case ACTIVITY_REQ_CODE_FOLDER_SELECTOR:
 				if (resultCode == Activity.RESULT_OK) {
-					final FragmentActivity activity = getActivity();
-					final NPFolder folder = data.getParcelableExtra(FoldersNavigatorActivity.KEY_FOLDER);
-					PhotosActivity.startWithFolderAndIndex(folder, activity, 1);
-					activity.finish();
-					activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+					mFolder = data.getParcelableExtra(Constants.KEY_FOLDER);
+					queryEntriesAsync();
 				}
 				break;
 			default:

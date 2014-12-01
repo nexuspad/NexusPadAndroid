@@ -11,14 +11,14 @@ import android.view.*;
 import android.widget.ListView;
 import com.nexuspad.R;
 import com.nexuspad.app.App;
-import com.nexuspad.bookmark.activity.BookmarkEditEditActivity;
+import com.nexuspad.bookmark.activity.BookmarkEditActivity;
 import com.nexuspad.common.Constants;
 import com.nexuspad.common.adapters.EntriesAdapter;
 import com.nexuspad.common.adapters.FoldersAndEntriesAdapter;
 import com.nexuspad.common.adapters.ListFoldersAdapter;
 import com.nexuspad.common.adapters.ListViewHolder;
 import com.nexuspad.common.annotation.FragmentName;
-import com.nexuspad.common.annotation.ModuleId;
+import com.nexuspad.common.annotation.ModuleInfo;
 import com.nexuspad.common.fragment.FoldersAndEntriesFragment;
 import com.nexuspad.common.listeners.OnEntryMenuClickListener;
 import com.nexuspad.service.datamodel.EntryList;
@@ -31,7 +31,7 @@ import com.nexuspad.service.dataservice.ServiceConstants;
  * @author Edmond
  */
 @FragmentName(BookmarksFragment.TAG)
-@ModuleId(moduleId = ServiceConstants.BOOKMARK_MODULE, template = EntryTemplate.BOOKMARK)
+@ModuleInfo(moduleId = ServiceConstants.BOOKMARK_MODULE, template = EntryTemplate.BOOKMARK)
 public class BookmarksFragment extends FoldersAndEntriesFragment {
 	public static final String TAG = "BookmarksFragment";
 
@@ -86,7 +86,7 @@ public class BookmarksFragment extends FoldersAndEntriesFragment {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.new_bookmark:
-				BookmarkEditEditActivity.startWithFolder(getActivity(), getFolder());
+				BookmarkEditActivity.startWithFolder(getActivity(), getFolder());
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
@@ -94,53 +94,52 @@ public class BookmarksFragment extends FoldersAndEntriesFragment {
 	}
 
 	@Override
-	protected void onListLoaded(EntryList list) {
+	protected void onListLoaded(EntryList newListToDisplay) {
 		Log.i(TAG, "Receiving bookmark list.");
 
-		super.onListLoaded(list);
+		super.onListLoaded(newListToDisplay);
 
 		FoldersAndEntriesAdapter a = (FoldersAndEntriesAdapter)getAdapter();
 
-		if (a != null) {
-			a.notifyDataSetChanged();
-			clearVisualIndicator();
-			return;
+		if (a == null) {
+			final BookmarksAdapter bookmarksAdapter = new BookmarksAdapter(getActivity(), newListToDisplay);
+
+			bookmarksAdapter.setOnMenuClickListener(new OnEntryMenuClickListener<NPBookmark>(mListView, getEntryService(), getUndoBarController()) {
+				@Override
+				public void onClick(View v) {
+					@SuppressWarnings("unchecked")
+					FoldersAndEntriesAdapter felAdapter = (FoldersAndEntriesAdapter) mListView.getAdapter();
+
+					int position = mListView.getPositionForView(v);
+
+					if (position != ListView.INVALID_POSITION && felAdapter.isPositionEntries(position)) {
+						NPBookmark item = (NPBookmark)felAdapter.getItem(position);
+						onEntryClick(item, position, v);
+					}
+				}
+
+				@Override
+				protected boolean onEntryMenuClick(NPBookmark entry, int pos, int menuId) {
+					switch (menuId) {
+						case R.id.edit:
+							mCallback.onEditBookmark(BookmarksFragment.this, entry);
+							return true;
+						default:
+							return super.onEntryMenuClick(entry, pos, menuId);
+					}
+				}
+			});
+
+			ListFoldersAdapter foldersAdapter = newFoldersAdapter();
+
+			FoldersAndEntriesAdapter combinedAdapter = new FoldersAndEntriesAdapter(foldersAdapter, bookmarksAdapter);
+			this.setAdapter(combinedAdapter);
+			mListView.setAdapter(combinedAdapter);
+			mListView.setOnItemLongClickListener(combinedAdapter);
+
+		} else {
+			a.getEntriesAdapter().setDisplayEntryList(newListToDisplay);
 		}
-
-		final BookmarksAdapter bookmarksAdapter = new BookmarksAdapter(getActivity(), list);
-
-		bookmarksAdapter.setOnMenuClickListener(new OnEntryMenuClickListener<NPBookmark>(mListView, getEntryService(), getUndoBarController()) {
-			@Override
-			public void onClick(View v) {
-				@SuppressWarnings("unchecked")
-				FoldersAndEntriesAdapter felAdapter = (FoldersAndEntriesAdapter) mListView.getAdapter();
-
-				int position = mListView.getPositionForView(v);
-
-				if (position != ListView.INVALID_POSITION && felAdapter.isPositionEntries(position)) {
-					NPBookmark item = (NPBookmark)felAdapter.getItem(position);
-					onEntryClick(item, position, v);
-				}
-			}
-
-			@Override
-			protected boolean onEntryMenuClick(NPBookmark entry, int pos, int menuId) {
-				switch (menuId) {
-					case R.id.edit:
-						mCallback.onEditBookmark(BookmarksFragment.this, entry);
-						return true;
-					default:
-						return super.onEntryMenuClick(entry, pos, menuId);
-				}
-			}
-		});
-
-		ListFoldersAdapter foldersAdapter = newFoldersAdapter();
-
-		FoldersAndEntriesAdapter combinedAdapter = new FoldersAndEntriesAdapter(foldersAdapter, bookmarksAdapter, getLoadMoreAdapter());
-		this.setAdapter(combinedAdapter);
-		mListView.setAdapter(combinedAdapter);
-		mListView.setOnItemLongClickListener(combinedAdapter);
 
 		clearVisualIndicator();
 	}

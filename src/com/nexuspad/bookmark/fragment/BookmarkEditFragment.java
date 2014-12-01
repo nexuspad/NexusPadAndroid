@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.nexuspad.common.Constants;
 import com.nexuspad.common.annotation.FragmentName;
 import com.nexuspad.R;
-import com.nexuspad.common.annotation.ModuleId;
+import com.nexuspad.common.annotation.ModuleInfo;
 import com.nexuspad.service.datamodel.NPBookmark;
 import com.nexuspad.service.datamodel.EntryTemplate;
 import com.nexuspad.service.datamodel.NPFolder;
@@ -24,7 +24,7 @@ import com.nexuspad.common.fragment.EntryEditFragment;
  * @author Edmond
  */
 @FragmentName(BookmarkEditFragment.TAG)
-@ModuleId(moduleId = ServiceConstants.BOOKMARK_MODULE, template = EntryTemplate.BOOKMARK)
+@ModuleInfo(moduleId = ServiceConstants.BOOKMARK_MODULE, template = EntryTemplate.BOOKMARK)
 public class BookmarkEditFragment extends EntryEditFragment<NPBookmark> {
     public static final String TAG = "BookmarkEditFragment";
 

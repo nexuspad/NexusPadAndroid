@@ -17,7 +17,7 @@ import com.nexuspad.common.Constants;
 import com.nexuspad.common.annotation.FragmentName;
 import com.ipaulpro.afilechooser.utils.FileUtils;
 import com.nexuspad.R;
-import com.nexuspad.common.annotation.ModuleId;
+import com.nexuspad.common.annotation.ModuleInfo;
 import com.nexuspad.app.App;
 import com.nexuspad.common.fragment.EntryEditFragment;
 import com.nexuspad.service.datamodel.NPDoc;
@@ -33,7 +33,7 @@ import java.util.List;
  * @author Edmond
  */
 @FragmentName(DocUpdateFragment.TAG)
-@ModuleId(moduleId = ServiceConstants.DOC_MODULE, template = EntryTemplate.DOC)
+@ModuleInfo(moduleId = ServiceConstants.DOC_MODULE, template = EntryTemplate.DOC)
 public class DocUpdateFragment extends EntryEditFragment<NPDoc> {
     public static final String TAG = "DocUpdateFragment";
 

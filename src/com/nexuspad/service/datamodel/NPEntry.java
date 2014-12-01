@@ -22,598 +22,602 @@ import java.util.regex.Pattern;
 import static com.google.common.base.Strings.nullToEmpty;
 
 public class NPEntry extends NPObject {
-    public static final Creator<NPEntry> CREATOR = new Creator<NPEntry>() {
-        @Override
-        public NPEntry createFromParcel(Parcel in) {
-            return new NPEntry(in);
-        }
+	public static final Creator<NPEntry> CREATOR = new Creator<NPEntry>() {
+		@Override
+		public NPEntry createFromParcel(Parcel in) {
+			return new NPEntry(in);
+		}
 
-        @Override
-        public NPEntry[] newArray(int size) {
-            return new NPEntry[size];
-        }
-    };
+		@Override
+		public NPEntry[] newArray(int size) {
+			return new NPEntry[size];
+		}
+	};
 
-    protected static final Comparator<String> CASE_INSENSITIVE_ORDERING = Ordering.from(String.CASE_INSENSITIVE_ORDER).nullsLast();
+	protected static final Comparator<String> CASE_INSENSITIVE_ORDERING = Ordering.from(String.CASE_INSENSITIVE_ORDER).nullsLast();
 
-    /**
-     * Order by title
-     */
-    public static final Comparator<NPEntry> ORDERING_BY_TITLE = new Comparator<NPEntry>() {
+	/**
+	 * Order by title
+	 */
+	public static final Comparator<NPEntry> ORDERING_BY_TITLE = new Comparator<NPEntry>() {
+		@Override
+		public int compare(NPEntry a, NPEntry o) {
+			return CASE_INSENSITIVE_ORDERING.compare(a.title, o.title);
+		}
+	};
 
-        @Override
-        public int compare(NPEntry a, NPEntry o) {
-            return CASE_INSENSITIVE_ORDERING.compare(a.title, o.title);
-        }
-    };
-    protected final EntryTemplate mTemplate;
+	protected final EntryTemplate mTemplate;
 
-    protected AccessEntitlement mAccessInfo;
+	protected AccessEntitlement mAccessInfo;
 
-    protected NPFolder folder;
+	protected NPFolder folder;
 
-    protected String entryId;
+	protected String entryId;
 
-    /**
-     * Sync id is assigned to locally created entry first.
-     */
-    protected String syncId = null;
+	/**
+	 * Sync id is assigned to locally created entry first.
+	 */
+	protected String syncId = null;
 
-    protected String title;
+	protected String title;
 
-    protected String colorLabel;
-    protected String tags;
-    protected String note;
+	protected String colorLabel;
+	protected String tags;
+	protected String note;
 
-    protected Map<String, Object> featureValues = new HashMap<String, Object>();
-    protected List<NPUpload> attachments = new ArrayList<NPUpload>();
+	protected Map<String, Object> featureValues = new HashMap<String, Object>();
+	protected List<NPUpload> attachments = new ArrayList<NPUpload>();
 
-    protected Date createTime;
-    protected Date lastModifiedTime;
+	protected Date createTime;
+	protected Date lastModifiedTime;
 
-    protected Location location;
-    protected String webAddress;
+	protected Location location;
+	protected String webAddress;
 
-    protected int status;
-    protected boolean synced;
+	protected int status;
+	protected boolean synced;
 
-    protected List<NPSharing> sharings = new ArrayList<NPSharing>();
+	protected List<NPSharing> sharings = new ArrayList<NPSharing>();
 
-    public NPEntry(EntryTemplate template) {
-        mTemplate = template;
-        location = new Location();
-    }
+	public NPEntry(EntryTemplate template) {
+		mTemplate = template;
+		location = new Location();
+	}
 
-    public NPEntry(NPFolder folder, EntryTemplate template) {
-        this.folder = folder;
-        mTemplate = template;
-        location = new Location();
-    }
+	public NPEntry(NPFolder folder, EntryTemplate template) {
+		this.folder = folder;
+		mTemplate = template;
+		location = new Location();
+	}
 
-    public NPEntry(NPEntry anEntry) {
-        folder = anEntry.folder;
-        mTemplate = anEntry.mTemplate;
-        entryId = anEntry.entryId;
+	public NPEntry(NPEntry anEntry) {
+		folder = anEntry.folder;
+		mTemplate = anEntry.mTemplate;
+		entryId = anEntry.entryId;
 
-        title = anEntry.title;
-        attachments = anEntry.attachments;
+		title = anEntry.title;
+		attachments = anEntry.attachments;
 
-        tags = anEntry.tags;
-        note = anEntry.note;
+		tags = anEntry.tags;
+		note = anEntry.note;
 
-        createTime = anEntry.createTime;
-        location = anEntry.location;
-        colorLabel = anEntry.colorLabel;
-        webAddress = anEntry.webAddress;
+		createTime = anEntry.createTime;
+		location = anEntry.location;
+		colorLabel = anEntry.colorLabel;
+		webAddress = anEntry.webAddress;
 
-        featureValues = anEntry.featureValues;
-    }
+		featureValues = anEntry.featureValues;
+	}
 
-    public NPEntry(JSONObject jsonObj, EntryTemplate template) {
-        mTemplate = template;
-        try {
-            folder = new NPFolder();
-            NPUser owner = new NPUser();
+	public NPEntry(JSONObject jsonObj, EntryTemplate template) {
+		mTemplate = template;
+		try {
+			folder = new NPFolder();
+			NPUser owner = new NPUser();
 
-            if (jsonObj.has(ServiceConstants.OWNER_ID)) {
-                owner.setUserId(jsonObj.getInt(ServiceConstants.OWNER_ID));
-            }
+			if (jsonObj.has(ServiceConstants.OWNER_ID)) {
+				owner.setUserId(jsonObj.getInt(ServiceConstants.OWNER_ID));
+			}
 
             /*
              * Access info
              */
-            if (mAccessInfo == null) {
-                mAccessInfo = new AccessEntitlement();
-            }
+			if (mAccessInfo == null) {
+				mAccessInfo = new AccessEntitlement();
+			}
 
-            mAccessInfo.setOwner(owner);
+			mAccessInfo.setOwner(owner);
 
-            // Preserver the values in a local Map
-            featureValues = JsonHelper.toMap(jsonObj);
+			// Preserver the values in a local Map
+			featureValues = JsonHelper.toMap(jsonObj);
 
-            // Assign the class attributes
-            if (jsonObj.has(ServiceConstants.MODULE_ID)) {
-                folder.setModuleId(jsonObj.getInt(ServiceConstants.MODULE_ID));
-            }
+			// Assign the class attributes
+			if (jsonObj.has(ServiceConstants.MODULE_ID)) {
+				folder.setModuleId(jsonObj.getInt(ServiceConstants.MODULE_ID));
+			}
 
-            if (jsonObj.has(ServiceConstants.FOLDER_ID)) {
-                folder.setFolderId(jsonObj.getInt(ServiceConstants.FOLDER_ID));
-            }
+			if (jsonObj.has(ServiceConstants.FOLDER_ID)) {
+				folder.setFolderId(jsonObj.getInt(ServiceConstants.FOLDER_ID));
+			}
 
-            entryId = jsonObj.getString(ServiceConstants.ENTRY_ID);
+			if (jsonObj.has(ServiceConstants.FOLDER_NAME)) {
+				folder.setFolderName(jsonObj.getString(ServiceConstants.FOLDER_NAME));
+			}
 
-            if (jsonObj.has(ServiceConstants.SYNC_ID)) {
-                syncId = jsonObj.getString(ServiceConstants.SYNC_ID);
-            }
+			entryId = jsonObj.getString(ServiceConstants.ENTRY_ID);
 
-            if (jsonObj.has(ServiceConstants.TITLE)) {
-                title = jsonObj.getString(ServiceConstants.TITLE);
-            }
+			if (jsonObj.has(ServiceConstants.SYNC_ID)) {
+				syncId = jsonObj.getString(ServiceConstants.SYNC_ID);
+			}
 
-            // Get the location
-            location = new Location(jsonObj);
+			if (jsonObj.has(ServiceConstants.TITLE)) {
+				title = jsonObj.getString(ServiceConstants.TITLE);
+			}
 
-            // Get the create date
-            if (jsonObj.has(ServiceConstants.ENTRY_CREATE_TS)) {
-                createTime = DateUtil.dateFromTimestampInSeconds(jsonObj.getLong(ServiceConstants.ENTRY_CREATE_TS));
-            }
+			// Get the location
+			location = new Location(jsonObj);
 
-            // Get the last modified time
-            if (jsonObj.has(ServiceConstants.ENTRY_MODIFIED_TS)) {
-                lastModifiedTime = DateUtil.dateFromTimestampInSeconds(jsonObj.getLong(ServiceConstants.ENTRY_MODIFIED_TS));
-            }
+			// Get the create date
+			if (jsonObj.has(ServiceConstants.ENTRY_CREATE_TS)) {
+				createTime = DateUtil.dateFromTimestampInSeconds(jsonObj.getLong(ServiceConstants.ENTRY_CREATE_TS));
+			}
 
-            // Get the color label
-            if (jsonObj.has(ServiceConstants.COLOR_LABEL)) {
-                colorLabel = jsonObj.getString(ServiceConstants.COLOR_LABEL);
-            }
+			// Get the last modified time
+			if (jsonObj.has(ServiceConstants.ENTRY_MODIFIED_TS)) {
+				lastModifiedTime = DateUtil.dateFromTimestampInSeconds(jsonObj.getLong(ServiceConstants.ENTRY_MODIFIED_TS));
+			}
 
-            // Get the web address
-            if (jsonObj.has(ServiceConstants.ENTRY_WEB_ADDRESS)) {
-                webAddress = jsonObj.getString(ServiceConstants.ENTRY_WEB_ADDRESS);
-            }
+			// Get the color label
+			if (jsonObj.has(ServiceConstants.COLOR_LABEL)) {
+				colorLabel = jsonObj.getString(ServiceConstants.COLOR_LABEL);
+			}
 
-            // Get the tags
-            if (jsonObj.has(ServiceConstants.ENTRY_TAGS)) {
-                tags = jsonObj.getString(ServiceConstants.ENTRY_TAGS);
-            }
+			// Get the web address
+			if (jsonObj.has(ServiceConstants.ENTRY_WEB_ADDRESS)) {
+				webAddress = jsonObj.getString(ServiceConstants.ENTRY_WEB_ADDRESS);
+			}
 
-            // Get the notes
-            if (jsonObj.has(ServiceConstants.ENTRY_NOTE)) {
-                note = jsonObj.getString(ServiceConstants.ENTRY_NOTE);
-            }
+			// Get the tags
+			if (jsonObj.has(ServiceConstants.ENTRY_TAGS)) {
+				tags = jsonObj.getString(ServiceConstants.ENTRY_TAGS);
+			}
 
-            // Get the attachments
-            if (jsonObj.has(ServiceConstants.ENTRY_ATTACHMENTS)) {
-                attachments = new ArrayList<NPUpload>();
-                JSONArray attachmentArray = new JSONArray(jsonObj.getString(ServiceConstants.ENTRY_ATTACHMENTS));
-                for (int i = 0; i < attachmentArray.length(); i++) {
-                    NPUpload upload = new NPUpload(attachmentArray.getJSONObject(i));
+			// Get the notes
+			if (jsonObj.has(ServiceConstants.ENTRY_NOTE)) {
+				note = jsonObj.getString(ServiceConstants.ENTRY_NOTE);
+			}
 
-                    // Update the parent information
-                    upload.setParentEntryModule(folder.getModuleId());
-                    upload.setParentEntryFolder(folder.getFolderId());
-                    upload.setParentEntryId(entryId);
+			// Get the attachments
+			if (jsonObj.has(ServiceConstants.ENTRY_ATTACHMENTS)) {
+				attachments = new ArrayList<NPUpload>();
+				JSONArray attachmentArray = new JSONArray(jsonObj.getString(ServiceConstants.ENTRY_ATTACHMENTS));
+				for (int i = 0; i < attachmentArray.length(); i++) {
+					NPUpload upload = new NPUpload(attachmentArray.getJSONObject(i));
 
-                    attachments.add(upload);
-                }
-            }
+					// Update the parent information
+					upload.setParentEntryModule(folder.getModuleId());
+					upload.setParentEntryFolder(folder.getFolderId());
+					upload.setParentEntryId(entryId);
 
-            // Status
-            if (jsonObj.has(ServiceConstants.ITEM_STATUS)) {
-                status = jsonObj.getInt(ServiceConstants.ITEM_STATUS);
-            }
+					attachments.add(upload);
+				}
+			}
 
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
-    }
+			// Status
+			if (jsonObj.has(ServiceConstants.ITEM_STATUS)) {
+				status = jsonObj.getInt(ServiceConstants.ITEM_STATUS);
+			}
 
-    protected NPEntry(Parcel in) {
-        mAccessInfo = in.readParcelable(AccessEntitlement.class.getClassLoader());
-        folder = in.readParcelable(NPFolder.class.getClassLoader());
-        mTemplate = (EntryTemplate) in.readSerializable();
-        entryId = in.readString();
-        title = in.readString();
-        colorLabel = in.readString();
-        tags = in.readString();
-        note = in.readString();
+		} catch (JSONException e) {
+			throw new RuntimeException(e);
+		}
+	}
 
-        attachments = new ArrayList<NPUpload>();
-        in.readList(attachments, NPUpload.class.getClassLoader());
+	protected NPEntry(Parcel in) {
+		mAccessInfo = in.readParcelable(AccessEntitlement.class.getClassLoader());
+		folder = in.readParcelable(NPFolder.class.getClassLoader());
+		mTemplate = (EntryTemplate) in.readSerializable();
+		entryId = in.readString();
+		title = in.readString();
+		colorLabel = in.readString();
+		tags = in.readString();
+		note = in.readString();
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(in.readLong());
-        createTime = calendar.getTime();
+		attachments = new ArrayList<NPUpload>();
+		in.readList(attachments, NPUpload.class.getClassLoader());
 
-        location = in.readParcelable(Location.class.getClassLoader());
-        webAddress = in.readString();
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTimeInMillis(in.readLong());
+		createTime = calendar.getTime();
 
-        sharings = new ArrayList<NPSharing>();
-        in.readList(sharings, NPSharing.class.getClassLoader());
-    }
+		location = in.readParcelable(Location.class.getClassLoader());
+		webAddress = in.readString();
 
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeParcelable(mAccessInfo, 0);
-        dest.writeParcelable(folder, 0);
-        dest.writeSerializable(mTemplate);
-        dest.writeString(entryId);
-        dest.writeString(title);
-        dest.writeString(colorLabel);
-        dest.writeString(tags);
-        dest.writeString(note);
-        dest.writeList(attachments);
-        dest.writeLong(createTime == null ? 0 : createTime.getTime());
-        dest.writeParcelable(location, 0);
-        dest.writeString(webAddress);
-        dest.writeList(sharings);
-    }
+		sharings = new ArrayList<NPSharing>();
+		in.readList(sharings, NPSharing.class.getClassLoader());
+	}
 
-    /**
-     * @return a {@link com.google.common.base.Predicate} that matches the {@code entryId}, {@code mTemplate}, and {@code folder}
-     */
-    public final Predicate<NPEntry> filterById() {
-        return new Predicate<NPEntry>() {
-            @Override
-            public boolean apply(NPEntry o) {
-                if (o == null) return false;
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeParcelable(mAccessInfo, 0);
+		dest.writeParcelable(folder, 0);
+		dest.writeSerializable(mTemplate);
+		dest.writeString(entryId);
+		dest.writeString(title);
+		dest.writeString(colorLabel);
+		dest.writeString(tags);
+		dest.writeString(note);
+		dest.writeList(attachments);
+		dest.writeLong(createTime == null ? 0 : createTime.getTime());
+		dest.writeParcelable(location, 0);
+		dest.writeString(webAddress);
+		dest.writeList(sharings);
+	}
 
-                if (entryId == null ? o.entryId != null : !entryId.equals(o.entryId)) return false;
-                if (mTemplate != o.mTemplate) return false;
+	/**
+	 * @return a {@link com.google.common.base.Predicate} that matches the {@code entryId}, {@code mTemplate}, and {@code folder}
+	 */
+	public final Predicate<NPEntry> filterById() {
+		return new Predicate<NPEntry>() {
+			@Override
+			public boolean apply(NPEntry o) {
+				if (o == null) return false;
 
-                return true;
-            }
-        };
-    }
+				if (entryId == null ? o.entryId != null : !entryId.equals(o.entryId)) return false;
+				if (getModuleId() != o.getModuleId()) return false;
 
-    public boolean filterByPattern(Pattern pattern) {
-        return pattern.matcher(nullToEmpty(getTitle())).matches() ||
-                pattern.matcher(nullToEmpty(getNote())).matches() ||
-                pattern.matcher(nullToEmpty(getTags())).matches() ||
-                pattern.matcher(nullToEmpty(getWebAddress())).matches();
-    }
+				return true;
+			}
+		};
+	}
 
-    public int getModuleId() {
-        return folder.getModuleId();
-    }
+	public boolean filterByPattern(Pattern pattern) {
+		return pattern.matcher(nullToEmpty(getTitle())).matches() ||
+				pattern.matcher(nullToEmpty(getNote())).matches() ||
+				pattern.matcher(nullToEmpty(getTags())).matches() ||
+				pattern.matcher(nullToEmpty(getWebAddress())).matches();
+	}
 
-    public int getOwnerId() {
-        if (mAccessInfo == null) {
-            return 0;
-        } else {
-            if (mAccessInfo.getOwner() == null) {
-                return 0;
-            } else {
-                return mAccessInfo.getOwner().getUserId();
-            }
-        }
-    }
+	public int getModuleId() {
+		return folder.getModuleId();
+	}
 
-    public boolean isNewEntry() {
-        return (entryId != null) && (entryId.length() > 0);
-    }
+	public int getOwnerId() {
+		if (mAccessInfo == null) {
+			return 0;
+		} else {
+			if (mAccessInfo.getOwner() == null) {
+				return 0;
+			} else {
+				return mAccessInfo.getOwner().getUserId();
+			}
+		}
+	}
 
-    public String getKeywordFilter() {
-        return "";
-    }
+	public boolean isNewEntry() {
+		return (entryId != null) && (entryId.length() > 0);
+	}
 
-    public Date getTimeFilter() {
-        return lastModifiedTime;
-    }
+	public String getKeywordFilter() {
+		return "";
+	}
 
-    public String getFeatureValue(String key) {
-        if (featureValues.containsKey(key)) {
-            return featureValues.get(key).toString();
-        } else {
-            return "";
-        }
-    }
+	public Date getTimeFilter() {
+		return lastModifiedTime;
+	}
 
-    public void setFeatureValue(String key, String value) {
-        featureValues.put(key, nullToEmpty(value));
-    }
+	public String getFeatureValue(String key) {
+		if (featureValues.containsKey(key)) {
+			return featureValues.get(key).toString();
+		} else {
+			return "";
+		}
+	}
 
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                .omitNullValues()
-                .add("status", status)
-                .add("accessInfo", mAccessInfo)
-                .add("folder", folder)
-                .add("mTemplate", mTemplate)
-                .add("entryId", entryId)
-                .add("syncId", syncId)
-                .add("title", title)
-                .add("colorLabel", colorLabel)
-                .add("tags", tags)
-                .add("note", note)
-                .add("featureValues", featureValues)
-                .add("attachments", attachments)
-                .add("createTime", createTime)
-                .add("location", location)
-                .add("webAddress", webAddress)
-                .add("sharings", sharings)
-                .toString();
-    }
+	public void setFeatureValue(String key, String value) {
+		featureValues.put(key, nullToEmpty(value));
+	}
 
-    /**
-     * Classes overriding the method must ensure that no values are {@code null}.
-     * Use null-check or {@code nullToEmpty} as needed.
-     *
-     * @return
-     */
-    public Map<String, String> toMap() {
-        Map<String, String> postParams = new HashMap<String, String>();
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this)
+				.omitNullValues()
+				.add("status", status)
+				.add("accessInfo", mAccessInfo)
+				.add("folder", folder)
+				.add("mTemplate", mTemplate)
+				.add("entryId", entryId)
+				.add("syncId", syncId)
+				.add("title", title)
+				.add("colorLabel", colorLabel)
+				.add("tags", tags)
+				.add("note", note)
+				.add("featureValues", featureValues)
+				.add("attachments", attachments)
+				.add("createTime", createTime)
+				.add("location", location)
+				.add("webAddress", webAddress)
+				.add("sharings", sharings)
+				.toString();
+	}
 
-        postParams.put(ServiceConstants.MODULE_ID, String.valueOf(folder.getModuleId()));
-        postParams.put(ServiceConstants.FOLDER_ID, String.valueOf(folder.getFolderId()));
-        if (mTemplate != null) {
-            postParams.put(ServiceConstants.TEMPLATE_ID, String.valueOf(mTemplate.getIntValue()));
-        }
-        if (entryId != null) {
-            postParams.put(ServiceConstants.ENTRY_ID, entryId);
-        }
-        if (title != null) {
-            postParams.put(ServiceConstants.TITLE, title);
-        }
+	/**
+	 * Classes overriding the method must ensure that no values are {@code null}.
+	 * Use null-check or {@code nullToEmpty} as needed.
+	 *
+	 * @return
+	 */
+	public Map<String, String> toMap() {
+		Map<String, String> postParams = new HashMap<String, String>();
 
-        if (colorLabel != null) {
-            postParams.put(ServiceConstants.COLOR_LABEL, colorLabel);
-        }
+		postParams.put(ServiceConstants.MODULE_ID, String.valueOf(folder.getModuleId()));
+		postParams.put(ServiceConstants.FOLDER_ID, String.valueOf(folder.getFolderId()));
+		if (mTemplate != null) {
+			postParams.put(ServiceConstants.TEMPLATE_ID, String.valueOf(mTemplate.getIntValue()));
+		}
+		if (entryId != null) {
+			postParams.put(ServiceConstants.ENTRY_ID, entryId);
+		}
+		if (title != null) {
+			postParams.put(ServiceConstants.TITLE, title);
+		}
 
-        if (note != null) {
-            postParams.put(ServiceConstants.ENTRY_NOTE, note);
-        }
+		if (colorLabel != null) {
+			postParams.put(ServiceConstants.COLOR_LABEL, colorLabel);
+		}
 
-        if (tags != null) {
-            postParams.put(ServiceConstants.ENTRY_TAGS, tags);
-        }
+		if (note != null) {
+			postParams.put(ServiceConstants.ENTRY_NOTE, note);
+		}
 
-        if (webAddress != null) {
-            postParams.put(ServiceConstants.ENTRY_WEB_ADDRESS, webAddress);
-        }
+		if (tags != null) {
+			postParams.put(ServiceConstants.ENTRY_TAGS, tags);
+		}
 
-        if (location != null) {
-            postParams.putAll(location.toMap());
-        }
+		if (webAddress != null) {
+			postParams.put(ServiceConstants.ENTRY_WEB_ADDRESS, webAddress);
+		}
 
-        if (syncId != null) {
-            postParams.put(ServiceConstants.SYNC_ID, syncId);
-        }
+		if (location != null) {
+			postParams.putAll(location.toMap());
+		}
 
-        return postParams;
-    }
+		if (syncId != null) {
+			postParams.put(ServiceConstants.SYNC_ID, syncId);
+		}
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
+		return postParams;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof NPEntry)) return false;
+	@Override
+	public int describeContents() {
+		return 0;
+	}
 
-        NPEntry npEntry = (NPEntry) o;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof NPEntry)) return false;
 
-        if (mAccessInfo != null ? !mAccessInfo.equals(npEntry.mAccessInfo) : npEntry.mAccessInfo != null) return false;
-        if (attachments != null ? !attachments.equals(npEntry.attachments) : npEntry.attachments != null) return false;
-        if (colorLabel != null ? !colorLabel.equals(npEntry.colorLabel) : npEntry.colorLabel != null) return false;
-        if (createTime != npEntry.createTime) return false;
-        if (entryId != null ? !entryId.equals(npEntry.entryId) : npEntry.entryId != null) return false;
-        if (featureValues != null ? !featureValues.equals(npEntry.featureValues) : npEntry.featureValues != null)
-            return false;
-        if (folder != null ? !folder.equals(npEntry.folder) : npEntry.folder != null) return false;
-        if (location != null ? !location.equals(npEntry.location) : npEntry.location != null) return false;
-        if (note != null ? !note.equals(npEntry.note) : npEntry.note != null) return false;
-        if (sharings != null ? !sharings.equals(npEntry.sharings) : npEntry.sharings != null) return false;
-        if (tags != null ? !tags.equals(npEntry.tags) : npEntry.tags != null) return false;
-        if (mTemplate != npEntry.mTemplate) return false;
-        if (title != null ? !title.equals(npEntry.title) : npEntry.title != null) return false;
-        if (webAddress != null ? !webAddress.equals(npEntry.webAddress) : npEntry.webAddress != null) return false;
+		NPEntry npEntry = (NPEntry) o;
 
-        return true;
-    }
+		if (mAccessInfo != null ? !mAccessInfo.equals(npEntry.mAccessInfo) : npEntry.mAccessInfo != null) return false;
+		if (attachments != null ? !attachments.equals(npEntry.attachments) : npEntry.attachments != null) return false;
+		if (colorLabel != null ? !colorLabel.equals(npEntry.colorLabel) : npEntry.colorLabel != null) return false;
+		if (createTime != npEntry.createTime) return false;
+		if (entryId != null ? !entryId.equals(npEntry.entryId) : npEntry.entryId != null) return false;
+		if (featureValues != null ? !featureValues.equals(npEntry.featureValues) : npEntry.featureValues != null)
+			return false;
+		if (folder != null ? !folder.equals(npEntry.folder) : npEntry.folder != null) return false;
+		if (location != null ? !location.equals(npEntry.location) : npEntry.location != null) return false;
+		if (note != null ? !note.equals(npEntry.note) : npEntry.note != null) return false;
+		if (sharings != null ? !sharings.equals(npEntry.sharings) : npEntry.sharings != null) return false;
+		if (tags != null ? !tags.equals(npEntry.tags) : npEntry.tags != null) return false;
+		if (mTemplate != npEntry.mTemplate) return false;
+		if (title != null ? !title.equals(npEntry.title) : npEntry.title != null) return false;
+		if (webAddress != null ? !webAddress.equals(npEntry.webAddress) : npEntry.webAddress != null) return false;
 
-    @Override
-    public int hashCode() {
-        int result = mAccessInfo != null ? mAccessInfo.hashCode() : 0;
-        result = 31 * result + (folder != null ? folder.hashCode() : 0);
-        result = 31 * result + (mTemplate != null ? mTemplate.hashCode() : 0);
-        result = 31 * result + (entryId != null ? entryId.hashCode() : 0);
-        result = 31 * result + (title != null ? title.hashCode() : 0);
-        result = 31 * result + (colorLabel != null ? colorLabel.hashCode() : 0);
-        result = 31 * result + (tags != null ? tags.hashCode() : 0);
-        result = 31 * result + (note != null ? note.hashCode() : 0);
-        result = 31 * result + (featureValues != null ? featureValues.hashCode() : 0);
-        result = 31 * result + (attachments != null ? attachments.hashCode() : 0);
-        result = 31 * result + createTime.hashCode();
-        result = 31 * result + (location != null ? location.hashCode() : 0);
-        result = 31 * result + (webAddress != null ? webAddress.hashCode() : 0);
-        result = 31 * result + (sharings != null ? sharings.hashCode() : 0);
-        return result;
-    }
+		return true;
+	}
 
-    /**
-     * This method print out the name/values pairs that are posted to web
-     * service.
-     */
-    public void debugMap() {
-        Map<String, String> postParams = toMap();
-        StringBuilder buf = new StringBuilder();
-        buf.append("\n================ Debug the post param map ===============\n");
-        for (Map.Entry<String, String> item : postParams.entrySet()) {
-            buf.append(item.getKey()).append(":").append(item.getValue()).append("\n");
-        }
-        Log.d("NPEntry", buf.toString());
-    }
+	@Override
+	public int hashCode() {
+		int result = mAccessInfo != null ? mAccessInfo.hashCode() : 0;
+		result = 31 * result + (folder != null ? folder.hashCode() : 0);
+		result = 31 * result + (mTemplate != null ? mTemplate.hashCode() : 0);
+		result = 31 * result + (entryId != null ? entryId.hashCode() : 0);
+		result = 31 * result + (title != null ? title.hashCode() : 0);
+		result = 31 * result + (colorLabel != null ? colorLabel.hashCode() : 0);
+		result = 31 * result + (tags != null ? tags.hashCode() : 0);
+		result = 31 * result + (note != null ? note.hashCode() : 0);
+		result = 31 * result + (featureValues != null ? featureValues.hashCode() : 0);
+		result = 31 * result + (attachments != null ? attachments.hashCode() : 0);
+		result = 31 * result + createTime.hashCode();
+		result = 31 * result + (location != null ? location.hashCode() : 0);
+		result = 31 * result + (webAddress != null ? webAddress.hashCode() : 0);
+		result = 31 * result + (sharings != null ? sharings.hashCode() : 0);
+		return result;
+	}
+
+	/**
+	 * This method print out the name/values pairs that are posted to web
+	 * service.
+	 */
+	public void debugMap() {
+		Map<String, String> postParams = toMap();
+		StringBuilder buf = new StringBuilder();
+		buf.append("\n================ Debug the post param map ===============\n");
+		for (Map.Entry<String, String> item : postParams.entrySet()) {
+			buf.append(item.getKey()).append(":").append(item.getValue()).append("\n");
+		}
+		Log.d("NPEntry", buf.toString());
+	}
 
     /*
      * Getters and Setters
      */
 
-    public Map<String, Object> getFeatureValues() {
-        return featureValues;
-    }
+	public Map<String, Object> getFeatureValues() {
+		return featureValues;
+	}
 
-    public void setFeatureValues(Map<String, Object> featureValues) {
-        this.featureValues = featureValues;
-    }
+	public void setFeatureValues(Map<String, Object> featureValues) {
+		this.featureValues = featureValues;
+	}
 
-    public List<NPUpload> getAttachments() {
-        return attachments;
-    }
+	public List<NPUpload> getAttachments() {
+		return attachments;
+	}
 
-    public void addAttachments(Collection<? extends NPUpload> attachments) {
-        this.attachments.addAll(attachments);
-    }
+	public void addAttachments(Collection<? extends NPUpload> attachments) {
+		this.attachments.addAll(attachments);
+	}
 
-    public void addAttachment(NPUpload att) {
-        attachments.add(att);
-    }
+	public void addAttachment(NPUpload att) {
+		attachments.add(att);
+	}
 
-    public Location getLocation() {
-        return location;
-    }
+	public Location getLocation() {
+		return location;
+	}
 
-    /**
-     * @param location not null
-     */
-    public void setLocation(Location location) {
-        this.location = location;
-    }
+	/**
+	 * @param location not null
+	 */
+	public void setLocation(Location location) {
+		this.location = location;
+	}
 
-    public String getColorLabel() {
-        return colorLabel;
-    }
+	public String getColorLabel() {
+		return colorLabel;
+	}
 
-    public void setColorLabel(String colorLabel) {
-        this.colorLabel = colorLabel;
-    }
+	public void setColorLabel(String colorLabel) {
+		this.colorLabel = colorLabel;
+	}
 
-    public String getWebAddress() {
-        return webAddress;
-    }
+	public String getWebAddress() {
+		return webAddress;
+	}
 
-    public void setWebAddress(String webAddress) {
-        this.webAddress = webAddress;
-    }
+	public void setWebAddress(String webAddress) {
+		this.webAddress = webAddress;
+	}
 
-    public AccessEntitlement getAccessInfo() {
-        return mAccessInfo;
-    }
+	public AccessEntitlement getAccessInfo() {
+		return mAccessInfo;
+	}
 
-    public void setAccessInfo(AccessEntitlement accessInfo) {
-        this.mAccessInfo = accessInfo;
-    }
+	public void setAccessInfo(AccessEntitlement accessInfo) {
+		this.mAccessInfo = accessInfo;
+	}
 
-    public NPFolder getFolder() {
-        return folder;
-    }
+	public NPFolder getFolder() {
+		return folder;
+	}
 
-    public void setFolder(NPFolder folder) {
-        this.folder = folder;
-    }
+	public void setFolder(NPFolder folder) {
+		this.folder = folder;
+	}
 
-    public EntryTemplate getTemplate() {
-        return mTemplate;
-    }
+	public EntryTemplate getTemplate() {
+		return mTemplate;
+	}
 
-    public String getEntryId() {
-        return entryId;
-    }
+	public String getEntryId() {
+		return entryId;
+	}
 
-    public void setEntryId(String entryId) {
-        this.entryId = entryId;
-    }
+	public void setEntryId(String entryId) {
+		this.entryId = entryId;
+	}
 
-    public String getTitle() {
-        return title;
-    }
+	public String getTitle() {
+		return title;
+	}
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+	public void setTitle(String title) {
+		this.title = title;
+	}
 
-    public Date getCreateTime() {
-        return createTime;
-    }
+	public Date getCreateTime() {
+		return createTime;
+	}
 
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
 
-    public String getTags() {
-        return tags;
-    }
+	public String getTags() {
+		return tags;
+	}
 
-    public void setTags(String tags) {
-        this.tags = tags;
-    }
+	public void setTags(String tags) {
+		this.tags = tags;
+	}
 
-    public String getNote() {
-        return note;
-    }
+	public String getNote() {
+		return note;
+	}
 
-    public void setNote(String note) {
-        this.note = note;
-    }
+	public void setNote(String note) {
+		this.note = note;
+	}
 
-    public void setOwner(NPUser owner) {
-        if (mAccessInfo == null) {
-            mAccessInfo = new AccessEntitlement();
-        }
-        mAccessInfo.setOwner(owner);
-    }
+	public void setOwner(NPUser owner) {
+		if (mAccessInfo == null) {
+			mAccessInfo = new AccessEntitlement();
+		}
+		mAccessInfo.setOwner(owner);
+	}
 
-    public HashMap<String, String> toHashMap() {
-        return null;
-    }
+	public HashMap<String, String> toHashMap() {
+		return null;
+	}
 
-    public List<NPSharing> getSharings() {
-        return sharings;
-    }
+	public List<NPSharing> getSharings() {
+		return sharings;
+	}
 
-    public void addSharing(NPSharing sharing) {
-        if (sharings == null) {
-            sharings = new ArrayList<NPSharing>();
-        }
-        sharings.add(sharing);
-    }
+	public void addSharing(NPSharing sharing) {
+		if (sharings == null) {
+			sharings = new ArrayList<NPSharing>();
+		}
+		sharings.add(sharing);
+	}
 
-    public void setSharings(List<NPSharing> sharings) {
-        this.sharings = sharings;
-    }
+	public void setSharings(List<NPSharing> sharings) {
+		this.sharings = sharings;
+	}
 
-    public int getStatus() {
-        return status;
-    }
+	public int getStatus() {
+		return status;
+	}
 
-    public void setStatus(int status) {
-        this.status = status;
-    }
+	public void setStatus(int status) {
+		this.status = status;
+	}
 
-    public Date getLastModifiedTime() {
-        return lastModifiedTime;
-    }
+	public Date getLastModifiedTime() {
+		return lastModifiedTime;
+	}
 
-    public void setLastModifiedTime(Date modifiedTime) {
-        this.lastModifiedTime = modifiedTime;
-    }
+	public void setLastModifiedTime(Date modifiedTime) {
+		this.lastModifiedTime = modifiedTime;
+	}
 
-    public boolean isSynced() {
-        return synced;
-    }
+	public boolean isSynced() {
+		return synced;
+	}
 
-    public void setSynced(boolean synced) {
-        this.synced = synced;
-    }
+	public void setSynced(boolean synced) {
+		this.synced = synced;
+	}
 
-    public String getSyncId() {
-        return syncId;
-    }
+	public String getSyncId() {
+		return syncId;
+	}
 
-    public void setSyncId(String syncId) {
-        this.syncId = syncId;
-    }
+	public void setSyncId(String syncId) {
+		this.syncId = syncId;
+	}
 }

@@ -17,7 +17,7 @@ import android.widget.ArrayAdapter;
 import com.google.common.collect.ImmutableList;
 import com.nexuspad.R;
 import com.nexuspad.common.Constants;
-import com.nexuspad.common.annotation.ModuleId;
+import com.nexuspad.common.annotation.ModuleInfo;
 import com.nexuspad.common.activity.EntriesActivity;
 import com.nexuspad.common.activity.UploadCenterActivity;
 import com.nexuspad.common.annotation.ParentActivity;
@@ -36,7 +36,7 @@ import static com.nexuspad.service.dataservice.ServiceConstants.PHOTO_MODULE;
  * @author Edmond
  */
 @ParentActivity(DashboardActivity.class)
-@ModuleId(moduleId = PHOTO_MODULE, template = EntryTemplate.PHOTO)
+@ModuleInfo(moduleId = PHOTO_MODULE, template = EntryTemplate.PHOTO)
 public class PhotosActivity extends EntriesActivity implements ActionBar.OnNavigationListener {
     public static final String TAG = "PhotosActivity";
     public static final String KEY_SPINNER_INDEX = "key_spinner_index";

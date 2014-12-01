@@ -267,8 +267,6 @@ public class EntryListService {
 				theList.setAccessInfo(currentFolder.getAccessInfo());
 				theList.initWithJSONObject(result.getData());
 
-				Logs.d(TAG, theList.toString());
-
 				//EntryStore.updateEntryList(theList);			// For junit testing
 				//EntryStore.updateEntryListAsync(theList);
 

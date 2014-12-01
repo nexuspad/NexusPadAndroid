@@ -17,7 +17,7 @@ import android.widget.DatePicker;
 import com.nexuspad.R;
 import com.nexuspad.common.Constants;
 import com.nexuspad.common.activity.EntriesActivity;
-import com.nexuspad.common.annotation.ModuleId;
+import com.nexuspad.common.annotation.ModuleInfo;
 import com.nexuspad.common.annotation.ParentActivity;
 import com.nexuspad.common.fragment.EntryFragment;
 import com.nexuspad.home.activity.DashboardActivity;
@@ -37,7 +37,7 @@ import java.util.Date;
  * @author Edmond
  */
 @ParentActivity(DashboardActivity.class)
-@ModuleId(moduleId = ServiceConstants.JOURNAL_MODULE, template = EntryTemplate.JOURNAL)
+@ModuleInfo(moduleId = ServiceConstants.JOURNAL_MODULE, template = EntryTemplate.JOURNAL)
 public class JournalsActivity extends EntriesActivity implements JournalsFragment.JournalsCallback, JournalEditFragment.JournalDetailCallback {
 	public static final String TAG = "JournalsActivity";
 

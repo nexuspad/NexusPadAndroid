@@ -86,8 +86,6 @@ public class NPAlbum extends NPEntry {
 				}
 			}
 
-			Log.i("PHOTOS -------------------------", photos.toString());
-
 		} catch (JSONException e) {
 			Log.i("NPAlbum", e.toString());
 			throw new NPException(ErrorCode.ENTRY_MISSING_DATA, "Album missing " + ServiceConstants.UPLOAD_TN_URL);

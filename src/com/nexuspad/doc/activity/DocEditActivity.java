@@ -9,8 +9,8 @@ import android.net.Uri;
 import android.support.v4.app.Fragment;
 import com.nexuspad.common.Constants;
 import com.nexuspad.common.activity.EntryEditActivity;
+import com.nexuspad.common.annotation.ModuleInfo;
 import com.nexuspad.common.annotation.ParentActivity;
-import com.nexuspad.common.annotation.ModuleId;
 import com.nexuspad.service.datamodel.NPDoc;
 import com.nexuspad.service.datamodel.EntryTemplate;
 import com.nexuspad.service.datamodel.NPFolder;
@@ -26,7 +26,7 @@ import java.util.List;
  * @author Edmond
  */
 @ParentActivity(DocsActivity.class)
-@ModuleId(moduleId = ServiceConstants.DOC_MODULE, template = EntryTemplate.DOC)
+@ModuleInfo(moduleId = ServiceConstants.DOC_MODULE, template = EntryTemplate.DOC)
 public class DocEditActivity extends EntryEditActivity<NPDoc> implements DocUpdateFragment.DocDetailCallback {
 
     public static void startWithFolder(Context c, NPFolder f) {

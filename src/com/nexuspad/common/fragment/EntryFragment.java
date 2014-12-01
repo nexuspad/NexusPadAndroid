@@ -180,6 +180,10 @@ public abstract class EntryFragment<T extends NPEntry> extends DialogFragment {
 	}
 
 	public NPFolder getFolder() {
+		if (mEntry != null) {
+			return mEntry.getFolder();
+		}
+
 		return mFolder;
 	}
 

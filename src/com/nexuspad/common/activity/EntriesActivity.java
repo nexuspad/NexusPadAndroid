@@ -8,21 +8,21 @@ import android.content.Intent;
 import android.os.Bundle;
 import com.nexuspad.R;
 import com.nexuspad.common.Constants;
-import com.nexuspad.common.annotation.ModuleId;
+import com.nexuspad.common.annotation.ModuleInfo;
 import com.nexuspad.common.fragment.EntriesFragment;
 import com.nexuspad.service.datamodel.EntryList;
 import com.nexuspad.service.datamodel.NPFolder;
 import com.nexuspad.service.dataservice.ServiceConstants;
 
 /**
- * You must annotate the class with {@link ModuleId}.
+ * You must annotate the class with {@link com.nexuspad.common.annotation.ModuleInfo}.
  *
  * @author Edmond
  */
 public abstract class EntriesActivity extends SinglePaneActivity implements EntriesFragment.ActivityCallback {
     protected NPFolder mFolder;
 
-    private ModuleId mModuleId;
+    private ModuleInfo mModuleId;
 
     /**
      * @return one of the {@code *_MODULE} constants in {@link ServiceConstants}
@@ -41,7 +41,7 @@ public abstract class EntriesActivity extends SinglePaneActivity implements Entr
 
     @Override
     protected void onCreate(Bundle savedState) {
-        mModuleId = ((Object) this).getClass().getAnnotation(ModuleId.class);
+        mModuleId = ((Object) this).getClass().getAnnotation(ModuleInfo.class);
 
         Intent intent = getIntent();
         NPFolder folder = intent.getParcelableExtra(Constants.KEY_FOLDER);

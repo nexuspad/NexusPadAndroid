@@ -10,8 +10,8 @@ import android.support.v4.app.Fragment;
 import com.nexuspad.bookmark.fragment.BookmarkEditFragment;
 import com.nexuspad.common.Constants;
 import com.nexuspad.common.activity.EntryEditActivity;
+import com.nexuspad.common.annotation.ModuleInfo;
 import com.nexuspad.common.annotation.ParentActivity;
-import com.nexuspad.common.annotation.ModuleId;
 import com.nexuspad.service.datamodel.NPBookmark;
 import com.nexuspad.service.datamodel.EntryTemplate;
 import com.nexuspad.service.datamodel.NPFolder;
@@ -21,15 +21,15 @@ import com.nexuspad.service.dataservice.ServiceConstants;
  * @author Edmond
  */
 @ParentActivity(BookmarksActivity.class)
-@ModuleId(moduleId = ServiceConstants.BOOKMARK_MODULE, template = EntryTemplate.BOOKMARK)
-public class BookmarkEditEditActivity extends EntryEditActivity<NPBookmark> {
+@ModuleInfo(moduleId = ServiceConstants.BOOKMARK_MODULE, template = EntryTemplate.BOOKMARK)
+public class BookmarkEditActivity extends EntryEditActivity<NPBookmark> {
 
     public static void startWithFolder(Context c, NPFolder f) {
-        BookmarkEditEditActivity.startWithBookmark(c, f, null);
+        BookmarkEditActivity.startWithBookmark(c, f, null);
     }
 
     public static void startWithBookmark(Context c, NPFolder f, NPBookmark b) {
-        Intent intent = new Intent(c, BookmarkEditEditActivity.class);
+        Intent intent = new Intent(c, BookmarkEditActivity.class);
         intent.putExtra(KEY_ENTRY, b);
         intent.putExtra(KEY_FOLDER, f);
         c.startActivity(intent);

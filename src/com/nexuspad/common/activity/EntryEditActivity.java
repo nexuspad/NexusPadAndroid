@@ -6,7 +6,7 @@ package com.nexuspad.common.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import com.nexuspad.R;
-import com.nexuspad.common.annotation.ModuleId;
+import com.nexuspad.common.annotation.ModuleInfo;
 import com.nexuspad.common.fragment.EntryEditFragment;
 import com.nexuspad.common.fragment.EntryFragment;
 import com.nexuspad.service.datamodel.NPEntry;
@@ -31,7 +31,7 @@ public abstract class EntryEditActivity<T extends NPEntry> extends DoneDiscardAc
     private Mode mMode = Mode.NEW;
     private T mEntry;
     private NPFolder mFolder;
-    private ModuleId mModuleId;
+    private ModuleInfo mModuleId;
 
     /**
      * @return one of the {@code *_MODULE} constants in {@link ServiceConstants}
@@ -50,7 +50,7 @@ public abstract class EntryEditActivity<T extends NPEntry> extends DoneDiscardAc
 
     @Override
     protected void onCreate(Bundle savedState) {
-        mModuleId = ((Object)this).getClass().getAnnotation(ModuleId.class);
+        mModuleId = ((Object)this).getClass().getAnnotation(ModuleInfo.class);
 
         handleIntent(getIntent());
         super.onCreate(savedState);

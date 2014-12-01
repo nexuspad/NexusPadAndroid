@@ -15,7 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.nexuspad.R;
 import com.nexuspad.common.Constants;
-import com.nexuspad.common.annotation.ModuleId;
+import com.nexuspad.common.annotation.ModuleInfo;
 import com.nexuspad.common.annotation.FragmentName;
 import com.nexuspad.common.fragment.EntryEditFragment;
 import com.nexuspad.contacts.activity.LocationEditActivity;
@@ -23,10 +23,10 @@ import com.nexuspad.service.datamodel.*;
 import com.nexuspad.service.dataservice.ServiceConstants;
 
 /**
- * Author: edmond
+ * Contact edit screen fragment
  */
 @FragmentName(ContactEditFragment.TAG)
-@ModuleId(moduleId = ServiceConstants.CONTACT_MODULE, template = EntryTemplate.CONTACT)
+@ModuleInfo(moduleId = ServiceConstants.CONTACT_MODULE, template = EntryTemplate.CONTACT)
 public class ContactEditFragment extends EntryEditFragment<NPPerson> {
 	public static final String TAG = "ContactEditFragment";
 

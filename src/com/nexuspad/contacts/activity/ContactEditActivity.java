@@ -4,8 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import com.nexuspad.common.activity.EntryEditActivity;
+import com.nexuspad.common.annotation.ModuleInfo;
 import com.nexuspad.common.annotation.ParentActivity;
-import com.nexuspad.common.annotation.ModuleId;
 import com.nexuspad.contacts.fragment.ContactEditFragment;
 import com.nexuspad.service.datamodel.NPFolder;
 import com.nexuspad.service.datamodel.NPPerson;
@@ -16,7 +16,7 @@ import com.nexuspad.service.dataservice.ServiceConstants;
  * Author: edmond
  */
 @ParentActivity(ContactsActivity.class)
-@ModuleId(moduleId = ServiceConstants.CONTACT_MODULE, template = EntryTemplate.CONTACT)
+@ModuleInfo(moduleId = ServiceConstants.CONTACT_MODULE, template = EntryTemplate.CONTACT)
 public class ContactEditActivity extends EntryEditActivity<NPPerson> {
 
     public static void startWithFolder(Context context, NPFolder folder) {

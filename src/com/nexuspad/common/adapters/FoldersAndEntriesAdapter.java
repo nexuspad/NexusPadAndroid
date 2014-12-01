@@ -18,12 +18,6 @@ public class FoldersAndEntriesAdapter<T extends EntriesAdapter<?>> extends BaseA
 		mEntriesAdapter = entriesAdapter;
 	}
 
-	public FoldersAndEntriesAdapter(ListFoldersAdapter folderAdapter, T entriesAdapter, BaseAdapter loadMoreAdapter) {
-		mFolderAdapter = folderAdapter;
-		mEntriesAdapter = entriesAdapter;
-		mEntriesAdapter.setLoadMoreAdapter(loadMoreAdapter);
-	}
-
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 		if (isPositionFolder(position)) {
@@ -36,7 +30,11 @@ public class FoldersAndEntriesAdapter<T extends EntriesAdapter<?>> extends BaseA
 	@Override
 	public int getCount() {
 		if (mEntriesAdapter.isEmpty()) {
-			return 1;
+			if (mFolderAdapter.isEmpty()) {
+				return 1;
+			} else {
+				return mFolderAdapter.getCount();
+			}
 		}
 
 		return mFolderAdapter.getCount() + mEntriesAdapter.getCount();
@@ -95,8 +93,6 @@ public class FoldersAndEntriesAdapter<T extends EntriesAdapter<?>> extends BaseA
 	public boolean isEnabled(int position) {
 		if (isPositionFolder(position)) {
 			return mFolderAdapter.isEnabled(position);
-		} else if (isPositionLoadMore(position)) {
-			return mEntriesAdapter.getLoadMoreAdapter().isEnabled(position);
 		}
 		return mEntriesAdapter.isEnabled(position);
 	}
@@ -105,8 +101,6 @@ public class FoldersAndEntriesAdapter<T extends EntriesAdapter<?>> extends BaseA
 	public int getItemViewType(int position) {
 		if (isPositionFolder(position)) {
 			return mFolderAdapter.getItemViewType(position);
-		} else if (isPositionLoadMore(position)) {
-			return mEntriesAdapter.getLoadMoreAdapter().getItemViewType(0);
 		}
 
 		return mEntriesAdapter.getItemViewType(position);
@@ -114,7 +108,7 @@ public class FoldersAndEntriesAdapter<T extends EntriesAdapter<?>> extends BaseA
 
 	@Override
 	public int getViewTypeCount() {
-		return mFolderAdapter.getViewTypeCount() + mEntriesAdapter.getViewTypeCount() + (mEntriesAdapter.getLoadMoreAdapter() == null ? 0 : 1);
+		return mFolderAdapter.getViewTypeCount() + mEntriesAdapter.getViewTypeCount();
 	}
 
 	@Override
@@ -129,8 +123,6 @@ public class FoldersAndEntriesAdapter<T extends EntriesAdapter<?>> extends BaseA
 	public Object getItem(int position) {
 		if (isPositionFolder(position)) {
 			return mFolderAdapter.getItem(position);
-		} else if (isPositionLoadMore(position)) {
-			return mEntriesAdapter.getLoadMoreAdapter().getItem(0);
 		} else {
 			position = position - mFolderAdapter.getCount();
 			return mEntriesAdapter.getItem(position);
@@ -141,8 +133,6 @@ public class FoldersAndEntriesAdapter<T extends EntriesAdapter<?>> extends BaseA
 	public long getItemId(int position) {
 		if (isPositionFolder(position)) {
 			return mFolderAdapter.getItemId(position);
-		} else if (isPositionLoadMore(position)) {
-			return mEntriesAdapter.getLoadMoreAdapter().getItemId(0);
 		} else {
 			position = position - mFolderAdapter.getCount();
 			return mEntriesAdapter.getItemId(position);
@@ -153,8 +143,6 @@ public class FoldersAndEntriesAdapter<T extends EntriesAdapter<?>> extends BaseA
 	public View getView(int position, View convertView, ViewGroup parent) {
 		if (isPositionFolder(position)) {
 			return mFolderAdapter.getView(position, convertView, parent);
-		} else if (isPositionLoadMore(position)) {
-			return mEntriesAdapter.getLoadMoreAdapter().getView(0, convertView, parent);
 		} else {
 			position = position - mFolderAdapter.getCount();
 			return mEntriesAdapter.getView(position, convertView, parent);
@@ -174,10 +162,6 @@ public class FoldersAndEntriesAdapter<T extends EntriesAdapter<?>> extends BaseA
 
 	public boolean isPositionEntries(int position) {
 		return mEntriesAdapter.getCount() != 0 && !isPositionFolder(position);
-	}
-
-	public void removeLoadMoreAdapter() {
-		mEntriesAdapter.setLoadMoreAdapter(null);
 	}
 
 	private boolean isPositionLoadMore(int position) {

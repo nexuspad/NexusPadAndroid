@@ -4,6 +4,7 @@
 
 package com.nexuspad.service.datamodel;
 
+import com.google.common.collect.Iterables;
 import com.nexuspad.service.dataservice.ServiceConstants;
 import com.nexuspad.service.util.Logs;
 import org.json.JSONArray;
@@ -36,7 +37,7 @@ public class EntryList <T extends NPEntry> implements Serializable {
 
 	private boolean entryUpdated;
 
-    private ArrayList<T> entries = new ArrayList<T>();
+    private List<T> entries = new ArrayList<T>();
 
     public void initWithJSONObject(JSONObject data) {
         try {
@@ -142,6 +143,50 @@ public class EntryList <T extends NPEntry> implements Serializable {
             Logs.e("EntryList", "Error building EntryList object using the dictionary..." + je.toString());
         }
     }
+
+	public boolean isEmpty() {
+		int itemsCount = entries.size() + (folder.getSubFolders() == null ? 0 : folder.getSubFolders().size());
+		if (itemsCount == 0) {
+			return true;
+		}
+		return false;
+	}
+
+	public boolean removeEntryFromList(NPEntry e) {
+		if (Iterables.removeIf(entries, e.filterById())) {
+			totalCount--;
+			return true;
+		}
+		return false;
+	}
+
+	public void addOrUpdateEntry(NPEntry e) {
+		if (!Iterables.tryFind(entries, e.filterById()).isPresent()) {
+			if (entries.size() == 0) {
+				((List<NPEntry>)entries).add(e);
+			} else {
+				((List<NPEntry>)entries).add(0, e);
+			}
+
+			totalCount++;
+
+		} else {
+			List<T> updatedEntries = new ArrayList<T>();
+
+			for (NPEntry anEntry : entries) {
+				if (anEntry.getEntryId().equals(e.getEntryId()) && anEntry.getModuleId() == e.getModuleId()) {
+					if ((e.getModuleId() == NPModule.CONTACT || e.getModuleId() == NPModule.PHOTO) ||
+							(anEntry.getFolder().getFolderId() == e.getFolder().getFolderId())) {
+						updatedEntries.add((T)e);
+					}
+				} else {
+					updatedEntries.add((T)anEntry);
+				}
+			}
+
+			entries = updatedEntries;
+		}
+	}
 
     @Override
     public String toString() {

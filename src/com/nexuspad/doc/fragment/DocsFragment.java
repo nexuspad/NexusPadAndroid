@@ -17,7 +17,7 @@ import com.nexuspad.common.adapters.FoldersAndEntriesAdapter;
 import com.nexuspad.common.adapters.ListFoldersAdapter;
 import com.nexuspad.common.adapters.ListViewHolder;
 import com.nexuspad.common.annotation.FragmentName;
-import com.nexuspad.common.annotation.ModuleId;
+import com.nexuspad.common.annotation.ModuleInfo;
 import com.nexuspad.common.fragment.FoldersAndEntriesFragment;
 import com.nexuspad.common.listeners.OnEntryMenuClickListener;
 import com.nexuspad.service.datamodel.EntryList;
@@ -31,7 +31,7 @@ import com.nexuspad.doc.activity.DocEditActivity;
  * @author Edmond
  */
 @FragmentName(DocsFragment.TAG)
-@ModuleId(moduleId = ServiceConstants.DOC_MODULE, template = EntryTemplate.DOC)
+@ModuleInfo(moduleId = ServiceConstants.DOC_MODULE, template = EntryTemplate.DOC)
 public class DocsFragment extends FoldersAndEntriesFragment {
 	public static final String TAG = "DocsFragment";
 
@@ -91,52 +91,51 @@ public class DocsFragment extends FoldersAndEntriesFragment {
 	}
 
 	@Override
-	protected void onListLoaded(EntryList list) {
+	protected void onListLoaded(EntryList newListToDisplay) {
 		Log.i(TAG, "Receiving entry list.");
 
-		super.onListLoaded(list);
+		super.onListLoaded(newListToDisplay);
 
 		FoldersAndEntriesAdapter a = (FoldersAndEntriesAdapter)getAdapter();
 
-		if (a != null) {
-			a.notifyDataSetChanged();
-			clearVisualIndicator();
-			return;
+		if (a == null) {
+			final DocsAdapter docsAdapter = new DocsAdapter(getActivity(), newListToDisplay);
+
+			docsAdapter.setOnMenuClickListener(new OnEntryMenuClickListener<NPDoc>(mListView, getEntryService(), getUndoBarController()) {
+				@Override
+				public void onClick(View v) {
+					@SuppressWarnings("unchecked")
+					FoldersAndEntriesAdapter<? extends EntriesAdapter<NPDoc>> felAdapter = ((FoldersAndEntriesAdapter<? extends EntriesAdapter<NPDoc>>) mListView.getAdapter());
+
+					int position = mListView.getPositionForView(v);
+					if (position != ListView.INVALID_POSITION && felAdapter.isPositionEntries(position)) {
+						NPDoc item = (NPDoc)felAdapter.getItem(position);
+						onEntryClick(item, position, v);
+					}
+				}
+
+				@Override
+				protected boolean onEntryMenuClick(NPDoc entry, int pos, int menuId) {
+					switch (menuId) {
+						case R.id.edit:
+							DocEditActivity.startWithDoc(getActivity(), getFolder(), entry);
+							return true;
+						default:
+							return super.onEntryMenuClick(entry, pos, menuId);
+					}
+				}
+			});
+
+			ListFoldersAdapter foldersAdapter = newFoldersAdapter();
+
+			FoldersAndEntriesAdapter combinedAdapter = new FoldersAndEntriesAdapter(foldersAdapter, docsAdapter);
+			setAdapter(combinedAdapter);
+			mListView.setAdapter(combinedAdapter);
+			mListView.setOnItemLongClickListener(combinedAdapter);
+
+		} else {
+			a.getEntriesAdapter().setDisplayEntryList(newListToDisplay);
 		}
-
-		final DocsAdapter docsAdapter = new DocsAdapter(getActivity(), list);
-
-		docsAdapter.setOnMenuClickListener(new OnEntryMenuClickListener<NPDoc>(mListView, getEntryService(), getUndoBarController()) {
-			@Override
-			public void onClick(View v) {
-				@SuppressWarnings("unchecked")
-				FoldersAndEntriesAdapter<? extends EntriesAdapter<NPDoc>> felAdapter = ((FoldersAndEntriesAdapter<? extends EntriesAdapter<NPDoc>>) mListView.getAdapter());
-
-				int position = mListView.getPositionForView(v);
-				if (position != ListView.INVALID_POSITION && felAdapter.isPositionEntries(position)) {
-					NPDoc item = (NPDoc)felAdapter.getItem(position);
-					onEntryClick(item, position, v);
-				}
-			}
-
-			@Override
-			protected boolean onEntryMenuClick(NPDoc entry, int pos, int menuId) {
-				switch (menuId) {
-					case R.id.edit:
-						DocEditActivity.startWithDoc(getActivity(), getFolder(), entry);
-						return true;
-					default:
-						return super.onEntryMenuClick(entry, pos, menuId);
-				}
-			}
-		});
-
-		ListFoldersAdapter foldersAdapter = newFoldersAdapter();
-
-		FoldersAndEntriesAdapter combinedAdapter = new FoldersAndEntriesAdapter(foldersAdapter, docsAdapter, getLoadMoreAdapter());
-		setAdapter(combinedAdapter);
-		mListView.setAdapter(combinedAdapter);
-		mListView.setOnItemLongClickListener(combinedAdapter);
 
 		clearVisualIndicator();
 	}

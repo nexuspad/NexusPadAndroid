@@ -19,9 +19,9 @@
 
         <TextView
             android:id="@+id/lbl_date_time"
+            style="?android:attr/listSeparatorTextViewStyle"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/np_textsize_small" />
+            android:layout_height="wrap_content" />
 
         <TextView
             android:id="@+id/lbl_location_frame"

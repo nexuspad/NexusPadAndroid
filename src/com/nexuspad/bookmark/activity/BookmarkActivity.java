@@ -22,7 +22,7 @@ public class BookmarkActivity extends EntryActivity<NPBookmark> implements Bookm
 
     @Override
     public void onEdit(BookmarkFragment f, NPBookmark b) {
-        BookmarkEditEditActivity.startWithBookmark(this, getFolder(), b);
+        BookmarkEditActivity.startWithBookmark(this, getFolder(), b);
     }
 
     @Override
