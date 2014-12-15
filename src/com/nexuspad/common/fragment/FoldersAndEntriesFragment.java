@@ -92,7 +92,12 @@ public class FoldersAndEntriesFragment extends EntriesFragment {
 	protected void doSearch(String keyword) {
 		displayProgressIndicator();
 		mCurrentSearchKeyword = keyword;
-		mFolderEntryCombinedAdapter.getEntriesAdapter().doSearch(keyword);
+
+		try {
+			mEntryListService.searchEntriesInFolder(keyword, mFolder, mModuleInfo.template(), 0, 99);
+		} catch (NPException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	@Override

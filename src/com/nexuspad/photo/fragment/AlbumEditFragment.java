@@ -36,235 +36,235 @@ import java.util.List;
 @FragmentName(AlbumEditFragment.TAG)
 @ModuleInfo(moduleId = ServiceConstants.PHOTO_MODULE, template = EntryTemplate.ALBUM)
 public class AlbumEditFragment extends EntryEditFragment<NPAlbum> {
-    public static final String TAG = "NewAlbumFragment";
-    private static final String KEY_PATHS = "key_paths";
+	public static final String TAG = "NewAlbumFragment";
+	private static final String KEY_PATHS = "key_paths";
 
-    public static AlbumEditFragment of(NPFolder folder) {
-        return AlbumEditFragment.of(null, folder);
-    }
+	public static AlbumEditFragment of(NPFolder folder) {
+		return AlbumEditFragment.of(null, folder);
+	}
 
-    public static AlbumEditFragment of(NPAlbum album, NPFolder folder) {
-        final Bundle bundle = new Bundle();
-        bundle.putParcelable(Constants.KEY_ENTRY, album);
-        bundle.putParcelable(Constants.KEY_FOLDER, folder);
+	public static AlbumEditFragment of(NPAlbum album, NPFolder folder) {
+		final Bundle bundle = new Bundle();
+		bundle.putParcelable(Constants.KEY_ENTRY, album);
+		bundle.putParcelable(Constants.KEY_FOLDER, folder);
 
-        final AlbumEditFragment fragment = new AlbumEditFragment();
-        fragment.setArguments(bundle);
+		final AlbumEditFragment fragment = new AlbumEditFragment();
+		fragment.setArguments(bundle);
 
-        return fragment;
-    }
+		return fragment;
+	}
 
-    private static final int IMAGE_SELECT_REQUEST = 2;
+	private static final int IMAGE_SELECT_REQUEST = 2;
 
-    private final Lazy<EntryUploadService> mUploadService = new Lazy<EntryUploadService>() {
-        @Override
-        protected EntryUploadService onCreate() {
-            return new EntryUploadService(getActivity());
-        }
-    };
-    private final ArrayList<Uri> mUris = new ArrayList<Uri>();
-    private PhotosAdapter mAdapter;
+	private final Lazy<EntryUploadService> mUploadService = new Lazy<EntryUploadService>() {
+		@Override
+		protected EntryUploadService onCreate() {
+			return new EntryUploadService(getActivity());
+		}
+	};
+	private final ArrayList<Uri> mUris = new ArrayList<Uri>();
+	private PhotosAdapter mAdapter;
 
-    private TextView mNumPhotosV;
-    private TextView mTitleV;
-    private TextView mFolderV;
+	private TextView mNumPhotosV;
+	private TextView mTitleV;
 
-    @Override
-    public void onSaveInstanceState(Bundle b) {
-        super.onSaveInstanceState(b);
+	@Override
+	public void onSaveInstanceState(Bundle b) {
+		super.onSaveInstanceState(b);
 
-        b.putParcelableArrayList(KEY_PATHS, mUris);
-    }
+		b.putParcelableArrayList(KEY_PATHS, mUris);
+	}
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (savedInstanceState != null) {
-            final List<Uri> list = savedInstanceState.getParcelableArrayList(KEY_PATHS);
-            addIfAbsent(list);
-        }
-    }
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		if (savedInstanceState != null) {
+			final List<Uri> list = savedInstanceState.getParcelableArrayList(KEY_PATHS);
+			addIfAbsent(list);
+		}
+	}
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(getLayoutId(), container, false);
-    }
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		return inflater.inflate(getLayoutId(), container, false);
+	}
 
-    private int getLayoutId() {
-        switch (getMode()) {
-            case NEW:
-                return R.layout.album_edit_frag;
-            case EDIT:
-                return R.layout.album_edit_frag;
-            default:
-                throw new AssertionError("unexpected mode: " + getMode());
-        }
-    }
+	private int getLayoutId() {
+		switch (getMode()) {
+			case NEW:
+				return R.layout.album_edit_frag;
+			case EDIT:
+				return R.layout.album_edit_frag;
+			default:
+				throw new AssertionError("unexpected mode: " + getMode());
+		}
+	}
 
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        findViews(view);
+	@Override
+	public void onViewCreated(View view, Bundle savedInstanceState) {
+		findViews(view);
 
-        installFolderSelectorListener(mFolderV);
+		installFolderSelectorListener(mFolderView);
 
-        if (EntryEditActivity.Mode.EDIT.equals(getMode())) {
-            final int size = mUris.size();
-            mNumPhotosV.setText(getResources().getQuantityString(R.plurals.numberOfPhotos, size, size));
+		if (EntryEditActivity.Mode.EDIT.equals(getMode())) {
+			final int size = mUris.size();
+			mNumPhotosV.setText(getResources().getQuantityString(R.plurals.numberOfPhotos, size, size));
 
-            mAdapter = new PhotosAdapter(mUris, getActivity());
+			mAdapter = new PhotosAdapter(mUris, getActivity());
 
-	        GridView photosGridView = (GridView)view.findViewById(R.id.grid_view);
-            photosGridView.setAdapter(mAdapter);
+			GridView photosGridView = (GridView)view.findViewById(R.id.grid_view);
+			photosGridView.setAdapter(mAdapter);
 
-	        View imagePicker = view.findViewById(R.id.pick_img);
-            imagePicker.setOnClickListener(new View.OnClickListener() {
-	            @Override
-	            public void onClick(View v) {
-		            final Intent intent = PhotosSelectActivity.of(getActivity());
-		            startActivityForResult(intent, IMAGE_SELECT_REQUEST);
-	            }
-            });
-        }
+			View imagePicker = view.findViewById(R.id.pick_img);
+			imagePicker.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					final Intent intent = PhotosSelectActivity.of(getActivity());
+					startActivityForResult(intent, IMAGE_SELECT_REQUEST);
+				}
+			});
+		}
 
-        super.onViewCreated(view, savedInstanceState);
-    }
+		super.onViewCreated(view, savedInstanceState);
+	}
 
-    private void findViews(View parent) {
-        mFolderV = (TextView)parent.findViewById(R.id.lbl_folder);
-        mTitleV = (TextView)parent.findViewById(R.id.txt_album_name);
-        mNumPhotosV = (TextView)parent.findViewById(R.id.lbl_num_photos);
-    }
+	private void findViews(View parent) {
+		mFolderView = (TextView)parent.findViewById(R.id.lbl_folder);
+		mTitleV = (TextView)parent.findViewById(R.id.txt_album_name);
+		mNumPhotosV = (TextView)parent.findViewById(R.id.lbl_num_photos);
+	}
 
-    @Override
-    protected void updateUI() {
-        mFolderV.setText(getFolder().getFolderName());
-        final NPAlbum album = getEntry();
-        if (album != null) {
-            mTitleV.setText(album.getTitle());
-        }
-    }
+	@Override
+	protected void updateUI() {
+		updateFolderView();
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case IMAGE_SELECT_REQUEST:
-                if (resultCode == Activity.RESULT_OK) {
-                    final List<Uri> paths = data.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
-                    addIfAbsent(paths);
-                    mAdapter.notifyDataSetChanged();
+		final NPAlbum album = getEntry();
+		if (album != null) {
+			mTitleV.setText(album.getTitle());
+		}
+	}
 
-                    final int size = mUris.size();
-                    mNumPhotosV.setText(getResources().getQuantityString(R.plurals.numberOfPhotos, size, size));
-                }
-                break;
-            default:
-                super.onActivityResult(requestCode, resultCode, data);
-        }
-    }
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		switch (requestCode) {
+			case IMAGE_SELECT_REQUEST:
+				if (resultCode == Activity.RESULT_OK) {
+					final List<Uri> paths = data.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
+					addIfAbsent(paths);
+					mAdapter.notifyDataSetChanged();
 
-    private void addIfAbsent(Iterable<Uri> uris) {
-        for (Uri uri : uris) {
-            if (!mUris.contains(uri)) {
-                mUris.add(uri);
-            }
-        }
-    }
+					final int size = mUris.size();
+					mNumPhotosV.setText(getResources().getQuantityString(R.plurals.numberOfPhotos, size, size));
+				}
+				break;
+			default:
+				super.onActivityResult(requestCode, resultCode, data);
+		}
+	}
 
-    @Override
-    public boolean isEditedEntryValid() {
-	    return true;
-    }
+	private void addIfAbsent(Iterable<Uri> uris) {
+		for (Uri uri : uris) {
+			if (!mUris.contains(uri)) {
+				mUris.add(uri);
+			}
+		}
+	}
 
-    @Override
-    public NPAlbum getEntryFromEditor() {
-        final NPAlbum entry = getEntry();
-        final NPAlbum album = entry == null ? new NPAlbum(getFolder()) : new NPAlbum(entry);
+	@Override
+	public boolean isEditedEntryValid() {
+		return true;
+	}
 
-        album.setTitle(mTitleV.getText().toString());
-        addPathsToAlbum(album);
+	@Override
+	public NPAlbum getEntryFromEditor() {
+		final NPAlbum entry = getEntry();
+		final NPAlbum album = entry == null ? new NPAlbum(getFolder()) : new NPAlbum(entry);
 
-        setEntry(album);
-        return album;
-    }
+		album.setTitle(mTitleV.getText().toString());
+		addPathsToAlbum(album);
 
-    @Override
-    protected void onAddEntry(NPAlbum entry) {
-        super.onAddEntry(entry);
-        final List<NPUpload> attachments = entry.getAttachments();
-        if (!attachments.isEmpty()) {
-            Log.e(TAG, "attachments are not uploaded (entry not created yet): " + attachments);
-        }
-    }
+		setEntry(album);
+		return album;
+	}
 
-    @Override
-    protected void onUpdateEntry(NPAlbum entry) {
-        super.onUpdateEntry(entry);
-        UploadCenterActivity.startWith(mUris, entry, getActivity());
-    }
+	@Override
+	protected void onAddEntry(NPAlbum entry) {
+		super.onAddEntry(entry);
+		final List<NPUpload> attachments = entry.getAttachments();
+		if (!attachments.isEmpty()) {
+			Log.e(TAG, "attachments are not uploaded (entry not created yet): " + attachments);
+		}
+	}
 
-    private void addPathsToAlbum(NPAlbum album) {
-        final NPFolder folder = getFolder();
-        for (Uri uri : mUris) {
-            final NPUpload npUpload = new NPUpload(folder);
-            npUpload.setFileName(uri.getPath());
-            album.addAttachment(npUpload);
-        }
-    }
+	@Override
+	protected void onUpdateEntry(NPAlbum entry) {
+		super.onUpdateEntry(entry);
+		UploadCenterActivity.startWith(mUris, entry, getActivity());
+	}
 
-    private static class PhotosAdapter extends BaseAdapter {
+	private void addPathsToAlbum(NPAlbum album) {
+		final NPFolder folder = getFolder();
+		for (Uri uri : mUris) {
+			final NPUpload npUpload = new NPUpload(folder);
+			npUpload.setFileName(uri.getPath());
+			album.addAttachment(npUpload);
+		}
+	}
 
-        private final LayoutInflater mInflater;
-	    private final Context mContext;
+	private static class PhotosAdapter extends BaseAdapter {
 
-        private static class ViewHolder {
-            public ImageView imageView;
-        }
+		private final LayoutInflater mInflater;
+		private final Context mContext;
 
-        private final List<? extends Uri> mUris;
+		private static class ViewHolder {
+			public ImageView imageView;
+		}
 
-        private PhotosAdapter(List<? extends Uri> uris, Context context) {
-            mUris = uris;
-            mInflater = LayoutInflater.from(context);
-	        mContext = context;
-        }
+		private final List<? extends Uri> mUris;
 
-        @Override
-        public int getCount() {
-            return mUris.size();
-        }
+		private PhotosAdapter(List<? extends Uri> uris, Context context) {
+			mUris = uris;
+			mInflater = LayoutInflater.from(context);
+			mContext = context;
+		}
 
-        @Override
-        public Uri getItem(int position) {
-            return mUris.get(position);
-        }
+		@Override
+		public int getCount() {
+			return mUris.size();
+		}
 
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
+		@Override
+		public Uri getItem(int position) {
+			return mUris.get(position);
+		}
 
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            final ViewHolder holder;
-            if (convertView == null) {
-                convertView = mInflater.inflate(R.layout.layout_photo_grid, parent, false);
+		@Override
+		public long getItemId(int position) {
+			return position;
+		}
 
-                holder = new ViewHolder();
-                holder.imageView = (ImageView)convertView.findViewById(android.R.id.icon);
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			final ViewHolder holder;
+			if (convertView == null) {
+				convertView = mInflater.inflate(R.layout.layout_photo_grid, parent, false);
 
-                convertView.setTag(holder);
-            } else {
-                holder = (ViewHolder) convertView.getTag();
-            }
+				holder = new ViewHolder();
+				holder.imageView = (ImageView)convertView.findViewById(android.R.id.icon);
 
-	        Ion.with(mContext)
-			        .load(getItem(position).getPath())
-			        .withBitmap()
-			        .placeholder(R.drawable.placeholder)
-			        .error(R.drawable.ic_launcher)
-			        .intoImageView(holder.imageView);
+				convertView.setTag(holder);
+			} else {
+				holder = (ViewHolder) convertView.getTag();
+			}
 
-            return convertView;
-        }
-    }
+			Ion.with(mContext)
+					.load(getItem(position).getPath())
+					.withBitmap()
+					.placeholder(R.drawable.placeholder)
+					.error(R.drawable.ic_launcher)
+					.intoImageView(holder.imageView);
+
+			return convertView;
+		}
+	}
 }

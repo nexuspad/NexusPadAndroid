@@ -3,6 +3,7 @@ package com.nexuspad.contacts.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
+import com.nexuspad.common.Constants;
 import com.nexuspad.common.activity.EntryEditActivity;
 import com.nexuspad.common.annotation.ModuleInfo;
 import com.nexuspad.common.annotation.ParentActivity;
@@ -29,8 +30,8 @@ public class ContactEditActivity extends EntryEditActivity<NPPerson> {
 
     public static Intent of(Context context, NPFolder folder, NPPerson contact) {
         final Intent intent = new Intent(context, ContactEditActivity.class);
-        intent.putExtra(KEY_ENTRY, contact);
-        intent.putExtra(KEY_FOLDER, folder);
+        intent.putExtra(Constants.KEY_ENTRY, contact);
+        intent.putExtra(Constants.KEY_FOLDER, folder);
         return intent;
     }
 

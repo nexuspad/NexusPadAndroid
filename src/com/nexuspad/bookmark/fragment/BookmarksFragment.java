@@ -162,6 +162,22 @@ public class BookmarksFragment extends FoldersAndEntriesFragment {
 	}
 
 	@Override
+	protected void reDisplayListEntries() {
+		dismissProgressIndicator();
+
+		// Need to reset the scroll listener.
+		mLoadMoreScrollListener.reset();
+
+		if (mCurrentSearchKeyword == null) {
+			((FoldersAndEntriesAdapter)getAdapter()).setShouldHideFolders(false);
+		} else {
+			((FoldersAndEntriesAdapter)getAdapter()).setShouldHideFolders(true);
+		}
+
+		((FoldersAndEntriesAdapter)getAdapter()).setDisplayFoldersAndEntries(mEntryList);
+	}
+
+	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
 
@@ -180,7 +196,7 @@ public class BookmarksFragment extends FoldersAndEntriesFragment {
 	 */
 	public class BookmarksAdapter extends EntriesAdapter<NPBookmark> {
 		public BookmarksAdapter(Activity a, EntryList entryList) {
-			super(a, entryList, getFolder(), getEntryListService(), EntryTemplate.BOOKMARK);
+			super(a, entryList);
 		}
 
 		@Override

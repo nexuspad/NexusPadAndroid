@@ -10,6 +10,8 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.TextView;
+import com.google.common.base.Strings;
 import com.nexuspad.common.Constants;
 import com.nexuspad.common.activity.EntryEditActivity;
 import com.nexuspad.common.activity.FoldersNavigatorActivity;
@@ -33,6 +35,8 @@ public abstract class EntryEditFragment<T extends NPEntry> extends EntryFragment
 	 * @return if calling {@link #getEntryFromEditor()} would return a valid entry
 	 */
 	public abstract boolean isEditedEntryValid();
+
+	protected TextView mFolderView;
 
 	/**
 	 * Callers of this method should first check with
@@ -67,6 +71,19 @@ public abstract class EntryEditFragment<T extends NPEntry> extends EntryFragment
 		super.onCreate(savedInstanceState);
 		mModuleId = ((Object) this).getClass().getAnnotation(ModuleInfo.class);
 		mMode = getEntry() == null ? EntryEditActivity.Mode.NEW : EntryEditActivity.Mode.EDIT;
+	}
+
+	protected void updateFolderView() {
+		String folderName = getFolder().getFolderName();
+		if (Strings.isNullOrEmpty(folderName)) {
+			folderName = getString(NPFolder.getFolderNameFor(getFolder().getModuleId()));
+		}
+		mFolderView.setText(folderName);
+	}
+
+	@Override
+	protected void onFolderUpdated(NPFolder folder) {
+		updateFolderView();
 	}
 
 	public final void addEntry() {
@@ -107,7 +124,7 @@ public abstract class EntryEditFragment<T extends NPEntry> extends EntryFragment
 
 	public final void updateEntry() {
 		if (!EntryEditActivity.Mode.EDIT.equals(mMode)) {
-			throw new IllegalStateException("not in Mode.EDIT");
+			throw new IllegalStateException("Not in edit mode.");
 		}
 		if (isEditedEntryValid()) {
 			final T originalEntry = getEntry();
@@ -116,11 +133,11 @@ public abstract class EntryEditFragment<T extends NPEntry> extends EntryFragment
 				try {
 					entry.setOwner(AccountManager.currentAccount());
 				} catch (NPException e) {
-					throw new AssertionError("WTF, I thought I am logged in!");
+					throw new AssertionError("Account information missing!");
 				}
 				onUpdateEntry(entry);
 			} else {
-				Log.w(TAG, "entry not updated because no changes when made: " + entry);
+				Log.w(TAG, "entry not updated because no changes were made: " + entry);
 			}
 		}
 	}

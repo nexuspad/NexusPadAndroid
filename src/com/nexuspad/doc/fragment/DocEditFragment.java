@@ -32,9 +32,9 @@ import java.util.List;
 /**
  * @author Edmond
  */
-@FragmentName(DocUpdateFragment.TAG)
+@FragmentName(DocEditFragment.TAG)
 @ModuleInfo(moduleId = ServiceConstants.DOC_MODULE, template = EntryTemplate.DOC)
-public class DocUpdateFragment extends EntryEditFragment<NPDoc> {
+public class DocEditFragment extends EntryEditFragment<NPDoc> {
     public static final String TAG = "DocUpdateFragment";
 
     protected static final int FILE_SELECT_REQUEST = 2;
@@ -43,22 +43,21 @@ public class DocUpdateFragment extends EntryEditFragment<NPDoc> {
         void onUpdateEntry(NPDoc entry);
     }
 
-    public static DocUpdateFragment of(NPFolder folder) {
+    public static DocEditFragment of(NPFolder folder) {
         return of(null, folder);
     }
 
-    public static DocUpdateFragment of(NPDoc doc, NPFolder f) {
+    public static DocEditFragment of(NPDoc doc, NPFolder f) {
         Bundle bundle = new Bundle();
         bundle.putParcelable(Constants.KEY_ENTRY, doc);
         bundle.putParcelable(Constants.KEY_FOLDER, f);
 
-        DocUpdateFragment fragment = new DocUpdateFragment();
+        DocEditFragment fragment = new DocEditFragment();
         fragment.setArguments(bundle);
 
         return fragment;
     }
 
-    private TextView mFolderV;
     private EditText mTitleV;
     private EditText mTagsV;
     private RichEditText mNoteV;
@@ -84,7 +83,7 @@ public class DocUpdateFragment extends EntryEditFragment<NPDoc> {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        mFolderV = (TextView)view.findViewById(R.id.lbl_folder);
+        mFolderView = (TextView)view.findViewById(R.id.lbl_folder);
         mNoteV = (RichEditText)view.findViewById(R.id.journal_text);
         mTitleV = (EditText)view.findViewById(R.id.txt_title);
         mTagsV = (EditText)view.findViewById(R.id.txt_tags);
@@ -101,7 +100,7 @@ public class DocUpdateFragment extends EntryEditFragment<NPDoc> {
 	        }
         });
 
-        installFolderSelectorListener(mFolderV);
+        installFolderSelectorListener(mFolderView);
         super.onViewCreated(view, savedInstanceState);
     }
 
@@ -158,10 +157,6 @@ public class DocUpdateFragment extends EntryEditFragment<NPDoc> {
     protected void onFolderUpdated(NPFolder folder) {
         super.onFolderUpdated(folder);
         updateFolderView();
-    }
-
-    private void updateFolderView() {
-        mFolderV.setText(getFolder().getFolderName());
     }
 
     @Override

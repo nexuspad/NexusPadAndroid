@@ -1,5 +1,6 @@
 package com.nexuspad.calendar.fragment;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
@@ -216,8 +217,14 @@ public class EventsListFragment extends EntriesFragment {
 				if (resultCode == Activity.RESULT_OK) {
 					mFolder = data.getParcelableExtra(Constants.KEY_FOLDER);
 					queryEntriesAsync();
+
+					// Refresh Fragment list content after selecting the folder from folder navigator.
+					// Since Activity remains the same, we need to update the title in Action bar.
+					final ActionBar actionBar = getActivity().getActionBar();
+					actionBar.setTitle(mFolder.getFolderName());
 				}
 				break;
+
 			default:
 				throw new AssertionError("unknown requestCode: " + requestCode);
 		}
@@ -306,7 +313,7 @@ public class EventsListFragment extends EntriesFragment {
 		private final DateFormat mTimeFormat;
 
 		private EventsListAdapter(Activity a, EntryList entryList, NPFolder folder, EntryListService service) {
-			super(a, entryList, folder, service, EntryTemplate.EVENT);
+			super(a, entryList);
 			mDateFormat = android.text.format.DateFormat.getMediumDateFormat(a);
 			mTimeFormat = android.text.format.DateFormat.getTimeFormat(a);
 		}

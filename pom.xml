@@ -66,6 +66,11 @@
             <artifactId>stickylistheaders</artifactId>
             <version>2.5.2</version>
         </dependency>
+        <dependency>
+            <groupId>com.mcxiaoke.volley</groupId>
+            <artifactId>library</artifactId>
+            <version>1.0.9</version>
+        </dependency>
     </dependencies>
 
     <dependencyManagement>

@@ -23,7 +23,7 @@ public class EntryList <T extends NPEntry> implements Serializable {
 
     private AccessEntitlement accessInfo;
 
-    private NPFolder folder;
+    private NPFolder folder = new NPFolder();
 
     private EntryTemplate mEntryTemplate;
     private String startYmd;
@@ -149,6 +149,11 @@ public class EntryList <T extends NPEntry> implements Serializable {
 		if (itemsCount == 0) {
 			return true;
 		}
+		return false;
+	}
+
+	public boolean hasMoreEntriesToLoad() {
+		if (totalCount > entries.size()) return true;
 		return false;
 	}
 

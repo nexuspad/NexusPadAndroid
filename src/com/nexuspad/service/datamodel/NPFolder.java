@@ -88,7 +88,7 @@ public class NPFolder extends NPObject implements Iterable<NPFolder> {
         return rootFolder;
     }
 
-    private static int getFolderNameFor(int moduleId) {
+    public static int getFolderNameFor(int moduleId) {
         switch (moduleId) {
             case ServiceConstants.CONTACT_MODULE:
                 return R.string.my_contacts;

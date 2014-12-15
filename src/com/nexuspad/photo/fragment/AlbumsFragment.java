@@ -3,6 +3,7 @@
  */
 package com.nexuspad.photo.fragment;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -96,7 +97,14 @@ public class AlbumsFragment extends EntriesFragment {
 					mFolder = data.getParcelableExtra(Constants.KEY_FOLDER);
 					queryEntriesAsync();
 				}
+
+				// Refresh Fragment list content after selecting the folder from folder navigator.
+				// Since Activity remains the same, we need to update the title in Action bar.
+				final ActionBar actionBar = getActivity().getActionBar();
+				actionBar.setTitle(mFolder.getFolderName());
+
 				break;
+
 			default:
 				throw new AssertionError("unexpected requestCode: " + requestCode);
 		}
@@ -118,7 +126,7 @@ public class AlbumsFragment extends EntriesFragment {
 	private class AlbumsAdapter extends EntriesAdapter<NPAlbum> {
 
 		public AlbumsAdapter() {
-			super(getActivity(), mEntryList, getFolder(), getEntryListService(), getTemplate());
+			super(getActivity(), mEntryList);
 		}
 
 		@Override

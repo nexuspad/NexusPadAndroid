@@ -50,7 +50,9 @@ public class FoldersNavigatorActivity extends SinglePaneActivity implements Fold
 		final ActionBar actionBar = getActionBar();
 		actionBar.setIcon(R.drawable.ic_ab);
 		actionBar.setDisplayHomeAsUpEnabled(true);
-		setTitle(mParentFolder.getFolderName());
+
+		//setTitle(mParentFolder.getFolderName());
+		setTitle(R.string.select_folder);
 	}
 
 	@Override

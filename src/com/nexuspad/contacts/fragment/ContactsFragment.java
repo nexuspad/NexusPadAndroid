@@ -1,5 +1,6 @@
 package com.nexuspad.contacts.fragment;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
@@ -29,6 +30,7 @@ import com.nexuspad.service.datamodel.EntryTemplate;
 import com.nexuspad.service.datamodel.NPFolder;
 import com.nexuspad.service.datamodel.NPPerson;
 import com.nexuspad.service.dataservice.EntryListService;
+import com.nexuspad.service.dataservice.NPException;
 import com.nexuspad.service.dataservice.ServiceConstants;
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
@@ -168,6 +170,8 @@ public final class ContactsFragment extends EntriesFragment {
 		}
 
 		clearVisualIndicator();
+
+		mStickyHeaderContactListView.smoothScrollToPosition(6);
 	}
 
 	/**
@@ -202,16 +206,17 @@ public final class ContactsFragment extends EntriesFragment {
 
 					mFolder = data.getParcelableExtra(Constants.KEY_FOLDER);
 					queryEntriesAsync();
+
+					// Refresh Fragment list content after selecting the folder from folder navigator.
+					// Since Activity remains the same, we need to update the title in Action bar.
+					final ActionBar actionBar = getActivity().getActionBar();
+					actionBar.setTitle(mFolder.getFolderName());
 				}
 				break;
+
 			default:
 				throw new AssertionError("unknown requestCode: " + requestCode);
 		}
-	}
-
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
 	}
 
 
@@ -225,7 +230,7 @@ public final class ContactsFragment extends EntriesFragment {
 					if (Strings.isNullOrEmpty(query)) {
 						reDisplayListEntries();
 					} else {
-						((ContactsAdapter)getAdapter()).doSearch(query);
+						((ContactsAdapter)getAdapter()).filter(query);
 					}
 					return true;
 				}
@@ -236,7 +241,7 @@ public final class ContactsFragment extends EntriesFragment {
 					if (Strings.isNullOrEmpty(newText)) {
 						reDisplayListEntries();
 					} else {
-						((ContactsAdapter)getAdapter()).doSearch(newText);
+						((ContactsAdapter)getAdapter()).filter(newText);
 					}
 					return true;
 				}
@@ -275,6 +280,20 @@ public final class ContactsFragment extends EntriesFragment {
 		getAdapter().notifyDataSetChanged();
 	}
 
+	protected void doSearch(String keyword) {
+		Log.i(TAG, "Search keyword: " + keyword);
+
+		displayProgressIndicator();
+		mCurrentSearchKeyword = keyword;
+
+		try {
+			mEntryListService.searchEntriesInFolder(keyword, mFolder, mModuleInfo.template(), 0, 99);
+		} catch (NPException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+
 	/**
 	 * Override common ListEntriesAdapter for Contact list.
 	 */
@@ -282,7 +301,7 @@ public final class ContactsFragment extends EntriesFragment {
 		private final EntriesLocalSearchFilter mFilter;
 
 		private ContactsAdapter(Activity a, EntryList entryList, NPFolder folder, EntryListService service, EntryTemplate template, EntriesLocalSearchFilter.OnFilterDoneListener<NPPerson> onFilterDoneListener) {
-			super(a, entryList, folder, service, template);
+			super(a, entryList);
 			mFilter = new EntriesLocalSearchFilter(entryList, onFilterDoneListener);
 		}
 
@@ -381,7 +400,7 @@ public final class ContactsFragment extends EntriesFragment {
 
 		@Override
 		public NPPerson getItem(int position) {
-			if (mDisplayEntryList.isEmpty()) {
+			if (mDisplayEntryList == null || mDisplayEntryList.isEmpty()) {
 				return null;
 			}
 			return (NPPerson)mDisplayEntryList.getEntries().get(position);
@@ -392,8 +411,7 @@ public final class ContactsFragment extends EntriesFragment {
 			return position;
 		}
 
-		@Override
-		public void doSearch(String string) {
+		public void filter(String string) {
 			mFilter.filter(string);
 		}
 	}

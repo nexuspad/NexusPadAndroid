@@ -63,6 +63,7 @@ public class EventsActivity extends EntriesActivity implements EventsMonthFragme
 //		actionBar.setListNavigationCallbacks(adapter, this);
 //		actionBar.setSelectedNavigationItem(readDefaultView());
 
+		actionBar.setTitle(mFolder.getFolderName());
 		actionBar.setDisplayHomeAsUpEnabled(true);
 	}
 

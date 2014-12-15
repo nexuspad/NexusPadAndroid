@@ -10,15 +10,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
+import com.nexuspad.R;
 import com.nexuspad.common.Constants;
 import com.nexuspad.common.annotation.FragmentName;
-import com.nexuspad.R;
 import com.nexuspad.common.annotation.ModuleInfo;
-import com.nexuspad.service.datamodel.NPBookmark;
+import com.nexuspad.common.fragment.EntryEditFragment;
 import com.nexuspad.service.datamodel.EntryTemplate;
+import com.nexuspad.service.datamodel.NPBookmark;
 import com.nexuspad.service.datamodel.NPFolder;
 import com.nexuspad.service.dataservice.ServiceConstants;
-import com.nexuspad.common.fragment.EntryEditFragment;
 
 /**
  * @author Edmond
@@ -43,7 +43,6 @@ public class BookmarkEditFragment extends EntryEditFragment<NPBookmark> {
         return fragment;
     }
 
-    private TextView mFolderV;
     private EditText mWebAddressV;
     private EditText mNoteV;
     private EditText mTagsV;
@@ -55,23 +54,13 @@ public class BookmarkEditFragment extends EntryEditFragment<NPBookmark> {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        mFolderV = (TextView)view.findViewById(R.id.lbl_folder);
+	    mFolderView = (TextView)view.findViewById(R.id.lbl_folder);
         mWebAddressV = (EditText)view.findViewById(R.id.txt_web_address);
         mNoteV = (EditText)view.findViewById(R.id.journal_text);
         mTagsV = (EditText)view.findViewById(R.id.txt_tags);
 
-        installFolderSelectorListener(mFolderV);
+        installFolderSelectorListener(mFolderView);
         super.onViewCreated(view, savedInstanceState);
-    }
-
-    @Override
-    protected void onFolderUpdated(NPFolder folder) {
-        super.onFolderUpdated(folder);
-        updateFolderView();
-    }
-
-    private void updateFolderView() {
-        mFolderV.setText(getFolder().getFolderName());
     }
 
     @Override

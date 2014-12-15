@@ -88,6 +88,7 @@ public class FoldersNavigatorFragment extends UndoBarFragment implements SwipeRe
 		@Override
 		protected void onUpdate(Context c, Intent i, NPFolder folder) {
 			final int index = Iterables.indexOf(mSubFolders, folder.filterById());
+
 			if (index >= 0) {
 				mSubFolders.remove(index);
 				mSubFolders.add(index, folder);
@@ -200,7 +201,7 @@ public class FoldersNavigatorFragment extends UndoBarFragment implements SwipeRe
 			swipeLayout.setOnRefreshListener(this);
 		}
 
-		mQuickReturnV = view.findViewById(R.id.quick_return);
+		mQuickReturnV = view.findViewById(R.id.bottom_overlay);
 
 		final View theView = view.findViewById(R.id.list_view);
 

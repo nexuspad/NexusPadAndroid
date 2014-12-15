@@ -3,6 +3,7 @@
  */
 package com.nexuspad.photo.fragment;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -139,15 +140,17 @@ public class PhotosFragment extends EntriesFragment implements OnItemClickListen
 		switch (requestCode) {
 			case REQ_FOLDER:
 				if (resultCode == Activity.RESULT_OK) {
-//					final FragmentActivity activity = getActivity();
-//					final NPFolder folder = data.getParcelableExtra(Constants.KEY_FOLDER);
-//					PhotosActivity.startWithFolder(folder, activity);
-//					activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-
 					mFolder = data.getParcelableExtra(Constants.KEY_FOLDER);
 					queryEntriesAsync();
 				}
+
+				// Refresh Fragment list content after selecting the folder from folder navigator.
+				// Since Activity remains the same, we need to update the title in Action bar.
+				final ActionBar actionBar = getActivity().getActionBar();
+				actionBar.setTitle(mFolder.getFolderName());
+
 				break;
+
 			default:
 				throw new AssertionError("unknown requestCode: " + requestCode);
 		}

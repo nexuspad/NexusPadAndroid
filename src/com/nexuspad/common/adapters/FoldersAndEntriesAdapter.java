@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import com.nexuspad.service.datamodel.EntryList;
 
 /**
  * Created by ren on 7/18/14.
@@ -25,6 +26,12 @@ public class FoldersAndEntriesAdapter<T extends EntriesAdapter<?>> extends BaseA
 		} else {
 			return mEntriesAdapter.onItemLongClick(parent, view, position - mFolderAdapter.getCount(), id);
 		}
+	}
+
+	public void setDisplayFoldersAndEntries(EntryList entryList) {
+		mFolderAdapter.setSubFolders(entryList.getFolder().getSubFolders());
+		mFolderAdapter.notifyDataSetChanged();
+		mEntriesAdapter.setDisplayEntryList(entryList);
 	}
 
 	@Override

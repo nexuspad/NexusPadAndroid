@@ -91,6 +91,28 @@ public class DocsFragment extends FoldersAndEntriesFragment {
 	}
 
 	@Override
+	protected void onSearchLoaded(EntryList list) {
+		((FoldersAndEntriesAdapter)getAdapter()).setShouldHideFolders(true);
+		super.onSearchLoaded(list);
+	}
+
+	@Override
+	protected void reDisplayListEntries() {
+		dismissProgressIndicator();
+
+		// Need to reset the scroll listener.
+		mLoadMoreScrollListener.reset();
+
+		if (mCurrentSearchKeyword == null) {
+			((FoldersAndEntriesAdapter)getAdapter()).setShouldHideFolders(false);
+		} else {
+			((FoldersAndEntriesAdapter)getAdapter()).setShouldHideFolders(true);
+		}
+
+		((FoldersAndEntriesAdapter)getAdapter()).setDisplayFoldersAndEntries(mEntryList);
+	}
+
+	@Override
 	protected void onListLoaded(EntryList newListToDisplay) {
 		Log.i(TAG, "Receiving entry list.");
 
@@ -152,13 +174,6 @@ public class DocsFragment extends FoldersAndEntriesFragment {
 	}
 
 	@Override
-	protected void onSearchLoaded(EntryList list) {
-		((FoldersAndEntriesAdapter)getAdapter()).setShouldHideFolders(true);
-		super.onSearchLoaded(list);
-	}
-
-
-	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
 
@@ -175,7 +190,7 @@ public class DocsFragment extends FoldersAndEntriesFragment {
 
 	public class DocsAdapter extends EntriesAdapter<NPDoc> {
 		public DocsAdapter(Activity a, EntryList entryList) {
-			super(a, entryList, getFolder(), getEntryListService(), EntryTemplate.DOC);
+			super(a, entryList);
 		}
 
 		@Override

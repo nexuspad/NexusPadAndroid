@@ -15,8 +15,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.nexuspad.R;
 import com.nexuspad.common.Constants;
-import com.nexuspad.common.annotation.ModuleInfo;
 import com.nexuspad.common.annotation.FragmentName;
+import com.nexuspad.common.annotation.ModuleInfo;
 import com.nexuspad.common.fragment.EntryEditFragment;
 import com.nexuspad.contacts.activity.LocationEditActivity;
 import com.nexuspad.service.datamodel.*;
@@ -45,7 +45,6 @@ public class ContactEditFragment extends EntryEditFragment<NPPerson> {
 
 	private LayoutInflater mInflater;
 
-	private TextView mFolderView;
 	private EditText mTitleV;
 	private TextView mFirstNameV;
 	private TextView mMiddleNameV;
@@ -113,15 +112,8 @@ public class ContactEditFragment extends EntryEditFragment<NPPerson> {
 	}
 
 	@Override
-	protected void onFolderUpdated(NPFolder folder) {
-		super.onFolderUpdated(folder);
-		mFolderView.setText(getFolder().getFolderName());
-	}
-
-
-	@Override
 	protected void updateUI() {
-		mFolderView.setText(getFolder().getFolderName());
+		updateFolderView();
 
 		final NPPerson contact = getEntry();
 		if (contact != null) {
@@ -278,14 +270,6 @@ public class ContactEditFragment extends EntryEditFragment<NPPerson> {
 		contact.setTags(mTagsV.getText().toString());
 		contact.setNote(mNoteV.getText().toString());
 
-		putPhonesInto(contact);
-		putEmailsInto(contact);
-
-		setEntry(contact);
-		return contact;
-	}
-
-	private void putPhonesInto(NPPerson contact) {
 		for (int i = 0, count = mPhoneFrameV.getChildCount(); i < count; ++i) {
 			final View view = mPhoneFrameV.getChildAt(i);
 			final EditText text = (EditText)view.findViewById(android.R.id.edit);
@@ -294,9 +278,7 @@ public class ContactEditFragment extends EntryEditFragment<NPPerson> {
 				contact.addPhone(new Phone(phone));
 			}
 		}
-	}
 
-	private void putEmailsInto(NPPerson contact) {
 		for (int i = 0, count = mEmailFrameV.getChildCount(); i < count; ++i) {
 			final View view = mEmailFrameV.getChildAt(i);
 			final EditText text = (EditText)view.findViewById(android.R.id.edit);
@@ -305,7 +287,12 @@ public class ContactEditFragment extends EntryEditFragment<NPPerson> {
 				contact.addEmail(new Email(email));
 			}
 		}
+
+		setEntry(contact);
+
+		return contact;
 	}
+
 
 	private static abstract class EmptyTextWatcher implements TextWatcher {
 		@Override

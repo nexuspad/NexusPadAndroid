@@ -13,11 +13,7 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import com.google.common.base.Strings;
 import com.nexuspad.R;
 import com.nexuspad.service.datamodel.EntryList;
-import com.nexuspad.service.datamodel.EntryTemplate;
 import com.nexuspad.service.datamodel.NPEntry;
-import com.nexuspad.service.datamodel.NPFolder;
-import com.nexuspad.service.dataservice.EntryListService;
-import com.nexuspad.service.dataservice.NPException;
 
 /**
  * Common Adapter to be used in entries list view.
@@ -33,10 +29,6 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter impl
 	private final LayoutInflater mInflater;
 	private final String mEntryHeaderText;
 
-	private final NPFolder mFolder;
-	private final EntryListService mService;
-	private final EntryTemplate mTemplate;
-
 	protected EntryList mDisplayEntryList;
 
 	private OnClickListener mOnMenuClickListener;
@@ -44,10 +36,7 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter impl
 	/**
 	 * use this constructor if you want filtering abilities
 	 */
-	public EntriesAdapter(Activity a, EntryList entryList, NPFolder folder, EntryListService service, EntryTemplate template) {
-		mFolder = folder;
-		mService = service;
-		mTemplate = template;
+	public EntriesAdapter(Activity a, EntryList entryList) {
 		mDisplayEntryList = entryList;
 		mInflater = a.getLayoutInflater();
 		mEntryHeaderText = getEntriesHeaderText();
@@ -224,18 +213,6 @@ public abstract class EntriesAdapter<T extends NPEntry> extends BaseAdapter impl
 			return true;
 		}
 		return false;
-	}
-
-	/**
-	 *
-	 * @param string
-	 */
-	public void doSearch(String string) {
-		try {
-			mService.searchEntriesInFolder(string, mFolder, mTemplate, 0, 99);
-		} catch (NPException e) {
-			throw new RuntimeException(e);
-		}
 	}
 
 }

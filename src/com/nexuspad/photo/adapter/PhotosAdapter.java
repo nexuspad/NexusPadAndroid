@@ -30,7 +30,7 @@ public class PhotosAdapter extends EntriesAdapter<NPPhoto> {
 	 * @param template
 	 */
 	public PhotosAdapter(Activity a, EntryList entryList, NPFolder folder, EntryListService service, EntryTemplate template) {
-		super(a, entryList, folder, service, template);
+		super(a, entryList);
 		mActivity = a;
 	}
 

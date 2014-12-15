@@ -16,8 +16,6 @@ import com.nexuspad.service.datamodel.NPFolder;
  * @author Ren
  */
 public abstract class EntryActivity<T extends NPEntry> extends SinglePaneActivity implements EntryFragment.EntryDetailCallback<T> {
-    public static final String KEY_ENTRY = "com.nexuspad.ui.activity.EntryActivity.entry";
-    public static final String KEY_FOLDER = "com.nexuspad.ui.activity.EntryActivity.folder";
 
 	private T mEntry;
 	private NPFolder mFolder;

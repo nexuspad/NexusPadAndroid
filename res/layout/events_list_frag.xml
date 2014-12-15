@@ -7,7 +7,7 @@
     <include layout="@layout/list_content_sticky" />
 
     <LinearLayout
-        android:id="@+id/quick_return"
+        android:id="@+id/bottom_overlay"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
         android:orientation="horizontal"

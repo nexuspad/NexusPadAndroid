@@ -3,7 +3,6 @@
  */
 package com.nexuspad.bookmark.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import com.nexuspad.bookmark.fragment.BookmarksFragment;
@@ -21,13 +20,6 @@ import com.nexuspad.service.dataservice.ServiceConstants;
 @ModuleInfo(moduleId = ServiceConstants.BOOKMARK_MODULE, template = EntryTemplate.BOOKMARK)
 public class BookmarksActivity extends EntriesActivity implements BookmarksFragment.Callback {
     public static final String TAG = BookmarksActivity.class.getSimpleName();
-
-    public static void startWithFolder(NPFolder f, Context c) {
-        Intent intent = new Intent(c, BookmarksActivity.class);
-        intent.putExtra(Constants.KEY_FOLDER, f);
-        intent.putExtra(KEY_PARENT_ACTIVITY, c.getClass());
-        c.startActivity(intent);
-    }
 
     @Override
     protected Fragment onCreateFragment() {
@@ -49,6 +41,9 @@ public class BookmarksActivity extends EntriesActivity implements BookmarksFragm
 
     @Override
     public void onFolderClick(BookmarksFragment f, NPFolder folder) {
-        startWithFolder(folder, this);
+	    Intent intent = new Intent(this, BookmarksActivity.class);
+	    intent.putExtra(Constants.KEY_FOLDER, folder);
+	    intent.putExtra(KEY_PARENT_ACTIVITY, ((Object)this).getClass());
+	    startActivity(intent);
     }
 }

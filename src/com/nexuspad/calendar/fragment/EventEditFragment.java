@@ -57,8 +57,6 @@ public class EventEditFragment extends EntryEditFragment<NPEvent> {
 		return fragment;
 	}
 
-	private TextView mFolderView;
-
 	private EditText mTitleView;
 	private LocationTextView mLocationView;
 
@@ -296,16 +294,8 @@ public class EventEditFragment extends EntryEditFragment<NPEvent> {
 	}
 
 	@Override
-	protected void onFolderUpdated(NPFolder folder) {
-		super.onFolderUpdated(folder);
-		mFolderView.setText(getFolder().getFolderName());
-	}
-
-	@Override
 	protected void updateUI() {
-		super.updateUI();
-
-		mFolderView.setText(getFolder().getFolderName());
+		updateFolderView();
 
 		final NPEvent event = getEntry();
 		if (event != null) {

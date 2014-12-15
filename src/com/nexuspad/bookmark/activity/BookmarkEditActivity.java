@@ -30,8 +30,8 @@ public class BookmarkEditActivity extends EntryEditActivity<NPBookmark> {
 
     public static void startWithBookmark(Context c, NPFolder f, NPBookmark b) {
         Intent intent = new Intent(c, BookmarkEditActivity.class);
-        intent.putExtra(KEY_ENTRY, b);
-        intent.putExtra(KEY_FOLDER, f);
+        intent.putExtra(Constants.KEY_ENTRY, b);
+        intent.putExtra(Constants.KEY_FOLDER, f);
         c.startActivity(intent);
     }
 

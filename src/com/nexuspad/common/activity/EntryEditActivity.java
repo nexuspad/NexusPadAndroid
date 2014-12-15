@@ -6,6 +6,7 @@ package com.nexuspad.common.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import com.nexuspad.R;
+import com.nexuspad.common.Constants;
 import com.nexuspad.common.annotation.ModuleInfo;
 import com.nexuspad.common.fragment.EntryEditFragment;
 import com.nexuspad.common.fragment.EntryFragment;
@@ -21,8 +22,6 @@ import com.nexuspad.service.dataservice.ServiceConstants;
  * @author Edmond
  */
 public abstract class EntryEditActivity<T extends NPEntry> extends DoneDiscardActivity implements EntryFragment.EntryDetailCallback<T> {
-    public static final String KEY_ENTRY = "com.nexuspad.ui.activity.NewEntryActivity.entry";
-    public static final String KEY_FOLDER = "com.nexuspad.ui.activity.NewEntryActivity.folder";
 
     public enum Mode {
         NEW, EDIT
@@ -63,8 +62,8 @@ public abstract class EntryEditActivity<T extends NPEntry> extends DoneDiscardAc
     }
 
     protected void handleIntent(Intent i) {
-        mEntry = i.getParcelableExtra(KEY_ENTRY);
-        mFolder = i.getParcelableExtra(KEY_FOLDER);
+        mEntry = i.getParcelableExtra(Constants.KEY_ENTRY);
+        mFolder = i.getParcelableExtra(Constants.KEY_FOLDER);
         if (mFolder == null) {
             mFolder = NPFolder.rootFolderOf(getModule(), this);
         }

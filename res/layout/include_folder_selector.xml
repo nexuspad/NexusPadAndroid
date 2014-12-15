@@ -10,5 +10,5 @@
     android:maxLines="1"
     android:scrollHorizontally="true"
     android:text="@string/root"
+    android:textAllCaps="true"
     android:textSize="@dimen/np_textsize_medium" />
-

@@ -25,6 +25,7 @@ import com.nexuspad.common.Constants;
 import com.nexuspad.common.activity.FoldersNavigatorActivity;
 import com.nexuspad.common.activity.UpdateFolderActivity;
 import com.nexuspad.common.adapters.EntriesAdapter;
+import com.nexuspad.common.adapters.FoldersAndEntriesAdapter;
 import com.nexuspad.common.annotation.ModuleInfo;
 import com.nexuspad.common.listeners.DirectionalScrollListener;
 import com.nexuspad.common.listeners.OnPagingListEndListener;
@@ -48,7 +49,6 @@ import static com.nexuspad.service.dataservice.EntryListService.EntryListReceive
  * You may use {@link com.nexuspad.common.annotation.ModuleInfo} annotation on the {@code Fragment} class, if you
  * don't, you must override {@link #getTemplate()} and {@link #getModule()}.
  *
- * @author Edmond
  */
 public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBarFragment
 		implements SwipeRefreshLayout.OnRefreshListener {
@@ -60,8 +60,8 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 
 	public static final int PAGE_COUNT = 20;
 
-	private EntryService mEntryService = null;
-	private EntryListService mEntryListService = null;
+	protected EntryService mEntryService = null;
+	protected EntryListService mEntryListService = null;
 
 	protected EntryList mEntryList;
 
@@ -71,10 +71,10 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 
 	protected NPFolder mFolder;
 
-	private ModuleInfo mModuleInfo;
+	protected ModuleInfo mModuleInfo;
 
 	protected View mListFrame;
-	protected View mQuickReturnView;
+	protected View mBottomOverlayView;
 	protected TextView mFolderSelectorView;
 	protected ListView mListView;
 
@@ -210,7 +210,10 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 	protected OnPagingListEndListener mLoadMoreScrollListener = new OnPagingListEndListener() {
 		@Override
 		protected void onListBottom(int page) {
-			queryEntriesInFolderByPage(getCurrentPage() + 1);
+			FoldersAndEntriesAdapter adapter = (FoldersAndEntriesAdapter)getAdapter();
+			if (adapter.getEntriesAdapter().hasMoreToLoad()) {
+				queryEntriesInFolderByPage(getCurrentPage() + 1);
+			}
 		}
 	};
 
@@ -267,6 +270,12 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 					return true;
 				}
 
+				/**
+				 * This is called when search is closed.
+				 *
+				 * @param item
+				 * @return
+				 */
 				@Override
 				public boolean onMenuItemActionCollapse(MenuItem item) {
 					mCurrentSearchKeyword = null;
@@ -278,9 +287,16 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 	}
 
 	protected void doSearch(String keyword) {
+		Log.i(TAG, "Search keyword: " + keyword);
+
 		displayProgressIndicator();
 		mCurrentSearchKeyword = keyword;
-		((EntriesAdapter)getAdapter()).doSearch(keyword);
+
+		try {
+			mEntryListService.searchEntriesInFolder(keyword, mFolder, mModuleInfo.template(), 0, 99);
+		} catch (NPException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	protected void reDisplayListEntries() {
@@ -290,7 +306,6 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 		mLoadMoreScrollListener.reset();
 
 		((EntriesAdapter)getAdapter()).setDisplayEntryList(mEntryList);
-		getAdapter().notifyDataSetChanged();
 	}
 
 	/**
@@ -451,8 +466,8 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 		/*
 		 * quick return
 		 */
-		if (mQuickReturnView == null) {
-			mQuickReturnView = view.findViewById(R.id.quick_return);
+		if (mBottomOverlayView == null) {
+			mBottomOverlayView = view.findViewById(R.id.bottom_overlay);
 		}
 
 		/*
@@ -598,6 +613,12 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 			case R.id.new_folder:
 				UpdateFolderActivity.startWithParentFolder(getFolder(), getActivity());
 				return true;
+			case R.id.search:
+				// When the search view displays, hide the bottom overlay.
+				if (mBottomOverlayView != null && mBottomOverlayView.getHeight() > 0) {
+					mBottomOverlayView.animate().translationY(mBottomOverlayView.getHeight()).setDuration(100L);
+				}
+				return super.onOptionsItemSelected(item);
 			default:
 				return super.onOptionsItemSelected(item);
 		}
@@ -701,9 +722,9 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 		return new DirectionalScrollListener(0, other) {
 			@Override
 			public void onScrollDirectionChanged(final boolean showing) {
-				if (mQuickReturnView != null) {
-					final int height = showing ? 0 : mQuickReturnView.getHeight();
-					mQuickReturnView.animate()
+				if (mBottomOverlayView != null) {
+					final int height = showing ? 0 : mBottomOverlayView.getHeight();
+					mBottomOverlayView.animate()
 							.translationY(height)
 							.setDuration(200L)
 							.withEndAction(new Runnable() {
@@ -723,7 +744,17 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 		final TextView folderSelectorView = getFolderSelectorView();
 		final int module = getModule();
 
-		folderSelectorView.setText(getFolder().getFolderName());
+		if (mFolder.getFolderId() == NPFolder.ROOT_FOLDER) {
+			if (module == NPModule.CALENDAR) {
+				folderSelectorView.setText(R.string.calendars);
+			} else {
+				folderSelectorView.setText(R.string.folders);
+			}
+
+		} else {
+			folderSelectorView.setText(mFolder.getDisplayName());
+		}
+
 		folderSelectorView.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {

@@ -25,8 +25,8 @@ public class ListFoldersAdapter extends BaseAdapter implements OnItemLongClickLi
 
 	protected final LayoutInflater mInflater;
 
-	private final List<? extends NPFolder> mSubFolders;
-	private final boolean mUseSubFolderButtons;
+	private List<? extends NPFolder> mSubFolders;
+	private boolean mUseSubFolderButtons;
 
 	private OnClickListener mOnMenuClickListener;
 	private OnClickListener mOnSubFolderClickListener;
@@ -196,14 +196,14 @@ public class ListFoldersAdapter extends BaseAdapter implements OnItemLongClickLi
 	protected View getFolderView(NPFolder folder, int position, View convertView, ViewGroup p) {
 		if (convertView == null || convertView.findViewById(R.drawable.ic_np_folder) == null) {
 			int layout = mUseSubFolderButtons ? R.layout.list_item_with_2_icon : R.layout.list_item_with_icon;
-			convertView = getLayoutInflater().inflate(layout, p, false);
+			convertView = mInflater.inflate(layout, p, false);
 		}
 
 		ListViewHolder holder = getHolder(convertView);
 
 		holder.icon.setImageResource(R.drawable.ic_np_folder);
 		holder.text1.setText(folder.getFolderName());
-		holder.menu.setOnClickListener(getOnMenuClickListener());
+		holder.menu.setOnClickListener(mOnMenuClickListener);
 
 		if (mUseSubFolderButtons) {
 			if (!folder.getSubFolders().isEmpty()) {
@@ -230,11 +230,7 @@ public class ListFoldersAdapter extends BaseAdapter implements OnItemLongClickLi
 		mOnMenuClickListener = onMenuClickListener;
 	}
 
-	public final OnClickListener getOnMenuClickListener() {
-		return mOnMenuClickListener;
-	}
-
-	protected final LayoutInflater getLayoutInflater() {
-		return mInflater;
+	public void setSubFolders(List<NPFolder> folders) {
+		mSubFolders = folders;
 	}
 }

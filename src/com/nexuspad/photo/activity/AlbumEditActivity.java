@@ -3,6 +3,7 @@ package com.nexuspad.photo.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
+import com.nexuspad.common.Constants;
 import com.nexuspad.common.activity.EntryEditActivity;
 import com.nexuspad.common.annotation.ModuleInfo;
 import com.nexuspad.common.annotation.ParentActivity;
@@ -23,8 +24,8 @@ public class AlbumEditActivity extends EntryEditActivity<NPAlbum> {
 
     public static Intent of(Context context, NPFolder folder, NPAlbum album) {
         final Intent intent = new Intent(context, AlbumEditActivity.class);
-        intent.putExtra(KEY_ENTRY, album);
-        intent.putExtra(KEY_FOLDER, folder);
+        intent.putExtra(Constants.KEY_ENTRY, album);
+        intent.putExtra(Constants.KEY_FOLDER, folder);
         return intent;
     }
 
