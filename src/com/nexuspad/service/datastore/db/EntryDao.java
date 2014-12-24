@@ -231,7 +231,7 @@ public class EntryDao {
 	 */
 	public void update(NPEntry entry) throws NPException {
 		if (Strings.isNullOrEmpty(entry.getEntryId()) && Strings.isNullOrEmpty(entry.getSyncId())) {
-			throw new NPException(ErrorCode.INTERNAL_ERROR, "Folder has neither valid folder Id nor sync Id.");
+			throw new NPException(ErrorCode.INTERNAL_ERROR, "Entry has neither valid entry Id nor sync Id.");
 		}
 
 		try {

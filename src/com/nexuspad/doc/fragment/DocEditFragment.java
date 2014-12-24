@@ -13,15 +13,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import com.commonsware.cwac.richedit.RichEditText;
-import com.nexuspad.common.Constants;
-import com.nexuspad.common.annotation.FragmentName;
 import com.ipaulpro.afilechooser.utils.FileUtils;
 import com.nexuspad.R;
-import com.nexuspad.common.annotation.ModuleInfo;
 import com.nexuspad.app.App;
+import com.nexuspad.common.annotation.FragmentName;
+import com.nexuspad.common.annotation.ModuleInfo;
 import com.nexuspad.common.fragment.EntryEditFragment;
-import com.nexuspad.service.datamodel.NPDoc;
 import com.nexuspad.service.datamodel.EntryTemplate;
+import com.nexuspad.service.datamodel.NPDoc;
 import com.nexuspad.service.datamodel.NPFolder;
 import com.nexuspad.service.datamodel.NPUpload;
 import com.nexuspad.service.dataservice.ServiceConstants;
@@ -41,21 +40,6 @@ public class DocEditFragment extends EntryEditFragment<NPDoc> {
 
     public static interface DocDetailCallback extends EntryDetailCallback<NPDoc> {
         void onUpdateEntry(NPDoc entry);
-    }
-
-    public static DocEditFragment of(NPFolder folder) {
-        return of(null, folder);
-    }
-
-    public static DocEditFragment of(NPDoc doc, NPFolder f) {
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(Constants.KEY_ENTRY, doc);
-        bundle.putParcelable(Constants.KEY_FOLDER, f);
-
-        DocEditFragment fragment = new DocEditFragment();
-        fragment.setArguments(bundle);
-
-        return fragment;
     }
 
     private EditText mTitleV;
@@ -84,7 +68,7 @@ public class DocEditFragment extends EntryEditFragment<NPDoc> {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         mFolderView = (TextView)view.findViewById(R.id.lbl_folder);
-        mNoteV = (RichEditText)view.findViewById(R.id.journal_text);
+        mNoteV = (RichEditText)view.findViewById(R.id.txt_note);
         mTitleV = (EditText)view.findViewById(R.id.txt_title);
         mTagsV = (EditText)view.findViewById(R.id.txt_tags);
         mAttachmentsFrameV = (LinearLayout)view.findViewById(R.id.frame_attachment);

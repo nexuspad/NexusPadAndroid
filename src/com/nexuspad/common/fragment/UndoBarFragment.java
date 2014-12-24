@@ -3,7 +3,6 @@
  */
 package com.nexuspad.common.fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +16,7 @@ import com.nexuspad.common.utils.UndoBarController;
  *
  * @author Edmond
  */
-public abstract class UndoBarFragment extends NPBaseFragment implements UndoBarController.UndoBarListener {
+public abstract class UndoBarFragment extends NPBaseListFragment implements UndoBarController.UndoBarListener {
 	public static final String TAG = UndoBarFragment.class.getSimpleName();
 
 	private UndoBarController mUndoBarController;
@@ -50,13 +49,6 @@ public abstract class UndoBarFragment extends NPBaseFragment implements UndoBarC
 		}
 	}
 
-	protected void hideUndoBar(boolean immediate) {
-		getUndoBarController().hideUndoBar(immediate);
-	}
-
-	protected void showUndoBar(boolean immediate, CharSequence message, Intent undoToken) {
-		getUndoBarController().showUndoBar(immediate, message, undoToken);
-	}
 
 	protected UndoBarController getUndoBarController() {
 		if (mUndoBarController == null) {

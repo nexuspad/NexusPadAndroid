@@ -12,7 +12,6 @@
         android:id="@+id/main_list_frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
         >
 
         <view
@@ -27,6 +26,7 @@
             android:paddingRight="@dimen/np_padding_small"
             android:scrollbarStyle="outsideOverlay"
             />
+
     </android.support.v4.widget.SwipeRefreshLayout>
 
     <include layout="@layout/include_undo_bar" />

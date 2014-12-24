@@ -76,8 +76,8 @@ public class EventsActivity extends EntriesActivity implements EventsMonthFragme
 		String startYmd = DateUtil.convertToYYYYMMDD(DateUtil.addDaysTo(today, -30));
 		String endYmd = DateUtil.convertToYYYYMMDD(DateUtil.addDaysTo(today, 30));
 
-		bundle.putString(EventsListFragment.KEY_START_YMD, startYmd);
-		bundle.putString(EventsListFragment.KEY_END_YMD, endYmd);
+		bundle.putString(Constants.KEY_START_YMD, startYmd);
+		bundle.putString(Constants.KEY_END_YMD, endYmd);
 
 		mEventsListFragment = new EventsListFragment();
 		mEventsListFragment.setArguments(bundle);

@@ -11,13 +11,11 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 import com.nexuspad.R;
-import com.nexuspad.common.Constants;
 import com.nexuspad.common.annotation.FragmentName;
 import com.nexuspad.common.annotation.ModuleInfo;
 import com.nexuspad.common.fragment.EntryEditFragment;
 import com.nexuspad.service.datamodel.EntryTemplate;
 import com.nexuspad.service.datamodel.NPBookmark;
-import com.nexuspad.service.datamodel.NPFolder;
 import com.nexuspad.service.dataservice.ServiceConstants;
 
 /**
@@ -27,21 +25,6 @@ import com.nexuspad.service.dataservice.ServiceConstants;
 @ModuleInfo(moduleId = ServiceConstants.BOOKMARK_MODULE, template = EntryTemplate.BOOKMARK)
 public class BookmarkEditFragment extends EntryEditFragment<NPBookmark> {
     public static final String TAG = "BookmarkEditFragment";
-
-    public static BookmarkEditFragment of(NPFolder folder) {
-        return BookmarkEditFragment.of(null, folder);
-    }
-
-    public static BookmarkEditFragment of(NPBookmark b, NPFolder f) {
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(Constants.KEY_ENTRY, b);
-        bundle.putParcelable(Constants.KEY_FOLDER, f);
-
-        BookmarkEditFragment fragment = new BookmarkEditFragment();
-        fragment.setArguments(bundle);
-
-        return fragment;
-    }
 
     private EditText mWebAddressV;
     private EditText mNoteV;
@@ -56,7 +39,7 @@ public class BookmarkEditFragment extends EntryEditFragment<NPBookmark> {
     public void onViewCreated(View view, Bundle savedInstanceState) {
 	    mFolderView = (TextView)view.findViewById(R.id.lbl_folder);
         mWebAddressV = (EditText)view.findViewById(R.id.txt_web_address);
-        mNoteV = (EditText)view.findViewById(R.id.journal_text);
+        mNoteV = (EditText)view.findViewById(R.id.txt_note);
         mTagsV = (EditText)view.findViewById(R.id.txt_tags);
 
         installFolderSelectorListener(mFolderView);

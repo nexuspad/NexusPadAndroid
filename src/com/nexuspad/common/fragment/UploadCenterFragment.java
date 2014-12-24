@@ -28,7 +28,7 @@ import java.util.List;
  * Author: edmond
  */
 @FragmentName(UploadCenterFragment.TAG)
-public class UploadCenterFragment extends NPBaseFragment {
+public class UploadCenterFragment extends NPBaseListFragment {
 	public static final String TAG = "UploadCenterFragment";
 
 	private final List<UploadRequest> mPendingRequests = new ArrayList<UploadRequest>();
@@ -58,7 +58,7 @@ public class UploadCenterFragment extends NPBaseFragment {
 
 			mAdapter.notifyDataSetChanged();
 
-			dismissProgressIndicator();
+			hideProgressIndicatorAndShowMainList();
 		}
 
 		@Override
@@ -76,7 +76,7 @@ public class UploadCenterFragment extends NPBaseFragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.list_content, container, false);
+		return inflater.inflate(R.layout.main_list, container, false);
 	}
 
 	@Override

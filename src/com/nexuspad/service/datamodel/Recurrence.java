@@ -52,14 +52,13 @@ public class Recurrence implements Parcelable {
     private Recurrence.Pattern pattern = Recurrence.Pattern.NOREPEAT;
     private int interval = 1;
     private int recurrenceTimes = 1;
-    private Date endDate;
+    private Date endDate = null;
     private boolean repeatForever = false;
 
     private List<String> weeklyDays;
     private Recurrence.MonthlyRepeat monthlyRepeatType;
 
     public Recurrence() {
-
     }
 
     /**
@@ -125,9 +124,15 @@ public class Recurrence implements Parcelable {
         interval = in.readInt();
         recurrenceTimes = in.readInt();
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(in.readLong());
-        endDate = calendar.getTime();
+        long timeInMilliSec = in.readLong();
+
+        if (timeInMilliSec != 0) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(in.readLong());
+            endDate = calendar.getTime();
+        } else {
+            endDate = null;
+        }
 
         repeatForever = in.readByte() != 0x00;
         weeklyDays = new ArrayList<String>();
@@ -176,7 +181,7 @@ public class Recurrence implements Parcelable {
             return postParams;
         }
 
-        postParams.put(ServiceConstants.EVENT_RECUR_PATTERN, String.valueOf(pattern));
+        postParams.put(ServiceConstants.EVENT_RECUR_PATTERN, String.valueOf(pattern.ordinal()));
         postParams.put(ServiceConstants.EVENT_RECUR_INTERVAL, String.valueOf(interval));
 
         if (pattern == Recurrence.Pattern.WEEKLY || pattern == Recurrence.Pattern.WEEKDAILY) {
@@ -253,9 +258,9 @@ public class Recurrence implements Parcelable {
         }
 
 	    if (recurrenceTimes > 0) {
-		    buf.append(LocalizedString.text(" For %d times")).append(recurrenceTimes);
+		    buf.append(String.format(LocalizedString.text(" for %d times"), recurrenceTimes));
 	    } else {
-		    buf.append(LocalizedString.text(" Until ")).append(endDate);
+		    buf.append(String.format(LocalizedString.text(" until "), endDate));
 	    }
 
         return buf.toString();

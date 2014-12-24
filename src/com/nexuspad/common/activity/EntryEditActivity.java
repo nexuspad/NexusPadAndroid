@@ -23,13 +23,9 @@ import com.nexuspad.service.dataservice.ServiceConstants;
  */
 public abstract class EntryEditActivity<T extends NPEntry> extends DoneDiscardActivity implements EntryFragment.EntryDetailCallback<T> {
 
-    public enum Mode {
-        NEW, EDIT
-    }
+    protected T mEntry;
+    protected NPFolder mFolder;
 
-    private Mode mMode = Mode.NEW;
-    private T mEntry;
-    private NPFolder mFolder;
     private ModuleInfo mModuleId;
 
     /**
@@ -67,38 +63,19 @@ public abstract class EntryEditActivity<T extends NPEntry> extends DoneDiscardAc
         if (mFolder == null) {
             mFolder = NPFolder.rootFolderOf(getModule(), this);
         }
-        mMode = mEntry == null ? Mode.NEW : Mode.EDIT;
     }
 
-    /**
-     * Calls {@link #onDoneAdding()} ()}, or {@link #onDoneEditing()} depending on the
-     * value of {@link #getMode()}.
-     */
     @Override
     protected void onDonePressed() {
         super.onDonePressed();
 
-        switch (getMode()) {
-            case EDIT:
-                onDoneEditing();
-                break;
-            case NEW:
-            default:
-                onDoneAdding();
-                break;
+        if (getEntryFromFragment().isNewEntry()) {
+            onDoneAdding();
+        } else {
+            onDoneEditing();
         }
     }
 
-    /**
-     * Called when the "DONE" button is pressed in {@link Mode#EDIT}. The
-     * default implementation updates the entry and calls {@link #goUp()}.
-     * <p/>
-     * This method assumes {@link #getFragment()} returns a type of
-     * {@link com.nexuspad.common.fragment.EntryEditFragment}.
-     *
-     * @throws ClassCastException if {@link #getFragment()} is not a type of
-     *                            {@link com.nexuspad.common.fragment.EntryEditFragment}
-     */
     protected void onDoneEditing() {
         EntryEditFragment<T> fragment = getFragment();
         if (fragment.isEditedEntryValid()) {
@@ -107,16 +84,6 @@ public abstract class EntryEditActivity<T extends NPEntry> extends DoneDiscardAc
         }
     }
 
-    /**
-     * Called when the "DONE" button is pressed in {@link Mode#NEW}. The
-     * default implementation updates the entry and calls {@link #goUp()}.
-     * <p/>
-     * This method assumes {@link #getFragment()} returns a type of
-     * {@link com.nexuspad.common.fragment.EntryEditFragment}.
-     *
-     * @throws ClassCastException if {@link #getFragment()} is not a type of
-     *                            {@link com.nexuspad.common.fragment.EntryEditFragment}
-     */
     protected void onDoneAdding() {
         EntryEditFragment<T> fragment = getFragment();
         if (fragment.isEditedEntryValid()) {
@@ -140,20 +107,15 @@ public abstract class EntryEditActivity<T extends NPEntry> extends DoneDiscardAc
         finish();
     }
 
-    protected void setEntry(T entry) {
-        mEntry = entry;
-    }
+    protected T getEntryFromFragment() {
+        EntryEditFragment<T> fragment = getFragment();
 
-    protected T getEntry() {
-        return mEntry;
-    }
+        T entry = fragment.getEntry();
+        if (entry == null) {
+            throw new IllegalStateException("Entry object in Fragment cannot be null.");
+        }
 
-    protected Mode getMode() {
-        return mMode;
-    }
-
-    protected NPFolder getFolder() {
-        return mFolder;
+        return entry;
     }
 
     @Override

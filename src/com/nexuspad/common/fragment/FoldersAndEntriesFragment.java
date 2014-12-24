@@ -6,10 +6,10 @@ import android.util.Log;
 import android.widget.BaseAdapter;
 import com.google.common.collect.Iterables;
 import com.nexuspad.Manifest;
-import com.nexuspad.service.account.AccountManager;
 import com.nexuspad.common.adapters.FoldersAndEntriesAdapter;
 import com.nexuspad.common.adapters.ListFoldersAdapter;
 import com.nexuspad.common.adapters.OnFolderMenuClickListener;
+import com.nexuspad.service.account.AccountManager;
 import com.nexuspad.service.datamodel.EntryList;
 import com.nexuspad.service.datamodel.NPFolder;
 import com.nexuspad.service.dataservice.FolderService;
@@ -90,7 +90,7 @@ public class FoldersAndEntriesFragment extends EntriesFragment {
 
 	@Override
 	protected void doSearch(String keyword) {
-		displayProgressIndicator();
+		showProgressIndicator();
 		mCurrentSearchKeyword = keyword;
 
 		try {
@@ -107,7 +107,7 @@ public class FoldersAndEntriesFragment extends EntriesFragment {
 
 	@Override
 	protected void reDisplayListEntries() {
-		dismissProgressIndicator();
+		hideProgressIndicatorAndShowMainList();
 
 		// Need to reset the scroll listener.
 		mLoadMoreScrollListener.reset();
@@ -116,30 +116,6 @@ public class FoldersAndEntriesFragment extends EntriesFragment {
 		mFolderEntryCombinedAdapter.notifyDataSetChanged();
 	}
 
-	/**
-	 * Folder specific undo bar actions.
-	 *
-	 * @param token
-	 */
-	@Override
-	public void onUndoBarHidden(Intent token) {
-		if (token != null) {
-			final String action = token.getAction();
-			final NPFolder folder = token.getParcelableExtra(FolderService.KEY_FOLDER);
-			final FolderService service = getFolderService();
-
-			if (FolderService.ACTION_DELETE.equals(action)) {
-				try {
-					folder.setOwner(AccountManager.currentAccount());
-					service.deleteFolder(folder);
-				} catch (NPException e) {
-					Log.e(TAG, e.toString());
-				}
-			} else {
-				super.onUndoBarHidden(token);
-			}
-		}
-	}
 
 	@Override
 	public void onResume() {
@@ -171,4 +147,31 @@ public class FoldersAndEntriesFragment extends EntriesFragment {
 		foldersAdapter.setOnMenuClickListener(listener);
 		return foldersAdapter;
 	}
+
+
+	/**
+	 * Folder specific undo bar actions.
+	 *
+	 * @param token
+	 */
+	@Override
+	public void onUndoBarFinishShowing(Intent token) {
+		if (token != null) {
+			final String action = token.getAction();
+			final NPFolder folder = token.getParcelableExtra(FolderService.KEY_FOLDER);
+			final FolderService service = getFolderService();
+
+			if (FolderService.ACTION_DELETE.equals(action)) {
+				try {
+					folder.setOwner(AccountManager.currentAccount());
+					service.deleteFolder(folder);
+				} catch (NPException e) {
+					Log.e(TAG, e.toString());
+				}
+			} else {
+				super.onUndoBarFinishShowing(token);
+			}
+		}
+	}
+
 }

@@ -99,6 +99,10 @@ public class BookmarksFragment extends FoldersAndEntriesFragment {
 
 		super.onListLoaded(newListToDisplay);
 
+		// Update the listener state
+		Log.i(TAG, "Set the load more listener's page Id to: " + newListToDisplay.getPageId());
+		mLoadMoreScrollListener.setCurrentPage(newListToDisplay.getPageId());
+
 		FoldersAndEntriesAdapter a = (FoldersAndEntriesAdapter)getAdapter();
 
 		if (a == null) {
@@ -141,7 +145,11 @@ public class BookmarksFragment extends FoldersAndEntriesFragment {
 			a.getEntriesAdapter().setDisplayEntryList(newListToDisplay);
 		}
 
-		clearVisualIndicator();
+		if (newListToDisplay.isEmpty()) {
+			hideProgressIndicatorAndShowEmptyFolder();
+		} else {
+			hideProgressIndicatorAndShowMainList();
+		}
 	}
 
 	/**
@@ -163,7 +171,7 @@ public class BookmarksFragment extends FoldersAndEntriesFragment {
 
 	@Override
 	protected void reDisplayListEntries() {
-		dismissProgressIndicator();
+		hideProgressIndicatorAndShowMainList();
 
 		// Need to reset the scroll listener.
 		mLoadMoreScrollListener.reset();

@@ -6,6 +6,7 @@ package com.nexuspad.bookmark.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import com.nexuspad.bookmark.fragment.BookmarkEditFragment;
 import com.nexuspad.common.Constants;
@@ -37,7 +38,14 @@ public class BookmarkEditActivity extends EntryEditActivity<NPBookmark> {
 
     @Override
     protected Fragment onCreateFragment() {
-        return BookmarkEditFragment.of(getEntry(), getFolder());
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(Constants.KEY_ENTRY, mEntry);
+        bundle.putParcelable(Constants.KEY_FOLDER, mFolder);
+
+        BookmarkEditFragment fragment = new BookmarkEditFragment();
+        fragment.setArguments(bundle);
+
+        return fragment;
     }
 
     @Override
@@ -45,7 +53,7 @@ public class BookmarkEditActivity extends EntryEditActivity<NPBookmark> {
         super.handleIntent(i);
 
         if (Intent.ACTION_SEND.equals(i.getAction())) {
-            NPBookmark bookmark = new NPBookmark(getFolder());
+            NPBookmark bookmark = new NPBookmark(mFolder);
 
             Uri uri = i.getData();
             String text = i.getStringExtra(Intent.EXTRA_TEXT);
@@ -55,14 +63,12 @@ public class BookmarkEditActivity extends EntryEditActivity<NPBookmark> {
             } else if (text != null) {
                 bookmark.setWebAddress(text);
             }
-
-            setEntry(bookmark);
         }
     }
 
     @Override
     protected Intent getGoBackIntent(Class<?> activity) {
-        return super.getGoBackIntent(activity).putExtra(Constants.KEY_FOLDER, getFolder());
+        return super.getGoBackIntent(activity).putExtra(Constants.KEY_FOLDER, mFolder);
     }
 
     @Override

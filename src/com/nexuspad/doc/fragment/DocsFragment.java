@@ -90,15 +90,10 @@ public class DocsFragment extends FoldersAndEntriesFragment {
 		}
 	}
 
-	@Override
-	protected void onSearchLoaded(EntryList list) {
-		((FoldersAndEntriesAdapter)getAdapter()).setShouldHideFolders(true);
-		super.onSearchLoaded(list);
-	}
 
 	@Override
 	protected void reDisplayListEntries() {
-		dismissProgressIndicator();
+		hideProgressIndicatorAndShowMainList();
 
 		// Need to reset the scroll listener.
 		mLoadMoreScrollListener.reset();
@@ -117,6 +112,11 @@ public class DocsFragment extends FoldersAndEntriesFragment {
 		Log.i(TAG, "Receiving entry list.");
 
 		super.onListLoaded(newListToDisplay);
+
+		// Update the listener state
+		Log.i(TAG, "Set the load more listener's page Id to: " + newListToDisplay.getPageId());
+		mLoadMoreScrollListener.setCurrentPage(newListToDisplay.getPageId());
+
 
 		FoldersAndEntriesAdapter a = (FoldersAndEntriesAdapter)getAdapter();
 
@@ -159,7 +159,17 @@ public class DocsFragment extends FoldersAndEntriesFragment {
 			a.getEntriesAdapter().setDisplayEntryList(newListToDisplay);
 		}
 
-		clearVisualIndicator();
+		if (newListToDisplay.isEmpty()) {
+			hideProgressIndicatorAndShowEmptyFolder();
+		} else {
+			hideProgressIndicatorAndShowMainList();
+		}
+	}
+
+	@Override
+	protected void onSearchLoaded(EntryList list) {
+		((FoldersAndEntriesAdapter)getAdapter()).setShouldHideFolders(true);
+		super.onSearchLoaded(list);
 	}
 
 	/**

@@ -45,6 +45,22 @@ public class NPUpload extends NPEntry {
         super(EntryTemplate.UPLOAD);
     }
 
+    public NPUpload(NPUpload other) {
+        super(other);
+
+        parentEntryModule = other.parentEntryModule;
+        parentEntryFolder = other.parentEntryFolder;
+        parentEntryId = other.parentEntryId;
+
+        fileName = other.fileName;
+        fileType = other.fileType;
+        fileSize = other.fileSize;
+
+        tnUrl = other.tnUrl;
+        lightBoxUrl = other.lightBoxUrl;
+        downloadLink = other.downloadLink;
+    }
+
     public NPUpload(NPFolder folder) {
         super(folder, EntryTemplate.UPLOAD);
     }

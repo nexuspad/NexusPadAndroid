@@ -46,6 +46,14 @@ public class NPEntry extends NPObject {
 		}
 	};
 
+	public static final Comparator<NPEntry> ORDERING_BY_UPDATE_TIME = new Comparator<NPEntry>() {
+		@Override
+		public int compare(NPEntry a, NPEntry o) {
+			return -1 * Ordering.natural().nullsLast().compare(a.getLastModifiedTime(), o.getLastModifiedTime());
+		}
+	};
+
+
 	protected final EntryTemplate mTemplate;
 
 	protected AccessEntitlement mAccessInfo;
@@ -102,6 +110,8 @@ public class NPEntry extends NPObject {
 		note = anEntry.note;
 
 		createTime = anEntry.createTime;
+		lastModifiedTime = anEntry.lastModifiedTime;
+
 		location = anEntry.location;
 		colorLabel = anEntry.colorLabel;
 		webAddress = anEntry.webAddress;
@@ -294,7 +304,10 @@ public class NPEntry extends NPObject {
 	}
 
 	public boolean isNewEntry() {
-		return (entryId != null) && (entryId.length() > 0);
+		if (entryId == null || entryId.startsWith("_")) {
+			return true;
+		}
+		return false;
 	}
 
 	public String getKeywordFilter() {
@@ -321,22 +334,22 @@ public class NPEntry extends NPObject {
 	public String toString() {
 		return Objects.toStringHelper(this)
 				.omitNullValues()
-				.add("status", status)
-				.add("accessInfo", mAccessInfo)
-				.add("folder", folder)
-				.add("mTemplate", mTemplate)
-				.add("entryId", entryId)
-				.add("syncId", syncId)
-				.add("title", title)
-				.add("colorLabel", colorLabel)
-				.add("tags", tags)
-				.add("note", note)
-				.add("featureValues", featureValues)
-				.add("attachments", attachments)
-				.add("createTime", createTime)
-				.add("location", location)
-				.add("webAddress", webAddress)
-				.add("sharings", sharings)
+				.add("\nstatus", status)
+				.add("\naccessInfo", mAccessInfo)
+				.add("\nfolder", folder)
+				.add("\nmTemplate", mTemplate)
+				.add("\nentryId", entryId)
+				.add("\nsyncId", syncId)
+				.add("\ntitle", title)
+				.add("\ncolorLabel", colorLabel)
+				.add("\ntags", tags)
+				.add("\nnote", note)
+				.add("\nfeatureValues", featureValues)
+				.add("\nattachments", attachments)
+				.add("\ncreateTime", createTime)
+				.add("\nlocation", location)
+				.add("\nwebAddress", webAddress)
+				.add("\nsharings", sharings)
 				.toString();
 	}
 
@@ -351,12 +364,15 @@ public class NPEntry extends NPObject {
 
 		postParams.put(ServiceConstants.MODULE_ID, String.valueOf(folder.getModuleId()));
 		postParams.put(ServiceConstants.FOLDER_ID, String.valueOf(folder.getFolderId()));
+
 		if (mTemplate != null) {
 			postParams.put(ServiceConstants.TEMPLATE_ID, String.valueOf(mTemplate.getIntValue()));
 		}
+
 		if (entryId != null) {
 			postParams.put(ServiceConstants.ENTRY_ID, entryId);
 		}
+
 		if (title != null) {
 			postParams.put(ServiceConstants.TITLE, title);
 		}
@@ -396,24 +412,13 @@ public class NPEntry extends NPObject {
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
-		if (!(o instanceof NPEntry)) return false;
+
+		if (o == null || getClass() != o.getClass()) return false;
 
 		NPEntry npEntry = (NPEntry) o;
 
-		if (mAccessInfo != null ? !mAccessInfo.equals(npEntry.mAccessInfo) : npEntry.mAccessInfo != null) return false;
-		if (attachments != null ? !attachments.equals(npEntry.attachments) : npEntry.attachments != null) return false;
-		if (colorLabel != null ? !colorLabel.equals(npEntry.colorLabel) : npEntry.colorLabel != null) return false;
-		if (createTime != npEntry.createTime) return false;
 		if (entryId != null ? !entryId.equals(npEntry.entryId) : npEntry.entryId != null) return false;
-		if (featureValues != null ? !featureValues.equals(npEntry.featureValues) : npEntry.featureValues != null)
-			return false;
-		if (folder != null ? !folder.equals(npEntry.folder) : npEntry.folder != null) return false;
-		if (location != null ? !location.equals(npEntry.location) : npEntry.location != null) return false;
-		if (note != null ? !note.equals(npEntry.note) : npEntry.note != null) return false;
-		if (sharings != null ? !sharings.equals(npEntry.sharings) : npEntry.sharings != null) return false;
-		if (tags != null ? !tags.equals(npEntry.tags) : npEntry.tags != null) return false;
 		if (mTemplate != npEntry.mTemplate) return false;
-		if (title != null ? !title.equals(npEntry.title) : npEntry.title != null) return false;
 		if (webAddress != null ? !webAddress.equals(npEntry.webAddress) : npEntry.webAddress != null) return false;
 
 		return true;
@@ -421,20 +426,9 @@ public class NPEntry extends NPObject {
 
 	@Override
 	public int hashCode() {
-		int result = mAccessInfo != null ? mAccessInfo.hashCode() : 0;
-		result = 31 * result + (folder != null ? folder.hashCode() : 0);
-		result = 31 * result + (mTemplate != null ? mTemplate.hashCode() : 0);
+		int result = mTemplate != null ? mTemplate.hashCode() : 0;
 		result = 31 * result + (entryId != null ? entryId.hashCode() : 0);
-		result = 31 * result + (title != null ? title.hashCode() : 0);
-		result = 31 * result + (colorLabel != null ? colorLabel.hashCode() : 0);
-		result = 31 * result + (tags != null ? tags.hashCode() : 0);
-		result = 31 * result + (note != null ? note.hashCode() : 0);
-		result = 31 * result + (featureValues != null ? featureValues.hashCode() : 0);
-		result = 31 * result + (attachments != null ? attachments.hashCode() : 0);
-		result = 31 * result + createTime.hashCode();
-		result = 31 * result + (location != null ? location.hashCode() : 0);
 		result = 31 * result + (webAddress != null ? webAddress.hashCode() : 0);
-		result = 31 * result + (sharings != null ? sharings.hashCode() : 0);
 		return result;
 	}
 

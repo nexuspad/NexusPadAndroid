@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.*;
@@ -48,12 +49,7 @@ public class EventsListFragment extends EntriesFragment {
 
 	public static final String TAG = "EventsListFragment";
 
-	public static final String KEY_START_YMD = "key_start_ymd";
-	public static final String KEY_END_YMD = "key_end_ymd";
-
 	private StickyListHeadersListView mStickyHeaderEventListView;
-
-	private EntryList mEventList;
 
 	private NPDateRange mDateRange;
 
@@ -83,7 +79,7 @@ public class EventsListFragment extends EntriesFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		final Bundle arguments = getArguments();
-		mDateRange = new NPDateRange((String)arguments.get(KEY_START_YMD), (String)arguments.get(KEY_END_YMD));
+		mDateRange = new NPDateRange((String)arguments.get(Constants.KEY_START_YMD), (String)arguments.get(Constants.KEY_END_YMD));
 	}
 
 	@Override
@@ -124,7 +120,7 @@ public class EventsListFragment extends EntriesFragment {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				if (getAdapter() != null) {
-					final NPEvent event = ((EventsListAdapter)getAdapter()).getItem(position);
+					final NPEvent event = ((EventsListAdapter) getAdapter()).getItem(position);
 					EventActivity.startWith(getActivity(), event, getFolder());
 				}
 			}
@@ -162,11 +158,13 @@ public class EventsListFragment extends EntriesFragment {
 
 		super.onListLoaded(newListToDisplay);
 
-		mEventList = newListToDisplay;
-
 		EventsListAdapter adapter = (EventsListAdapter)getAdapter();
 
+		boolean initialLoad = false;
+
 		if (adapter == null) {
+			initialLoad = true;
+
 			adapter = new EventsListAdapter(getActivity(), newListToDisplay, getFolder(), getEntryListService());
 
 			adapter.setOnMenuClickListener(new OnEntryMenuClickListener<NPEvent>(mStickyHeaderEventListView, getEntryService(), getUndoBarController()) {
@@ -193,21 +191,43 @@ public class EventsListFragment extends EntriesFragment {
 			mStickyHeaderEventListView.setOnItemLongClickListener(adapter);
 			setAdapter(adapter);
 
-			scrollToToday(mEventList);
-
 		} else {
 			adapter.setDisplayEntryList(newListToDisplay);
 		}
-
-		dismissProgressIndicator();
 
 		mLoadMoreScrollListener.reset();
 
 		if (!newListToDisplay.isEntryUpdated()) {
 			mLoadMoreScrollListener.setLoadingDisabled(true);
 		}
+
+		if (newListToDisplay.isEmpty()) {
+			hideProgressIndicatorAndShowEmptyFolder();
+		} else {
+			hideProgressIndicatorAndShowMainList();
+		}
+
+		if (initialLoad) {
+			scrollToToday(newListToDisplay);
+		}
 	}
 
+	@Override
+	protected void onSearchLoaded(EntryList list) {
+		((EntriesAdapter)getAdapter()).setDisplayEntryList(list);
+	}
+
+	/**
+	 * SwipeRefresh handler.
+	 */
+	@Override
+	public void onRefresh() {
+		if (mListFrame instanceof SwipeRefreshLayout) {
+			((SwipeRefreshLayout)mListFrame).setRefreshing(true);
+			mEntryList.empty();
+			queryEntriesAsync();
+		}
+	}
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -237,7 +257,10 @@ public class EventsListFragment extends EntriesFragment {
 		for (NPEntry entry : (List<? extends NPEntry>)eventList.getEntries()) {
 			NPEvent event = NPEvent.fromEntry(entry);
 			if (event.getStartTime().after(today)) {
-				mStickyHeaderEventListView.smoothScrollToPosition(i);
+				Log.i(TAG, "Scroll to event at position: " + i);
+				ListView wrapperList = mStickyHeaderEventListView.getWrappedList();
+				wrapperList.smoothScrollToPosition(i);
+				wrapperList.setSelection(i);
 				break;
 			}
 			i++;

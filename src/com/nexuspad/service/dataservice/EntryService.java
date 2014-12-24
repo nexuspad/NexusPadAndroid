@@ -57,7 +57,7 @@ public class EntryService {
 
 	public static final String KEY_ERROR = "key_error";
 
-	private static EntryService mInstance;
+	protected static EntryService mInstance;
 
 	public static EntryService getInstance(Context context) {
 		if (mInstance == null) {
@@ -300,7 +300,7 @@ public class EntryService {
 	 * @throws NPException
 	 */
 	private void updateEntry(NPEntry entry, Map<String, String> actionDetail) throws NPException {
-		Log.i("EntryService - [UPDATE]", entry.getEntryId());
+		Log.d("EntryService - [UPDATE]", entry.toMap().toString());
 
 		Map<String, String> params = new HashMap<String, String>();
 		NPWebServiceUtil.addOwnerParam(params, entry.getAccessInfo());

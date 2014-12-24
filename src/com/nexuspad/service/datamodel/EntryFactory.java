@@ -47,6 +47,33 @@ public class EntryFactory {
         }
     }
 
+    public static NPEntry copyEntry(NPObject e) {
+        if (e instanceof NPPerson) {
+            return new NPPerson((NPPerson)e);
+
+        } else if (e instanceof  NPEvent) {
+            return new NPEvent((NPEvent)e);
+
+        } else if (e instanceof NPJournal) {
+            return new NPJournal((NPJournal)e);
+
+        } else if (e instanceof NPPhoto) {
+            Log.i("------------------", "----------");
+            return new NPPhoto((NPPhoto)e);
+
+        } else if (e instanceof NPAlbum) {
+            return new NPAlbum((NPAlbum)e);
+
+        } else if (e instanceof NPBookmark) {
+            return new NPBookmark((NPBookmark)e);
+
+        } else if (e instanceof NPDoc) {
+            return new NPDoc((NPDoc)e);
+        }
+
+        throw new IllegalArgumentException("Entry type not supported: " + e.getClass().getSimpleName());
+    }
+
     public static NPEntry jsonToEntry(JSONObject jsonObj) {
         if (!jsonObj.has(ServiceConstants.MODULE_ID)) {
             return null;

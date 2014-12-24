@@ -7,6 +7,7 @@ package com.nexuspad.service.datamodel;
 import android.os.Parcel;
 import android.util.Log;
 import com.google.common.base.Objects;
+import com.google.common.collect.ComparisonChain;
 import com.nexuspad.service.dataservice.ServiceConstants;
 import com.nexuspad.service.util.DateUtil;
 import com.nexuspad.service.util.JsonHelper;
@@ -160,6 +161,53 @@ public class NPEvent extends NPEntry {
 		}
 		return new NPEvent(entry);
 	}
+
+	public static final Comparator<NPEvent> ORDERING_BY_STARTING_TIME = new Comparator<NPEvent>() {
+		@Override
+		public int compare(NPEvent a, NPEvent o) {
+			return ComparisonChain.start()
+					.compare(a.startTime, o.startTime)
+					.result();
+		}
+	};
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+
+		if (o == null || getClass() != o.getClass()) return false;
+
+		NPEvent npEvent = (NPEvent) o;
+
+		if (allDayEvent != npEvent.allDayEvent) return false;
+		if (lastChangeTime != npEvent.lastChangeTime) return false;
+		if (multiDayEvent != npEvent.multiDayEvent) return false;
+		if (noStartingTime != npEvent.noStartingTime) return false;
+		if (singleTimeEvent != npEvent.singleTimeEvent) return false;
+		if (endTime != null ? !endTime.equals(npEvent.endTime) : npEvent.endTime != null) return false;
+		if (recurId != null ? !recurId.equals(npEvent.recurId) : npEvent.recurId != null) return false;
+		if (!startTime.equals(npEvent.startTime)) return false;
+
+		if (!super.equals(o)) return false;
+
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = super.hashCode();
+		result = 31 * result + startTime.hashCode();
+		result = 31 * result + (endTime != null ? endTime.hashCode() : 0);
+		result = 31 * result + timeZone.hashCode();
+		result = 31 * result + (int) (lastChangeTime ^ (lastChangeTime >>> 32));
+		result = 31 * result + (singleTimeEvent ? 1 : 0);
+		result = 31 * result + (allDayEvent ? 1 : 0);
+		result = 31 * result + (noStartingTime ? 1 : 0);
+		result = 31 * result + (multiDayEvent ? 1 : 0);
+		result = 31 * result + (recurId != null ? recurId.hashCode() : 0);
+		return result;
+	}
+
 
 	/**
 	 * Split an event that spans multiple days into an array of events. This is
@@ -343,6 +391,7 @@ public class NPEvent extends NPEntry {
 	@Override
 	public Map<String, String> toMap() {
 		Map<String, String> postParams = super.toMap();
+
 		if (allDayEvent) {
 			postParams.put(ServiceConstants.EVENT_ALL_DAY, String.valueOf(1));
 		}
@@ -355,18 +404,20 @@ public class NPEvent extends NPEntry {
 		}
 
 		postParams.put(ServiceConstants.EVENT_START_TS, String.valueOf(startTime.getTime() / 1000));
-		postParams.put(ServiceConstants.EVENT_END_TS, String.valueOf(endTime.getTime() / 1000));
+
+		if (endTime != null) {
+			postParams.put(ServiceConstants.EVENT_END_TS, String.valueOf(endTime.getTime() / 1000));
+		}
 
 		if (timeZone != null) {
 			postParams.put(ServiceConstants.EVENT_TIMEZONE, timeZone.getID());
 		}
 
-		if (recurrence != null) {
+		if (recurrence != null && !recurrence.getPattern().equals(Recurrence.Pattern.NOREPEAT)) {
 			try {
-				JSONObject recurJsonObj = (JSONObject) JsonHelper
-						.toJSON(recurrence.toMap());
-				postParams.put(ServiceConstants.EVENT_RECURRENCE,
-						recurJsonObj.toString());
+				JSONObject recurJsonObj = (JSONObject) JsonHelper.toJSON(recurrence.toMap());
+				postParams.put(ServiceConstants.EVENT_RECURRENCE, recurJsonObj.toString());
+
 			} catch (JSONException e) {
 				Log.e("Event", "Error exporting recurrence to JSON object.");
 			}
@@ -410,6 +461,22 @@ public class NPEvent extends NPEntry {
 		return Objects.toStringHelper(this)
 				.omitNullValues()
 				.add("\nentryId", entryId)
+				.add("\nstatus", status)
+				.add("\naccessInfo", mAccessInfo)
+				.add("\nfolder", folder)
+				.add("\nmTemplate", mTemplate)
+				.add("\nentryId", entryId)
+				.add("\nsyncId", syncId)
+				.add("\ntitle", title)
+				.add("\ncolorLabel", colorLabel)
+				.add("\ntags", tags)
+				.add("\nnote", note)
+				.add("\nfeatureValues", featureValues)
+				.add("\nattachments", attachments)
+				.add("\ncreateTime", createTime)
+				.add("\nlocation", location)
+				.add("\nwebAddress", webAddress)
+				.add("\nsharings", sharings)
 				.add("\nstartTime", startTime)
 				.add("\nendTime", endTime)
 				.add("\ntimeZone", timeZone)

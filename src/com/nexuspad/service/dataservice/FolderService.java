@@ -197,7 +197,7 @@ public class FolderService {
 			mContext.sendBroadcast(intent, Manifest.permission.LISTEN_FOLDER_CHANGES);
 
 		} else {
-			String folderUrl = folderUri(parentFolder, true);
+			String folderUrl = folderListUri(parentFolder);
 
 			Map<String, String> params = new HashMap<String, String>();
 
@@ -272,7 +272,7 @@ public class FolderService {
 
 		NPWebServiceUtil.addOwnerParam(params, folder.getAccessInfo());
 
-		String folderUrl = folderUri(folder, false);
+		String folderUrl = folderUri(folder);
 		try {
 			folderUrl = NPWebServiceUtil.fullUrlWithAuthenticationTokens(folderUrl, mContext);
 			folderUrl = NPWebServiceUtil.appendParams(folderUrl, params);
@@ -322,7 +322,7 @@ public class FolderService {
     	/*
     	 * Update web service
     	 */
-		String folderUrl = folderUri(folder, false);
+		String folderUrl = folderUri(folder);
 
 		Map<String, String> params = new HashMap<String, String>();
 
@@ -605,8 +605,7 @@ public class FolderService {
 		mContext.sendBroadcast(intent, Manifest.permission.LISTEN_FOLDER_CHANGES);
 	}
 
-
-	public static String folderUri(NPFolder folder, boolean forFolderList) {
+	public static String folderListUri(NPFolder folder) {
 		String url = "";
 
 		switch (folder.getModuleId()) {
@@ -638,16 +637,6 @@ public class FolderService {
 				break;
 		}
 
-//        if (url.length() > 0 && forFolderList) {
-//            if (folder.getFolderId() == Folder.ROOT_FOLDER) {
-//                url = url + "?AllFolders";
-//            } else {
-//                url = url + "?folder_id=" + folder.getFolderId();
-//            }
-//        } else {
-//            url = url + "?folder_id=" + folder.getFolderId();
-//        }
-
 		/**
 		 * For now we make the same API call to get all folders event for subfolders.
 		 * The problem is convertJsonToFolders does not parse properly on API call with folder_id parameter and
@@ -658,6 +647,43 @@ public class FolderService {
 		 */
 		url = url + "?AllFolders";
 
+		return url;
+	}
+
+
+	public static String folderUri(NPFolder folder) {
+		String url = "";
+
+		switch (folder.getModuleId()) {
+			case NPModule.CONTACT:
+				url = "/contact/folder";
+				break;
+
+			case NPModule.CALENDAR:
+				url = "/calendar/calendar";
+				break;
+
+			case NPModule.JOURNAL:
+				url = "/planner/folder";
+				break;
+
+			case NPModule.DOC:
+				url = "/doc/folder";
+				break;
+
+			case NPModule.PHOTO:
+				url = "/photo/folder";
+				break;
+
+			case NPModule.BOOKMARK:
+				url = "/bookmark/folder";
+				break;
+
+			default:
+				break;
+		}
+
+		url = url + "?folder_id=" + folder.getFolderId();
 		return url;
 	}
 

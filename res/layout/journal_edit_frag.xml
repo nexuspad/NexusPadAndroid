@@ -9,7 +9,7 @@
     >
 
     <com.nexuspad.journal.view.LinedEditText
-        android:id="@+id/journal_text"
+        android:id="@+id/txt_note"
         style="@style/listItemTextView"
         android:layout_width="match_parent"
         android:layout_height="0dp"

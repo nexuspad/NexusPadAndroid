@@ -6,6 +6,7 @@ package com.nexuspad.service.datamodel;
 
 import android.os.Parcel;
 import com.google.common.base.Objects;
+import com.google.common.base.Strings;
 import com.google.common.collect.ComparisonChain;
 import com.nexuspad.service.dataservice.ServiceConstants;
 import com.nexuspad.service.util.JsonHelper;
@@ -118,6 +119,10 @@ public class NPPerson extends NPEntry {
                         .getString(ServiceConstants.BUSINESS_NAME);
             }
 
+            if (jsonObj.has(ServiceConstants.CONTACT_WEBSITE)) {
+                webAddress = jsonObj.getString(ServiceConstants.CONTACT_WEBSITE);
+            }
+
             // Parse mPhones
             if (jsonObj.has(ServiceConstants.CONTACT_PHONE)) {
                 JSONArray phoneArray = jsonObj.getJSONArray(ServiceConstants.CONTACT_PHONE);
@@ -217,6 +222,11 @@ public class NPPerson extends NPEntry {
             postParams.put(ServiceConstants.LAST_NAME, nullToEmpty(mLastName));
             postParams.put(ServiceConstants.MIDDLE_NAME, nullToEmpty(mMiddleName));
             postParams.put(ServiceConstants.BUSINESS_NAME, nullToEmpty(mBusinessName));
+
+            if (!Strings.isNullOrEmpty(webAddress)) {
+                postParams.put(ServiceConstants.CONTACT_WEBSITE, webAddress);
+            }
+
             postParams.put(ServiceConstants.COUNTRY_CODE, nullToEmpty(mCountryCode));
             postParams.put(ServiceConstants.LANGUAGE_CODE, nullToEmpty(mLanguageCode));
 
@@ -249,24 +259,24 @@ public class NPPerson extends NPEntry {
     public String toString() {
         return Objects.toStringHelper(this)
                 .omitNullValues()
-                .add("accessInfo", mAccessInfo)
-                .add("folder", folder.getFolderId())
-                .add("mTemplate", mTemplate)
-                .add("entryId", entryId)
-                .add("syncId", syncId)
-                .add("synced", synced)
-                .add("colorLabel", colorLabel)
-                .add("tags", tags)
-                .add("note", note)
-                .add("createTime", createTime)
-                .add("location", location)
-                .add("webAddress", webAddress)
-                .add("title", title)
-                .add("Last Name", mLastName)
-                .add("First Name", mFirstName)
-                .add("Middle Name", mMiddleName)
-                .add("Emails", mEmails)
-                .add("Phones", mPhones)
+                .add("\naccessInfo", mAccessInfo)
+                .add("\nfolder", folder.getFolderId())
+                .add("\nmTemplate", mTemplate)
+                .add("\nentryId", entryId)
+                .add("\nsyncId", syncId)
+                .add("\nsynced", synced)
+                .add("\ncolorLabel", colorLabel)
+                .add("\ntags", tags)
+                .add("\nnote", note)
+                .add("\ncreateTime", createTime)
+                .add("\nlocation", location)
+                .add("\nwebAddress", webAddress)
+                .add("\ntitle", title)
+                .add("\nLast Name", mLastName)
+                .add("\nFirst Name", mFirstName)
+                .add("\nMiddle Name", mMiddleName)
+                .add("\nEmails", mEmails)
+                .add("\nPhones", mPhones)
                 .toString();
     }
 

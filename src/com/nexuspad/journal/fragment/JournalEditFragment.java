@@ -50,10 +50,13 @@ public class JournalEditFragment extends EntryEditFragment<NPJournal> {
 	public interface JournalDetailCallback extends EntryDetailCallback<NPJournal> {
 	}
 
+	/*
+	 * This is called in EntryFragment EntryReceiver.onGet
+	 */
 	@Override
 	public void setEntry(NPJournal journal) {
 		if (journal.getJournalYmd().equals(journalDateYmd)) {
-			Log.i(TAG, "Update UI for " + journalDateYmd);
+			Log.i(TAG, "Load Journal into UI editor " + journalDateYmd);
 			noteView.setText(journal.getNote());
 			lastModifiedTime = journal.getLastModifiedTime();
 		}
@@ -81,7 +84,7 @@ public class JournalEditFragment extends EntryEditFragment<NPJournal> {
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 
-		noteView = (EditText)view.findViewById(R.id.journal_text);
+		noteView = (EditText)view.findViewById(R.id.txt_note);
 		noteView.setText(mEntry.getNote());
 
 		noteView.addTextChangedListener(new TextWatcher() {
@@ -103,26 +106,17 @@ public class JournalEditFragment extends EntryEditFragment<NPJournal> {
 		return true;
 	}
 
-	/**
-	 * Used in updateEntry.
-	 *
-	 * @return
-	 */
 	@Override
 	public NPJournal getEntryFromEditor() {
-		NPJournal journal = NPJournal.fromEntry(mEntry);
-		journal.setNote(noteView.getText().toString());
-		return journal;
+		Log.e(TAG, "No implementation!!!!");
+		return null;
 	}
 
 	public String getJournalDateYmd() {
 		return journalDateYmd;
 	}
 
-	NPJournal getUpdatedJournal() {
-		NPJournal j = NPJournal.fromEntry(mEntry);
-		j.setNote(noteView.getText().toString());
-
-		return j;
+	public String getJournalText() {
+		return noteView.getText().toString();
 	}
 }

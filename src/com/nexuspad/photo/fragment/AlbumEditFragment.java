@@ -13,10 +13,10 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.google.common.base.Strings;
 import com.koushikdutta.ion.Ion;
 import com.nexuspad.R;
 import com.nexuspad.common.Constants;
-import com.nexuspad.common.activity.EntryEditActivity;
 import com.nexuspad.common.activity.UploadCenterActivity;
 import com.nexuspad.common.annotation.FragmentName;
 import com.nexuspad.common.annotation.ModuleInfo;
@@ -90,14 +90,7 @@ public class AlbumEditFragment extends EntryEditFragment<NPAlbum> {
 	}
 
 	private int getLayoutId() {
-		switch (getMode()) {
-			case NEW:
-				return R.layout.album_edit_frag;
-			case EDIT:
-				return R.layout.album_edit_frag;
-			default:
-				throw new AssertionError("unexpected mode: " + getMode());
-		}
+		return R.layout.album_edit_frag;
 	}
 
 	@Override
@@ -106,7 +99,7 @@ public class AlbumEditFragment extends EntryEditFragment<NPAlbum> {
 
 		installFolderSelectorListener(mFolderView);
 
-		if (EntryEditActivity.Mode.EDIT.equals(getMode())) {
+		if (!Strings.isNullOrEmpty(getEntry().getEntryId())) {
 			final int size = mUris.size();
 			mNumPhotosV.setText(getResources().getQuantityString(R.plurals.numberOfPhotos, size, size));
 

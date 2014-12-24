@@ -13,7 +13,6 @@ import android.view.View.OnClickListener;
 import android.widget.TextView;
 import com.google.common.base.Strings;
 import com.nexuspad.common.Constants;
-import com.nexuspad.common.activity.EntryEditActivity;
 import com.nexuspad.common.activity.FoldersNavigatorActivity;
 import com.nexuspad.common.annotation.ModuleInfo;
 import com.nexuspad.service.account.AccountManager;
@@ -50,11 +49,6 @@ public abstract class EntryEditFragment<T extends NPEntry> extends EntryFragment
 	public abstract T getEntryFromEditor();
 
 	private ModuleInfo mModuleId;
-	private EntryEditActivity.Mode mMode;
-
-	protected EntryEditActivity.Mode getMode() {
-		return mMode;
-	}
 
 	/**
 	 * @return one of the {@code *_MODULE} constants in {@link ServiceConstants}
@@ -70,7 +64,6 @@ public abstract class EntryEditFragment<T extends NPEntry> extends EntryFragment
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mModuleId = ((Object) this).getClass().getAnnotation(ModuleInfo.class);
-		mMode = getEntry() == null ? EntryEditActivity.Mode.NEW : EntryEditActivity.Mode.EDIT;
 	}
 
 	protected void updateFolderView() {
@@ -87,9 +80,6 @@ public abstract class EntryEditFragment<T extends NPEntry> extends EntryFragment
 	}
 
 	public final void addEntry() {
-		if (!EntryEditActivity.Mode.NEW.equals(mMode)) {
-			throw new IllegalStateException("not in Mode.NEW");
-		}
 		if (isEditedEntryValid()) {
 			T entry = getEntryFromEditor();
 			try {
@@ -123,22 +113,15 @@ public abstract class EntryEditFragment<T extends NPEntry> extends EntryFragment
 	}
 
 	public final void updateEntry() {
-		if (!EntryEditActivity.Mode.EDIT.equals(mMode)) {
-			throw new IllegalStateException("Not in edit mode.");
-		}
 		if (isEditedEntryValid()) {
-			final T originalEntry = getEntry();
 			final T entry = getEntryFromEditor();
-			if (!entry.equals(originalEntry)) {
-				try {
-					entry.setOwner(AccountManager.currentAccount());
-				} catch (NPException e) {
-					throw new AssertionError("Account information missing!");
-				}
-				onUpdateEntry(entry);
-			} else {
-				Log.w(TAG, "entry not updated because no changes were made: " + entry);
+
+			try {
+				entry.setOwner(AccountManager.currentAccount());
+			} catch (NPException e) {
+				throw new AssertionError("Account information missing!");
 			}
+			onUpdateEntry(entry);
 		}
 	}
 

@@ -169,7 +169,7 @@ public class SyncUpService implements Runnable {
      * @throws java.util.concurrent.ExecutionException
      */
     private void updateFolder(NPFolder folder) throws NPException, InterruptedException, ExecutionException {
-        String folderUrl = FolderService.folderUri(folder, false);
+        String folderUrl = FolderService.folderUri(folder);
 
         if (!isNewFolder(folder)) {
             folderUrl = NPWebServiceUtil.appendParam(folderUrl, "folder_id", String.valueOf(folder.getFolderId()));

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <include layout="@layout/list_content_sticky" />
+    <include layout="@layout/main_list_sticky_header" />
 
     <LinearLayout
         android:id="@+id/bottom_overlay"

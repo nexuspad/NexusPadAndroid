@@ -109,6 +109,19 @@ public class NPFolder extends NPObject implements Iterable<NPFolder> {
     public NPFolder() {
     }
 
+    public NPFolder(NPFolder aFolder) {
+        accessInfo = aFolder.accessInfo;
+        moduleId = aFolder.moduleId;
+        folderId = aFolder.folderId;
+        folderName = aFolder.folderName;
+        folderCode = aFolder.folderCode;
+        colorLabel = aFolder.colorLabel;
+
+        parentId = aFolder.parentId;
+        parent = aFolder.parent;
+        subFolders = aFolder.subFolders;
+    }
+
     /**
      * A new folder without folder Id assigned.
      *
@@ -144,18 +157,6 @@ public class NPFolder extends NPObject implements Iterable<NPFolder> {
         }
     }
 
-    public NPFolder(NPFolder aFolder) {
-        accessInfo = aFolder.accessInfo;
-        moduleId = aFolder.moduleId;
-        folderId = aFolder.folderId;
-        folderName = aFolder.folderName;
-        folderCode = aFolder.folderCode;
-        colorLabel = aFolder.colorLabel;
-
-        parentId = aFolder.parentId;
-        parent = aFolder.parent;
-        subFolders = aFolder.subFolders;
-    }
 
     protected NPFolder(Parcel in) {
         accessInfo = in.readParcelable(AccessEntitlement.class.getClassLoader());

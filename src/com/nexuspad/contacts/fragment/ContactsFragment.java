@@ -14,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SearchView;
 import com.google.common.base.Strings;
+import com.koushikdutta.ion.Ion;
 import com.nexuspad.R;
 import com.nexuspad.common.Constants;
 import com.nexuspad.common.adapters.EntriesAdapter;
@@ -31,6 +32,7 @@ import com.nexuspad.service.datamodel.NPFolder;
 import com.nexuspad.service.datamodel.NPPerson;
 import com.nexuspad.service.dataservice.EntryListService;
 import com.nexuspad.service.dataservice.NPException;
+import com.nexuspad.service.dataservice.NPWebServiceUtil;
 import com.nexuspad.service.dataservice.ServiceConstants;
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
@@ -169,9 +171,22 @@ public final class ContactsFragment extends EntriesFragment {
 			adapter.setDisplayEntryList(newListToDisplay);
 		}
 
-		clearVisualIndicator();
+		if (newListToDisplay.isEmpty()) {
+			hideProgressIndicatorAndShowEmptyFolder();
+		} else {
+			hideProgressIndicatorAndShowMainList();
+		}
+	}
 
-		mStickyHeaderContactListView.smoothScrollToPosition(6);
+	@Override
+	protected void onSearchLoaded(EntryList list) {
+		((EntriesAdapter)getAdapter()).setDisplayEntryList(list);
+	}
+
+	@Override
+	protected void reDisplayListEntries() {
+		((ContactsAdapter)getAdapter()).setDisplayEntryList(mEntryList);
+		getAdapter().notifyDataSetChanged();
 	}
 
 	/**
@@ -273,17 +288,10 @@ public final class ContactsFragment extends EntriesFragment {
 		}
 	}
 
-	@Override
-	protected void reDisplayListEntries() {
-		clearVisualIndicator();
-		((ContactsAdapter)getAdapter()).setDisplayEntryList(mEntryList);
-		getAdapter().notifyDataSetChanged();
-	}
-
 	protected void doSearch(String keyword) {
 		Log.i(TAG, "Search keyword: " + keyword);
 
-		displayProgressIndicator();
+		showProgressIndicator();
 		mCurrentSearchKeyword = keyword;
 
 		try {
@@ -298,10 +306,12 @@ public final class ContactsFragment extends EntriesFragment {
 	 * Override common ListEntriesAdapter for Contact list.
 	 */
 	public static class ContactsAdapter extends EntriesAdapter<NPPerson> implements StickyListHeadersAdapter {
+		private final Activity mActivity;
 		private final EntriesLocalSearchFilter mFilter;
 
 		private ContactsAdapter(Activity a, EntryList entryList, NPFolder folder, EntryListService service, EntryTemplate template, EntriesLocalSearchFilter.OnFilterDoneListener<NPPerson> onFilterDoneListener) {
 			super(a, entryList);
+			mActivity = a;
 			mFilter = new EntriesLocalSearchFilter(entryList, onFilterDoneListener);
 		}
 
@@ -330,23 +340,27 @@ public final class ContactsFragment extends EntriesFragment {
 			if (convertView == null) {
 				convertView = getLayoutInflater().inflate(R.layout.list_item_with_icon, parent, false);
 			}
+
 			final ListViewHolder holder = getHolder(convertView);
 
-//            postponed for the first release
-//            final String profileImageUrl = p.getProfileImageUrl();
-//            if (!TextUtils.isEmpty(profileImageUrl)) {
-//                try {
-//                    final String url = NPWebServiceUtil.fullUrlWithAuthenticationTokens(profileImageUrl, getActivity());
-//
-//                    mPicasso.load(url)
-//                            .placeholder(R.drawable.placeholder)
-//                            .error(R.drawable.ic_launcher)
-//                            .into(holder.icon);
-//
-//                } catch (NPException e) {
-//                    throw new RuntimeException(e);
-//                }
-//            }
+            final String profileImageUrl = p.getProfileImageUrl();
+
+            if (!TextUtils.isEmpty(profileImageUrl)) {
+                try {
+                    final String url = NPWebServiceUtil.fullUrlWithAuthenticationTokens(profileImageUrl, mActivity);
+
+	                Ion.with(mActivity)
+			                .load(url)
+			                .withBitmap()
+			                .placeholder(R.drawable.placeholder)
+			                .intoImageView(holder.getIcon());
+
+                } catch (NPException e) {
+                    throw new RuntimeException(e);
+                }
+            } else {
+	            holder.getIcon().setImageDrawable(mActivity.getResources().getDrawable(R.drawable.avatar));
+            }
 
 			holder.getText1().setText(getDisplayTitle(position));
 			holder.getMenu().setOnClickListener(getOnMenuClickListener());

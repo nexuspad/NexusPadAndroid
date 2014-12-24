@@ -6,6 +6,7 @@ package com.nexuspad.doc.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import com.nexuspad.common.Constants;
 import com.nexuspad.common.activity.EntryEditActivity;
@@ -68,12 +69,19 @@ public class DocEditActivity extends EntryEditActivity<NPDoc> implements DocEdit
 
     @Override
     protected Fragment onCreateFragment() {
-        return DocEditFragment.of(getEntry(), getFolder());
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(Constants.KEY_ENTRY, mEntry);
+        bundle.putParcelable(Constants.KEY_FOLDER, mFolder);
+
+        DocEditFragment fragment = new DocEditFragment();
+        fragment.setArguments(bundle);
+
+        return fragment;
     }
 
     @Override
     protected Intent getGoBackIntent(Class<?> activity) {
-        return super.getGoBackIntent(activity).putExtra(Constants.KEY_FOLDER, getFolder());
+        return super.getGoBackIntent(activity).putExtra(Constants.KEY_FOLDER, mFolder);
     }
 
     @Override

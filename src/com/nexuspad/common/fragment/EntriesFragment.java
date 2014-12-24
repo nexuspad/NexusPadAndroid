@@ -78,8 +78,6 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 	protected TextView mFolderSelectorView;
 	protected ListView mListView;
 
-	protected View mEmptyFolderView;
-
 	protected String mCurrentSearchKeyword;
 
 	/** Keep private to force using getAdapter and setAdapter */
@@ -105,42 +103,40 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 		@Override
 		protected void onReceiveFolderListing(Context c, Intent i, EntryTemplate entryTemplate, String key) {
 			if (mModuleInfo.template().equals(entryTemplate)) {
-				EntryList entryList = getEntryListService().getEntryListFromKey(key);
+				EntryList newEntryList = getEntryListService().getEntryListFromKey(key);
 
 				if (mEntryList == null) {
-					mEntryList = entryList;
-
+					mEntryList = newEntryList;
 					mEntryList.setEntryUpdated(true);
 
 				} else {
 
-					if (mEntryList.getFolder().getFolderId() != entryList.getFolder().getFolderId()) {
-						mEntryList = entryList;
+					if (mEntryList.getFolder().getFolderId() != newEntryList.getFolder().getFolderId()) {
+						mEntryList = newEntryList;
 
 					} else {
-						/*
-						 * Handles the pagination.
-						 */
-						final List<NPEntry> oldEntries = mEntryList.getEntries();
-						final List<NPEntry> newEntries = entryList.getEntries();
 
-						int sameEntryCount = 0;
+						/*
+						 * Handles loading next pages.
+						 */
+						final List<NPEntry> existingEntries = mEntryList.getEntries();
+						List<NPEntry> newEntries = newEntryList.getEntries();
+
+						boolean entryAdded = false;
 						for (NPEntry newEntry : newEntries) {
-							if (!Iterables.tryFind(oldEntries, newEntry.filterById()).isPresent()) {
-								oldEntries.add(newEntry);
-							} else {
-								// entry is already in the list
-								sameEntryCount++;
+							if (!existingEntries.contains(newEntry)) {
+								existingEntries.add(EntryFactory.copyEntry(newEntry));
+								entryAdded = true;
 							}
 						}
 
-						mEntryList.setPageId(entryList.getPageId());
-
-						if (sameEntryCount == oldEntries.size()) {
+						if (entryAdded) {
 							mEntryList.setEntryUpdated(true);
 						} else {
 							mEntryList.setEntryUpdated(false);
 						}
+
+						mEntryList.setPageId(newEntryList.getPageId());
 					}
 				}
 
@@ -150,7 +146,12 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 				} else {
 					if (mModuleInfo.moduleId() == NPModule.CONTACT) {
 						Collections.sort(mEntryList.getEntries(), NPPerson.ORDERING_BY_LAST_NAME);
+					} else if (mModuleInfo.moduleId() == NPModule.CALENDAR) {
+						Collections.sort(mEntryList.getEntries(), NPEvent.ORDERING_BY_STARTING_TIME);
+					} else {
+						Collections.sort(mEntryList.getEntries(), NPEntry.ORDERING_BY_UPDATE_TIME);
 					}
+
 					onListLoaded(mEntryList);
 				}
 			}
@@ -163,7 +164,7 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 				mCurrentSearchKeyword = nullToEmpty(entryList.getKeyword());
 
 				onSearchLoaded(entryList);
-				dismissProgressIndicator();
+				hideProgressIndicatorAndShowMainList();
 			}
 		}
 
@@ -289,7 +290,7 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 	protected void doSearch(String keyword) {
 		Log.i(TAG, "Search keyword: " + keyword);
 
-		displayProgressIndicator();
+		showProgressIndicator();
 		mCurrentSearchKeyword = keyword;
 
 		try {
@@ -300,7 +301,7 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 	}
 
 	protected void reDisplayListEntries() {
-		dismissProgressIndicator();
+		hideProgressIndicatorAndShowMainList();
 
 		// Need to reset the scroll listener.
 		mLoadMoreScrollListener.reset();
@@ -360,6 +361,7 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 			} else {
 				Log.w(TAG, "Entry deleted on the server, but ID does not exists in the list");
 			}
+			refreshUIAfterUpdatingEntryList();
 		}
 	}
 
@@ -423,7 +425,7 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.list_content, container, false);
+		return inflater.inflate(R.layout.main_list, container, false);
 	}
 
 
@@ -448,15 +450,16 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 		/*
 		 * progress frame and retry button
 		 */
+		final View emptyFolderView = view.findViewById(R.id.frame_empty_folder);
 		final View progressFrame = view.findViewById(R.id.frame_progress);
 		final View retryFrame = view.findViewById(R.id.frame_retry);
 
 		if (mListFrame != null && progressFrame != null && retryFrame != null) {
 			if (mLoadingUiManager == null) {
-				mLoadingUiManager = new LoadingUiManager(mListFrame, retryFrame, progressFrame, new View.OnClickListener() {
+				mLoadingUiManager = new LoadingUiManager(mListFrame, emptyFolderView, retryFrame, progressFrame, new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						mLoadingUiManager.fadeInProgressFrame();
+						mLoadingUiManager.showProgressView();
 						onRetryClicked(v);
 					}
 				});
@@ -468,13 +471,6 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 		 */
 		if (mBottomOverlayView == null) {
 			mBottomOverlayView = view.findViewById(R.id.bottom_overlay);
-		}
-
-		/*
-		 * empty folder
-		 */
-		if (mEmptyFolderView == null) {
-			mEmptyFolderView = view.findViewById(R.id.frame_empty_folder);
 		}
 
 		/*
@@ -506,14 +502,6 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 		}
 	}
 
-	protected void clearVisualIndicator() {
-		dismissProgressIndicator();
-
-		if (mListFrame instanceof SwipeRefreshLayout) {
-			((SwipeRefreshLayout)mListFrame).setRefreshing(false);
-		}
-	}
-
 	protected boolean isAutoLoadMoreEnabled() {
 		return true;
 	}
@@ -531,81 +519,6 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 	public void onRefresh() {
 		Log.i(TAG, "Implement swipe refresh....");
 	}
-
-	@Override
-	public void onUndoButtonClicked(Intent token) {
-		if (token != null) {
-			final String action = token.getAction();
-			final NPEntry entry = token.getParcelableExtra(Constants.KEY_ENTRY);
-			final NPFolder folder = token.getParcelableExtra(FolderService.KEY_FOLDER);
-			final int position = token.getIntExtra(KEY_LIST_POS, 0);
-
-			if (EntryService.ACTION_DELETE.equals(action)) {
-				final List<NPEntry> entries = getEntryList().getEntries();
-				entries.add(position, entry);
-				refreshUIAfterUpdatingEntryList();
-
-			} else if (FolderService.ACTION_DELETE.equals(action)) {
-				final List<NPFolder> subFolders = getSubFolders();
-				subFolders.add(position, folder);
-				refreshUIAfterUpdatingEntryList();
-			}
-		}
-	}
-
-	@Override
-	public void onUndoBarShown(Intent token) {
-		if (token != null) {
-			final String action = token.getAction();
-			final NPEntry entry = token.getParcelableExtra(Constants.KEY_ENTRY);
-			final NPFolder folder = token.getParcelableExtra(FolderService.KEY_FOLDER);
-
-			if (EntryService.ACTION_DELETE.equals(action)) {
-				final EntryList entryList = getEntryList();
-				if (entryList != null) {
-					final List<NPEntry> entries = entryList.getEntries();
-					final int i = Iterables.indexOf(entries, entry.filterById());
-					if (i >= 0) {
-						entries.remove(i);
-						token.putExtra(KEY_LIST_POS, i);
-						refreshUIAfterUpdatingEntryList();
-					} else {
-						Log.w(TAG, "deleting entry, but no matching ID exists in the list. " + entry.getEntryId());
-					}
-				}
-			} else if (FolderService.ACTION_DELETE.equals(action)) {
-				if (mFolder.getFolderId() == folder.getParentId()) {
-					final List<NPFolder> subFolders = getSubFolders();
-					final int i = Iterables.indexOf(subFolders, folder.filterById());
-					if (i >= 0) {
-						subFolders.remove(i);
-						token.putExtra(KEY_LIST_POS, i);
-						refreshUIAfterUpdatingEntryList();
-					} else {
-						Log.w(TAG, "deleting folder, but no matching ID found in the list. " + folder);
-					}
-				}
-			}
-		}
-	}
-
-	/**
-	 * When the unbar is finally hidden, call the service API to delete the entry.
-	 *
-	 * @param token
-	 */
-	@Override
-	public void onUndoBarHidden(Intent token) {
-		if (token != null) {
-			final String action = token.getAction();
-			final NPEntry entry = token.getParcelableExtra(Constants.KEY_ENTRY);
-
-			if (EntryService.ACTION_DELETE.equals(action)) {
-				getEntryService().safeDeleteEntry(getActivity(), entry);
-			}
-		}
-	}
-
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -680,14 +593,8 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 	 * @param newListToDisplay
 	 */
 	protected void onListLoaded(EntryList newListToDisplay) {
-		// Update the listener state
-		Log.i(TAG, "Set the load more listener's page Id to: " + newListToDisplay.getPageId());
-		mLoadMoreScrollListener.setCurrentPage(newListToDisplay.getPageId());
-
-		if (newListToDisplay.isEmpty()) {
-			showEmptyFolderView(true);
-		} else {
-			showEmptyFolderView(false);
+		if (mListFrame instanceof SwipeRefreshLayout) {
+			((SwipeRefreshLayout)mListFrame).setRefreshing(false);
 		}
 	}
 
@@ -698,13 +605,7 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 	 * @param list the filtered entries
 	 */
 	protected void onSearchLoaded(EntryList list) {
-		((EntriesAdapter)getAdapter()).setDisplayEntryList(list);
-
-		if (list.isEmpty()) {
-			showEmptyFolderView(true);
-		} else {
-			showEmptyFolderView(false);
-		}
+		Log.e(TAG, "No onSearchLoaded implementation. Must be implemented in subclass.");
 	}
 
 	public void deleteEntry(NPEntry entry) {
@@ -773,17 +674,6 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 		return mFolderSelectorView;
 	}
 
-	protected void showEmptyFolderView(boolean showIt) {
-		if (mEmptyFolderView != null) {
-			mLoadingUiManager.fadeOutProgressFrame();
-
-			if (showIt) {
-				mEmptyFolderView.setVisibility(View.VISIBLE);
-			} else {
-				mEmptyFolderView.setVisibility(View.GONE);
-			}
-		}
-	}
 
 	public EntryList getEntryList() {
 		if (mEntryList == null) {
@@ -807,7 +697,7 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 		return mCurrentPage;
 	}
 
-	public final EntryService getEntryService() {
+	public EntryService getEntryService() {
 		if (mEntryService == null) {
 			mEntryService = EntryService.getInstance(getActivity());
 		}
@@ -819,6 +709,81 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 			mEntryListService = EntryListService.getInstance(getActivity());
 		}
 		return mEntryListService;
+	}
+
+
+	@Override
+	public void onUndoButtonClicked(Intent token) {
+		if (token != null) {
+			final String action = token.getAction();
+			final NPEntry entry = token.getParcelableExtra(Constants.KEY_ENTRY);
+			final NPFolder folder = token.getParcelableExtra(FolderService.KEY_FOLDER);
+			final int position = token.getIntExtra(KEY_LIST_POS, 0);
+
+			if (EntryService.ACTION_DELETE.equals(action)) {
+				final List<NPEntry> entries = getEntryList().getEntries();
+				entries.add(position, entry);
+				refreshUIAfterUpdatingEntryList();
+
+			} else if (FolderService.ACTION_DELETE.equals(action)) {
+				final List<NPFolder> subFolders = getSubFolders();
+				subFolders.add(position, folder);
+				refreshUIAfterUpdatingEntryList();
+			}
+		}
+	}
+
+	@Override
+	public void onUndoBarShown(Intent token) {
+		if (token != null) {
+			final String action = token.getAction();
+			final NPEntry entry = token.getParcelableExtra(Constants.KEY_ENTRY);
+			final NPFolder folder = token.getParcelableExtra(FolderService.KEY_FOLDER);
+
+			if (EntryService.ACTION_DELETE.equals(action)) {
+				final EntryList entryList = getEntryList();
+				if (entryList != null) {
+					final List<NPEntry> entries = entryList.getEntries();
+					final int i = Iterables.indexOf(entries, entry.filterById());
+					if (i >= 0) {
+						entries.remove(i);
+						token.putExtra(KEY_LIST_POS, i);
+						refreshUIAfterUpdatingEntryList();
+					} else {
+						Log.w(TAG, "deleting entry, but no matching ID exists in the list. " + entry.getEntryId());
+					}
+				}
+			} else if (FolderService.ACTION_DELETE.equals(action)) {
+				if (mFolder.getFolderId() == folder.getParentId()) {
+					final List<NPFolder> subFolders = getSubFolders();
+					final int i = Iterables.indexOf(subFolders, folder.filterById());
+					if (i >= 0) {
+						subFolders.remove(i);
+						token.putExtra(KEY_LIST_POS, i);
+						refreshUIAfterUpdatingEntryList();
+					} else {
+						Log.w(TAG, "deleting folder, but no matching ID found in the list. " + folder);
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * When the unbar is finally hidden, call the service API to delete the entry.
+	 *
+	 * @param token
+	 */
+	@Override
+	public void onUndoBarFinishShowing(Intent token) {
+		if (token != null) {
+			final String action = token.getAction();
+			final NPEntry entry = token.getParcelableExtra(Constants.KEY_ENTRY);
+
+			if (EntryService.ACTION_DELETE.equals(action)) {
+				getEntryService().safeDeleteEntry(getActivity(), entry);
+			}
+		}
 	}
 
 }

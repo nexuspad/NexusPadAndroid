@@ -2,6 +2,7 @@ package com.nexuspad.photo.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import com.nexuspad.common.Constants;
 import com.nexuspad.common.activity.EntryEditActivity;
@@ -31,7 +32,14 @@ public class AlbumEditActivity extends EntryEditActivity<NPAlbum> {
 
     @Override
     protected Fragment onCreateFragment() {
-        return AlbumEditFragment.of(getEntry(), getFolder());
+        final Bundle bundle = new Bundle();
+        bundle.putParcelable(Constants.KEY_ENTRY, mEntry);
+        bundle.putParcelable(Constants.KEY_FOLDER, mFolder);
+
+        final AlbumEditFragment fragment = new AlbumEditFragment();
+        fragment.setArguments(bundle);
+
+        return fragment;
     }
 
     @Override

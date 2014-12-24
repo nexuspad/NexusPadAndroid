@@ -9,6 +9,7 @@ import android.widget.*;
 import com.android.datetimepicker.date.DatePickerDialog;
 import com.nexuspad.R;
 import com.nexuspad.calendar.view.DateButton;
+import com.nexuspad.common.Constants;
 import com.nexuspad.service.datamodel.Recurrence;
 import com.nexuspad.service.util.DateUtil;
 
@@ -20,17 +21,6 @@ import java.util.Date;
  */
 public class RecurrenceEditFragment extends DialogFragment {
 	public static final String TAG = "RecurrenceEditFragment";
-	public static final String KEY_RECURRENCE = "key_recurrence";
-
-	public static RecurrenceEditFragment of (Recurrence recurrence) {
-		final Bundle bundle = new Bundle();
-		bundle.putParcelable(KEY_RECURRENCE, recurrence);
-
-		final RecurrenceEditFragment fragment = new RecurrenceEditFragment();
-		fragment.setArguments(bundle);
-
-		return fragment;
-	}
 
 	private Recurrence mRecurrence;
 
@@ -56,6 +46,11 @@ public class RecurrenceEditFragment extends DialogFragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		final Bundle bundle = savedInstanceState == null ? getArguments() : savedInstanceState;
+		if (bundle != null) {
+			mRecurrence = bundle.getParcelable(Constants.KEY_RECURRENCE);
+		}
 	}
 
 	@Override
@@ -155,7 +150,7 @@ public class RecurrenceEditFragment extends DialogFragment {
 		mRecurrenceTimesText = (TextView)view.findViewById(R.id.txt_repeat_times);
 
 		// Repeat times "-"
-		mReduceRepeatTimesButton = (Button)view.findViewById(R.id.btn_reduce_interval);
+		mReduceRepeatTimesButton = (Button)view.findViewById(R.id.btn_reduce_repeat_times);
 		mReduceRepeatTimesButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -267,6 +262,8 @@ public class RecurrenceEditFragment extends DialogFragment {
 			mIntervalView.setVisibility(View.VISIBLE);
 			mRecurTimesView.setVisibility(View.VISIBLE);
 
+			setRecurrenceEnd();
+
 		} else {
 			mNoRecurrenceRadioButton.setChecked(true);
 			mIntervalView.setVisibility(View.GONE);
@@ -295,6 +292,18 @@ public class RecurrenceEditFragment extends DialogFragment {
 			case YEARLY:
 				mRecurrenceIntervalText.setText(getString(R.string.recurrence_interval_yearly, mRecurrence.getInterval()));
 				break;
+		}
+	}
+
+	private void setRecurrenceEnd() {
+		if (mRecurrence != null) {
+			if (mRecurrence.isRepeatForever()) {
+				setRecurrenceEndUI(true);
+			} else if (mRecurrence.getEndDate() != null) {
+				setRecurrenceEndUI(mRecurrence.getEndDate());
+			} else {
+				setRecurrenceEndUI(mRecurrence.getRecurrenceTimes());
+			}
 		}
 	}
 

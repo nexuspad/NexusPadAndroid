@@ -19,6 +19,7 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import com.nexuspad.R;
 import com.nexuspad.common.Constants;
+import com.nexuspad.common.adapters.EntriesAdapter;
 import com.nexuspad.common.annotation.FragmentName;
 import com.nexuspad.common.annotation.ModuleInfo;
 import com.nexuspad.common.fragment.EntriesFragment;
@@ -72,8 +73,18 @@ public class PhotosFragment extends EntriesFragment implements OnItemClickListen
 			stableNotifyAdapter(a);
 		}
 
-		clearVisualIndicator();
+		if (newListToDisplay.isEmpty()) {
+			hideProgressIndicatorAndShowEmptyFolder();
+		} else {
+			hideProgressIndicatorAndShowMainList();
+		}
 	}
+
+	@Override
+	protected void onSearchLoaded(EntryList list) {
+		((EntriesAdapter)getAdapter()).setDisplayEntryList(list);
+	}
+
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

@@ -11,4 +11,7 @@ public class Constants {
 	public static final String KEY_PHOTO = "key_photo";
 	public static final String KEY_PHOTOS = "key_photos";
 
+	public static final String KEY_START_YMD = "key_start_ymd";
+	public static final String KEY_END_YMD = "key_end_ymd";
+	public static final String KEY_RECURRENCE = "key_recurrence";
 }

@@ -171,7 +171,7 @@ public class FoldersNavigatorFragment extends UndoBarFragment implements SwipeRe
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.list_content, container, false);
+		return inflater.inflate(R.layout.main_list, container, false);
 	}
 
 
@@ -186,11 +186,13 @@ public class FoldersNavigatorFragment extends UndoBarFragment implements SwipeRe
 		final View progressFrame = view.findViewById(R.id.frame_progress);
 		final View retryFrame = view.findViewById(R.id.frame_retry);
 
+		final View emptyFolderView = view.findViewById(R.id.frame_empty_folder);
+
 		if (mListFrame != null && progressFrame != null && retryFrame != null) {
-			mLoadingUiManager = new LoadingUiManager(mListFrame, retryFrame, progressFrame, new View.OnClickListener() {
+			mLoadingUiManager = new LoadingUiManager(mListFrame, emptyFolderView, retryFrame, progressFrame, new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					mLoadingUiManager.fadeInProgressFrame();
+					mLoadingUiManager.showProgressView();
 					onRetryClicked(v);
 				}
 			});
@@ -260,7 +262,7 @@ public class FoldersNavigatorFragment extends UndoBarFragment implements SwipeRe
 
 		mListView.setAdapter(mFoldersAdapter);
 
-		dismissProgressIndicator();
+		hideProgressIndicatorAndShowMainList();
 		((SwipeRefreshLayout)mListFrame).setRefreshing(false);
 	}
 
@@ -299,7 +301,7 @@ public class FoldersNavigatorFragment extends UndoBarFragment implements SwipeRe
 	}
 
 	@Override
-	public void onUndoBarHidden(Intent token) {
+	public void onUndoBarFinishShowing(Intent token) {
 		if (token != null) {
 			final String action = token.getAction();
 			final NPFolder folder = token.getParcelableExtra(FolderService.KEY_FOLDER);

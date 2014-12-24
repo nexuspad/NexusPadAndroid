@@ -96,21 +96,29 @@ public class JournalsFragment extends EntriesFragment {
 	 * Save the journals in the fragments, get the edited text before saving.
 	 */
 	private void saveJournalsInFragments() {
-		final EntryService entryService = getEntryService();
+		final JournalService journalService = (JournalService)getEntryService();
 		final FragmentActivity activity = getActivity();
 
 		if (mPagerAdapter != null) {
 			List<JournalEditFragment> frags = mPagerAdapter.getJournalEditFragments();
 			for (JournalEditFragment frag : frags) {
 				if (frag.journalEdited()) {
-					NPJournal updatedJournal = frag.getUpdatedJournal();
-					if (!isNullOrEmpty(updatedJournal.getNote())) {
-						Log.i(TAG, "Save journal for: " + updatedJournal.getJournalYmd());
-						entryService.safePutEntry(activity, updatedJournal);
+					NPJournal j = mJournals.get(frag.getJournalDateYmd());
+					j.setNote(frag.getJournalText());
+					if (!isNullOrEmpty(j.getNote())) {
+						journalService.saveJournal(activity, j);
 					}
 				}
 			}
 		}
+	}
+
+	@Override
+	public EntryService getEntryService() {
+		if (mEntryService == null) {
+			mEntryService = JournalService.getInstance(getActivity());
+		}
+		return mEntryService;
 	}
 
 	public void setDisplayDate(long date) {
@@ -145,7 +153,7 @@ public class JournalsFragment extends EntriesFragment {
 	protected void onListLoaded(EntryList newListToDisplay) {
 		Log.i(TAG, "Receiving entry list.");
 
-		dismissProgressIndicator();
+		hideProgressIndicatorAndShowMainList();
 
 		mJournals.clear();
 
@@ -168,6 +176,11 @@ public class JournalsFragment extends EntriesFragment {
 			if (journal == null) {
 				journal = createJournalForDate(theDay);
 			}
+
+			if (journal.getFolder() == null) {
+				journal.setFolder(NPFolder.rootFolderOf(NPModule.JOURNAL));
+			}
+
 			mJournals.put(journal.getJournalYmd(), journal);
 		}
 
@@ -258,9 +271,8 @@ public class JournalsFragment extends EntriesFragment {
 	 */
 	@Override
 	protected void onGetEntry(NPEntry entry) {
-		Log.i(TAG, "Receive journal");
-
 		NPJournal j = NPJournal.fromEntry(entry);
+		Log.i(TAG, "Received journal for: " + j.getJournalYmd());
 		mJournals.put(j.getJournalYmd(), j);
 	}
 
@@ -271,6 +283,8 @@ public class JournalsFragment extends EntriesFragment {
 	 * @return
 	 */
 	private NPJournal getJournal(String ymd) {
+		Log.i(TAG, "Get journal from the stored journal list: " + ymd);
+
 		NPJournal j = mJournals.get(ymd);
 		if (j == null) {
 			j = new NPJournal();
@@ -283,12 +297,21 @@ public class JournalsFragment extends EntriesFragment {
 	private NPJournal createJournalForDate(Date date) {
 		final NPJournal emptyJournal = new NPJournal(NPFolder.rootFolderOf(NPModule.JOURNAL));
 		emptyJournal.setCreateTime(date);
+
+		try {
+			NPUser owner = AccountManager.currentAccount();
+			emptyJournal.setAccessInfo(new AccessEntitlement(owner, owner));
+
+		} catch (NPException e) {
+			e.printStackTrace();
+		}
+
 		return emptyJournal;
 	}
 
 	private JournalService getJournalService() {
 		if (mJournalService == null) {
-			mJournalService = new JournalService(getActivity());
+			mJournalService = JournalService.getInstance(getActivity());
 		}
 		return mJournalService;
 	}

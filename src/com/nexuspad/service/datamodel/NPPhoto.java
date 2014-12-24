@@ -57,16 +57,24 @@ public class NPPhoto extends NPEntry {
         p.writeParcelable(uploadImage, 0);
     }
 
-	public NPPhoto(NPEntry entry) {
-		super(entry);
-	}
+    public NPPhoto(NPPhoto other) {
+        super(other);
 
-	public static NPPhoto fromEntry(NPEntry entry) {
-		if (entry instanceof NPPhoto) {
-			return (NPPhoto)entry;
-		}
-		return new NPPhoto(entry);
-	}
+        tnUrl = other.tnUrl;
+        photoUrl = other.photoUrl;
+        uploadImage = new NPUpload(other.getUploadImage());
+    }
+
+    public NPPhoto(NPEntry entry) {
+        super(entry);
+    }
+
+    public static NPPhoto fromEntry(NPEntry entry) {
+        if (entry instanceof NPPhoto) {
+            return (NPPhoto)entry;
+        }
+        return new NPPhoto(entry);
+    }
 
     /**
      * Converts a {@link NPUpload} to a {@link com.nexuspad.service.datamodel.NPPhoto}
@@ -75,7 +83,7 @@ public class NPPhoto extends NPEntry {
      */
     public NPPhoto(NPUpload upload) {
         this(upload.getFolder());
-	    entryId = upload.entryId;
+        entryId = upload.entryId;
         photoUrl = upload.getLightBoxUrl();
         tnUrl = upload.getTnUrl();
         uploadImage = upload;

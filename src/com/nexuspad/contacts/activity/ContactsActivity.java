@@ -19,7 +19,6 @@ public class ContactsActivity extends EntriesActivity {
     protected Fragment onCreateFragment() {
 	    final Bundle bundle = new Bundle();
 	    bundle.putParcelable(Constants.KEY_FOLDER, mFolder);
-
 	    final ContactsFragment fragment = new ContactsFragment();
 	    fragment.setArguments(bundle);
 

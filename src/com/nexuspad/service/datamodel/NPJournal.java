@@ -29,10 +29,17 @@ public class NPJournal extends NPEntry {
 
     private NPJournal(Parcel p) {
         super(p);
+        folder = NPFolder.rootFolderOf(NPModule.JOURNAL);
     }
 
     public NPJournal() {
         super(EntryTemplate.JOURNAL);
+        folder = NPFolder.rootFolderOf(NPModule.JOURNAL);
+    }
+
+    public NPJournal(NPJournal other) {
+        super(other);
+        journalYmd = other.journalYmd;
     }
 
     public NPJournal(NPFolder folder) {
@@ -41,10 +48,14 @@ public class NPJournal extends NPEntry {
 
     public NPJournal(JSONObject jsonObj) {
         super(jsonObj, EntryTemplate.JOURNAL);
+        folder = NPFolder.rootFolderOf(NPModule.JOURNAL);
+        journalYmd = this.getFeatureValue(ServiceConstants.JOURNAL_DATE);
     }
 
     public NPJournal(NPEntry anEntry) {
         super(anEntry);
+        folder = NPFolder.rootFolderOf(NPModule.JOURNAL);
+        journalYmd = this.getFeatureValue(ServiceConstants.JOURNAL_DATE);
     }
 
 	public static NPJournal fromEntry(NPEntry entry) {
@@ -53,6 +64,11 @@ public class NPJournal extends NPEntry {
 		}
 		return new NPJournal(entry);
 	}
+
+    @Override
+    public String toString() {
+        return "journal_date:" + journalYmd + "\n" + super.toString();
+    }
 
     @Override
     public Map<String, String> toMap() {

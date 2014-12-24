@@ -12,8 +12,8 @@ import static android.view.animation.AnimationUtils.loadAnimation;
 /**
  * Created by ren on 7/23/14.
  */
-public class NPBaseFragment extends Fragment {
-	public static final String TAG = NPBaseFragment.class.getSimpleName();
+public class NPBaseListFragment extends Fragment {
+	public static final String TAG = NPBaseListFragment.class.getSimpleName();
 
 	protected LoadingUiManager mLoadingUiManager;
 
@@ -38,36 +38,49 @@ public class NPBaseFragment extends Fragment {
 	/**
 	 * Fade out the progress or retrying screen element.
 	 */
-	protected void dismissProgressIndicator() {
+	protected void hideProgressIndicatorAndShowMainList() {
 		if (mLoadingUiManager != null)
-			mLoadingUiManager.fadeInListFrame();
+			mLoadingUiManager.showListView();
 	}
 
-	protected void displayProgressIndicator() {
+	protected void hideProgressIndicatorAndShowEmptyFolder() {
 		if (mLoadingUiManager != null)
-			mLoadingUiManager.fadeInProgressFrame();
+			mLoadingUiManager.showEmptyFolderView();
+	}
+
+	protected void showProgressIndicator() {
+		if (mLoadingUiManager != null)
+			mLoadingUiManager.showProgressView();
 	}
 
 	protected void displayRetry() {
 		if (mLoadingUiManager != null)
-			mLoadingUiManager.fadeInRetryFrame();
+			mLoadingUiManager.showRetryView();
 	}
 
 	protected static final class LoadingUiManager {
 		private final View mMainListViewFrame;
 		private final View mRetryView;
 		private final View mProgressView;
+
+		private final View mEmptyFolderView;
+
 		private final Animation mFadeOutAnimation;
 		private final Animation mFadeInAnimation;
 
-		protected LoadingUiManager(View listV, View retryV, View progressV, View.OnClickListener onRetryListener) {
+		protected LoadingUiManager(View listV, View emptyFolderView, View retryV, View progressV, View.OnClickListener onRetryListener) {
 			mMainListViewFrame = listV;
+			mEmptyFolderView = emptyFolderView;
 			mRetryView = retryV;
 			mProgressView = progressV;
 
 			mProgressView.setVisibility(View.VISIBLE);
 			mRetryView.setVisibility(View.GONE);
 			mMainListViewFrame.setVisibility(View.GONE);
+
+			if (mEmptyFolderView != null) {
+				mEmptyFolderView.setVisibility(View.GONE);
+			}
 
 			final Context context = listV.getContext();
 			mFadeOutAnimation = loadAnimation(context, android.R.anim.fade_out);
@@ -76,9 +89,14 @@ public class NPBaseFragment extends Fragment {
 			mRetryView.findViewById(R.id.btn_retry).setOnClickListener(onRetryListener);
 		}
 
-		protected void fadeInListFrame() {
+		protected void showListView() {
 			boolean isRetryVisible = mRetryView.getVisibility() == View.VISIBLE;
 			boolean isProgressVisible = mProgressView.getVisibility() == View.VISIBLE;
+			boolean isEmptyFolderViewVisible = mEmptyFolderView != null && mEmptyFolderView.getVisibility() == View.VISIBLE ? true : false;
+
+			if (isEmptyFolderViewVisible) {
+				fadeOut(mEmptyFolderView);
+			}
 
 			if (isRetryVisible) {
 				fadeOut(mRetryView);
@@ -91,7 +109,21 @@ public class NPBaseFragment extends Fragment {
 			fadeIn(mMainListViewFrame);
 		}
 
-		protected void fadeInRetryFrame() {
+		protected void showEmptyFolderView() {
+			boolean isListVisible = mMainListViewFrame.getVisibility() == View.VISIBLE;
+			boolean isProgressVisible = mProgressView.getVisibility() == View.VISIBLE;
+
+			if (isListVisible) {
+				fadeOut(mMainListViewFrame);
+			}
+			if (isProgressVisible) {
+				fadeOut(mProgressView);
+			}
+
+			fadeIn(mEmptyFolderView);
+		}
+
+		protected void showRetryView() {
 			boolean isListVisible = mMainListViewFrame.getVisibility() == View.VISIBLE;
 			boolean isProgressVisible = mProgressView.getVisibility() == View.VISIBLE;
 
@@ -105,9 +137,14 @@ public class NPBaseFragment extends Fragment {
 			fadeIn(mRetryView);
 		}
 
-		protected void fadeInProgressFrame() {
+		protected void showProgressView() {
 			boolean isListVisible = mMainListViewFrame.getVisibility() == View.VISIBLE;
 			boolean isRetryVisible = mRetryView.getVisibility() == View.VISIBLE;
+			boolean isEmptyFolderViewVisible = mEmptyFolderView != null && mEmptyFolderView.getVisibility() == View.VISIBLE ? true : false;
+
+			if (isEmptyFolderViewVisible) {
+				fadeOut(mEmptyFolderView);
+			}
 
 			if (isListVisible) {
 				fadeOut(mMainListViewFrame);
@@ -119,16 +156,18 @@ public class NPBaseFragment extends Fragment {
 			fadeIn(mProgressView);
 		}
 
-		protected void fadeOutProgressFrame() {
+		protected void hideProgressFrame() {
 			fadeOut(mProgressView);
 		}
 
 		private void fadeOut(View view) {
+			if (view == null) return;
 			view.startAnimation(mFadeOutAnimation);
 			view.setVisibility(View.GONE);
 		}
 
 		private void fadeIn(View view) {
+			if (view == null) return;
 			view.setVisibility(View.VISIBLE);
 			view.startAnimation(mFadeInAnimation);
 		}

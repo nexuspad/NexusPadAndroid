@@ -19,6 +19,10 @@ public class ListViewHolder {
 		return icon;
 	}
 
+	public void setIcon(ImageButton icon) {
+		this.icon = icon;
+	}
+
 	public TextView getText1() {
 		return text1;
 	}

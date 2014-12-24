@@ -4,8 +4,8 @@
     android:layout_height="match_parent">
 
     <include layout="@layout/include_frame_progress" />
-
     <include layout="@layout/include_frame_retry" />
+    <include layout="@layout/include_frame_empty_folder" />
 
     <include layout="@layout/photo_grid_view" />
 

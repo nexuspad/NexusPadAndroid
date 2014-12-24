@@ -2,6 +2,7 @@ package com.nexuspad.calendar.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import com.nexuspad.calendar.fragment.EventEditFragment;
 import com.nexuspad.common.Constants;
@@ -38,6 +39,13 @@ public class EventEditActivity extends EntryEditActivity<NPEvent> {
 
     @Override
     protected Fragment onCreateFragment() {
-        return EventEditFragment.of(getEntry(), getFolder());
+        final Bundle bundle = new Bundle();
+        bundle.putParcelable(Constants.KEY_ENTRY, mEntry);
+        bundle.putParcelable(Constants.KEY_FOLDER, mFolder);
+
+        final EventEditFragment fragment = new EventEditFragment();
+        fragment.setArguments(bundle);
+
+        return fragment;
     }
 }

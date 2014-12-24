@@ -81,7 +81,7 @@ public class EntryStore extends DataStore {
      * @param entry
      */
     public static void update(NPEntry entry) {
-        Logs.i("EntryStore", "Update the entry in data store: " + entry.toString());
+        //Logs.i("EntryStore", "Update the entry in data store: " + entry.toString());
 
         try {
             EntryDao entryDao = new EntryDao(DatabaseManager.getDb());

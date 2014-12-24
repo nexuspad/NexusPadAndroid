@@ -42,9 +42,7 @@ public class UndoBarController {
 
     public interface UndoBarListener {
         void onUndoBarShown(Intent token);
-
-        void onUndoBarHidden(Intent token);
-
+        void onUndoBarFinishShowing(Intent token);
         void onUndoButtonClicked(Intent token);
     }
 
@@ -54,15 +52,30 @@ public class UndoBarController {
         mUndoBarListener = undoBarListener;
 
         mMessageView = (TextView) mBarView.findViewById(R.id.undobar_message);
+
         mBarView.findViewById(R.id.undobar_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                hideUndoBar(false);
                 mUndoBarListener.onUndoButtonClicked(mUndoToken);
+
+                mBarAnimator.cancel();
+                mBarAnimator
+                        .alpha(0)
+                        .setDuration(mBarView.getResources().getInteger(android.R.integer.config_shortAnimTime))
+                        .setListener(new AnimatorListenerAdapter() {
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                mBarView.setVisibility(View.GONE);
+                                mUndoMessage = null;
+                                mUndoToken = null;
+                            }
+                        });
+
+                mHideHandler.removeCallbacks(mHideRunnable);
             }
         });
 
-        hideUndoBar(true);
+        mBarView.setVisibility(View.GONE);
     }
 
     public void showUndoBar(boolean immediate, CharSequence message, final Intent undoToken) {
@@ -76,6 +89,7 @@ public class UndoBarController {
         mHideHandler.postDelayed(mHideRunnable, resources.getInteger(R.integer.undobar_hide_delay));
 
         mBarView.setVisibility(View.VISIBLE);
+
         if (immediate) {
             mBarView.setAlpha(1);
             mUndoBarListener.onUndoBarShown(undoToken);
@@ -88,36 +102,6 @@ public class UndoBarController {
                         @Override
                         public void onAnimationEnd(Animator animation) {
                             mUndoBarListener.onUndoBarShown(undoToken);
-                        }
-                    });
-        }
-    }
-
-    public void hideUndoBar(boolean immediate) {
-        mHideHandler.removeCallbacks(mHideRunnable);
-        if (immediate) {
-            mBarView.setVisibility(View.GONE);
-            mBarView.setAlpha(0);
-
-            mUndoBarListener.onUndoBarHidden(mUndoToken);
-
-            mUndoMessage = null;
-            mUndoToken = null;
-
-        } else {
-            mBarAnimator.cancel();
-            mBarAnimator
-                    .alpha(0)
-                    .setDuration(mBarView.getResources().getInteger(android.R.integer.config_shortAnimTime))
-                    .setListener(new AnimatorListenerAdapter() {
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-                            mBarView.setVisibility(View.GONE);
-
-                            mUndoBarListener.onUndoBarHidden(mUndoToken);
-
-                            mUndoMessage = null;
-                            mUndoToken = null;
                         }
                     });
         }
@@ -142,7 +126,22 @@ public class UndoBarController {
     private Runnable mHideRunnable = new Runnable() {
         @Override
         public void run() {
-            hideUndoBar(false);
+            mHideHandler.removeCallbacks(mHideRunnable);
+
+            mBarAnimator.cancel();
+            mBarAnimator
+                    .alpha(0)
+                    .setDuration(mBarView.getResources().getInteger(android.R.integer.config_shortAnimTime))
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            mBarView.setVisibility(View.GONE);
+                            mUndoBarListener.onUndoBarFinishShowing(mUndoToken);
+                            mUndoMessage = null;
+                            mUndoToken = null;
+                        }
+                    });
+
         }
     };
 }

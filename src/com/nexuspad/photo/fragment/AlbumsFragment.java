@@ -67,8 +67,11 @@ public class AlbumsFragment extends EntriesFragment {
 		} else {
 			a.setDisplayEntryList(newListToDisplay);
 		}
+	}
 
-		clearVisualIndicator();
+	@Override
+	protected void onSearchLoaded(EntryList list) {
+		((EntriesAdapter)getAdapter()).setDisplayEntryList(list);
 	}
 
 

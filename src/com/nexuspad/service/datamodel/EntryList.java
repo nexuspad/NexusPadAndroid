@@ -144,6 +144,12 @@ public class EntryList <T extends NPEntry> implements Serializable {
         }
     }
 
+    public void empty() {
+        entries.clear();
+        totalCount = 0;
+        pageId = 0;
+    }
+
 	public boolean isEmpty() {
 		int itemsCount = entries.size() + (folder.getSubFolders() == null ? 0 : folder.getSubFolders().size());
 		if (itemsCount == 0) {

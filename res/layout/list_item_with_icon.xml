@@ -13,8 +13,9 @@
         android:id="@android:id/icon"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:maxWidth="48dp"
+        android:maxWidth="32dp"
         android:scaleType="centerInside"
+        android:adjustViewBounds="true"
         tools:ignore="ContentDescription" />
 
     <TextView

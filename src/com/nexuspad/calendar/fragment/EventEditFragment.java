@@ -96,7 +96,7 @@ public class EventEditFragment extends EntryEditFragment<NPEvent> {
 
 			case RECURRENCE_EDIT_REQUEST:
 				if (resultCode == Activity.RESULT_OK) {
-					Recurrence recurrence = data.getParcelableExtra(RecurrenceEditActivity.KEY_RECURRENCE);
+					Recurrence recurrence = data.getParcelableExtra(Constants.KEY_RECURRENCE);
 					updateRecurrenceView(recurrence);
 					getEntry().setRecurrence(recurrence);
 				}
@@ -124,7 +124,7 @@ public class EventEditFragment extends EntryEditFragment<NPEvent> {
 		mAllDayView = (CheckBox)view.findViewById(R.id.chk_all_day);
 		mRecurrenceView = (RecurrenceTextView)view.findViewById(R.id.txt_recurrence);
 		mTagsView = (EditText)view.findViewById(R.id.txt_tags);
-		mNoteView = (EditText)view.findViewById(R.id.journal_text);
+		mNoteView = (EditText)view.findViewById(R.id.txt_note);
 
 		final View.OnClickListener listener = new View.OnClickListener() {
 			@Override
@@ -145,7 +145,7 @@ public class EventEditFragment extends EntryEditFragment<NPEvent> {
 							@Override
 							public void onDateSet(DatePickerDialog dialog, int year, int monthOfYear, int dayOfMonth) {
 								mFromDateView.onDateSet(dialog, year, monthOfYear, dayOfMonth);
-								mStartYmd = String.format("%4d%02d%02d", year, monthOfYear, dayOfMonth);
+								mStartYmd = String.format("%4d%02d%02d", year, monthOfYear + 1, dayOfMonth);
 								updateEventFromEditor();
 							}
 						});
@@ -176,6 +176,7 @@ public class EventEditFragment extends EntryEditFragment<NPEvent> {
 							mFromTimeView.setVisibility(View.VISIBLE);
 							mToLayoutView.setVisibility(View.VISIBLE);
 						}
+						updateEventFromEditor();
 						break;
 
 					case R.id.spinner_to_day:
@@ -186,7 +187,7 @@ public class EventEditFragment extends EntryEditFragment<NPEvent> {
 							@Override
 							public void onDateSet(DatePickerDialog dialog, int year, int monthOfYear, int dayOfMonth) {
 								mToDateView.onDateSet(dialog, year, monthOfYear, dayOfMonth);
-								mEndYmd = String.format("%4d%02d%02d", year, monthOfYear, dayOfMonth);
+								mEndYmd = String.format("%4d%02d%02d", year, monthOfYear + 1, dayOfMonth);
 								updateEventFromEditor();
 							}
 						});
@@ -210,8 +211,9 @@ public class EventEditFragment extends EntryEditFragment<NPEvent> {
 						break;
 
 					case R.id.txt_recurrence:
-						final Intent recurrenceEditIntent = RecurrenceEditActivity.of(getActivity(), (Recurrence) mRecurrenceView.getTag());
-						startActivityForResult(recurrenceEditIntent, RECURRENCE_EDIT_REQUEST);
+						final Intent intent = new Intent(getActivity(), RecurrenceEditActivity.class);
+						intent.putExtra(Constants.KEY_RECURRENCE, getEntry().getRecurrence());
+						startActivityForResult(intent, RECURRENCE_EDIT_REQUEST);
 						break;
 
 					default:
@@ -327,7 +329,7 @@ public class EventEditFragment extends EntryEditFragment<NPEvent> {
 			updateRecurrenceView(event.getRecurrence());
 
 			mTagsView.setText(event.getTags());
-			mNoteView.setTag(event.getNote());
+			mNoteView.setText(event.getNote());
 		}
 	}
 
@@ -360,7 +362,7 @@ public class EventEditFragment extends EntryEditFragment<NPEvent> {
 	 * Update the entry object.
 	 * Called when the editor is updated.
 	 */
-	private void updateEventFromEditor() {
+	private NPEvent updateEventFromEditor() {
 		final NPEvent entry = getEntry();
 		NPEvent event = entry == null ? new NPEvent(getFolder()) : new NPEvent(entry);
 
@@ -397,7 +399,6 @@ public class EventEditFragment extends EntryEditFragment<NPEvent> {
 			// Set the flags
 			event.setAllDayEvent(mAllDayView.isChecked());
 			event.setSingleTimeEvent(false);
-			event.setNoStartingTime(true);
 			event.setEndTime(null);
 
 		} else {
@@ -415,12 +416,22 @@ public class EventEditFragment extends EntryEditFragment<NPEvent> {
 		event.setNote(mNoteView.getText().toString());
 
 		mEntry = event;
+
+		return event;
 	}
 
 	@Override
 	public NPEvent getEntryFromEditor() {
-		updateEventFromEditor();
-		return NPEvent.fromEntry(getEntry());
+		return updateEventFromEditor();
 	}
 
+	@Override
+	public NPEvent getEntry() {
+		if (mEntry == null) {
+			mEntry = new NPEvent(mFolder);
+			mEntry.setStartTime(DateUtil.now());
+		}
+
+		return mEntry;
+	}
 }

@@ -139,6 +139,7 @@ public abstract class ServiceConstants {
     public static final String MIDDLE_NAME = "mi";
 	public static final String FULL_NAME = "full_name";
     public static final String BUSINESS_NAME = "business";
+    public static final String CONTACT_WEBSITE = "contact_website";
     public static final String ADDRESS = "address";
     public static final String CITY = "city";
     public static final String PROVINCE = "province";

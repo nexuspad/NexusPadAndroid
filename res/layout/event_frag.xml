@@ -19,7 +19,7 @@
 
         <TextView
             android:id="@+id/lbl_date_time"
-            style="?android:attr/listSeparatorTextViewStyle"
+            style="@style/blockTextTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
