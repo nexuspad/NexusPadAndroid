@@ -64,6 +64,12 @@ public class DateUtil {
         //return android.text.format.DateFormat.format("yyyyMMdd", time).toString();
     }
 
+    public static Date dateFromTimestamp(long milliTs) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(milliTs);
+        return calendar.getTime();
+    }
+
     public static Date dateFromTimestampInSeconds(long ts) {
         long milliTs = ts * 1000;
         Calendar calendar = Calendar.getInstance();
@@ -124,6 +130,13 @@ public class DateUtil {
         final int otherDate = calendar.get(Calendar.DAY_OF_MONTH);
 
         return firstDate == otherDate;
+    }
+
+    public static boolean dateWithinDateRange(Date aDate, Date leftDate, Date rightDate) {
+        if (aDate.compareTo(leftDate) >= 0 && aDate.compareTo(rightDate) <= 0) {
+            return true;
+        }
+        return false;
     }
 
     public static int daysBetween(Date date, Date other) {

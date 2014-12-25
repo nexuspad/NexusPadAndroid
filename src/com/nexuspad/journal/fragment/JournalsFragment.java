@@ -3,6 +3,7 @@
  */
 package com.nexuspad.journal.fragment;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,14 +14,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
 import com.nexuspad.R;
-import com.nexuspad.common.annotation.ModuleInfo;
-import com.nexuspad.service.account.AccountManager;
 import com.nexuspad.app.App;
 import com.nexuspad.common.annotation.FragmentName;
+import com.nexuspad.common.annotation.ModuleInfo;
 import com.nexuspad.common.fragment.EntriesFragment;
+import com.nexuspad.service.account.AccountManager;
 import com.nexuspad.service.datamodel.*;
 import com.nexuspad.service.dataservice.EntryService;
 import com.nexuspad.service.dataservice.JournalService;
@@ -64,7 +63,6 @@ public class JournalsFragment extends EntriesFragment {
 
 	public interface JournalsCallback {
 		void onListLoaded(EntriesFragment f, EntryList list);
-		void onJournalSelected(JournalsFragment f, String dateString);
 	}
 
 	@Override
@@ -103,7 +101,8 @@ public class JournalsFragment extends EntriesFragment {
 			List<JournalEditFragment> frags = mPagerAdapter.getJournalEditFragments();
 			for (JournalEditFragment frag : frags) {
 				if (frag.journalEdited()) {
-					NPJournal j = mJournals.get(frag.getJournalDateYmd());
+					Log.i(TAG, "--------> Save journals in fragment...." + frag.getJournalDateYmd());
+					NPJournal j = getJournal(frag.getJournalDateYmd());
 					j.setNote(frag.getJournalText());
 					if (!isNullOrEmpty(j.getNote())) {
 						journalService.saveJournal(activity, j);
@@ -115,17 +114,21 @@ public class JournalsFragment extends EntriesFragment {
 
 	@Override
 	public EntryService getEntryService() {
-		if (mEntryService == null) {
+		if (mEntryService instanceof JournalService) {
+			return mEntryService;
+		} else {
 			mEntryService = JournalService.getInstance(getActivity());
 		}
 		return mEntryService;
 	}
 
-	public void setDisplayDate(long date) {
-		Log.i(TAG, "setDisplayDate is called...........");
-		Date selectedDate = new Date(date);
+	public void setDisplayDate(Date selectedDate) {
+		Log.i(TAG, "setDisplayDate is called on date: " + DateUtil.convertToYYYYMMDD(selectedDate));
 		mStartDate = DateUtil.addDaysTo(selectedDate, -1);
 		mEndDate = DateUtil.addDaysTo(selectedDate, 1);
+
+		saveJournalsInFragments();
+
 		queryEntriesAsync();
 	}
 
@@ -140,6 +143,8 @@ public class JournalsFragment extends EntriesFragment {
 			mEndDate = DateUtil.addDaysTo(today, 1);
 		}
 
+		Log.i(TAG, "Retrieve journals between " + DateUtil.convertToYYYYMMDD(mStartDate) + " and " + DateUtil.convertToYYYYMMDD(mEndDate));
+
 		try {
 			mFolder.setOwner(AccountManager.currentAccount());
 			getEntryListService().getEntriesBetweenDates(mFolder, EntryTemplate.JOURNAL, DateUtil.convertToYYYYMMDD(mStartDate),
@@ -151,40 +156,29 @@ public class JournalsFragment extends EntriesFragment {
 
 	@Override
 	protected void onListLoaded(EntryList newListToDisplay) {
-		Log.i(TAG, "Receiving entry list.");
+		Log.i(TAG, "Receiving journal list.");
 
 		hideProgressIndicatorAndShowMainList();
 
 		mJournals.clear();
 
-		List<NPJournal> journals = new ArrayList<NPJournal>();
 		for (NPEntry e : (List<? extends NPEntry>) newListToDisplay.getEntries()) {
-			journals.add(NPJournal.fromEntry(e));
+			NPJournal j = NPJournal.fromEntry(e);
+
+			// Since the journal list returned in EntryList can have journals outside mStartDate and mEndDate,
+			// we need to filter them out.
+			// mJournals should ALWAYS remain with the count of 3.
+			if (DateUtil.dateWithinDateRange(j.getCreateTime(), mStartDate, mEndDate)) {
+				mJournals.put(j.getJournalYmd(), j);
+			}
 		}
 
 		for (Date day = mStartDate; day.compareTo(mEndDate) <= 0; day = DateUtil.addDaysTo(day, 1)) {
-			final Date theDay = day;
-
-			NPJournal journal = Iterables.tryFind(journals, new Predicate<NPJournal>() {
-				@Override
-				public boolean apply(NPJournal journal) {
-					final Date time = journal.getCreateTime();
-					return DateUtil.isSameDay(time, theDay);
-				}
-			}).orNull();  // we won't call createJournalForDate() unless we have to; JAVA 8 LAMBDA PLS
-
-			if (journal == null) {
-				journal = createJournalForDate(theDay);
+			if (!mJournals.containsKey(DateUtil.convertToYYYYMMDD(day))) {
+				NPJournal j = createJournalForDate(DateUtil.convertToYYYYMMDD(day));
+				mJournals.put(j.getJournalYmd(), j);
 			}
-
-			if (journal.getFolder() == null) {
-				journal.setFolder(NPFolder.rootFolderOf(NPModule.JOURNAL));
-			}
-
-			mJournals.put(journal.getJournalYmd(), journal);
 		}
-
-		saveJournalsInFragments();
 
 		/*
 		 * Create adapter with initial journals.
@@ -241,15 +235,15 @@ public class JournalsFragment extends EntriesFragment {
 					mViewPager.setAdapter(mPagerAdapter);
 					mViewPager.setCurrentItem(CENTER_PAGE, false);
 
+					// Update the date in action bar based on the current pager item.
+					JournalEditFragment currentFrag = mPagerAdapter.getJournalEditFragment(mViewPager.getCurrentItem());
+					updateActionBarJournalDate(currentFrag.getJournalDateYmd());
+
 					try {
 						getJournalService().getJournal(retrieveJournalYmd);
 					} catch (NPException e) {
 						Log.e(TAG, "Error getting journal: " + e.toString());
 					}
-
-					// Update the date in action bar based on the current pager item.
-					JournalEditFragment currentFrag = mPagerAdapter.getJournalEditFragment(mViewPager.getCurrentItem());
-					mJournalsCallback.onJournalSelected(JournalsFragment.this, currentFrag.getJournalDateYmd());
 				}
 			}
 
@@ -261,7 +255,7 @@ public class JournalsFragment extends EntriesFragment {
 
 		// Update the date in action bar based on the current pager item.
 		JournalEditFragment currentFrag = mPagerAdapter.getJournalEditFragment(mViewPager.getCurrentItem());
-		mJournalsCallback.onJournalSelected(JournalsFragment.this, currentFrag.getJournalDateYmd());
+		updateActionBarJournalDate(currentFrag.getJournalDateYmd());
 	}
 
 	/**
@@ -287,16 +281,18 @@ public class JournalsFragment extends EntriesFragment {
 
 		NPJournal j = mJournals.get(ymd);
 		if (j == null) {
-			j = new NPJournal();
-			j.setJournalYmd(ymd);
+			j = createJournalForDate(ymd);
+			mJournals.put(ymd, j);
 		}
 
 		return j;
 	}
 
-	private NPJournal createJournalForDate(Date date) {
+	private NPJournal createJournalForDate(String ymd) {
 		final NPJournal emptyJournal = new NPJournal(NPFolder.rootFolderOf(NPModule.JOURNAL));
-		emptyJournal.setCreateTime(date);
+
+		emptyJournal.setCreateTime(DateUtil.parseFromYYYYMMDD(ymd));
+		emptyJournal.setJournalYmd(ymd);
 
 		try {
 			NPUser owner = AccountManager.currentAccount();
@@ -304,6 +300,10 @@ public class JournalsFragment extends EntriesFragment {
 
 		} catch (NPException e) {
 			e.printStackTrace();
+		}
+
+		if (emptyJournal.getFolder() == null) {
+			emptyJournal.setFolder(NPFolder.rootFolderOf(NPModule.JOURNAL));
 		}
 
 		return emptyJournal;
@@ -314,6 +314,17 @@ public class JournalsFragment extends EntriesFragment {
 			mJournalService = JournalService.getInstance(getActivity());
 		}
 		return mJournalService;
+	}
+
+	private void updateActionBarJournalDate(String ymd) {
+		Log.i(TAG, "Update action bar title to: " + ymd);
+
+		Date d = DateUtil.parseFromYYYYMMDD(ymd);
+
+		final ActionBar actionBar = getActivity().getActionBar();
+		if (actionBar != null) {
+			actionBar.setSubtitle(android.text.format.DateFormat.getDateFormat(getActivity()).format(d));
+		}
 	}
 
 
@@ -367,13 +378,11 @@ public class JournalsFragment extends EntriesFragment {
 
 		@Override
 		public Fragment getItem(int position) {
-			Log.i(TAG, "getItem called...." + String.valueOf(position));
 			return getJournalEditFragment(position);
 		}
 
 		@Override
 		public void destroyItem(ViewGroup container, int position, Object object) {
-			Log.i(TAG, "destroyItem called...." + String.valueOf(position));
 			super.destroyItem(container, position, object);
 		}
 

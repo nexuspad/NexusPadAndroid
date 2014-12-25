@@ -117,6 +117,8 @@ public class NPEntry extends NPObject {
 		webAddress = anEntry.webAddress;
 
 		featureValues = anEntry.featureValues;
+
+		mAccessInfo = anEntry.getAccessInfo();
 	}
 
 	public NPEntry(JSONObject jsonObj, EntryTemplate template) {

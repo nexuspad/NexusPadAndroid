@@ -122,8 +122,8 @@ public final class ContactsFragment extends EntriesFragment {
 			}
 		});
 
-		//mStickyHeaderContactListView.setItemsCanFocus(true);
 		mStickyHeaderContactListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+
 
 		if (mEntryList == null) {
 			queryEntriesAsync();

@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.DatePicker;
@@ -29,7 +28,6 @@ import com.nexuspad.service.datamodel.NPJournal;
 import com.nexuspad.service.dataservice.ServiceConstants;
 import com.nexuspad.service.util.DateUtil;
 
-import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -43,8 +41,7 @@ public class JournalsActivity extends EntriesActivity implements JournalsFragmen
 
 	private static final String KEY_PENDING_DISPLAY_DATE = "key_pending_display_date";
 
-	private DateFormat mDateFormat;
-	private long mPendingDisplayDate = -1;
+	private Date mPendingDisplayDate = null;
 
 	public class DatePickerFragment extends DialogFragment
 			implements DatePickerDialog.OnDateSetListener {
@@ -70,8 +67,7 @@ public class JournalsActivity extends EntriesActivity implements JournalsFragmen
 		 * @param day
 		 */
 		public void onDateSet(DatePicker view, int year, int month, int day) {
-			Date selectedDate = DateUtil.getDate(year, month, day);
-			getFragment().setDisplayDate(selectedDate.getTime());
+			getFragment().setDisplayDate(DateUtil.getDate(year, month, day));
 		}
 	}
 
@@ -115,8 +111,6 @@ public class JournalsActivity extends EntriesActivity implements JournalsFragmen
 	protected void onCreate(Bundle savedState) {
 		super.onCreate(savedState);
 
-		mDateFormat = android.text.format.DateFormat.getDateFormat(this);
-
 		final ActionBar actionBar = getActionBar();
 		if (actionBar != null) {
 			actionBar.setTitle(R.string.journal);
@@ -126,7 +120,7 @@ public class JournalsActivity extends EntriesActivity implements JournalsFragmen
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if (mPendingDisplayDate >= 0) {
+		if (mPendingDisplayDate != null) {
 			getFragment().setDisplayDate(mPendingDisplayDate);
 		}
 	}
@@ -134,13 +128,20 @@ public class JournalsActivity extends EntriesActivity implements JournalsFragmen
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putLong(KEY_PENDING_DISPLAY_DATE, mPendingDisplayDate);
+		if (mPendingDisplayDate != null) {
+			outState.putLong(KEY_PENDING_DISPLAY_DATE, mPendingDisplayDate.getTime());
+		}
 	}
 
 	@Override
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {
 		super.onRestoreInstanceState(savedInstanceState);
-		mPendingDisplayDate = savedInstanceState.getLong(KEY_PENDING_DISPLAY_DATE, -1);
+		long ts = savedInstanceState.getLong(KEY_PENDING_DISPLAY_DATE, -1);
+		if (ts != -1) {
+			mPendingDisplayDate = DateUtil.dateFromTimestampInSeconds(ts);
+		} else {
+			mPendingDisplayDate = DateUtil.now();
+		}
 	}
 
 	@Override
@@ -161,17 +162,5 @@ public class JournalsActivity extends EntriesActivity implements JournalsFragmen
 	@Override
 	protected JournalsFragment getFragment() {
 		return (JournalsFragment) super.getFragment();
-	}
-
-	@Override
-	public void onJournalSelected(JournalsFragment f, String ymd) {
-		Log.i(TAG, "Update action bar title to: " + ymd);
-
-		Date d = DateUtil.parseFromYYYYMMDD(ymd);
-
-		final ActionBar actionBar = getActionBar();
-		if (actionBar != null) {
-			actionBar.setSubtitle(android.text.format.DateFormat.getDateFormat(this).format(d));
-		}
 	}
 }

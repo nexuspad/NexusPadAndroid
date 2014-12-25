@@ -63,6 +63,7 @@
     <string name="delete">Delete</string>
     <string name="rename">Rename</string>
     <string name="empty_folder">The folder is empty</string>
+    <string name="empty_calendar">The calendar is empty</string>
     <string name="empty_bookmarks">No Bookmarks in this folder</string>
     <string name="empty_photos">No Photos in this folder</string>
     <string name="empty_contacts">No Contacts in this folder</string>

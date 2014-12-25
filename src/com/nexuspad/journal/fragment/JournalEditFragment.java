@@ -63,6 +63,10 @@ public class JournalEditFragment extends EntryEditFragment<NPJournal> {
 	}
 
 	public boolean journalEdited() {
+		if (mEntry == null) {
+			return false;
+		}
+
 		NPJournal j = NPJournal.fromEntry(mEntry);
 
 		if (j.getLastModifiedTime() == null) {
