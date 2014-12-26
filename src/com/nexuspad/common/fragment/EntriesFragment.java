@@ -25,10 +25,8 @@ import com.nexuspad.common.Constants;
 import com.nexuspad.common.activity.FoldersNavigatorActivity;
 import com.nexuspad.common.activity.UpdateFolderActivity;
 import com.nexuspad.common.adapters.EntriesAdapter;
-import com.nexuspad.common.adapters.FoldersAndEntriesAdapter;
 import com.nexuspad.common.annotation.ModuleInfo;
 import com.nexuspad.common.listeners.DirectionalScrollListener;
-import com.nexuspad.common.listeners.OnPagingListEndListener;
 import com.nexuspad.home.activity.LoginActivity;
 import com.nexuspad.service.account.AccountManager;
 import com.nexuspad.service.datamodel.*;
@@ -208,15 +206,6 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 		}
 	};
 
-	protected OnPagingListEndListener mLoadMoreScrollListener = new OnPagingListEndListener() {
-		@Override
-		protected void onListBottom(int page) {
-			FoldersAndEntriesAdapter adapter = (FoldersAndEntriesAdapter)getAdapter();
-			if (adapter.getEntriesAdapter().hasMoreToLoad()) {
-				queryEntriesInFolderByPage(getCurrentPage() + 1);
-			}
-		}
-	};
 
 	/**
 	 * set up {@code OnQueryTextListener}, {@code OnCloseListener}, and {@code OnActionExpandListener}.
@@ -302,9 +291,6 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 
 	protected void reDisplayListEntries() {
 		hideProgressIndicatorAndShowMainList();
-
-		// Need to reset the scroll listener.
-		mLoadMoreScrollListener.reset();
 
 		((EntriesAdapter)getAdapter()).setDisplayEntryList(mEntryList);
 	}

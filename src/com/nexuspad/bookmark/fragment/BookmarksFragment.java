@@ -21,6 +21,7 @@ import com.nexuspad.common.annotation.FragmentName;
 import com.nexuspad.common.annotation.ModuleInfo;
 import com.nexuspad.common.fragment.FoldersAndEntriesFragment;
 import com.nexuspad.common.listeners.OnEntryMenuClickListener;
+import com.nexuspad.common.listeners.OnPagingListEndListener;
 import com.nexuspad.service.datamodel.EntryList;
 import com.nexuspad.service.datamodel.EntryTemplate;
 import com.nexuspad.service.datamodel.NPBookmark;
@@ -55,6 +56,16 @@ public class BookmarksFragment extends FoldersAndEntriesFragment {
 		void onEditBookmark(BookmarksFragment f, NPBookmark bookmark);
 		void onFolderClick(BookmarksFragment f, NPFolder folder);
 	}
+
+	protected OnPagingListEndListener mLoadMoreScrollListener = new OnPagingListEndListener() {
+		@Override
+		protected void onListBottom(int page) {
+			FoldersAndEntriesAdapter adapter = (FoldersAndEntriesAdapter)getAdapter();
+			if (adapter.getEntriesAdapter().hasMoreToLoad()) {
+				queryEntriesInFolderByPage(getCurrentPage() + 1);
+			}
+		}
+	};
 
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {

@@ -162,13 +162,17 @@ public class JournalsFragment extends EntriesFragment {
 
 		mJournals.clear();
 
+		int iStartYmd = Integer.parseInt(DateUtil.convertToYYYYMMDD(mStartDate));
+		int iEndYmd = Integer.parseInt(DateUtil.convertToYYYYMMDD(mEndDate));
+
 		for (NPEntry e : (List<? extends NPEntry>) newListToDisplay.getEntries()) {
 			NPJournal j = NPJournal.fromEntry(e);
 
 			// Since the journal list returned in EntryList can have journals outside mStartDate and mEndDate,
 			// we need to filter them out.
 			// mJournals should ALWAYS remain with the count of 3.
-			if (DateUtil.dateWithinDateRange(j.getCreateTime(), mStartDate, mEndDate)) {
+			int iJournalYmd = Integer.parseInt(j.getJournalYmd());
+			if (iJournalYmd >= iStartYmd && iJournalYmd <= iEndYmd) {
 				mJournals.put(j.getJournalYmd(), j);
 			}
 		}

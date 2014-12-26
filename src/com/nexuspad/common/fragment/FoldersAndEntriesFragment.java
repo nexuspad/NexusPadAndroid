@@ -109,9 +109,6 @@ public class FoldersAndEntriesFragment extends EntriesFragment {
 	protected void reDisplayListEntries() {
 		hideProgressIndicatorAndShowMainList();
 
-		// Need to reset the scroll listener.
-		mLoadMoreScrollListener.reset();
-
 		mFolderEntryCombinedAdapter.getEntriesAdapter().setDisplayEntryList(mEntryList);
 		mFolderEntryCombinedAdapter.notifyDataSetChanged();
 	}

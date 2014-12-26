@@ -54,17 +54,88 @@ public class PhotosFragment extends EntriesFragment implements OnItemClickListen
 		return fragment;
 	}
 
+	protected OnPagingListEndListener mLoadMoreScrollListener = new OnPagingListEndListener() {
+		@Override
+		protected void onListBottom(int page) {
+			PhotosAdapter adapter = (PhotosAdapter)getAdapter();
+			if (adapter.hasMoreToLoad()) {
+				queryEntriesInFolderByPage(getCurrentPage() + 1);
+			}
+		}
+	};
+
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		return inflater.inflate(R.layout.photos_frag, container, false);
+	}
+
+	@Override
+	public void onViewCreated(View view, Bundle savedInstanceState) {
+		mGridView = (GridView)view.findViewById(R.id.grid_view);
+
+		mGridView.setOnScrollListener(mLoadMoreScrollListener);
+		mGridView.setOnItemClickListener(this);
+
+		super.onViewCreated(view, savedInstanceState);
+
+		initFolderSelector(REQ_FOLDER);
+
+		if (mEntryList == null) {
+			queryEntriesAsync();
+		} else {
+			onListLoaded(mEntryList);
+		}
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		switch (requestCode) {
+			case REQ_FOLDER:
+				if (resultCode == Activity.RESULT_OK) {
+					mFolder = data.getParcelableExtra(Constants.KEY_FOLDER);
+					queryEntriesAsync();
+				}
+
+				// Refresh Fragment list content after selecting the folder from folder navigator.
+				// Since Activity remains the same, we need to update the title in Action bar.
+				final ActionBar actionBar = getActivity().getActionBar();
+				actionBar.setTitle(mFolder.getFolderName());
+
+				break;
+
+			default:
+				throw new AssertionError("unknown requestCode: " + requestCode);
+		}
+	}
+
+	/**
+	 * SwipeRefresh handler.
+	 */
+	@Override
+	public void onRefresh() {
+		if (mListFrame instanceof SwipeRefreshLayout) {
+			((SwipeRefreshLayout)mListFrame).setRefreshing(true);
+			queryEntriesAsync();
+		}
+	}
+
 	@Override
 	protected void onListLoaded(EntryList newListToDisplay) {
 		Log.i(TAG, "Receiving photo list.");
 
 		super.onListLoaded(newListToDisplay);
 
+		mLoadMoreScrollListener.setCurrentPage(newListToDisplay.getPageId());
+
 		PhotosAdapter a = (PhotosAdapter)mGridView.getAdapter();
 
 		if (a == null) {
 			a = new PhotosAdapter(getActivity(), newListToDisplay, getFolder(), getEntryListService(), getTemplate());
 
+			setAdapter(a);
+			
 			mGridView.setAdapter(a);
 			stableNotifyAdapter(a);
 
@@ -133,77 +204,18 @@ public class PhotosFragment extends EntriesFragment implements OnItemClickListen
 	}
 
 
-	/**
-	 * SwipeRefresh handler.
-	 */
-	@Override
-	public void onRefresh() {
-		if (mListFrame instanceof SwipeRefreshLayout) {
-			((SwipeRefreshLayout)mListFrame).setRefreshing(true);
-			queryEntriesAsync();
-		}
-	}
-
-
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		switch (requestCode) {
-			case REQ_FOLDER:
-				if (resultCode == Activity.RESULT_OK) {
-					mFolder = data.getParcelableExtra(Constants.KEY_FOLDER);
-					queryEntriesAsync();
-				}
-
-				// Refresh Fragment list content after selecting the folder from folder navigator.
-				// Since Activity remains the same, we need to update the title in Action bar.
-				final ActionBar actionBar = getActivity().getActionBar();
-				actionBar.setTitle(mFolder.getFolderName());
-
-				break;
-
-			default:
-				throw new AssertionError("unknown requestCode: " + requestCode);
-		}
-	}
-
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.photos_frag, container, false);
-	}
-
-	@Override
-	public void onViewCreated(View view, Bundle savedInstanceState) {
-		mGridView = (GridView)view.findViewById(R.id.grid_view);
-
-		mGridView.setOnScrollListener(
-			newDirectionalScrollListener(
-				new OnPagingListEndListener() {
-					@Override
-					protected void onListBottom(int page) {
-						queryEntriesInFolderByPage(getCurrentPage() + 1);
-					}
-				}
-			)
-		);
-
-		mGridView.setOnItemClickListener(this);
-
-		super.onViewCreated(view, savedInstanceState);
-
-		initFolderSelector(REQ_FOLDER);
-
-		if (mEntryList == null) {
-			queryEntriesAsync();
-		} else {
-			onListLoaded(mEntryList);
-		}
-	}
-
-
 	private void stableNotifyAdapter(BaseAdapter adapter) {
 		final int prevPos = mGridView.getFirstVisiblePosition();
 		adapter.notifyDataSetChanged();
 		mGridView.setSelection(prevPos);
 	}
+
+	@Override
+	protected void reDisplayListEntries() {
+		super.reDisplayListEntries();
+
+		// Need to reset the scroll listener.
+		mLoadMoreScrollListener.reset();
+	}
+
 }
