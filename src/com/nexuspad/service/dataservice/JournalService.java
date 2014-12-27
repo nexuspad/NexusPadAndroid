@@ -33,11 +33,13 @@ import java.util.Map;
  */
 public class JournalService extends EntryService {
 
-	public static JournalService getInstance(Context context) {
-		if (mInstance == null) {
+	public static EntryService getInstance(Context context) {
+		if (mInstance != null && mInstance instanceof JournalService) {
+			return mInstance;
+		} else {
 			mInstance = new JournalService(context);
+			return mInstance;
 		}
-		return (JournalService)mInstance;
 	}
 
 	private JournalService(Context context) {

@@ -5,9 +5,6 @@
 package com.nexuspad.service.dataservice;
 
 import android.content.Context;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
-import android.os.Bundle;
 import android.util.Log;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
@@ -21,32 +18,22 @@ import java.util.Map;
 
 public class NPWebServiceUtil {
 
-    public static String BASE_URL = "https://api-lab.nexuspad.com";
+    private static String BASE_URL = "https://api-lab.nexuspad.com";
 
     private static RequestQueue volleyQueue;
 
     public static RequestQueue getRequestQueue(Context context) {
         if (volleyQueue == null) {
             volleyQueue = Volley.newRequestQueue(context);
-
-	        try {
-		        ApplicationInfo ai = context.getPackageManager().getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
-		        Bundle bundle = ai.metaData;
-
-		        if (bundle != null) {
-			        String env = bundle.getString("env");
-
-			        if ("prod".equalsIgnoreCase(env)) {
-				        BASE_URL = "https://api13.nexuspad.com";
-			        }
-		        }
-
-	        } catch (PackageManager.NameNotFoundException e) {
-		        e.printStackTrace();
-	        }
         }
 
         return volleyQueue;
+    }
+
+    public static void setIsProduction(boolean isProduction) {
+        if (isProduction) {
+            BASE_URL = "https://api13.nexuspad.com";
+        }
     }
 
     /**

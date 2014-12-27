@@ -315,7 +315,7 @@ public class JournalsFragment extends EntriesFragment {
 
 	private JournalService getJournalService() {
 		if (mJournalService == null) {
-			mJournalService = JournalService.getInstance(getActivity());
+			mJournalService = (JournalService)JournalService.getInstance(getActivity());
 		}
 		return mJournalService;
 	}

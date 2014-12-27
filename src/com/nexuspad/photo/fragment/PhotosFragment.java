@@ -135,7 +135,7 @@ public class PhotosFragment extends EntriesFragment implements OnItemClickListen
 			a = new PhotosAdapter(getActivity(), newListToDisplay, getFolder(), getEntryListService(), getTemplate());
 
 			setAdapter(a);
-			
+
 			mGridView.setAdapter(a);
 			stableNotifyAdapter(a);
 

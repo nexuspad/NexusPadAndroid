@@ -546,8 +546,12 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 
 	protected void handleServiceError(ServiceError error) {
 		final ErrorCode errorCode = error.getErrorCode();
+
 		if (shouldKickToLogin(errorCode)) {
+			// Clear the token
+			AccountManager.logout();
 			kickToLoginScreen();
+
 		} else {
 			displayRetry();
 		}

@@ -67,6 +67,12 @@ public class AlbumsFragment extends EntriesFragment {
 		} else {
 			a.setDisplayEntryList(newListToDisplay);
 		}
+
+		if (newListToDisplay.isEmpty()) {
+			hideProgressIndicatorAndShowEmptyFolder();
+		} else {
+			hideProgressIndicatorAndShowMainList();
+		}
 	}
 
 	@Override

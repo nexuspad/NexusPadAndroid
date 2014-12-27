@@ -205,6 +205,7 @@ public class AccountManager {
             AccountDao acctDao = new AccountDao(DatabaseManager.getDb());
             acctDao.clearAcctInfo();
             AccountManager.sAccount = null;
+
         } catch (NPException npe) {
             Log.e("AccountManager: ", npe.toString());
         }

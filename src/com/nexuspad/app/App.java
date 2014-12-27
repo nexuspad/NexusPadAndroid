@@ -8,10 +8,14 @@ import android.app.Application;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.os.Bundle;
 import android.widget.Toast;
 import com.nexuspad.R;
+import com.nexuspad.service.dataservice.NPWebServiceUtil;
 import com.nexuspad.service.datastore.db.DatabaseManager;
 
 import java.util.regex.Pattern;
@@ -28,6 +32,22 @@ public class App extends Application {
 
         // initialize the database
         DatabaseManager.getDb(this);
+
+        try {
+            ApplicationInfo ai = getPackageManager().getApplicationInfo(getPackageName(), PackageManager.GET_META_DATA);
+            Bundle bundle = ai.metaData;
+
+            if (bundle != null) {
+                String env = bundle.getString("env");
+
+                if ("prod".equalsIgnoreCase(env)) {
+                    NPWebServiceUtil.setIsProduction(true);
+                }
+            }
+
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
 
         sRobotoLight = Typeface.createFromAsset(getAssets(), "Roboto-Light.ttf");
     }
