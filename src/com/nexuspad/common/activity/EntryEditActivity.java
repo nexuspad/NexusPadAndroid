@@ -110,7 +110,7 @@ public abstract class EntryEditActivity<T extends NPEntry> extends DoneDiscardAc
     protected T getEntryFromFragment() {
         EntryEditFragment<T> fragment = getFragment();
 
-        T entry = fragment.getEntry();
+        T entry = fragment.getEntryFromEditor();
         if (entry == null) {
             throw new IllegalStateException("Entry object in Fragment cannot be null.");
         }

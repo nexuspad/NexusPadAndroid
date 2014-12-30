@@ -214,7 +214,7 @@
             />
         <activity android:name=".calendar.activity.RecurrenceEditActivity"/>
 
-        <meta-data android:name="env" android:value="prod"/>
+        <meta-data android:name="env" android:value="lab"/>
 
     </application>
 

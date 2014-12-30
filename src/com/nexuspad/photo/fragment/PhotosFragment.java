@@ -144,8 +144,8 @@ public class PhotosFragment extends EntriesFragment implements OnItemClickListen
 			stableNotifyAdapter(a);
 		}
 
-		if (newListToDisplay.isEmpty()) {
-			hideProgressIndicatorAndShowEmptyFolder();
+		if (newListToDisplay.noEntries()) {
+			hideProgressIndicatorAndShowEmptyFolder(getString(R.string.empty_photos));
 		} else {
 			hideProgressIndicatorAndShowMainList();
 		}

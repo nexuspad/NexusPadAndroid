@@ -40,7 +40,6 @@
     <string name="err_no_email_app">No email app installed.</string>
     <string name="err_no_browser">No browser installed.</string>
     <string name="err_no_map">No map installed.</string>
-    <string name="formatted_err_delete_failed">Failed to delete \"%s\". Please try again later.</string>
     <string name="err_network">Please check your network connection.</string>
     <string name="err_internal">An internal error has occurred. Please try again later.</string>
     <string name="confirm_password">Confirm Password</string>
@@ -66,7 +65,8 @@
     <string name="empty_calendar">The calendar is empty</string>
     <string name="empty_bookmarks">No Bookmarks in this folder</string>
     <string name="empty_photos">No Photos in this folder</string>
-    <string name="empty_contacts">No Contacts in this folder</string>
+    <string name="empty_albums">No Albums in this folder</string>
+    <string name="empty_contacts">No Contacts</string>
     <string name="empty_docs">No Docs in this folder</string>
     <string name="empty_events">No Events in this calendar</string>
     <string name="loading_more">Loading More…</string>

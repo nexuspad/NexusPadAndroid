@@ -5,6 +5,8 @@ import android.support.v4.app.Fragment;
 import android.view.View;
 import android.view.animation.Animation;
 import android.widget.ListView;
+import android.widget.TextView;
+import com.google.common.base.Strings;
 import com.nexuspad.R;
 
 import static android.view.animation.AnimationUtils.loadAnimation;
@@ -43,9 +45,9 @@ public class NPBaseListFragment extends Fragment {
 			mLoadingUiManager.showListView();
 	}
 
-	protected void hideProgressIndicatorAndShowEmptyFolder() {
+	protected void hideProgressIndicatorAndShowEmptyFolder(String emptyFolderMessage) {
 		if (mLoadingUiManager != null)
-			mLoadingUiManager.showEmptyFolderView();
+			mLoadingUiManager.showEmptyFolderView(emptyFolderMessage);
 	}
 
 	protected void showProgressIndicator() {
@@ -109,7 +111,7 @@ public class NPBaseListFragment extends Fragment {
 			fadeIn(mMainListViewFrame);
 		}
 
-		protected void showEmptyFolderView() {
+		protected void showEmptyFolderView(String emptyFolderMessage) {
 			boolean isListVisible = mMainListViewFrame.getVisibility() == View.VISIBLE;
 			boolean isProgressVisible = mProgressView.getVisibility() == View.VISIBLE;
 
@@ -118,6 +120,11 @@ public class NPBaseListFragment extends Fragment {
 			}
 			if (isProgressVisible) {
 				fadeOut(mProgressView);
+			}
+
+			if (!Strings.isNullOrEmpty(emptyFolderMessage)) {
+				TextView messageView = (TextView) mEmptyFolderView.findViewById(R.id.empty_folder_message);
+				messageView.setText(emptyFolderMessage);
 			}
 
 			fadeIn(mEmptyFolderView);

@@ -171,7 +171,7 @@ public class DocsFragment extends FoldersAndEntriesFragment {
 		}
 
 		if (newListToDisplay.isEmpty()) {
-			hideProgressIndicatorAndShowEmptyFolder();
+			hideProgressIndicatorAndShowEmptyFolder(null);
 		} else {
 			hideProgressIndicatorAndShowMainList();
 		}

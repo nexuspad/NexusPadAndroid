@@ -171,8 +171,8 @@ public final class ContactsFragment extends EntriesFragment {
 			adapter.setDisplayEntryList(newListToDisplay);
 		}
 
-		if (newListToDisplay.isEmpty()) {
-			hideProgressIndicatorAndShowEmptyFolder();
+		if (newListToDisplay.noEntries()) {
+			hideProgressIndicatorAndShowEmptyFolder(getString(R.string.empty_contacts));
 		} else {
 			hideProgressIndicatorAndShowMainList();
 		}

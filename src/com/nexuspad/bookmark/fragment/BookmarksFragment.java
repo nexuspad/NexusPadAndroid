@@ -157,7 +157,7 @@ public class BookmarksFragment extends FoldersAndEntriesFragment {
 		}
 
 		if (newListToDisplay.isEmpty()) {
-			hideProgressIndicatorAndShowEmptyFolder();
+			hideProgressIndicatorAndShowEmptyFolder(null);
 		} else {
 			hideProgressIndicatorAndShowMainList();
 		}

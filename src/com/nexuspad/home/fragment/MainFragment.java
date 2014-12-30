@@ -50,7 +50,7 @@ public class MainFragment extends Fragment {
             } else {
                 String email = currentUser.getEmail();
                 String password = currentUser.getPassword();
-                AccountManager.autoSignInAsync(email, password, getActivity(), new AccountManager.Callback() {
+                AccountManager.autoSignInAsync(email, password, getActivity(), new AccountManager.LoginCallback() {
                     @Override
                     public void onLoginFailed(String userName, String password) {
                         mCallback.onLoginFailed(MainFragment.this, userName, password);

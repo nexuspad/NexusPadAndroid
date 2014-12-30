@@ -68,8 +68,8 @@ public class AlbumsFragment extends EntriesFragment {
 			a.setDisplayEntryList(newListToDisplay);
 		}
 
-		if (newListToDisplay.isEmpty()) {
-			hideProgressIndicatorAndShowEmptyFolder();
+		if (newListToDisplay.noEntries()) {
+			hideProgressIndicatorAndShowEmptyFolder(getString(R.string.empty_albums));
 		} else {
 			hideProgressIndicatorAndShowMainList();
 		}
@@ -141,6 +141,7 @@ public class AlbumsFragment extends EntriesFragment {
 		@Override
 		protected View getEntryView(NPAlbum entry, int position, View convertView, ViewGroup parent) {
 			final AlbumsFragment.ViewHolder holder;
+
 			if (convertView == null) {
 				convertView = getActivity().getLayoutInflater().inflate(R.layout.list_item_album, parent, false);
 
@@ -154,19 +155,20 @@ public class AlbumsFragment extends EntriesFragment {
 			}
 
 			final NPAlbum album = getItem(position);
-			holder.title.setText(album.getTitle());
-			final String tnUrl = album.getTnUrl();
-			if (!TextUtils.isEmpty(tnUrl)) {
-				Ion.with(getActivity())
-						.load(tnUrl)
-						.withBitmap()
-						.placeholder(R.drawable.placeholder)
-						.error(R.drawable.ic_launcher)
-//				.animateLoad(spinAnimation)
-//				.animateIn(fadeInAnimation)
-						.intoImageView(holder.thumbnail);
-			} else {
-				holder.thumbnail.setImageResource(R.drawable.placeholder);
+
+			if (album != null) {
+				holder.title.setText(album.getTitle());
+				final String tnUrl = album.getTnUrl();
+				if (!TextUtils.isEmpty(tnUrl)) {
+					Ion.with(getActivity())
+							.load(tnUrl)
+							.withBitmap()
+							.placeholder(R.drawable.placeholder)
+							.error(R.drawable.ic_launcher)
+							.intoImageView(holder.thumbnail);
+				} else {
+					holder.thumbnail.setImageResource(R.drawable.placeholder);
+				}
 			}
 
 			return convertView;

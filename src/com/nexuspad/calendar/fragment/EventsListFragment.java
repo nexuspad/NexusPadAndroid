@@ -202,7 +202,7 @@ public class EventsListFragment extends EntriesFragment {
 		}
 
 		if (newListToDisplay.isEmpty()) {
-			hideProgressIndicatorAndShowEmptyFolder();
+			hideProgressIndicatorAndShowEmptyFolder(getString(R.string.empty_calendar));
 		} else {
 			hideProgressIndicatorAndShowMainList();
 		}

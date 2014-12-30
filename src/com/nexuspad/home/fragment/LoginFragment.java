@@ -12,14 +12,19 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver.OnPreDrawListener;
-import android.widget.*;
-import com.nexuspad.common.annotation.FragmentName;
-import com.nexuspad.common.view.LoadingViews;
-import com.nexuspad.common.utils.Lazy;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 import com.nexuspad.R;
-import com.nexuspad.service.account.AccountManager;
 import com.nexuspad.app.App;
+import com.nexuspad.common.annotation.FragmentName;
+import com.nexuspad.common.utils.Lazy;
+import com.nexuspad.common.view.LoadingViews;
+import com.nexuspad.service.account.AccountManager;
 import com.nexuspad.service.datamodel.NPUser;
+
+import java.util.TimeZone;
 
 /**
  * A {@code Fragment} that handles both login and signup.
@@ -148,7 +153,7 @@ public class LoginFragment extends Fragment {
 
         mLoginV.setOnClickListener(new OnClickListener() {
 
-            private AccountManager.Callback mLoginCallback = new AccountManager.Callback() {
+            private AccountManager.LoginCallback mLoginCallback = new AccountManager.LoginCallback() {
                 @Override
                 public void onLoginFailed(String userName, String password) {
                     mLoadingViews.doneLoading();
@@ -162,9 +167,25 @@ public class LoginFragment extends Fragment {
                 }
             };
 
+            private AccountManager.RegisterCallback mRegisterCallback = new AccountManager.RegisterCallback() {
+                @Override
+                public void onCreateAccountFailed(String failureReason) {
+                    mLoadingViews.doneLoading();
+                    Toast.makeText(getActivity(), failureReason, Toast.LENGTH_LONG).show();
+                }
+
+                @Override
+                public void onAccountCreated(NPUser user) {
+                    mLoadingViews.doneLoading();
+                    mActivityCallback.onLogin(user);
+                }
+            };
+
+
             @Override
             public void onClick(View v) {
                 boolean isSignUp = isSignUp();
+
                 EditText[] views = isSignUp ? mAllFields.get() : mLoginFields.get();
 
                 if (!isAllTextNotEmpty(R.string.err_empty_field, views)) {
@@ -178,6 +199,17 @@ public class LoginFragment extends Fragment {
                     String userName = mUserNameV.getText().toString();
                     String password = mPasswordV.getText().toString();
                     AccountManager.autoSignInAsync(userName, password, getActivity(), mLoginCallback);
+
+                } else {
+                    // Create new account
+                    NPUser newUser = new NPUser();
+                    newUser.setEmail(mUserNameV.getText().toString());
+                    newUser.setPassword(mPasswordV.getText().toString());
+                    newUser.setFirstName(mFirstNameV.getText().toString());
+                    newUser.setLastName(mLastNameV.getText().toString());
+                    newUser.setTimeZone(TimeZone.getDefault());
+
+                    AccountManager.createAccountAsync(newUser, getActivity(), mRegisterCallback);
                 }
             }
         });

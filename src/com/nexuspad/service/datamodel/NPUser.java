@@ -35,6 +35,8 @@ public class NPUser implements Parcelable {
     private String languageCode;
     private String countryCode;
 
+    private String uuid;
+
     private String sessionId;
     private String padDbId;
     private String padHost;
@@ -270,4 +272,11 @@ public class NPUser implements Parcelable {
         this.countryCode = countryCode;
     }
 
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
 }
