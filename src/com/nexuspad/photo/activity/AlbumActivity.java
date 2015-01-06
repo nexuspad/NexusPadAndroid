@@ -7,18 +7,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import com.nexuspad.common.activity.SinglePaneActivity;
-import com.nexuspad.common.annotation.ParentActivity;
 import com.nexuspad.R;
+import com.nexuspad.common.activity.SinglePaneActivity;
+import com.nexuspad.common.fragment.EntryFragment;
+import com.nexuspad.photo.fragment.AlbumFragment;
 import com.nexuspad.service.datamodel.NPAlbum;
 import com.nexuspad.service.datamodel.NPFolder;
-import com.nexuspad.photo.fragment.AlbumFragment;
-import com.nexuspad.common.fragment.EntryFragment;
 
-/**
- * @author Edmond
- */
-@ParentActivity(PhotosActivity.class)
 public class AlbumActivity extends SinglePaneActivity implements EntryFragment.EntryDetailCallback<NPAlbum> {
 
     private static final String KEY_FOLDER = "key_folder";
@@ -45,6 +40,8 @@ public class AlbumActivity extends SinglePaneActivity implements EntryFragment.E
         mAlbum = intent.getParcelableExtra(KEY_ALBUM);
 
         setTitle(mAlbum.getTitle());
+
+        mParentActivity = PhotosActivity.class;
 
         super.onCreate(savedState);
     }

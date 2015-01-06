@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import com.nexuspad.common.Constants;
 import com.nexuspad.common.activity.EntryActivity;
-import com.nexuspad.common.annotation.ParentActivity;
 import com.nexuspad.contacts.fragment.ContactFragment;
 import com.nexuspad.service.datamodel.NPFolder;
 import com.nexuspad.service.datamodel.NPPerson;
@@ -14,7 +13,6 @@ import com.nexuspad.service.datamodel.NPPerson;
 /**
  * Author: edmond
  */
-@ParentActivity(ContactsActivity.class)
 public class ContactActivity extends EntryActivity<NPPerson> {
 
     public static void startWith(Context context, NPPerson contact, NPFolder folder) {
@@ -32,6 +30,7 @@ public class ContactActivity extends EntryActivity<NPPerson> {
 
     @Override
     protected void onCreate(Bundle savedState) {
+        mParentActivity = ContactsActivity.class;
         mContact = getIntent().getParcelableExtra(Constants.KEY_ENTRY);
 
         super.onCreate(savedState);

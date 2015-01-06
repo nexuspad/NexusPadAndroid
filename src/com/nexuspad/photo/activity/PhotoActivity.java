@@ -9,19 +9,17 @@ import android.support.v4.app.Fragment;
 import com.nexuspad.R;
 import com.nexuspad.common.Constants;
 import com.nexuspad.common.activity.SinglePaneActivity;
-import com.nexuspad.common.annotation.ParentActivity;
 import com.nexuspad.common.fragment.EntriesFragment;
+import com.nexuspad.photo.fragment.PhotoFragment;
 import com.nexuspad.service.datamodel.EntryList;
 import com.nexuspad.service.datamodel.NPFolder;
 import com.nexuspad.service.datamodel.NPPhoto;
-import com.nexuspad.photo.fragment.PhotoFragment;
 
 import java.util.ArrayList;
 
 /**
  * @author Ren
  */
-@ParentActivity(PhotosActivity.class)
 public class PhotoActivity extends SinglePaneActivity implements EntriesFragment.ActivityCallback, PhotoFragment.PhotoDisplayCallback {
 
 	/**
@@ -55,6 +53,8 @@ public class PhotoActivity extends SinglePaneActivity implements EntriesFragment
 
         mPhoto = intent.getParcelableExtra(Constants.KEY_PHOTO);
         mPhotos = intent.getParcelableArrayListExtra(Constants.KEY_PHOTOS);
+
+        mParentActivity = PhotosActivity.class;
 
         super.onCreate(savedState);
     }

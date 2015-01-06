@@ -53,7 +53,9 @@ public abstract class NPNavigateActivity extends FragmentActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		mParentActivity = (Class<?>)getIntent().getSerializableExtra(KEY_PARENT_ACTIVITY);
+		if (mParentActivity == null) {
+			mParentActivity = (Class<?>) getIntent().getSerializableExtra(KEY_PARENT_ACTIVITY);
+		}
 
 		if (mParentActivity == null) {
 			ParentActivity upAnnotaion = getClass().getAnnotation(ParentActivity.class);

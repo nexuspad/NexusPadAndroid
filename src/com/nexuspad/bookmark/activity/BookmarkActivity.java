@@ -3,17 +3,22 @@
  */
 package com.nexuspad.bookmark.activity;
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import com.nexuspad.bookmark.fragment.BookmarkFragment;
-import com.nexuspad.service.datamodel.NPBookmark;
 import com.nexuspad.common.activity.EntryActivity;
-import com.nexuspad.common.annotation.ParentActivity;
+import com.nexuspad.service.datamodel.NPBookmark;
 
 /**
  * @author Edmond
  */
-@ParentActivity(BookmarksActivity.class)
 public class BookmarkActivity extends EntryActivity<NPBookmark> implements BookmarkFragment.BookmarkDetailCallback {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        mParentActivity = BookmarksActivity.class;
+        super.onCreate(savedInstanceState);
+    }
 
     @Override
     protected Fragment onCreateFragment() {
