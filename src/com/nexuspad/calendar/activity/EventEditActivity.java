@@ -8,7 +8,6 @@ import com.nexuspad.calendar.fragment.EventEditFragment;
 import com.nexuspad.common.Constants;
 import com.nexuspad.common.activity.EntryEditActivity;
 import com.nexuspad.common.annotation.ModuleInfo;
-import com.nexuspad.common.annotation.ParentActivity;
 import com.nexuspad.service.datamodel.EntryTemplate;
 import com.nexuspad.service.datamodel.NPEvent;
 import com.nexuspad.service.datamodel.NPFolder;
@@ -18,7 +17,6 @@ import static com.nexuspad.service.dataservice.ServiceConstants.CALENDAR_MODULE;
 /**
  * Author: edmond
  */
-@ParentActivity(EventsActivity.class)
 @ModuleInfo(moduleId = CALENDAR_MODULE, template = EntryTemplate.EVENT)
 public class EventEditActivity extends EntryEditActivity<NPEvent> {
 
@@ -35,6 +33,12 @@ public class EventEditActivity extends EntryEditActivity<NPEvent> {
         intent.putExtra(Constants.KEY_ENTRY, event);
         intent.putExtra(Constants.KEY_FOLDER, folder);
         return intent;
+    }
+
+    @Override
+    protected void onCreate(Bundle savedState) {
+        mParentActivity = EventsActivity.class;
+        super.onCreate(savedState);
     }
 
     @Override

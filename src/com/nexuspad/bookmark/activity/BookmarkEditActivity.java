@@ -12,16 +12,14 @@ import com.nexuspad.bookmark.fragment.BookmarkEditFragment;
 import com.nexuspad.common.Constants;
 import com.nexuspad.common.activity.EntryEditActivity;
 import com.nexuspad.common.annotation.ModuleInfo;
-import com.nexuspad.common.annotation.ParentActivity;
-import com.nexuspad.service.datamodel.NPBookmark;
 import com.nexuspad.service.datamodel.EntryTemplate;
+import com.nexuspad.service.datamodel.NPBookmark;
 import com.nexuspad.service.datamodel.NPFolder;
 import com.nexuspad.service.dataservice.ServiceConstants;
 
 /**
  * @author Edmond
  */
-@ParentActivity(BookmarksActivity.class)
 @ModuleInfo(moduleId = ServiceConstants.BOOKMARK_MODULE, template = EntryTemplate.BOOKMARK)
 public class BookmarkEditActivity extends EntryEditActivity<NPBookmark> {
 
@@ -34,6 +32,12 @@ public class BookmarkEditActivity extends EntryEditActivity<NPBookmark> {
         intent.putExtra(Constants.KEY_ENTRY, b);
         intent.putExtra(Constants.KEY_FOLDER, f);
         c.startActivity(intent);
+    }
+
+    @Override
+    protected void onCreate(Bundle savedState) {
+        mParentActivity = BookmarksActivity.class;
+        super.onCreate(savedState);
     }
 
     @Override

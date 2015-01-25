@@ -114,7 +114,7 @@ public class PhotoSelectFragment extends Fragment implements
                 projection,
                 null,
                 null,
-                null);
+                MediaStore.Files.FileColumns.DATE_ADDED + " DESC");
     }
 
     @Override

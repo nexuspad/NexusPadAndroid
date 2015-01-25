@@ -5,17 +5,21 @@ import android.support.v4.app.Fragment;
 import com.nexuspad.common.Constants;
 import com.nexuspad.common.activity.EntriesActivity;
 import com.nexuspad.common.annotation.ModuleInfo;
-import com.nexuspad.common.annotation.ParentActivity;
 import com.nexuspad.contacts.fragment.ContactsFragment;
 import com.nexuspad.home.activity.DashboardActivity;
 import com.nexuspad.service.datamodel.EntryTemplate;
 import com.nexuspad.service.dataservice.ServiceConstants;
 
-@ParentActivity(DashboardActivity.class)
 @ModuleInfo(moduleId = ServiceConstants.CONTACT_MODULE, template = EntryTemplate.CONTACT)
 public class ContactsActivity extends EntriesActivity {
 
-    @Override
+	@Override
+	protected void onCreate(Bundle savedState) {
+		mParentActivity = DashboardActivity.class;
+		super.onCreate(savedState);
+	}
+
+	@Override
     protected Fragment onCreateFragment() {
 	    final Bundle bundle = new Bundle();
 	    bundle.putParcelable(Constants.KEY_FOLDER, mFolder);

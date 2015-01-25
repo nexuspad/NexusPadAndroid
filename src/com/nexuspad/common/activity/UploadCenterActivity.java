@@ -11,8 +11,8 @@ import android.support.v4.app.Fragment;
 import com.nexuspad.R;
 import com.nexuspad.app.UploadRequest;
 import com.nexuspad.common.fragment.UploadCenterFragment;
-import com.nexuspad.service.datamodel.NPFolder;
 import com.nexuspad.service.datamodel.NPEntry;
+import com.nexuspad.service.datamodel.NPFolder;
 import com.nexuspad.service.dataservice.ServiceConstants;
 
 import java.util.ArrayList;
@@ -118,6 +118,7 @@ public class UploadCenterActivity extends SinglePaneActivity {
 
         final Intent intent = getIntent();
         final NPEntry entry = intent.getParcelableExtra(KEY_ENTRY);
+
         if (entry == null) {
             NPFolder folder = intent.getParcelableExtra(KEY_FOLDER);
             if (folder == null) {
@@ -126,6 +127,7 @@ public class UploadCenterActivity extends SinglePaneActivity {
             for (Uri uri : mUris) {
                 fragment.addRequest(UploadRequest.forFolder(uri, folder, null));
             }
+
         } else {
             for (Uri uri : mUris) {
                 fragment.addRequest(UploadRequest.forEntry(uri, entry, null));

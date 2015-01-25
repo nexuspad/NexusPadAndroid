@@ -17,15 +17,14 @@ import android.widget.ArrayAdapter;
 import com.google.common.collect.ImmutableList;
 import com.nexuspad.R;
 import com.nexuspad.common.Constants;
-import com.nexuspad.common.annotation.ModuleInfo;
 import com.nexuspad.common.activity.EntriesActivity;
 import com.nexuspad.common.activity.UploadCenterActivity;
-import com.nexuspad.common.annotation.ParentActivity;
-import com.nexuspad.service.datamodel.EntryTemplate;
-import com.nexuspad.service.datamodel.NPFolder;
+import com.nexuspad.common.annotation.ModuleInfo;
 import com.nexuspad.home.activity.DashboardActivity;
 import com.nexuspad.photo.fragment.AlbumsFragment;
 import com.nexuspad.photo.fragment.PhotosFragment;
+import com.nexuspad.service.datamodel.EntryTemplate;
+import com.nexuspad.service.datamodel.NPFolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +34,6 @@ import static com.nexuspad.service.dataservice.ServiceConstants.PHOTO_MODULE;
 /**
  * @author Edmond
  */
-@ParentActivity(DashboardActivity.class)
 @ModuleInfo(moduleId = PHOTO_MODULE, template = EntryTemplate.PHOTO)
 public class PhotosActivity extends EntriesActivity implements ActionBar.OnNavigationListener {
     public static final String TAG = "PhotosActivity";
@@ -80,10 +78,12 @@ public class PhotosActivity extends EntriesActivity implements ActionBar.OnNavig
                 final Intent intent = PhotosSelectActivity.of(this);
                 startActivityForResult(intent, REQ_CHOOSE_FILE);
                 return true;
+
             case R.id.new_albums:
                 final Intent albumIntent = AlbumEditActivity.of(this, mFolder);
                 startActivity(albumIntent);
                 return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -91,6 +91,8 @@ public class PhotosActivity extends EntriesActivity implements ActionBar.OnNavig
 
     @Override
     protected void onCreate(Bundle savedState) {
+        mParentActivity = DashboardActivity.class;
+
         super.onCreate(savedState);
 
         final ActionBar actionBar = getActionBar();

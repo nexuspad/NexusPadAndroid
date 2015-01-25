@@ -4,11 +4,13 @@
 package com.nexuspad.bookmark.activity;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import com.nexuspad.bookmark.fragment.BookmarksFragment;
 import com.nexuspad.common.Constants;
 import com.nexuspad.common.activity.EntriesActivity;
 import com.nexuspad.common.annotation.ModuleInfo;
+import com.nexuspad.home.activity.DashboardActivity;
 import com.nexuspad.service.datamodel.EntryTemplate;
 import com.nexuspad.service.datamodel.NPBookmark;
 import com.nexuspad.service.datamodel.NPFolder;
@@ -22,16 +24,23 @@ public class BookmarksActivity extends EntriesActivity implements BookmarksFragm
     public static final String TAG = BookmarksActivity.class.getSimpleName();
 
     @Override
+    protected void onCreate(Bundle savedState) {
+        mParentActivity = DashboardActivity.class;
+
+        super.onCreate(savedState);
+    }
+
+    @Override
     protected Fragment onCreateFragment() {
         return BookmarksFragment.of(mFolder);
     }
 
     @Override
     public void onBookmarkClick(BookmarksFragment f, NPBookmark bookmark) {
-	    Intent intent = new Intent(this, BookmarkActivity.class);
-	    intent.putExtra(Constants.KEY_ENTRY, bookmark);
-	    intent.putExtra(Constants.KEY_FOLDER, mFolder);
-	    this.startActivity(intent);
+        Intent intent = new Intent(this, BookmarkActivity.class);
+        intent.putExtra(Constants.KEY_ENTRY, bookmark);
+        intent.putExtra(Constants.KEY_FOLDER, mFolder);
+        this.startActivity(intent);
     }
 
     @Override
@@ -41,9 +50,9 @@ public class BookmarksActivity extends EntriesActivity implements BookmarksFragm
 
     @Override
     public void onFolderClick(BookmarksFragment f, NPFolder folder) {
-	    Intent intent = new Intent(this, BookmarksActivity.class);
-	    intent.putExtra(Constants.KEY_FOLDER, folder);
-	    intent.putExtra(KEY_PARENT_ACTIVITY, ((Object)this).getClass());
-	    startActivity(intent);
+        Intent intent = new Intent(this, BookmarksActivity.class);
+        intent.putExtra(Constants.KEY_FOLDER, folder);
+        intent.putExtra(KEY_PARENT_ACTIVITY, ((Object)this).getClass());
+        startActivity(intent);
     }
 }

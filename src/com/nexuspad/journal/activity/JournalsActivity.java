@@ -34,7 +34,6 @@ import java.util.Date;
 /**
  * @author Edmond
  */
-@ParentActivity(DashboardActivity.class)
 @ModuleInfo(moduleId = ServiceConstants.JOURNAL_MODULE, template = EntryTemplate.JOURNAL)
 public class JournalsActivity extends EntriesActivity implements JournalsFragment.JournalsCallback, JournalEditFragment.JournalDetailCallback {
 	public static final String TAG = "JournalsActivity";
@@ -109,6 +108,8 @@ public class JournalsActivity extends EntriesActivity implements JournalsFragmen
 
 	@Override
 	protected void onCreate(Bundle savedState) {
+		mParentActivity = DashboardActivity.class;
+
 		super.onCreate(savedState);
 
 		final ActionBar actionBar = getActionBar();

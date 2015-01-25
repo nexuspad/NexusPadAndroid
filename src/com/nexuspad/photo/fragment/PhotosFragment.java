@@ -25,6 +25,7 @@ import com.nexuspad.common.annotation.ModuleInfo;
 import com.nexuspad.common.fragment.EntriesFragment;
 import com.nexuspad.common.listeners.OnPagingListEndListener;
 import com.nexuspad.photo.activity.PhotoActivity;
+import com.nexuspad.photo.activity.PhotosActivity;
 import com.nexuspad.photo.adapter.PhotosAdapter;
 import com.nexuspad.service.datamodel.*;
 
@@ -96,12 +97,17 @@ public class PhotosFragment extends EntriesFragment implements OnItemClickListen
 				if (resultCode == Activity.RESULT_OK) {
 					mFolder = data.getParcelableExtra(Constants.KEY_FOLDER);
 					queryEntriesAsync();
-				}
 
-				// Refresh Fragment list content after selecting the folder from folder navigator.
-				// Since Activity remains the same, we need to update the title in Action bar.
-				final ActionBar actionBar = getActivity().getActionBar();
-				actionBar.setTitle(mFolder.getFolderName());
+					// Refresh Fragment list content after selecting the folder from folder navigator.
+					// Since Activity remains the same, we need to update the title in Action bar.
+					final ActionBar actionBar = getActivity().getActionBar();
+					actionBar.setTitle(mFolder.getFolderName());
+
+					// Need to set the folder attribute in the Activity since it will be used
+					// when uploading.
+					PhotosActivity a = (PhotosActivity)getActivity();
+					a.setFolder(mFolder);
+				}
 
 				break;
 

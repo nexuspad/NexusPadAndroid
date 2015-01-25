@@ -62,4 +62,8 @@ public abstract class EntriesActivity extends SinglePaneActivity implements Entr
     public void onListLoaded(EntriesFragment f, EntryList list) {
         // do nothing
     }
+
+    public void setFolder(NPFolder folder) {
+        mFolder = folder;
+    }
 }

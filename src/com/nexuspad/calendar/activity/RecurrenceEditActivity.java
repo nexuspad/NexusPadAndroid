@@ -6,13 +6,11 @@ import android.support.v4.app.Fragment;
 import com.nexuspad.calendar.fragment.RecurrenceEditFragment;
 import com.nexuspad.common.Constants;
 import com.nexuspad.common.activity.DoneDiscardActivity;
-import com.nexuspad.common.annotation.ParentActivity;
 import com.nexuspad.service.datamodel.Recurrence;
 
 /**
  * Created by ren on 8/3/14.
  */
-@ParentActivity(EventEditActivity.class)
 public class RecurrenceEditActivity extends DoneDiscardActivity {
 	private Recurrence mRecurrence;
 
@@ -20,6 +18,8 @@ public class RecurrenceEditActivity extends DoneDiscardActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		setResult(RESULT_CANCELED);
 		mRecurrence = getIntent().getParcelableExtra(Constants.KEY_RECURRENCE);
+
+		mParentActivity = EventEditActivity.class;
 		super.onCreate(savedInstanceState);
 	}
 
