@@ -185,12 +185,12 @@ public class PhotosFragment extends EntriesFragment implements OnItemClickListen
 	}
 
 	@Override
-	protected void onUpdateEntry(NPEntry entry) {
+	protected void onEntryChangedAndUpdateList(NPEntry entry) {
 		if (entry instanceof NPPhoto) {  // or album, which will be handled at AlbumsFragment
 			final NPPhoto photo = (NPPhoto) entry;
             mEntryList.getEntries().add(photo);
 		}
-		super.onUpdateEntry(entry);
+		super.onEntryChangedAndUpdateList(entry);
 	}
 
 	@Override

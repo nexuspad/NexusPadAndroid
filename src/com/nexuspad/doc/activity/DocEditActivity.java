@@ -46,7 +46,7 @@ public class DocEditActivity extends EntryEditActivity<NPDoc> implements DocEdit
         DocEditFragment fragment = getFragment();
         if (fragment.isEditedEntryValid()) {
             fragment.updateEntry();
-            // don't go up, it is handled at onUpdateEntry(…)
+            // don't go up, it is handled at onEntryChangedAndUpdateList(…)
         }
     }
 

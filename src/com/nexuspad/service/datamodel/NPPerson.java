@@ -376,6 +376,9 @@ public class NPPerson extends NPEntry {
     }
 
 	public String getFullName() {
+		if (Strings.isNullOrEmpty(mFullName)) {
+
+		}
 		return mFullName;
 	}
 

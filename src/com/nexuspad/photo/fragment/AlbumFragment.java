@@ -3,6 +3,7 @@ package com.nexuspad.photo.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.*;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -24,8 +25,9 @@ import java.util.List;
  */
 
 @FragmentName(AlbumFragment.TAG)
-public class AlbumFragment extends EntryFragment<NPAlbum> implements AdapterView.OnItemClickListener {
+public class AlbumFragment extends EntryFragment<NPAlbum> implements AdapterView.OnItemClickListener, SwipeRefreshLayout.OnRefreshListener {
 	public static final String TAG = "AlbumFragment";
+	private View viewFrame;
 	private GridView mGridView;
 
 	public static AlbumFragment of(NPAlbum album, NPFolder folder) {
@@ -83,6 +85,14 @@ public class AlbumFragment extends EntryFragment<NPAlbum> implements AdapterView
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		mGridView = (GridView)view.findViewById(R.id.grid_view);
 		mGridView.setOnItemClickListener(this);
+
+		// Get the wrapping frame
+		viewFrame = view.findViewById(R.id.main_list_frame);
+		if (viewFrame instanceof android.support.v4.widget.SwipeRefreshLayout) {
+			SwipeRefreshLayout swipeLayout = (SwipeRefreshLayout)viewFrame;
+			swipeLayout.setOnRefreshListener(this);
+		}
+
 		super.onViewCreated(view, savedInstanceState);
 	}
 
@@ -113,6 +123,8 @@ public class AlbumFragment extends EntryFragment<NPAlbum> implements AdapterView
 		} else {
 			mPhotosAdapter.notifyDataSetChanged();
 		}
+
+		((SwipeRefreshLayout)viewFrame).setRefreshing(false);
 	}
 
 	@Override
@@ -132,5 +144,10 @@ public class AlbumFragment extends EntryFragment<NPAlbum> implements AdapterView
 
 		activity.startActivity(intent);
 		activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+	}
+
+	@Override
+	public void onRefresh() {
+		queryEntryAsync();
 	}
 }

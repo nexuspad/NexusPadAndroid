@@ -32,7 +32,8 @@ public class NPWebServiceUtil {
 
     public static void setIsProduction(boolean isProduction) {
         if (isProduction) {
-            BASE_URL = "https://api13.nexuspad.com";
+            //BASE_URL = "https://api-davinci2.nexuspad.com";
+	        BASE_URL = "https://api2.nexuspad.com";
         }
     }
 

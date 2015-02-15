@@ -54,15 +54,6 @@ public class EventsActivity extends EntriesActivity implements EventsMonthFragme
 
 		final ActionBar actionBar = getActionBar();
 
-//		final List<String> list = ImmutableList.of(getString(R.string.month), getString(R.string.agenda));
-//		final ArrayAdapter<?> adapter = new ArrayAdapter<String>(actionBar.getThemedContext(), R.layout.list_item_spinner, android.R.id.text1, list);
-
-//		actionBar.setDisplayShowTitleEnabled(false);
-//		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-
-//		actionBar.setListNavigationCallbacks(adapter, this);
-//		actionBar.setSelectedNavigationItem(readDefaultView());
-
 		actionBar.setTitle(mFolder.getFolderName());
 		actionBar.setDisplayHomeAsUpEnabled(true);
 	}

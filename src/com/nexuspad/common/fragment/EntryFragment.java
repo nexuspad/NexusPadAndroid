@@ -11,11 +11,11 @@ import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import com.nexuspad.Manifest;
 import com.nexuspad.R;
 import com.nexuspad.app.App;
 import com.nexuspad.common.Constants;
 import com.nexuspad.common.utils.Lazy;
-import com.nexuspad.Manifest;
 import com.nexuspad.service.datamodel.NPEntry;
 import com.nexuspad.service.datamodel.NPFolder;
 import com.nexuspad.service.dataservice.EntryService;
@@ -98,14 +98,18 @@ public abstract class EntryFragment<T extends NPEntry> extends DialogFragment {
 		}
 
 		if (shouldGetDetailEntry()) {
-			try {
-				final T entry = getEntry();
-				if (entry != null) {
-					getEntryService().getEntry(entry);
-				}
-			} catch (NPException e) {
-				Log.e(TAG, e.toString());
+			queryEntryAsync();
+		}
+	}
+
+	protected void queryEntryAsync() {
+		try {
+			final T entry = getEntry();
+			if (entry != null) {
+				getEntryService().getEntry(entry);
 			}
+		} catch (NPException e) {
+			Log.e(TAG, e.toString());
 		}
 	}
 

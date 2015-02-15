@@ -190,12 +190,12 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 
 		@Override
 		public void onNew(Context context, Intent intent, NPEntry entry) {
-			onUpdateEntry(entry);
+			onEntryChangedAndUpdateList(entry);
 		}
 
 		@Override
 		public void onUpdate(Context context, Intent intent, NPEntry entry) {
-			onUpdateEntry(entry);
+			onEntryChangedAndUpdateList(entry);
 		}
 
 		@Override
@@ -356,7 +356,7 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 	 *
 	 * @param newOrUpdatedEntry
 	 */
-	protected void onUpdateEntry(NPEntry newOrUpdatedEntry) {
+	protected void onEntryChangedAndUpdateList(NPEntry newOrUpdatedEntry) {
 		getEntryList().addOrUpdateEntry(newOrUpdatedEntry);
 		refreshUIAfterUpdatingEntryList();
 	}
