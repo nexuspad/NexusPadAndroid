@@ -36,27 +36,22 @@ public class DashboardFragment extends Fragment {
 //			0,
 			CONTACT_MODULE,
 			CALENDAR_MODULE,
-			JOURNAL_MODULE,
 			DOC_MODULE,
 			PHOTO_MODULE,
 			BOOKMARK_MODULE
 	};
 
 	private static final int[] sDrawables = {
-//			R.drawable.avatar,
 			R.drawable.contact,
 			R.drawable.event,
-			R.drawable.journal,
 			R.drawable.doc,
 			R.drawable.photo,
 			R.drawable.bookmark
 	};
 
 	private static final int[] sStrings = {
-//			R.string.file,
 			R.string.contacts,
 			R.string.events,
-			R.string.journal,
 			R.string.docs,
 			R.string.photos,
 			R.string.bookmarks

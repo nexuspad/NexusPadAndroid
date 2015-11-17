@@ -178,12 +178,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".photo.activity.AlbumActivity"
-            android:label="@string/photos"
-            android:icon="@drawable/ic_ab"
-            />
-        <activity android:name=".photo.activity.AlbumEditActivity" />
-        <activity
             android:name=".contacts.activity.ContactsActivity"
             android:label="@string/contacts"
             />

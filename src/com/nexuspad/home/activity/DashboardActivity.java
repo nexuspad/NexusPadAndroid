@@ -9,19 +9,18 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import com.nexuspad.R;
-import com.nexuspad.service.account.AccountManager;
 import com.nexuspad.bookmark.activity.BookmarksActivity;
 import com.nexuspad.calendar.activity.EventsActivity;
 import com.nexuspad.common.activity.SinglePaneActivity;
 import com.nexuspad.common.activity.UploadCenterActivity;
 import com.nexuspad.contacts.activity.ContactsActivity;
+import com.nexuspad.doc.activity.DocsActivity;
+import com.nexuspad.home.fragment.DashboardFragment;
+import com.nexuspad.photo.activity.PhotosActivity;
+import com.nexuspad.service.account.AccountManager;
 import com.nexuspad.service.datamodel.NPFolder;
 import com.nexuspad.service.datamodel.NPModule;
 import com.nexuspad.service.dataservice.NPException;
-import com.nexuspad.doc.activity.DocsActivity;
-import com.nexuspad.home.fragment.DashboardFragment;
-import com.nexuspad.journal.activity.JournalsActivity;
-import com.nexuspad.photo.activity.PhotosActivity;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -75,10 +74,6 @@ public class DashboardActivity extends SinglePaneActivity implements DashboardFr
 
 			case CONTACT_MODULE:
 				startActivity(new Intent(this, ContactsActivity.class));
-				break;
-
-			case JOURNAL_MODULE:
-				startActivity(new Intent(this, JournalsActivity.class));
 				break;
 
 			case 0:

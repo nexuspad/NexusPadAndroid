@@ -13,21 +13,17 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
-import com.google.common.collect.ImmutableList;
 import com.nexuspad.R;
 import com.nexuspad.common.Constants;
 import com.nexuspad.common.activity.EntriesActivity;
 import com.nexuspad.common.activity.UploadCenterActivity;
 import com.nexuspad.common.annotation.ModuleInfo;
 import com.nexuspad.home.activity.DashboardActivity;
-import com.nexuspad.photo.fragment.AlbumsFragment;
 import com.nexuspad.photo.fragment.PhotosFragment;
 import com.nexuspad.service.datamodel.EntryTemplate;
 import com.nexuspad.service.datamodel.NPFolder;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import static com.nexuspad.service.dataservice.ServiceConstants.PHOTO_MODULE;
 
@@ -61,8 +57,6 @@ public class PhotosActivity extends EntriesActivity implements ActionBar.OnNavig
     }
 
     private Fragment mPhotosFragment;
-    private Fragment mAlbumsFragment;
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -79,11 +73,6 @@ public class PhotosActivity extends EntriesActivity implements ActionBar.OnNavig
                 startActivityForResult(intent, REQ_CHOOSE_FILE);
                 return true;
 
-            case R.id.new_albums:
-                final Intent albumIntent = AlbumEditActivity.of(this, mFolder);
-                startActivity(albumIntent);
-                return true;
-
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -95,35 +84,16 @@ public class PhotosActivity extends EntriesActivity implements ActionBar.OnNavig
 
         super.onCreate(savedState);
 
-        final ActionBar actionBar = getActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-
-        final List<String> list = ImmutableList.of(getString(R.string.photos), getString(R.string.albums));
-
-        final ArrayAdapter<?> adapter = new ArrayAdapter<String>(
-                actionBar.getThemedContext(), R.layout.list_item_spinner, android.R.id.text1, list);
-
-        actionBar.setListNavigationCallbacks(adapter, this);
-        actionBar.setDisplayShowTitleEnabled(false);
-
         if (savedState == null) {
-            final int spinnerIndex = getIntent().getIntExtra(KEY_SPINNER_INDEX, -1);
-
             mPhotosFragment = PhotosFragment.of(mFolder);
-            mAlbumsFragment = AlbumsFragment.of(mFolder);
 
             final int containerViewId = getFragmentId();
             getSupportFragmentManager()
                     .beginTransaction()
                     .add(containerViewId, mPhotosFragment, PhotosFragment.TAG)
-                    .add(containerViewId, mAlbumsFragment, AlbumsFragment.TAG)
-                    .hide(spinnerIndex == 1 ? mPhotosFragment : mAlbumsFragment)
                     .commit();
-
-            actionBar.setSelectedNavigationItem(spinnerIndex);
         } else {
             mPhotosFragment = getSupportFragmentManager().findFragmentByTag(PhotosFragment.TAG);
-            mAlbumsFragment = getSupportFragmentManager().findFragmentByTag(AlbumsFragment.TAG);
         }
     }
 
@@ -154,30 +124,12 @@ public class PhotosActivity extends EntriesActivity implements ActionBar.OnNavig
     public boolean onNavigationItemSelected(int itemPosition, long itemId) {
         switch (itemPosition) {
             case 0:
-                showPhotosFragment();
                 break;
             case 1:
-                showAlbumsFragment();
                 break;
             default:
                 throw new AssertionError("unknown position: " + itemPosition);
         }
         return true;
-    }
-
-    private void showPhotosFragment() {
-        getSupportFragmentManager()
-                .beginTransaction()
-                .hide(mAlbumsFragment)
-                .show(mPhotosFragment)
-                .commit();
-    }
-
-    private void showAlbumsFragment() {
-        getSupportFragmentManager()
-                .beginTransaction()
-                .hide(mPhotosFragment)
-                .show(mAlbumsFragment)
-                .commit();
     }
 }

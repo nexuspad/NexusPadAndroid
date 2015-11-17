@@ -14,7 +14,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SearchView;
 import com.google.common.base.Strings;
-import com.koushikdutta.ion.Ion;
 import com.nexuspad.R;
 import com.nexuspad.common.Constants;
 import com.nexuspad.common.adapters.EntriesAdapter;
@@ -34,6 +33,7 @@ import com.nexuspad.service.dataservice.EntryListService;
 import com.nexuspad.service.dataservice.NPException;
 import com.nexuspad.service.dataservice.NPWebServiceUtil;
 import com.nexuspad.service.dataservice.ServiceConstants;
+import com.squareup.picasso.Picasso;
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
@@ -308,11 +308,13 @@ public final class ContactsFragment extends EntriesFragment {
 	public static class ContactsAdapter extends EntriesAdapter<NPPerson> implements StickyListHeadersAdapter {
 		private final Activity mActivity;
 		private final EntriesLocalSearchFilter mFilter;
+		private Picasso mPicasso;
 
 		private ContactsAdapter(Activity a, EntryList entryList, NPFolder folder, EntryListService service, EntryTemplate template, EntriesLocalSearchFilter.OnFilterDoneListener<NPPerson> onFilterDoneListener) {
 			super(a, entryList);
 			mActivity = a;
 			mFilter = new EntriesLocalSearchFilter(entryList, onFilterDoneListener);
+			mPicasso = Picasso.with(a);
 		}
 
 		private String getDisplayTitle(int position) {
@@ -349,11 +351,10 @@ public final class ContactsFragment extends EntriesFragment {
                 try {
                     final String url = NPWebServiceUtil.fullUrlWithAuthenticationTokens(profileImageUrl, mActivity);
 
-	                Ion.with(mActivity)
-			                .load(url)
-			                .withBitmap()
+	                mPicasso.load(url)
 			                .placeholder(R.drawable.placeholder)
-			                .intoImageView(holder.getIcon());
+			                .error(R.drawable.ic_launcher)
+			                .into(holder.getIcon(), null);
 
                 } catch (NPException e) {
                     throw new RuntimeException(e);
