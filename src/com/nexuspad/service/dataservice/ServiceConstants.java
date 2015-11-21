@@ -186,8 +186,12 @@ public abstract class ServiceConstants {
     public static final String EVENT_ATTENDEE_NAME = "attendee_name";
     public static final String EVENT_ATTENDEE_COMMENT = "attendee_comment";
     public static final String EVENT_ATTENDEE_ATT_STATUS = "attendee_status";
+
     // Journal
     public static final String JOURNAL_DATE = "journal_date";
+
+    // Doc
+	public static final String DOC_FORMAT = "format";
 
     // Photo
 

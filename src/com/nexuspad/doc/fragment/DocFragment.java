@@ -14,15 +14,15 @@ import android.view.*;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import com.nexuspad.R;
 import com.nexuspad.common.Constants;
 import com.nexuspad.common.annotation.FragmentName;
+import com.nexuspad.common.fragment.EntryFragment;
 import com.nexuspad.common.utils.Lazy;
-import com.nexuspad.R;
+import com.nexuspad.doc.activity.DocEditActivity;
 import com.nexuspad.service.datamodel.NPDoc;
 import com.nexuspad.service.datamodel.NPFolder;
 import com.nexuspad.service.datamodel.NPUpload;
-import com.nexuspad.doc.activity.DocEditActivity;
-import com.nexuspad.common.fragment.EntryFragment;
 
 import java.util.List;
 
@@ -121,7 +121,11 @@ public class DocFragment extends EntryFragment<NPDoc> {
 
             final String note = doc.getNote();
             if (!TextUtils.isEmpty(note)) {
-                mNoteV.setText(Html.fromHtml(note));
+				if (doc.isHtml()) {
+					mNoteV.setText(Html.fromHtml(note));
+				} else {
+					mNoteV.setText(note);
+				}
             }
 
             final List<NPUpload> attachments = doc.getAttachments();

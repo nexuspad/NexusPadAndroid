@@ -7,6 +7,7 @@ package com.nexuspad.service.datamodel;
 import android.os.Parcel;
 import com.nexuspad.service.dataservice.ServiceConstants;
 import com.nexuspad.service.util.DateUtil;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Map;
@@ -25,7 +26,7 @@ public class NPDoc extends NPEntry {
         }
     };
 
-    private boolean isRichText;
+    private boolean isHtml;
 
     public NPDoc(NPFolder folder) {
         super(folder, EntryTemplate.DOC);
@@ -33,30 +34,43 @@ public class NPDoc extends NPEntry {
 
     public NPDoc(NPDoc aDoc) {
         super(aDoc);
-        isRichText = aDoc.isRichText;
+	    isHtml = aDoc.isHtml;
     }
 
-    public NPDoc(JSONObject dictionary) {
-        super(dictionary, EntryTemplate.DOC);
+    public NPDoc(JSONObject json) {
+        super(json, EntryTemplate.DOC);
+
+	    isHtml = false;
+
+        if (json.has(ServiceConstants.DOC_FORMAT)) {
+	        try {
+		        if ("html".equalsIgnoreCase(json.getString(ServiceConstants.DOC_FORMAT))) {
+					isHtml = true;
+		        }
+
+	        } catch (JSONException e) {
+
+	        }
+        }
     }
 
     private NPDoc(Parcel p) {
         super(p);
-        isRichText = p.readByte() != 0x00;
+	    isHtml = p.readByte() != 0x00;
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
-        dest.writeByte((byte) (isRichText ? 0x01 : 0x00));
+        dest.writeByte((byte) (isHtml ? 0x01 : 0x00));
     }
 
-    public boolean isRichText() {
-        return isRichText;
+    public boolean isHtml() {
+        return isHtml;
     }
 
-    public void setRichText(boolean isRichText) {
-        this.isRichText = isRichText;
+    public void setHtml(boolean isHtml) {
+        this.isHtml = isHtml;
     }
 
     @Override
@@ -78,7 +92,7 @@ public class NPDoc extends NPEntry {
 
         NPDoc doc = (NPDoc) o;
 
-        if (isRichText != doc.isRichText) return false;
+        if (isHtml != doc.isHtml) return false;
 
         return true;
     }
@@ -86,7 +100,7 @@ public class NPDoc extends NPEntry {
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + (isRichText ? 1 : 0);
+        result = 31 * result + (isHtml ? 1 : 0);
         return result;
     }
 }
