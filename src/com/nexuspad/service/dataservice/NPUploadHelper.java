@@ -109,7 +109,7 @@ public abstract class NPUploadHelper {
 
 			// start of binary boundary.
 			writer.append("--").append(boundary).append(CRLF);
-			writer.append("Content-Disposition: form-data;").append("filename=\"").append(file.getName()).append("\"; name=\"filename\"").append(CRLF);
+			writer.append("Content-Disposition: form-data; name=\"file\"").append("; filename=\"" + file.getName() + "\"").append(CRLF);
 			writer.append("Content-Type: ").append(URLConnection.guessContentTypeFromName(file.getName())).append(CRLF);
 			writer.append("Content-Transfer-Encoding: binary").append(CRLF);
 			writer.append(CRLF).flush();

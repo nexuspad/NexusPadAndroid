@@ -95,7 +95,7 @@
 
     <!-- first name, last name -->
     <string name="format_ac_name">%1$s %2$s</string>
-    <string name="about">About</string>
+    <string name="account">Account</string>
     <string name="profile">Profile</string>
     <string name="porfile_image">Porfile Image</string>
     <string name="no_name">(No Name)</string>

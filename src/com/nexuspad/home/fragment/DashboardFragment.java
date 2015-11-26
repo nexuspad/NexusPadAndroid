@@ -99,7 +99,7 @@ public class DashboardFragment extends Fragment {
 				activity.finish();
 				return true;
 
-			case R.id.about:
+			case R.id.account:
 				startActivity(new Intent(getActivity(), AboutActivity.class));
 				return true;
 			default:

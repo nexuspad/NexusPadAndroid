@@ -34,7 +34,7 @@ public abstract class ServiceConstants {
     public static final String ACCT_SESSION_ID = "session_id";
     public static final String ACCT_PAD_HOST = "padhost";
 
-	public static final String ACCT_PROFILE_IMAGE_URL = "profile_photo_tn_url";
+	public static final String ACCT_PROFILE_IMAGE_URL = "profile_photo_url";
     public static final String ACCT_SPACE_ALLOCATION = "space_allocation";
     public static final String ACCT_SPACE_USAGE = "space_usage";
 	public static final String ACCT_SPACE_ALLOCATION_FORMATTED = "space_allocation_formatted";
