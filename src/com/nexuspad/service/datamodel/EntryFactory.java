@@ -40,8 +40,6 @@ public class EntryFactory {
                 }
                 throw new AssertionError("unexpected entryType: " + entryType);
 
-            case ServiceConstants.JOURNAL_MODULE:
-                return new NPJournal(folder);
             default:
                 return new NPEntry(folder, EntryTemplate.NOT_ASSIGNED);
         }
@@ -53,9 +51,6 @@ public class EntryFactory {
 
         } else if (e instanceof  NPEvent) {
             return new NPEvent((NPEvent)e);
-
-        } else if (e instanceof NPJournal) {
-            return new NPJournal((NPJournal)e);
 
         } else if (e instanceof NPPhoto) {
             Log.i("------------------", "----------");
@@ -149,9 +144,6 @@ public class EntryFactory {
                 } else {
                     return new NPEntry(jsonObj, templateId);
                 }
-
-            case ServiceConstants.JOURNAL_MODULE:
-                return new NPJournal(jsonObj);
         }
 
         return null;

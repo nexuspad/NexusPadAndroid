@@ -625,9 +625,6 @@ public class EntryService {
 			case TASK:
 				return "/task";
 
-			case JOURNAL:
-				return "/journal";
-
 			case DOC:
 			case NOTE:
 				return "/doc";

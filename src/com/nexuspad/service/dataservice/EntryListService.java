@@ -345,9 +345,6 @@ public class EntryListService {
 			case TASK:
 				return "/tasks";
 
-			case JOURNAL:
-				return "/journals";
-
 			case DOC:
 			case NOTE:
 				return "/docs";

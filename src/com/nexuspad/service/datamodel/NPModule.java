@@ -15,7 +15,6 @@ public class NPModule {
     public static final int DOC = 4;
     public static final int UPLOAD = 5;
     public static final int PHOTO = 6;
-    public static final int JOURNAL = 7;
 
     public static String getModuleCode(int moduleId) {
         switch (moduleId) {
@@ -31,8 +30,6 @@ public class NPModule {
                 return "upload";
             case 6:
                 return "photo";
-            case 7:
-                return "planner";
         }
         return "";
     }

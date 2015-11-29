@@ -122,7 +122,10 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 
 						boolean entryAdded = false;
 						for (NPEntry newEntry : newEntries) {
-							if (!existingEntries.contains(newEntry)) {
+							if (existingEntries.contains(newEntry)) {
+								Log.i(TAG, ">>>>>>>>>>> DO NOT add " + newEntry.getEntryId());
+								continue;
+							} else {
 								existingEntries.add(EntryFactory.copyEntry(newEntry));
 								entryAdded = true;
 							}
@@ -138,20 +141,15 @@ public abstract class EntriesFragment <T extends EntriesAdapter> extends UndoBar
 					}
 				}
 
-				if (mModuleInfo.moduleId() == NPModule.JOURNAL) {
-					onListLoaded(mEntryList);
-
+				if (mModuleInfo.moduleId() == NPModule.CONTACT) {
+					Collections.sort(mEntryList.getEntries(), NPPerson.ORDERING_BY_LAST_NAME);
+				} else if (mModuleInfo.moduleId() == NPModule.CALENDAR) {
+					Collections.sort(mEntryList.getEntries(), NPEvent.ORDERING_BY_STARTING_TIME);
 				} else {
-					if (mModuleInfo.moduleId() == NPModule.CONTACT) {
-						Collections.sort(mEntryList.getEntries(), NPPerson.ORDERING_BY_LAST_NAME);
-					} else if (mModuleInfo.moduleId() == NPModule.CALENDAR) {
-						Collections.sort(mEntryList.getEntries(), NPEvent.ORDERING_BY_STARTING_TIME);
-					} else {
-						Collections.sort(mEntryList.getEntries(), NPEntry.ORDERING_BY_UPDATE_TIME);
-					}
-
-					onListLoaded(mEntryList);
+					Collections.sort(mEntryList.getEntries(), NPEntry.ORDERING_BY_UPDATE_TIME);
 				}
+
+				onListLoaded(mEntryList);
 			}
 		}
 

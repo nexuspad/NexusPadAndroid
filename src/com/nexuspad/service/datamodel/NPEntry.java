@@ -419,9 +419,14 @@ public class NPEntry extends NPObject {
 
 		NPEntry npEntry = (NPEntry) o;
 
-		if (entryId != null ? !entryId.equals(npEntry.entryId) : npEntry.entryId != null) return false;
-		if (mTemplate != npEntry.mTemplate) return false;
-		if (webAddress != null ? !webAddress.equals(npEntry.webAddress) : npEntry.webAddress != null) return false;
+		if (entryId != null ? !entryId.equals(npEntry.entryId) : npEntry.entryId != null)
+			return false;
+
+		if (!mTemplate.equals(npEntry.mTemplate))
+			return false;
+
+		if (webAddress != null ? !webAddress.equals(npEntry.webAddress) : npEntry.webAddress != null)
+			return false;
 
 		return true;
 	}

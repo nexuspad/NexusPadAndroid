@@ -26,10 +26,7 @@ public enum EntryTemplate {
     UPLOAD(501),
 
     PHOTO(601),
-    ALBUM(602),
-
-    JOURNAL(701),
-    STICKY(702);
+    ALBUM(602);
 
     private static final SparseArray<EntryTemplate> intToEntryTemplate = createIntToEntryTemplate();
 

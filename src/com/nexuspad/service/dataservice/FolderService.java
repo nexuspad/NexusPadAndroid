@@ -617,10 +617,6 @@ public class FolderService {
 				url = "/calendar/calendar";
 				break;
 
-			case NPModule.JOURNAL:
-				url = "/planner/folder";
-				break;
-
 			case NPModule.DOC:
 				url = "/doc/folder";
 				break;
@@ -661,10 +657,6 @@ public class FolderService {
 
 			case NPModule.CALENDAR:
 				url = "/calendar/calendar";
-				break;
-
-			case NPModule.JOURNAL:
-				url = "/planner/folder";
 				break;
 
 			case NPModule.DOC:

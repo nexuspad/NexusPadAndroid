@@ -134,10 +134,6 @@ public abstract class OnEntryMenuClickListener<T extends NPEntry> implements OnC
             case ALBUM:
                 id = R.string.album;
                 break;
-            case JOURNAL:
-                id = R.string.journal;
-                break;
-            case STICKY:  // fall-through
             case NOT_ASSIGNED:  // fall-through
             default:
                 id = R.string.entry;
