@@ -53,7 +53,6 @@ public class DocFragment extends EntryFragment<NPDoc> {
         }
     };
 
-    private TextView mTitleV;
     private TextView mNoteV;
 
     private TextView mAttachmentsTitleV;
@@ -93,7 +92,6 @@ public class DocFragment extends EntryFragment<NPDoc> {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-//        mTitleV = findView(view, R.id.lbl_title);
         mNoteV = (TextView)view.findViewById(R.id.lbl_note);
 
         mAttachmentsTitleV = (TextView)view.findViewById(R.id.lbl_attachment);
@@ -101,8 +99,6 @@ public class DocFragment extends EntryFragment<NPDoc> {
 
         mTagsFrameV = (TextView)view.findViewById(R.id.lbl_tags_title);
         mTagsV = (TextView)view.findViewById(R.id.lbl_tags);
-
-//        mTitleV.setTypeface(App.getRobotoLight());
 
         super.onViewCreated(view, savedInstanceState);
     }
@@ -116,7 +112,6 @@ public class DocFragment extends EntryFragment<NPDoc> {
     protected void updateUI() {
         NPDoc doc = getEntry();
         if (doc != null) {
-//            mTitleV.setText(doc.getTitle());
             mTagsV.setText(doc.getTags());
 
             final String note = doc.getNote();
